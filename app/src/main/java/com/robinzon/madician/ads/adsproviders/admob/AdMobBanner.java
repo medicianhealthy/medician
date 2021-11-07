@@ -115,7 +115,7 @@ public class AdMobBanner extends BannerAd implements BannerAdActions {
             @Override
             public void onAdImpression() {
                 super.onAdImpression();
-                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad impression");
+                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad logged impression");
             }
         };
     }
