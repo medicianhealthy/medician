@@ -1,3 +1,5 @@
+
+
 plugins {
     id 'com.android.application'
     /*id 'com.google.gms.google-services'
@@ -5,19 +7,20 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
 
     defaultConfig {
-        applicationId "com.robinzon.madician"
+        applicationId "com.robinzon.medicationwizard"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 101
         versionName "1.01"
     }
 
     buildTypes {
         release {
+            debuggable false
             // Enables code shrinking, obfuscation, and optimization for only
             // your project's release build type.
             minifyEnabled true
@@ -47,16 +50,15 @@ android {
 
 dependencies {
     //Ads
-    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation 'com.google.android.gms:play-services-ads:20.5.0'
     //Material
     implementation 'com.google.android.material:material:1.4.0'
     //Android X
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     //Firebase
-    /*
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-config'
@@ -64,5 +66,4 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-inappmessaging'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
-    */
 }

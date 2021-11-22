@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "704026520513",
+    "project_id": "mediwhole-3a08b",
+    "storage_bucket": "mediwhole-3a08b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704026520513:android:0a9ffb2658ae44134edd40",
+        "android_client_info": {
+          "package_name": "com.robinzon.medicationwizard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704026520513-a0fid4bcmj953o3u9781d4dhp0vonm93.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJbzkIT4J6fm8bk8tUCxE_WBqdm6yynuc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704026520513-a0fid4bcmj953o3u9781d4dhp0vonm93.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

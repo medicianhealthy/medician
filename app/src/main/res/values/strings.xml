@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Madician</string>
+    <string name="app_name">Medication Wizard</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -11,9 +11,18 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
 
+    <!--***********************   Ads   ************************************************************************-->
+    <!--Test ad units-->
     <string name="admob_application_id_test">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
     <string name="admob_rewarded_interstitial_id_test">ca-app-pub-3940256099942544/5354046379</string>
     <string name="admob_rv_id_test">ca-app-pub-3940256099942544/5224354917</string>
+
+    <!--Live ad units-->
+    <string name="admob_application_id_live">app</string>
+    <string name="admob_banner_id_live">banner</string>
+    <string name="admob_interstitial_id_live">inter</string>
+    <string name="admob_rewarded_interstitial_id_live">RInter</string>
+    <string name="admob_rv_id_live">Rv</string>
 </resources>

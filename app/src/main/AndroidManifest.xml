@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.robinzon.madician">
+    package="com.robinzon.medicationwizard">
 
     <application
+        android:name=".MedicationWizardApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Madician">
+        android:theme="@style/Theme.MedicationWizard"
+        android:fullBackupContent="@xml/backup_rules">
         <activity
-            android:name=".MainActivity"
+            android:name="com.robinzon.medicationwizard.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Madician.NoActionBar">
+            android:theme="@style/Theme.MedicationWizard.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,7 +25,6 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_application_id_test"/>
-
     </application>
 
 </manifest>
