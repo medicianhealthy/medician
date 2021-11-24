@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.ads.adsproviders.admob;
 
 import android.app.Activity;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +10,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ads.AdDisplayingEvent;
 import com.robinzon.medicationwizard.ads.AdLoadingEvents;
 import com.robinzon.medicationwizard.ads.AdsManager;
@@ -30,6 +32,10 @@ public class AdMobInterstitial extends InterstitialAd implements InterstitialAdA
 
     @Override
     public void load(Activity activity, AdLoadingEvents adLoadingEvents) {
+        Logger.logSingleTag(getClassName(),
+                AdsManager.LOG_INTERSTITIAL,
+                "Calling to load interstitial ad. Ad unit is [%s]",
+                isTestAdUnitID(activity) ? "TEST - ".concat(getAdUnitId()) : getAdUnitId());
         com.google.android.gms.ads.interstitial.InterstitialAd.load(activity,
                 getAdUnitId(),
                 new AdRequest.Builder().build(),
@@ -38,6 +44,7 @@ public class AdMobInterstitial extends InterstitialAd implements InterstitialAdA
                     public void onAdLoaded(@NonNull com.google.android.gms.ads.interstitial.InterstitialAd interstitialAd) {
                         super.onAdLoaded(interstitialAd);
                          mInterstitial = interstitialAd;
+                        Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial ad loaded");
                         if(null != adLoadingEvents){
                             adLoadingEvents.onAdLoaded();
                         }
@@ -47,6 +54,9 @@ public class AdMobInterstitial extends InterstitialAd implements InterstitialAdA
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                         super.onAdFailedToLoad(loadAdError);
                         mInterstitial = null;
+                        Logger.logSingleTag(getClassName(),
+                                AdsManager.LOG_INTERSTITIAL,
+                                "Interstitial ad failed to load");
                         if(null != adLoadingEvents){
                             adLoadingEvents.onAdFailedToLoad(loadAdError.getMessage());
                         }
@@ -56,6 +66,7 @@ public class AdMobInterstitial extends InterstitialAd implements InterstitialAdA
 
     @Override
     public void show(Activity activity, AdDisplayingEvent adDisplayingEvent) {
+        Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Calling to show interstitial ad");
         mInterstitial.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
@@ -84,13 +95,20 @@ public class AdMobInterstitial extends InterstitialAd implements InterstitialAdA
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial as clicked");
             }
         });
+        Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Showing interstitial ad");
         mInterstitial.show(activity);
     }
 
     @Override
     public boolean hasAd() {
         return null != mInterstitial;
+    }
+
+    @Override
+    public boolean isTestAdUnitID(Context context) {
+        return getAdUnitId().contentEquals(context.getString(R.string.admob_interstitial_id_test));
     }
 }

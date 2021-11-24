@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.ads.adsproviders.admob;
 
 import android.app.Activity;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 
@@ -22,16 +23,29 @@ public class AdMobBanner extends BannerAd implements BannerAdActions {
     private AdView mBanner;
     @Override
     public void createBannerAd(final Activity activity, final int adUnitIdResourceId) {
-        if(isValidResourceIdForAdUnit(activity, adUnitIdResourceId)) {
+        if(createAdUnitIdIfIsValidResourceId(activity, adUnitIdResourceId)) {
             mBanner = new AdView(activity);
             mBanner.setAdSize(AdSize.BANNER);
             mBanner.setAdUnitId(getAdUnitId());
+            Logger.logSingleTag(getClassName(),
+                    AdsManager.LOG_BANNER,
+                    "Banner ad created. Ad unit is [%s].",
+                    isTestAdUnitID(activity) ? "TEST | ".concat(getAdUnitId()):getAdUnitId());
+        } else {
+            Logger.logSingleTag(getClassName(),
+                    AdsManager.LOG_BANNER,
+                    "Tried to create banner but resource id for ad unit is null");
         }
     }
 
     @Override
     public void createBannerAdFromLayout(Activity activity , final int viewId) {
         mBanner = activity.findViewById(R.id.adView);
+        setAdUnitId(mBanner.getAdUnitId());
+        Logger.logSingleTag(getClassName(),
+                AdsManager.LOG_BANNER,
+                "Banner ad created from layout. Ad unit is [%s].",
+                isTestAdUnitID(activity) ? "TEST | ".concat(getAdUnitId()):getAdUnitId());
     }
 
     @Override
@@ -56,7 +70,7 @@ public class AdMobBanner extends BannerAd implements BannerAdActions {
         return null != mBanner;
     }
 
-    private boolean isValidResourceIdForAdUnit(final Activity activity, final int resourceId){
+    private boolean createAdUnitIdIfIsValidResourceId(final Activity activity, final int resourceId){
         if (Validator.isValidAndroidResourceId(resourceId)){
             final String adUnitId = activity.getString(resourceId);
             if (adUnitId.startsWith("ca-app-pub-")){
@@ -118,6 +132,11 @@ public class AdMobBanner extends BannerAd implements BannerAdActions {
                 Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad logged impression");
             }
         };
+    }
+
+    @Override
+    public boolean isTestAdUnitID(final Context context) {
+        return (getAdUnitId().contentEquals(context.getString(R.string.admob_banner_id_test)));
     }
 
     @Override

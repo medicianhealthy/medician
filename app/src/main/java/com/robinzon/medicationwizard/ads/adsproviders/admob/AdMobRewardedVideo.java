@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.ads.adsproviders.admob;
 
 import android.app.Activity;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 
@@ -12,6 +13,7 @@ import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ads.AdDisplayingEvent;
 import com.robinzon.medicationwizard.ads.AdLoadingEvents;
 import com.robinzon.medicationwizard.ads.AdsManager;
@@ -33,7 +35,10 @@ public class AdMobRewardedVideo extends RewardedVideoAd implements RewardedVideo
 
     @Override
     public void load(Activity activity, AdLoadingEvents adLoadingEvents) {
-        Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "AdMob Calling to load rv");
+        Logger.logSingleTag(getClassName(),
+                AdsManager.LOG_REWARDED_VIDEO,
+                "AdMob Calling to load rv. Ad unit is [%s]",
+                isTestAdUnitID(activity) ? "TEST - ".concat(getAdUnitId()) : getAdUnitId());
         RewardedAd.load(activity, getAdUnitId(),
                 new AdRequest.Builder().build(),
                 new RewardedAdLoadCallback(){
@@ -114,5 +119,10 @@ public class AdMobRewardedVideo extends RewardedVideoAd implements RewardedVideo
     @Override
     public boolean hasAd() {
         return null != mRewardedAd;
+    }
+
+    @Override
+    public boolean isTestAdUnitID(Context context) {
+        return getAdUnitId().contentEquals(context.getString(R.string.admob_rv_id_test));
     }
 }

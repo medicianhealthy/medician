@@ -202,10 +202,6 @@ public class AdsManager extends MedicationWizardSuperClass {
         return getAdProvider(EAdsProvider.ADMOB).getRewardedVideo().isLoaded();
     }
 
-    final String getClassNameForLog(){
-        return "{AdsManager} - ";
-    }
-
     public void onResume(Activity activity) {
         if (Validator.isValidObject(getAdProvider(EAdsProvider.ADMOB))){
             getAdProvider(EAdsProvider.ADMOB).onResume(activity);

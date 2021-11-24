@@ -1,5 +1,7 @@
 package com.robinzon.medicationwizard.ads.rootclasses;
 
+import android.content.Context;
+
 public abstract class Ad extends MedicationWizardSuperClass {
     protected String mAdUnitId;
     protected boolean mIsLoaded;
@@ -19,6 +21,11 @@ public abstract class Ad extends MedicationWizardSuperClass {
 
     public String getAdUnitId() {
         return mAdUnitId;
+    }
+
+
+    public boolean isTestAdUnitID(final Context context){
+        return false;
     }
 
     public void setAdUnitId(String mAdUnitId) {
