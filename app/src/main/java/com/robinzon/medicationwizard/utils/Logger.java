@@ -41,7 +41,7 @@ public class Logger {
     }
 
     private static void log(final String className, final String tag, final String message, Object...params){
-        Log.i(className.concat("-").concat(tag), String.format(Locale.getDefault(), message, params));
+        Log.i(className.concat("- ").concat(tag), String.format(Locale.getDefault(), message, params));
     }
 
     public static boolean isLoggingEnabled(){

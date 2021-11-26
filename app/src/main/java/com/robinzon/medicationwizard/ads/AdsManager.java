@@ -27,10 +27,10 @@ import java.util.Map;
 
 public class AdsManager implements ISuper {
     public static boolean DISABLE_ADS = false;
-    public static final String LOG_BANNER = "madician_ad_banner";
-    public static final String LOG_INTERSTITIAL = "madician_ad_inter";
-    public static final String LOG_REWARDED_INTERSTITIAL = "madician_ad_rewarded_inter";
-    public static final String LOG_REWARDED_VIDEO = "madician_ad_rv";
+    public static final String LOG_BANNER = "mwiz_Banner_Ad";
+    public static final String LOG_INTERSTITIAL = "mwiz_Interstitial_Ad";
+    public static final String LOG_REWARDED_INTERSTITIAL = "mwiz_Rewarded_Interstitial_Ad";
+    public static final String LOG_REWARDED_VIDEO = "mwiz_Rewarded_Video_Ad";
     public static final List<String> LOGS_ADS =
             Collections.unmodifiableList(new ArrayList<String>() {{
                 add(LOG_BANNER);
