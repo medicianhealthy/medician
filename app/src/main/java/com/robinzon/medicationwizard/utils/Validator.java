@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Build;
 
+import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobAdProvider;
+
 import org.json.JSONArray;
 
 import java.util.Collection;
@@ -40,5 +42,11 @@ public class Validator {
 
     public static boolean isValidJsonArray(JSONArray jsonArray) {
         return null != jsonArray && jsonArray.length() > 0;
+    }
+
+    public static class Ads{
+        public static boolean isValidAdMobAdUnitId(final String adMobAdUnitId){
+            return Validator.isValidString(adMobAdUnitId) && adMobAdUnitId.startsWith(AdMobAdProvider.AD_INIT_PREFIX);
+        }
     }
 }

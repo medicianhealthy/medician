@@ -6,14 +6,14 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuperClass;
+import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
 
 import org.json.JSONArray;
 
 import java.lang.ref.WeakReference;
 
 
-public class SharedPreferencesManager extends MedicationWizardSuperClass {
+public class SharedPreferencesManager implements ISuper {
 
     private static final String SHARED_PREFERENCES = "shared_prefernces";
     private SharedPreferences sAndroidSharedPreferencesInstance;

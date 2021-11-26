@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.entities;
 
+import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
 import com.robinzon.medicationwizard.utils.Validator;
 
 import org.json.JSONArray;
@@ -8,7 +9,12 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class Medication {
+public class Medication implements ISuper {
+    @Override
+    public String getClassName() {
+        return "{Medication}";
+    }
+
     public static final class JsonKeys {
         public static final String JSON_KEY_COMMERCIAL_NAME = "mCommercialName";
         public static final String JSON_KEY_ACTIVE_INGREDIENTS = "mActiveIngredients";

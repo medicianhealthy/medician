@@ -2,14 +2,15 @@ package com.robinzon.medicationwizard.ads.adsproviders.admob;
 
 import android.app.Activity;
 
-import com.robinzon.medicationwizard.ads.rootclasses.AdsProvider;
+import com.robinzon.medicationwizard.ads.interfaces.IAdsProvider;
 import com.robinzon.medicationwizard.utils.Validator;
 
-public class AdMobAdProvider extends AdsProvider {
+public class AdMobAdProvider implements IAdsProvider {
 
-    protected AdMobBanner mBannerAd;
-    protected AdMobInterstitial mInterstitial;
-    protected AdMobRewardedVideo mRewardedVideo;
+    private final AdMobBanner mBannerAd;
+    private final AdMobInterstitial mInterstitial;
+    private final AdMobRewardedVideo mRewardedVideo;
+    public static final String AD_INIT_PREFIX = "ca-app-pub-";
 
     public AdMobAdProvider() {
         mInterstitial = new AdMobInterstitial();
@@ -17,29 +18,29 @@ public class AdMobAdProvider extends AdsProvider {
         mRewardedVideo = new AdMobRewardedVideo();
     }
 
-    public boolean hasBanner(){
-        return Validator.isValidObject(getBanner()) &&
-                getBanner().hasAd() ;
-    }
-
+    @Override
     public AdMobBanner getBanner() {
         return mBannerAd;
     }
 
+    @Override
     public boolean hasInterstitial(){
         return Validator.isValidObject(getInterstitial()) &&
                 getInterstitial().hasAd();
     }
 
+    @Override
     public AdMobInterstitial getInterstitial() {
         return mInterstitial;
     }
 
+    @Override
     public boolean hasRv(){
         return Validator.isValidObject(getRewardedVideo()) &&
                 getRewardedVideo().hasAd();
     }
 
+    @Override
     public AdMobRewardedVideo getRewardedVideo() {
         return mRewardedVideo;
     }
@@ -62,6 +63,11 @@ public class AdMobAdProvider extends AdsProvider {
     @Override
     public void onCreate(Activity activity) {
 
+    }
+
+    @Override
+    public boolean hasBanner() {
+        return Validator.isValidObject(getBanner()) && getBanner().hasAd();
     }
 }
 

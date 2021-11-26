@@ -1,9 +1,16 @@
 package com.robinzon.medicationwizard.entities;
 
+import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ActiveIngredient {
+public class ActiveIngredient implements ISuper {
+    @Override
+    public String getClassName() {
+        return "{ActiveIngredient}";
+    }
+
     public static class JsonKeys{
         public static final String JSON_KEY_NAME = "mName";
         public static final String JSON_MEASUREMENT_UNIT = "mMeasurementUnit";

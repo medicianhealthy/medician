@@ -14,16 +14,16 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.ads.AdsManager;
-import com.robinzon.medicationwizard.ads.interfaces.AdsInitializeCallBack;
+import com.robinzon.medicationwizard.ads.interfaces.IAdsInitializeCallBack;
+import com.robinzon.medicationwizard.ads.interfaces.EAdsInitializeState;
+import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
-import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
-import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.Validator;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ISuper {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
         mAdsManager = new AdsManager();
         mAdsManager.onCreate(this);
         Logger.logMultipleTags(getClassName(), AdsManager.LOGS_ADS, "MainActivity calling init ads");
-        mAdsManager.initializeAdMobAds(this, new AdsInitializeCallBack(){
+        mAdsManager.initializeAdMobAds(this, new IAdsInitializeCallBack(){
             @Override
-            public void onAdsInitialized(AdsInitializeState adsInitializeState) {
+            public void onAdsInitialized(EAdsInitializeState adsInitializeState) {
                 Logger.logMultipleTags(getClassName(), AdsManager.LOGS_ADS,
                         "MainActivity got a message thet ads finished initializing. status is[%s]",
                         adsInitializeState.name());
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
     public String getClassName(){
         return "{MainActivity}";
     }

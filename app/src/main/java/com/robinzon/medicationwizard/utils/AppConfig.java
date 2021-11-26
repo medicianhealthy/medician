@@ -1,8 +1,8 @@
 package com.robinzon.medicationwizard.utils;
 
-import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuperClass;
+import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
 
-public class AppConfig extends MedicationWizardSuperClass {
+public class AppConfig implements ISuper {
 
 
 

@@ -7,7 +7,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
-import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuperClass;
+import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.TimeInterval;
 import com.robinzon.medicationwizard.utils.Validator;
@@ -15,7 +15,7 @@ import com.robinzon.medicationwizard.utils.Validator;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
-public class RemoteConfigManager extends MedicationWizardSuperClass {
+public class RemoteConfigManager implements ISuper {
 
     private static final String LOG_REMOTE_CONFIG_VALUES = "remote_config";
     public static WeakReference<RemoteConfigManager> sInstance;

@@ -1,7 +1,6 @@
 package com.robinzon.medicationwizard.ads.adsproviders.admob;
 
 import android.app.Activity;
-import android.content.Context;
 
 import androidx.annotation.NonNull;
 
@@ -10,27 +9,37 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.robinzon.medicationwizard.R;
-import com.robinzon.medicationwizard.ads.AdDisplayingEvent;
-import com.robinzon.medicationwizard.ads.AdLoadingEvents;
 import com.robinzon.medicationwizard.ads.AdsManager;
-import com.robinzon.medicationwizard.ads.interfaces.BannerAdActions;
-import com.robinzon.medicationwizard.ads.rootclasses.BannerAd;
+import com.robinzon.medicationwizard.ads.IAdDisplayingEvent;
+import com.robinzon.medicationwizard.ads.IAdLoadingEvents;
+import com.robinzon.medicationwizard.ads.interfaces.IAd;
+import com.robinzon.medicationwizard.ads.interfaces.IBannerAd;
+import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.Validator;
 
-public class AdMobBanner extends BannerAd implements BannerAdActions {
+public class AdMobBanner implements ISuper, IBannerAd, IAd {
     private AdView mBanner;
+    private String mAdUnit;
+    private boolean mIsLoaded = false;
+    private boolean mIsShowing;
+
     @Override
     public void createBannerAd(final Activity activity, final int adUnitIdResourceId) {
-        if(createAdUnitIdIfIsValidResourceId(activity, adUnitIdResourceId)) {
-            mBanner = new AdView(activity);
-            mBanner.setAdSize(AdSize.BANNER);
-            mBanner.setAdUnitId(getAdUnitId());
-            Logger.logSingleTag(getClassName(),
-                    AdsManager.LOG_BANNER,
-                    "Banner ad created. Ad unit is [%s].",
-                    isTestAdUnitID(activity) ? "TEST | ".concat(getAdUnitId()):getAdUnitId());
+        if (Validator.isValidAndroidResourceId(adUnitIdResourceId)) {
+            setAdUnitId(activity.getString(adUnitIdResourceId));
+            if (Validator.isValidString(getAdUnitId())) {
+                mBanner = new AdView(activity);
+                mBanner.setAdSize(AdSize.BANNER);
+                mBanner.setAdUnitId(getAdUnitId());
+                Logger.logSingleTag(getClassName(),
+                        AdsManager.LOG_BANNER,
+                        "Banner ad created. Ad unit is [%s].", getAdUnitId());
+            } else {
+                Logger.logSingleTag(getClassName(),
+                        AdsManager.LOG_BANNER,
+                        "Tried to create banner but ad unit id null");
+            }
         } else {
             Logger.logSingleTag(getClassName(),
                     AdsManager.LOG_BANNER,
@@ -39,25 +48,28 @@ public class AdMobBanner extends BannerAd implements BannerAdActions {
     }
 
     @Override
-    public void createBannerAdFromLayout(Activity activity , final int viewId) {
-        mBanner = activity.findViewById(R.id.adView);
+    public void createBannerAdFromLayout(Activity activity, final int viewId) {
+        mBanner = activity.findViewById(viewId);
         setAdUnitId(mBanner.getAdUnitId());
         Logger.logSingleTag(getClassName(),
                 AdsManager.LOG_BANNER,
-                "Banner ad created from layout. Ad unit is [%s].",
-                isTestAdUnitID(activity) ? "TEST | ".concat(getAdUnitId()):getAdUnitId());
+                "Banner ad created from layout. Ad unit is [%s].", getAdUnitId());
     }
 
     @Override
-    public void load(AdLoadingEvents adLoadingEvents) {
-        Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner does not have a listener yet. Assigning one");
-        mBanner.setAdListener(getBannerAdListener(adLoadingEvents));
-        mBanner.loadAd(getBannerAdRequest());
+    public void load(IAdLoadingEvents adLoadingEvents) {
+        if(Validator.isValidString(getAdUnitId())) {
+            Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner does not have a listener yet. Assigning one");
+            mBanner.setAdListener(getBannerAdListener(adLoadingEvents));
+            mBanner.loadAd(getBannerAdRequest());
+        } else {
+            Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Called to load banner but ad unit id is null");
+        }
     }
 
     @Override
-    public void show(Activity activity, AdDisplayingEvent adDisplayingEvent) {
-
+    public void show(Activity activity, IAdDisplayingEvent adDisplayingEvent) {
+        //TODO implement showinf banner not from pre defined layout;
     }
 
     @Override
@@ -67,76 +79,119 @@ public class AdMobBanner extends BannerAd implements BannerAdActions {
 
     @Override
     public boolean hasAd() {
-        return null != mBanner;
+        return null != mBanner && isLoaded();
     }
 
-    private boolean createAdUnitIdIfIsValidResourceId(final Activity activity, final int resourceId){
-        if (Validator.isValidAndroidResourceId(resourceId)){
-            final String adUnitId = activity.getString(resourceId);
-            if (adUnitId.startsWith("ca-app-pub-")){
-                setAdUnitId(adUnitId);
-                return true;
-            }
+    @Override
+    public boolean isLoaded() {
+        return mIsLoaded;
+    }
+
+    @Override
+    public void setIsLoaded(final boolean isLoaded) {
+        mIsLoaded = isLoaded;
+    }
+
+    @Override
+    public boolean isShowing() {
+        //TODO not rigth
+        return mIsShowing;
+    }
+
+    @Override
+    public void setIsShowing(boolean isShowing) {
+        mIsShowing = isShowing;
+    }
+
+    @Override
+    public String getAdUnitId() {
+        return mAdUnit;
+    }
+
+    @Override
+    public void setAdUnitId(final String adUnitId) {
+        if (Validator.Ads.isValidAdMobAdUnitId(adUnitId)) {
+            mAdUnit = adUnitId;
         }
-        return false;
+    }
+
+    @Override
+    public void callOnResume(Activity activity) {
+        if (Validator.isValidObject(mBanner)) {
+            mBanner.resume();
+        }
+    }
+
+    @Override
+    public void callOnPause(Activity activity) {
+        if (Validator.isValidObject(mBanner)) {
+            mBanner.pause();
+        }
+    }
+
+    @Override
+    public void callOnDestroy(Activity activity) {
+        if (Validator.isValidObject(mBanner)) {
+            mBanner.destroy();
+        }
+    }
+
+    @Override
+    public void callOnCreate(Activity activity) {
+
     }
 
     private AdRequest getBannerAdRequest() {
         return new AdRequest.Builder().build();
     }
 
-    private AdListener getBannerAdListener(AdLoadingEvents adLoadingEvents) {
+    private AdListener getBannerAdListener(IAdLoadingEvents adLoadingEvents) {
         return new AdListener() {
             @Override
             public void onAdClosed() {
+                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad closed");
                 super.onAdClosed();
-                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad closed");
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
                 setIsLoaded(false);
-                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad failed to load. Reason is [%s]", loadAdError.getMessage());
+                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad failed to load. Reason is [%s]", loadAdError.getMessage());
                 if (Validator.isValidObject(adLoadingEvents)) {
                     adLoadingEvents.onAdFailedToLoad(loadAdError.getMessage());
                 }
+                super.onAdFailedToLoad(loadAdError);
             }
 
             @Override
             public void onAdOpened() {
+                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad opened");
                 super.onAdOpened();
-                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad opened");
-
             }
 
             @Override
             public void onAdLoaded() {
-                super.onAdLoaded();
                 setIsLoaded(true);
-                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad loaded");
+                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad loaded");
                 if (Validator.isValidObject(adLoadingEvents)) {
                     adLoadingEvents.onAdLoaded();
                 }
+                super.onAdLoaded();
             }
 
             @Override
             public void onAdClicked() {
+                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad clicked");
                 super.onAdClicked();
-                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad clicked");
             }
 
             @Override
             public void onAdImpression() {
+                setIsShowing(true);
+                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad logged impression");
                 super.onAdImpression();
-                Logger.logSingleTag(getClassName(),AdsManager.LOG_BANNER, "Banner ad logged impression");
             }
         };
-    }
-
-    @Override
-    public boolean isTestAdUnitID(final Context context) {
-        return (getAdUnitId().contentEquals(context.getString(R.string.admob_banner_id_test)));
     }
 
     @Override

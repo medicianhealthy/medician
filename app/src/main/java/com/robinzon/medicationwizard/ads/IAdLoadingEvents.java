@@ -1,6 +1,6 @@
 package com.robinzon.medicationwizard.ads;
 
-public interface AdLoadingEvents {
+public interface IAdLoadingEvents {
 
     public void onAdLoaded();
     public void onAdFailedToLoad(final String reason);
