@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements ISuper {
             @Override
             public void onClick(View v) {
                 if(mAdsManager.isRvLoaded()){
-                    mAdsManager.showRv(MainActivity.this);
+                    mAdsManager.showInterstitial(MainActivity.this);
                 }
             }
         });
