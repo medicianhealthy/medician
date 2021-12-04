@@ -13,4 +13,5 @@ public interface IAdsProvider {
     IInterstitialAd getInterstitial();
     boolean hasRv();
     IRewardedVideo getRewardedVideo();
+    void initialize(final Activity activity , final IAdsInitializeCallBack adsInitializeCallBack);
 }

@@ -2,8 +2,6 @@ package com.robinzon.medicationwizard.remoteconfig;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
@@ -28,7 +26,7 @@ public class RemoteConfigManager implements ISuper {
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         final FirebaseRemoteConfigSettings firebaseRemoteConfigSettings = new FirebaseRemoteConfigSettings.
                 Builder().
-                setFetchTimeoutInSeconds((long)FETCH_TIMEOUT_SECONDS).
+                setFetchTimeoutInSeconds(FETCH_TIMEOUT_SECONDS).
                 setMinimumFetchIntervalInSeconds(TimeInterval.Seconds.getFromHors(FETCH_INTERVAL_HOURS)).
                 build();
         mFirebaseRemoteConfig.setConfigSettingsAsync(firebaseRemoteConfigSettings);
@@ -42,25 +40,21 @@ public class RemoteConfigManager implements ISuper {
     }
 
     public void fetchConfiguration(final FireBaseFetchCallBack fireBaseFetchCallBack) {
-        mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(new OnCompleteListener<Boolean>() {
-            @Override
-            public void onComplete(@NonNull Task<Boolean> task) {
-                if (task.isSuccessful()) {
-                    if (Validator.isValidMap(mFirebaseRemoteConfig.getAll())) {
-                        mFirebaseValues = mFirebaseRemoteConfig.getAll();
-                        if (Logger.isLoggingEnabled()){
-                            logRemoteConfigValues();
-                        }
-                        if (null != fireBaseFetchCallBack) {
-                            fireBaseFetchCallBack.onFetchCompleted(true);
-                        }
+        mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (Validator.isValidMap(mFirebaseRemoteConfig.getAll())) {
+                    mFirebaseValues = mFirebaseRemoteConfig.getAll();
+                    if (Logger.getInstance().isLoggingEnabled()){
+                        logRemoteConfigValues();
                     }
-                } else {
                     if (null != fireBaseFetchCallBack) {
-                        fireBaseFetchCallBack.onFetchCompleted(false);
+                        fireBaseFetchCallBack.onFetchCompleted(true);
                     }
                 }
-
+            } else {
+                if (null != fireBaseFetchCallBack) {
+                    fireBaseFetchCallBack.onFetchCompleted(false);
+                }
             }
         });
     }
@@ -68,33 +62,38 @@ public class RemoteConfigManager implements ISuper {
     private void logRemoteConfigValues() {
         if (Validator.isValidMap(mFirebaseValues)){
             for (Map.Entry<String, FirebaseRemoteConfigValue> entry : mFirebaseValues.entrySet()) {
-                Logger.logSingleTag(getClassName(),
+                Logger.getInstance().logSingleTag(getClassName(),
                         LOG_REMOTE_CONFIG_VALUES,
                         "[%s, %s]",
                         entry.getKey(),
                         entry.getValue().asString());
             }
         } else {
-            Logger.logSingleTag(getClassName(),
+            Logger.getInstance().logSingleTag(getClassName(),
                     LOG_REMOTE_CONFIG_VALUES ,
                     "Remote config values are empty");
         }
     }
 
     public int getIntValue(final @NonNull String key) {
+
         if (Validator.isValidMap(mFirebaseValues)) {
             final FirebaseRemoteConfigValue remoteConfigValue = mFirebaseValues.get(key);
             if (Validator.isValidObject(remoteConfigValue)) {
                 try {
                     return (int) remoteConfigValue.asLong();
                 } catch (IllegalArgumentException e) {
-                    return (int) RemoteConfigKeysAndDefaults.VALUES.get(key);
+                    return getDefaultIntValue(key);
                 }
             }
         }
-        return (int) RemoteConfigKeysAndDefaults.VALUES.get(key);
+        return getDefaultIntValue(key);
     }
 
+    private int getDefaultIntValue(@NonNull String key) {
+        final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(key);
+        return null != defaultValueFromMap ? (int) defaultValueFromMap : Integer.MAX_VALUE;
+    }
 
 
     public boolean getBooleanValue(final String key) {
@@ -104,11 +103,16 @@ public class RemoteConfigManager implements ISuper {
                 try {
                     return remoteConfigValue.asBoolean();
                 } catch (IllegalArgumentException e) {
-                    return (boolean) RemoteConfigKeysAndDefaults.VALUES.get(key);
+                    return getDefaultBooleanValue(key);
                 }
             }
         }
-        return (boolean) RemoteConfigKeysAndDefaults.VALUES.get(key);
+        return getDefaultBooleanValue(key);
+    }
+
+    private boolean getDefaultBooleanValue(String key) {
+        final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(key);
+        return null != defaultValueFromMap && (boolean) defaultValueFromMap;
     }
 
 

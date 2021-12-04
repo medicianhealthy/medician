@@ -43,7 +43,7 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
     public void load(Activity activity, IAdLoadingEvents adLoadingEvents) {
         if (!isLoaded()) {
             if (Validator.isValidString(getAdUnitId())) {
-                Logger.logSingleTag(getClassName(),
+                Logger.getInstance().logSingleTag(getClassName(),
                         AdsManager.LOG_REWARDED_VIDEO,
                         "AdMob Calling to load rv. Ad unit is [%s]", getAdUnitId());
                 RewardedAd.load(activity, getAdUnitId(),
@@ -51,10 +51,10 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
                         getRewardedAdLoadCallback(adLoadingEvents)
                         );
             } else {
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Called to load rv but ad unit is null");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Called to load rv but ad unit is null");
             }
         } else {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Called to load rv but it is already loaded");
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Called to load rv but it is already loaded");
         }
     }
 
@@ -63,7 +63,7 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
             @Override
             public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                 setIsLoaded(true);
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,"Rv ad loaded");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,"Rv ad loaded");
                 mRewardedAd = rewardedAd;
                 if(null != adLoadingEvents){
                     adLoadingEvents.onAdLoaded();
@@ -75,7 +75,7 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 setIsLoaded(false);
                 mRewardedAd = null;
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv Failed to load");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv Failed to load");
                 if(null != adLoadingEvents){
                     adLoadingEvents.onAdFailedToLoad(loadAdError.getMessage());
                 }
@@ -93,14 +93,14 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
                     @Override
                     public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                         setRewardAmount(rewardItem.getAmount());
-                        Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "User rewarded with [%d]",rewardItem.getAmount());
+                        Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "User rewarded with [%d]",rewardItem.getAmount());
                     }
                 });
             } else {
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO , "Called to show rv but there is no ad");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO , "Called to show rv but there is no ad");
             }
         } else {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO , "Called to show rv but already showing");
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO , "Called to show rv but already showing");
         }
     }
 
@@ -109,7 +109,7 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
             @Override
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                 setIsShowing(false);
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv failed to show. Reason is [%s]",adError.getMessage());
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv failed to show. Reason is [%s]",adError.getMessage());
                 if(null != adDisplayingEvent){
                     adDisplayingEvent.onAdFailedToShow();
                 }
@@ -120,7 +120,7 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
             @Override
             public void onAdShowedFullScreenContent() {
                 setIsShowing(true);
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv show");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv show");
                 if(null != adDisplayingEvent){
                     adDisplayingEvent.onAdShown();
                 }
@@ -130,7 +130,7 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
             @Override
             public void onAdDismissedFullScreenContent() {
                 setIsShowing(true);
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv Dismissed");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv Dismissed");
                 if(null != adDisplayingEvent){
                     adDisplayingEvent.onAdDismissed();
                 }
@@ -139,13 +139,13 @@ public class AdMobRewardedVideo implements IRewardedVideo, IAd, ISuper {
 
             @Override
             public void onAdImpression() {
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv Impression");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv Impression");
                 super.onAdImpression();
             }
 
             @Override
             public void onAdClicked() {
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv clicked");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Rv clicked");
                 super.onAdClicked();
             }
         };

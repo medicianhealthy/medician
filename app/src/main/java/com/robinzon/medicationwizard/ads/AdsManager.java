@@ -58,51 +58,19 @@ public class AdsManager implements ISuper {
         return mAdsProviders;
     }
 
-    public void initializeAdMobAds(final Activity activity, IAdsInitializeCallBack adsInitializeCallBack) {
-        if (!Validator.isValidObject(activity)) {
-            return;
-        }
-        MobileAds.initialize(activity, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-                Logger.logMultipleTags(getClassName(), LOGS_ADS, "Initialization of AdMob ads completed.");
-                final Map<String, AdapterStatus> statusMap = initializationStatus.getAdapterStatusMap();
-                byte networksReadyCounter = 0;
-                for (String key : statusMap.keySet()) {
-                    final AdapterStatus adapterStatus = statusMap.get(key);
-                    if (Validator.isValidObject(adapterStatus)) {
-                        if (AdapterStatus.State.READY == adapterStatus.getInitializationState()) {
-                            networksReadyCounter++;
-                        }
-                        Logger.logMultipleTags(getClassName(), LOGS_ADS,
-                                "Initialization of [%s,%s] status is [%s]",
-                                key,
-                                adapterStatus.getDescription(),
-                                adapterStatus.getInitializationState() == AdapterStatus.State.READY ? "ready" : "not ready");
-                    }
-                }
-                if (null != adsInitializeCallBack) {
-                    if (networksReadyCounter == statusMap.size()) {
-                        adsInitializeCallBack.onAdsInitialized(EAdsInitializeState.ALL_NETWORKS_READY);
-                    } else if (0 == networksReadyCounter) {
-                        adsInitializeCallBack.onAdsInitialized(EAdsInitializeState.NO_NETWORKS_ARE_READY);
-                    } else {
-                        adsInitializeCallBack.onAdsInitialized(EAdsInitializeState.SOME_NETWORKS_READY);
-                    }
-                }
-            }
-        });
+    public void initializeAds(final Activity activity, IAdsInitializeCallBack adsInitializeCallBack) {
+        getAdProvider().initialize(activity, adsInitializeCallBack);
     }
 
 
     public void showBanner(final Activity mainActivity) {
-        Logger.logSingleTag(getClassName(), LOG_BANNER, "AdsManger calling to show banner");
+        Logger.getInstance().logSingleTag(getClassName(), LOG_BANNER, "AdsManger calling to show banner");
         if (getAdProvider().hasBanner()) {
             if (getAdProvider().getBanner().isLoaded()) {
-                Logger.logSingleTag(getClassName(), LOG_BANNER, "No need to load. showing banner");
+                Logger.getInstance().logSingleTag(getClassName(), LOG_BANNER, "No need to load. showing banner");
                 getAdProvider().getBanner().show(mainActivity, null);
             } else {
-                Logger.logSingleTag(getClassName(), LOG_BANNER, "Banner is " +
+                Logger.getInstance().logSingleTag(getClassName(), LOG_BANNER, "Banner is " +
                         "not loaded. Calling to load it");
                 getAdProvider().getBanner().load(getBannerAdLoadingEvents(mainActivity));
             }
@@ -117,7 +85,7 @@ public class AdsManager implements ISuper {
         return new IAdLoadingEvents() {
             @Override
             public void onAdLoaded() {
-                Logger.logSingleTag(getClassName(), LOG_BANNER, "Banner ad loaded. showing banner");
+                Logger.getInstance().logSingleTag(getClassName(), LOG_BANNER, "Banner ad loaded. showing banner");
                 if (!getAdProvider().getBanner().isShowing()) {
                     getAdProvider().getBanner().show(mainActivity, null);
                 }
@@ -125,31 +93,31 @@ public class AdsManager implements ISuper {
 
             @Override
             public void onAdFailedToLoad(String reason) {
-                Logger.logSingleTag(getClassName(), LOG_BANNER, "Banner ad failed to load. Reason is [%s]", reason);
+                Logger.getInstance().logSingleTag(getClassName(), LOG_BANNER, "Banner ad failed to load. Reason is [%s]", reason);
 
             }
         };
     }
 
     public void loadInterstitial(final Activity mainActivity) {
-        Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Ads Manger calling to load interstitial");
+        Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Ads Manger calling to load interstitial");
         if (!getAdProvider().hasInterstitial()) {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "There is no interstitial. Creating one");
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "There is no interstitial. Creating one");
             getAdProvider().getInterstitial().create(mainActivity, R.string.admob_interstitial_id_test);
         }
         if (!getAdProvider().getInterstitial().isLoaded()) {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial is not loaded. Loading one");
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial is not loaded. Loading one");
             getAdProvider().getInterstitial().load(mainActivity, new IAdLoadingEvents() {
                 @Override
                 public void onAdLoaded() {
                     getAdProvider().getInterstitial().setIsLoaded(true);
-                    Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial ad loaded");
+                    Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial ad loaded");
                 }
 
                 @Override
                 public void onAdFailedToLoad(String reason) {
                     getAdProvider().getInterstitial().setIsLoaded(false);
-                    Logger.logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial ad failed to load");
+                    Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial ad failed to load");
                 }
             });
         }
@@ -165,30 +133,30 @@ public class AdsManager implements ISuper {
     }
 
     public void loadRV(Activity mainActivity) {
-        Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
+        Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
                 "Ads Manger calling to load rv");
         if (!getAdProvider().hasRv()) {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
                     "Don't have an rv. Creating one");
             getAdProvider().getRewardedVideo().create(mainActivity,
                     R.string.admob_rv_id_test);
         }
         if (!getAdProvider().getRewardedVideo().isLoaded()) {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
                     "Rv is not loaded. Loading one");
             getAdProvider().getRewardedVideo().load(mainActivity,
                     new IAdLoadingEvents() {
                         @Override
                         public void onAdLoaded() {
                             getAdProvider().getRewardedVideo().setIsLoaded(true);
-                            Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
+                            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
                                     "Rv ad loaded");
                         }
 
                         @Override
                         public void onAdFailedToLoad(String reason) {
                             getAdProvider().getRewardedVideo().setIsLoaded(false);
-                            Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
+                            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO,
                                     "Rv ad failed to load. Reason is[%s]",
                                     reason);
                         }

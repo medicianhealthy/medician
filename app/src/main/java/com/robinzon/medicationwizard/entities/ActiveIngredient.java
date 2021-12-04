@@ -16,9 +16,9 @@ public class ActiveIngredient implements ISuper {
         public static final String JSON_MEASUREMENT_UNIT = "mMeasurementUnit";
     }
     public final String mName;
-    public final MeasurementUnit mMeasurementUnit;
+    public final EMeasurementUnit mMeasurementUnit;
 
-    public ActiveIngredient(String name, MeasurementUnit measurementUnit) {
+    public ActiveIngredient(String name, EMeasurementUnit measurementUnit) {
         this.mName = name;
         this.mMeasurementUnit = measurementUnit;
     }

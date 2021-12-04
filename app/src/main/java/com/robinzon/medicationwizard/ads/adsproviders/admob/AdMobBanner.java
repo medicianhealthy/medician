@@ -32,16 +32,16 @@ public class AdMobBanner implements ISuper, IBannerAd, IAd {
                 mBanner = new AdView(activity);
                 mBanner.setAdSize(AdSize.BANNER);
                 mBanner.setAdUnitId(getAdUnitId());
-                Logger.logSingleTag(getClassName(),
+                Logger.getInstance().logSingleTag(getClassName(),
                         AdsManager.LOG_BANNER,
                         "Banner ad created. Ad unit is [%s].", getAdUnitId());
             } else {
-                Logger.logSingleTag(getClassName(),
+                Logger.getInstance().logSingleTag(getClassName(),
                         AdsManager.LOG_BANNER,
                         "Tried to create banner but ad unit id null");
             }
         } else {
-            Logger.logSingleTag(getClassName(),
+            Logger.getInstance().logSingleTag(getClassName(),
                     AdsManager.LOG_BANNER,
                     "Tried to create banner but resource id for ad unit is null");
         }
@@ -51,7 +51,7 @@ public class AdMobBanner implements ISuper, IBannerAd, IAd {
     public void createBannerAdFromLayout(Activity activity, final int viewId) {
         mBanner = activity.findViewById(viewId);
         setAdUnitId(mBanner.getAdUnitId());
-        Logger.logSingleTag(getClassName(),
+        Logger.getInstance().logSingleTag(getClassName(),
                 AdsManager.LOG_BANNER,
                 "Banner ad created from layout. Ad unit is [%s].", getAdUnitId());
     }
@@ -59,11 +59,11 @@ public class AdMobBanner implements ISuper, IBannerAd, IAd {
     @Override
     public void load(IAdLoadingEvents adLoadingEvents) {
         if(Validator.isValidString(getAdUnitId())) {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner does not have a listener yet. Assigning one");
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner does not have a listener yet. Assigning one");
             mBanner.setAdListener(getBannerAdListener(adLoadingEvents));
             mBanner.loadAd(getBannerAdRequest());
         } else {
-            Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Called to load banner but ad unit id is null");
+            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Called to load banner but ad unit id is null");
         }
     }
 
@@ -149,14 +149,14 @@ public class AdMobBanner implements ISuper, IBannerAd, IAd {
         return new AdListener() {
             @Override
             public void onAdClosed() {
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad closed");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad closed");
                 super.onAdClosed();
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 setIsLoaded(false);
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad failed to load. Reason is [%s]", loadAdError.getMessage());
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad failed to load. Reason is [%s]", loadAdError.getMessage());
                 if (Validator.isValidObject(adLoadingEvents)) {
                     adLoadingEvents.onAdFailedToLoad(loadAdError.getMessage());
                 }
@@ -165,14 +165,14 @@ public class AdMobBanner implements ISuper, IBannerAd, IAd {
 
             @Override
             public void onAdOpened() {
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad opened");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad opened");
                 super.onAdOpened();
             }
 
             @Override
             public void onAdLoaded() {
                 setIsLoaded(true);
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad loaded");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad loaded");
                 if (Validator.isValidObject(adLoadingEvents)) {
                     adLoadingEvents.onAdLoaded();
                 }
@@ -181,14 +181,14 @@ public class AdMobBanner implements ISuper, IBannerAd, IAd {
 
             @Override
             public void onAdClicked() {
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad clicked");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad clicked");
                 super.onAdClicked();
             }
 
             @Override
             public void onAdImpression() {
                 setIsShowing(true);
-                Logger.logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad logged impression");
+                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_BANNER, "Banner ad logged impression");
                 super.onAdImpression();
             }
         };

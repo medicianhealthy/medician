@@ -31,7 +31,7 @@ public class SharedPreferencesManager implements ISuper {
         if (!TextUtils.isEmpty(fileName)) {
             sAndroidSharedPreferencesInstance = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         } else {
-            Logger.logSingleTag(getClassName(), SHARED_PREFERENCES,
+            Logger.getInstance().logSingleTag(getClassName(), SHARED_PREFERENCES,
                     "File name of shared preferences is invalid. Could not create instance");
         }
     }
@@ -79,13 +79,13 @@ public class SharedPreferencesManager implements ISuper {
         if(TextUtils.isEmpty(key) ||
                 null == value ||
                 (value instanceof String && TextUtils.isEmpty((String)value))){
-            Logger.logSingleTag(getClassName(),SHARED_PREFERENCES,
+            Logger.getInstance().logSingleTag(getClassName(),SHARED_PREFERENCES,
                     "Trying to set value but key or value is invalid");
             return;
         }
         final SharedPreferences.Editor editor = getEditor();
         if(null == editor){
-            Logger.logSingleTag(getClassName(), SHARED_PREFERENCES,
+            Logger.getInstance().logSingleTag(getClassName(), SHARED_PREFERENCES,
                     "Trying to set value but editor object is null");
             return;
         }

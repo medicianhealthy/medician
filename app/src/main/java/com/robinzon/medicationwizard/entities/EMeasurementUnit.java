@@ -1,6 +1,6 @@
 package com.robinzon.medicationwizard.entities;
 
-public enum MeasurementUnit {
+public enum EMeasurementUnit {
     GRAMS ("g"),
     MILLIGRAM ("mg"),
     INTERNATIONAL_UNITS ("IU"),
@@ -12,7 +12,7 @@ public enum MeasurementUnit {
 
     private final String mName;
 
-    MeasurementUnit(final String name) {
+    EMeasurementUnit(final String name) {
         mName = name;
     }
 

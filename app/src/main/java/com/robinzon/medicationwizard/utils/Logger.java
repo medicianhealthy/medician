@@ -4,14 +4,22 @@ import android.util.Log;
 
 import com.robinzon.medicationwizard.BuildConfig;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
 public class Logger {
 
-    private static boolean sIsLoggingEnabled;
+    private boolean sIsLoggingEnabled;
+    private static WeakReference<Logger> sInstance;
 
-    public static void logSingleTag(final String className,
+    public static Logger getInstance(){
+        if(null == sInstance || null == sInstance.get()){
+            sInstance = new WeakReference<>(new Logger());
+        }
+        return sInstance.get();
+    }
+    public void logSingleTag(final String className,
                            final String tag,
                            final String message,
                            Object...params){
@@ -23,7 +31,7 @@ public class Logger {
         log(className , tag , message, params);
     }
 
-    public static void logMultipleTags(final String className,
+    public void logMultipleTags(final String className,
                            final List<String> tags,
                            final String message,
                            Object...params){
@@ -40,11 +48,11 @@ public class Logger {
         }
     }
 
-    private static void log(final String className, final String tag, final String message, Object...params){
-        Log.i(className.concat("- ").concat(tag), String.format(Locale.getDefault(), message, params));
+    private void log(final String className, final String tag, final String message, Object...params){
+        Log.i(className.concat(" ").concat(tag), String.format(Locale.getDefault(), message, params));
     }
 
-    public static boolean isLoggingEnabled(){
+    public boolean isLoggingEnabled(){
         return BuildConfig.DEBUG || sIsLoggingEnabled;
     }
 

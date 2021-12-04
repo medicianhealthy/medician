@@ -1,6 +1,6 @@
 package com.robinzon.medicationwizard.entities;
 
-public enum Instructions {
+public enum EInstructions {
     BeforeEating ("Before eating"),
     WhileEating ("While eating"),
     AfterEating ("After eating"),
@@ -8,7 +8,7 @@ public enum Instructions {
 
     final String mDescription;
 
-    Instructions(String description) {
+    EInstructions(String description) {
         this.mDescription = description;
     }
 

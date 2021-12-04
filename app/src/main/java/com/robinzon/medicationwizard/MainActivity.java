@@ -2,7 +2,6 @@ package com.robinzon.medicationwizard;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -14,8 +13,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.ads.AdsManager;
-import com.robinzon.medicationwizard.ads.interfaces.IAdsInitializeCallBack;
-import com.robinzon.medicationwizard.ads.interfaces.EAdsInitializeState;
 import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.utils.Logger;
@@ -26,7 +23,7 @@ import com.robinzon.medicationwizard.utils.Validator;
 public class MainActivity extends AppCompatActivity implements ISuper {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityMainBinding binding;
+    private ActivityMainBinding mBinding;
     private AdsManager mAdsManager;
 
     @Override
@@ -36,26 +33,21 @@ public class MainActivity extends AppCompatActivity implements ISuper {
         if(!AdsManager.DISABLE_ADS) {
             initAds();
         }
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        setSupportActionBar(mBinding.appBarMain.toolbar);
+        mBinding.appBarMain.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
+        final DrawerLayout drawer = mBinding.drawerLayout;
+        final NavigationView navigationView = mBinding.navView;
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         SharedPreferencesManager.getInstance(this).getLong("d",0);
@@ -63,34 +55,30 @@ public class MainActivity extends AppCompatActivity implements ISuper {
 
     private void initAds() {
         mAdsManager = new AdsManager();
-        mAdsManager.onCreate(this);
-        Logger.logMultipleTags(getClassName(), AdsManager.LOGS_ADS, "MainActivity calling init ads");
-        mAdsManager.initializeAdMobAds(this, new IAdsInitializeCallBack(){
-            @Override
-            public void onAdsInitialized(EAdsInitializeState adsInitializeState) {
-                Logger.logMultipleTags(getClassName(), AdsManager.LOGS_ADS,
-                        "MainActivity got a message thet ads finished initializing. status is[%s]",
-                        adsInitializeState.name());
-                onAdsFinishedInitializing();
-            }
+        getAdsManager().onCreate(this);
+        Logger.getInstance().logMultipleTags(getClassName(), AdsManager.LOGS_ADS, "MainActivity calling init ads");
+        getAdsManager().initializeAds(this, adsInitializeState -> {
+            Logger.getInstance().logMultipleTags(getClassName(), AdsManager.LOGS_ADS,
+                    "MainActivity got a message that ads finished initializing. status is[%s]",
+                    adsInitializeState.name());
+            onAdsFinishedInitializing();
         });
     }
 
     private void onAdsFinishedInitializing() {
-        Logger.logMultipleTags(getClassName(), AdsManager.LOGS_ADS,
+        Logger.getInstance().logMultipleTags(getClassName(), AdsManager.LOGS_ADS,
                 "MainActivity starting to take action that waited for ads to initialize");
-        mAdsManager.showBanner(this);
-        mAdsManager.loadInterstitial(this);
-        findViewById(R.id.text_home).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mAdsManager.isRvLoaded()){
-                    mAdsManager.showInterstitial(MainActivity.this);
-                }
+        getAdsManager().showBanner(this);
+        getAdsManager().loadInterstitial(this);
+        findViewById(R.id.text_home).setOnClickListener(v -> {
+            if(getAdsManager().isInterstitialLoaded()){
+                getAdsManager().showInterstitial(MainActivity.this);
             }
         });
-        Logger.logSingleTag(getClassName(), AdsManager.LOG_REWARDED_VIDEO, "Main activity calling to load rv");
-        mAdsManager.loadRV(this);
+        Logger.getInstance().logSingleTag(getClassName(),
+                AdsManager.LOG_REWARDED_VIDEO,
+                "Main activity calling to load rv");
+        getAdsManager().loadRV(this);
 
     }
 
@@ -110,24 +98,24 @@ public class MainActivity extends AppCompatActivity implements ISuper {
 
     @Override
     protected void onResume() {
-        if (Validator.isValidObject(mAdsManager)){
-            mAdsManager.onResume(this);
+        if (Validator.isValidObject(getAdsManager())){
+            getAdsManager().onResume(this);
         }
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
-        if (Validator.isValidObject(mAdsManager)){
-            mAdsManager.onDestroy(this);
+        if (Validator.isValidObject(getAdsManager())){
+            getAdsManager().onDestroy(this);
         }
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        if (Validator.isValidObject(mAdsManager)){
-            mAdsManager.onPause(this);
+        if (Validator.isValidObject(getAdsManager())){
+            getAdsManager().onPause(this);
         }
         super.onPause();
     }
@@ -135,5 +123,9 @@ public class MainActivity extends AppCompatActivity implements ISuper {
     @Override
     public String getClassName(){
         return "{MainActivity}";
+    }
+
+    public AdsManager getAdsManager() {
+        return mAdsManager;
     }
 }

@@ -1,6 +1,6 @@
 package com.robinzon.medicationwizard.entities;
 
-public enum Form {
+public enum EForm {
     Pill,
     Solution,
     Injection,

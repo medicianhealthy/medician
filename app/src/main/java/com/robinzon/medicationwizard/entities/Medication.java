@@ -28,13 +28,13 @@ public class Medication implements ISuper {
     }
     private final String mCommercialName;
     private final List<ActiveIngredient> mActiveIngredients;
-    private Form mForm;
+    private EForm mForm;
     private float mStrength;
     private String mMedicalCondition;
     private List<Long> mDailySchedule;
     private int mDaysCycle;
     private int mAmountLeft;
-    private Instructions mInstruction;
+    private EInstructions mInstruction;
 
     public Medication(String commercialName, List<ActiveIngredient> activeIngredients) {
         if(Validator.isValidString(commercialName) && Validator.isValidCollection(activeIngredients)) {
@@ -56,11 +56,11 @@ public class Medication implements ISuper {
         return mActiveIngredients;
     }
 
-    public Form getForm() {
+    public EForm getForm() {
         return mForm;
     }
 
-    public void setForm(Form mForm) {
+    public void setForm(EForm mForm) {
         this.mForm = mForm;
     }
 
@@ -104,11 +104,11 @@ public class Medication implements ISuper {
         this.mAmountLeft = mAmountLeft;
     }
 
-    public Instructions getInstruction() {
+    public EInstructions getInstruction() {
         return mInstruction;
     }
 
-    public void setInstruction(Instructions mInstruction) {
+    public void setInstruction(EInstructions mInstruction) {
         this.mInstruction = mInstruction;
     }
 
