@@ -5,15 +5,17 @@ import androidx.annotation.NonNull;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
-import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
+import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.TimeInterval;
 import com.robinzon.medicationwizard.utils.Validator;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class RemoteConfigManager implements ISuper {
+public class RemoteConfigManager extends MedicationWizardSuper {
 
     private static final String LOG_REMOTE_CONFIG_VALUES = "remote_config";
     public static WeakReference<RemoteConfigManager> sInstance;
@@ -44,7 +46,7 @@ public class RemoteConfigManager implements ISuper {
             if (task.isSuccessful()) {
                 if (Validator.isValidMap(mFirebaseRemoteConfig.getAll())) {
                     mFirebaseValues = mFirebaseRemoteConfig.getAll();
-                    if (Logger.getInstance().isLoggingEnabled()){
+                    if (Logger.getInstance().isLoggingEnabled()) {
                         logRemoteConfigValues();
                     }
                     if (null != fireBaseFetchCallBack) {
@@ -60,19 +62,25 @@ public class RemoteConfigManager implements ISuper {
     }
 
     private void logRemoteConfigValues() {
-        if (Validator.isValidMap(mFirebaseValues)){
+        if (Validator.isValidMap(mFirebaseValues)) {
             for (Map.Entry<String, FirebaseRemoteConfigValue> entry : mFirebaseValues.entrySet()) {
-                Logger.getInstance().logSingleTag(getClassName(),
-                        LOG_REMOTE_CONFIG_VALUES,
+                Logger.getInstance().log(getClassName(),
+                        getRemoteConfigLogs(),
                         "[%s, %s]",
                         entry.getKey(),
                         entry.getValue().asString());
             }
         } else {
-            Logger.getInstance().logSingleTag(getClassName(),
-                    LOG_REMOTE_CONFIG_VALUES ,
+            Logger.getInstance().log(getClassName(),
+                    getRemoteConfigLogs(),
                     "Remote config values are empty");
         }
+    }
+
+    private List<String> getRemoteConfigLogs() {
+        return new ArrayList<String>() {{
+            add(LOG_REMOTE_CONFIG_VALUES);
+        }};
     }
 
     public int getIntValue(final @NonNull String key) {
@@ -129,7 +137,6 @@ public class RemoteConfigManager implements ISuper {
         }
         return (String) RemoteConfigKeysAndDefaults.VALUES.get(key);
     }
-
 
 
     @Override

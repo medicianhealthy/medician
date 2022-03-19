@@ -10,53 +10,41 @@ import java.util.Locale;
 
 public class Logger {
 
-    private boolean sIsLoggingEnabled;
+    private static boolean mIsLoggingEnabled;
     private static WeakReference<Logger> sInstance;
 
-    public static Logger getInstance(){
-        if(null == sInstance || null == sInstance.get()){
+    public static Logger getInstance() {
+        if (null == sInstance || null == sInstance.get()) {
             sInstance = new WeakReference<>(new Logger());
         }
         return sInstance.get();
     }
-    public void logSingleTag(final String className,
-                           final String tag,
-                           final String message,
-                           Object...params){
-        if (isLoggingEnabled() &&
-                Validator.isValidString(className) &&
-                Validator.isValidString(tag) &&
-                Validator.isValidString(message) &&
-                Validator.isValidObject(params))
-        log(className , tag , message, params);
-    }
 
-    public void logMultipleTags(final String className,
-                           final List<String> tags,
-                           final String message,
-                           Object...params){
-        if (isLoggingEnabled() &&
-                Validator.isValidString(className) &&
+    public void log(final String className,
+                    final List<String> tags,
+                    final String message,
+                    Object... params) {
+        if (Validator.isValidString(className) &&
                 Validator.isValidString(message) &&
                 Validator.isValidCollection(tags) &&
-                Validator.isValidObject(params)){
+                Validator.isValidObject(params)) {
             for (String tag : tags) {
-                if(Validator.isValidString(tag)) {
+                if (Validator.isValidString(tag)) {
                     log(className, tag, message, params);
                 }
             }
         }
     }
 
-    private void log(final String className, final String tag, final String message, Object...params){
+    private void log(final String className, final String tag, final String message, Object... params) {
         Log.i(className.concat(" ").concat(tag), String.format(Locale.getDefault(), message, params));
     }
 
-    public boolean isLoggingEnabled(){
-        return BuildConfig.DEBUG || sIsLoggingEnabled;
+    public static boolean isLoggingEnabled() {
+        return BuildConfig.DEBUG || mIsLoggingEnabled;
     }
 
-    public void setLoggingEnabled(final boolean isEnabled){
-        sIsLoggingEnabled = isEnabled;
+    public void setLoggingEnabled(final boolean isEnabled) {
+        mIsLoggingEnabled = isEnabled;
     }
 }

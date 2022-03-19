@@ -4,7 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Build;
 
-import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobAdProvider;
+import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMob;
 
 import org.json.JSONArray;
 
@@ -46,7 +46,7 @@ public class Validator {
 
     public static class Ads{
         public static boolean isValidAdMobAdUnitId(final String adMobAdUnitId){
-            return Validator.isValidString(adMobAdUnitId) && adMobAdUnitId.startsWith(AdMobAdProvider.AD_INIT_PREFIX);
+            return Validator.isValidString(adMobAdUnitId) && adMobAdUnitId.startsWith(AdMob.AD_INIT_PREFIX);
         }
     }
 }

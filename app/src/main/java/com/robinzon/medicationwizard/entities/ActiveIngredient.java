@@ -1,11 +1,11 @@
 package com.robinzon.medicationwizard.entities;
 
-import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
+import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ActiveIngredient implements ISuper {
+public class ActiveIngredient extends MedicationWizardSuper {
     @Override
     public String getClassName() {
         return "{ActiveIngredient}";

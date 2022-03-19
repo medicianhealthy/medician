@@ -13,14 +13,14 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.ads.AdsManager;
-import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
+import com.robinzon.medicationwizard.ads.interfaces.EAdsInitializeState;
+import com.robinzon.medicationwizard.ads.interfaces.IAdsInitializeCallBack;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
-import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.Validator;
 
 
-public class MainActivity extends AppCompatActivity implements ISuper {
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding mBinding;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements ISuper {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!AdsManager.DISABLE_ADS) {
+        if (!AdsManager.DISABLE_ADS) {
             initAds();
         }
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -50,36 +50,30 @@ public class MainActivity extends AppCompatActivity implements ISuper {
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        SharedPreferencesManager.getInstance(this).getLong("d",0);
+        SharedPreferencesManager.getInstance(this).getLong("d", 0);
     }
 
     private void initAds() {
         mAdsManager = new AdsManager();
         getAdsManager().onCreate(this);
-        Logger.getInstance().logMultipleTags(getClassName(), AdsManager.LOGS_ADS, "MainActivity calling init ads");
-        getAdsManager().initializeAds(this, adsInitializeState -> {
-            Logger.getInstance().logMultipleTags(getClassName(), AdsManager.LOGS_ADS,
-                    "MainActivity got a message that ads finished initializing. status is[%s]",
-                    adsInitializeState.name());
-            onAdsFinishedInitializing();
+        getAdsManager().initializeAds(this, new IAdsInitializeCallBack() {
+            @Override
+            public void onAdsInitialized(EAdsInitializeState adsInitializeState) {
+                onAdsFinishedInitializing();
+            }
         });
+
     }
 
     private void onAdsFinishedInitializing() {
-        Logger.getInstance().logMultipleTags(getClassName(), AdsManager.LOGS_ADS,
-                "MainActivity starting to take action that waited for ads to initialize");
-        getAdsManager().showBanner(this);
+        getAdsManager().loadBanner(this);
         getAdsManager().loadInterstitial(this);
         findViewById(R.id.text_home).setOnClickListener(v -> {
-            if(getAdsManager().isInterstitialLoaded()){
-                getAdsManager().showInterstitial(MainActivity.this);
+            if (getAdsManager().hasRvToShow()) {
+                getAdsManager().showRv(MainActivity.this);
             }
         });
-        Logger.getInstance().logSingleTag(getClassName(),
-                AdsManager.LOG_REWARDED_VIDEO,
-                "Main activity calling to load rv");
         getAdsManager().loadRV(this);
-
     }
 
     @Override
@@ -98,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements ISuper {
 
     @Override
     protected void onResume() {
-        if (Validator.isValidObject(getAdsManager())){
+        if (Validator.isValidObject(getAdsManager())) {
             getAdsManager().onResume(this);
         }
         super.onResume();
@@ -106,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements ISuper {
 
     @Override
     protected void onDestroy() {
-        if (Validator.isValidObject(getAdsManager())){
+        if (Validator.isValidObject(getAdsManager())) {
             getAdsManager().onDestroy(this);
         }
         super.onDestroy();
@@ -114,14 +108,13 @@ public class MainActivity extends AppCompatActivity implements ISuper {
 
     @Override
     protected void onPause() {
-        if (Validator.isValidObject(getAdsManager())){
+        if (Validator.isValidObject(getAdsManager())) {
             getAdsManager().onPause(this);
         }
         super.onPause();
     }
 
-    @Override
-    public String getClassName(){
+    public String getClassName() {
         return "{MainActivity}";
     }
 

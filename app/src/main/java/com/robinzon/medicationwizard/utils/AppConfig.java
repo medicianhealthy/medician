@@ -1,13 +1,13 @@
 package com.robinzon.medicationwizard.utils;
 
-import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
+import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 
-public class AppConfig implements ISuper {
+public class AppConfig extends MedicationWizardSuper {
 
 
 
     @Override
     public String getClassName() {
-        return "{AppConfig}";
+        return AppConfig.class.getSimpleName();
     }
 }

@@ -7,11 +7,16 @@ public interface IAdsProvider {
     void onPause(final Activity activity);
     void onDestroy(final Activity activity);
     void onCreate(final Activity activity);
-    boolean hasBanner();
     IBannerAd getBanner();
-    boolean hasInterstitial();
     IInterstitialAd getInterstitial();
-    boolean hasRv();
     IRewardedVideo getRewardedVideo();
-    void initialize(final Activity activity , final IAdsInitializeCallBack adsInitializeCallBack);
+    void initializeAds(final Activity activity , final IAdsInitializeCallBack adsInitializeCallBack);
+    void initializeSdk(final Activity activity, ISdkInitializeCallBack adsInitializeCallBack);
+    boolean isSdkInitialized();
+    void loadBanner(final Activity activity);
+    void loadInterstitial(final Activity activity);
+    void loadRv(final Activity activity);
+    void showBanner(final Activity activity);
+    void showInterstitial(final Activity activity);
+    void showRv(final Activity activity);
 }

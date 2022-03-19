@@ -10,183 +10,151 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.robinzon.medicationwizard.ads.AdsManager;
 import com.robinzon.medicationwizard.ads.IAdDisplayingEvent;
 import com.robinzon.medicationwizard.ads.IAdLoadingEvents;
-import com.robinzon.medicationwizard.ads.interfaces.IAd;
-import com.robinzon.medicationwizard.ads.interfaces.IInterstitialAd;
-import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
-import com.robinzon.medicationwizard.utils.Logger;
-import com.robinzon.medicationwizard.utils.Validator;
+import com.robinzon.medicationwizard.ads.rootclasses.Interstitial;
 
-public class AdMobInterstitial implements IInterstitialAd, IAd, ISuper {
-    com.google.android.gms.ads.interstitial.InterstitialAd mInterstitial;
-    private boolean mIsLoaded;
-    private String mAdUnit;
-    private boolean mIsShowing;
+public class AdMobInterstitial extends Interstitial {
+    private InterstitialAd mInterstitialAd;
 
     @Override
-    public void create(final Activity activity, final int adUnitResourceId) {
-        if (Validator.isValidAndroidResourceId(adUnitResourceId)){
-            setAdUnitId(activity.getString(adUnitResourceId));
-        }
+    public void create(Activity activity, int adUnitIdResourceId) {
+        setAdUnitId(activity.getString(adUnitIdResourceId));
     }
 
     @Override
-    public void load(Activity activity, IAdLoadingEvents adLoadingEvents) {
-        if (Validator.isValidString(getAdUnitId())) {
-            Logger.getInstance().logSingleTag(getClassName(),
-                    AdsManager.LOG_INTERSTITIAL,
-                    "Calling to load interstitial ad. Ad unit is [%s]", getAdUnitId());
-            InterstitialAd.load(activity,
-                    getAdUnitId(),
-                    new AdRequest.Builder().build(),
-                    getInterstitialAdLoadCallback(adLoadingEvents));
-        } else {
-            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL , "Called to load interstitial but ad unit is null");
+    public void load(final Activity activity) {
+        if (mIsInLoadingProgress.compareAndSet(false, true)) {
+            InterstitialAd.load(activity, getAdUnitId(), getAdRequest(), getInterstitialAdLoadCallBack());
         }
     }
 
-    private InterstitialAdLoadCallback getInterstitialAdLoadCallback(IAdLoadingEvents adLoadingEvents){
+    private AdRequest getAdRequest() {
+        return new AdRequest.Builder().build();
+    }
+
+    private InterstitialAdLoadCallback getInterstitialAdLoadCallBack() {
         return new InterstitialAdLoadCallback() {
             @Override
-            public void onAdLoaded(@NonNull com.google.android.gms.ads.interstitial.InterstitialAd interstitialAd) {
-                mInterstitial = interstitialAd;
-                setIsLoaded(true);
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial ad loaded");
-                if(null != adLoadingEvents){
-                    adLoadingEvents.onAdLoaded();
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                mInterstitialAd = null;
+                mIsLoaded.set(false);
+                mIsInLoadingProgress.set(false);
+                mRetryAttempts++;
+                if (null != mLoadingEventsListener){
+                    mLoadingEventsListener.onAdFailedToLoad(loadAdError.getMessage());
                 }
-                super.onAdLoaded(interstitialAd);
             }
 
             @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                mInterstitial = null;
-                setIsLoaded(false);
-                Logger.getInstance().logSingleTag(getClassName(),
-                        AdsManager.LOG_INTERSTITIAL,
-                        "Interstitial ad failed to load");
-                if(null != adLoadingEvents){
-                    adLoadingEvents.onAdFailedToLoad(loadAdError.getMessage());
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                super.onAdLoaded(interstitialAd);
+                mInterstitialAd = interstitialAd;
+                mIsLoaded.set(true);
+                mIsInLoadingProgress.set(false);
+                mRetryAttempts = 0;
+                if (null != mLoadingEventsListener){
+                    mLoadingEventsListener.onAdLoaded();
                 }
-                super.onAdFailedToLoad(loadAdError);
             }
         };
     }
 
     @Override
     public void show(Activity activity, IAdDisplayingEvent adDisplayingEvent) {
-        if (!isShowing()) {
-            if (hasAd()) {
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Calling to show interstitial ad");
-                mInterstitial.setFullScreenContentCallback(getFullScreenContentCallback());
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Showing interstitial ad");
-                mInterstitial.show(activity);
-            } else {
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL , "Called to show interstitial but there is no ad");
+        if (null != mInterstitialAd && mIsLoaded.get() && !mIsShowing.get()) {
+            if (null == mInterstitialAd.getFullScreenContentCallback()) {
+                mInterstitialAd.setFullScreenContentCallback(getFullScreenContentCallBack());
             }
-        } else {
-            Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Called to show interstitial but already showing");
+            mInterstitialAd.show(activity);
         }
     }
 
-    private FullScreenContentCallback getFullScreenContentCallback(){
+    private FullScreenContentCallback getFullScreenContentCallBack() {
         return new FullScreenContentCallback() {
             @Override
-            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                setIsShowing(false);
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial as failed to show");
-                super.onAdFailedToShowFullScreenContent(adError);
-            }
-
-            @Override
-            public void onAdShowedFullScreenContent() {
-                setIsShowing(true);
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial as showing");
-                super.onAdShowedFullScreenContent();
+            public void onAdClicked() {
+                super.onAdClicked();
             }
 
             @Override
             public void onAdDismissedFullScreenContent() {
-                setIsShowing(false);
-                Logger.getInstance().logSingleTag(getClassName(),  AdsManager.LOG_INTERSTITIAL, "Interstitial as dismissed");
                 super.onAdDismissedFullScreenContent();
+                mIsShowing.set(false);
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                super.onAdFailedToShowFullScreenContent(adError);
+                mIsShowing.set(false);
             }
 
             @Override
             public void onAdImpression() {
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial as impression");
                 super.onAdImpression();
             }
 
             @Override
-            public void onAdClicked() {
-                Logger.getInstance().logSingleTag(getClassName(), AdsManager.LOG_INTERSTITIAL, "Interstitial as clicked");
-                super.onAdClicked();
+            public void onAdShowedFullScreenContent() {
+                super.onAdShowedFullScreenContent();
+                mIsShowing.set(true);
             }
         };
     }
 
     @Override
-    public void setIsShowing(boolean isShowing) {
-        mIsShowing = isShowing;
-    }
-
-    @Override
     public boolean hasAd() {
-        return null != mInterstitial && isLoaded() ;
+        return null != mInterstitialAd && mIsLoaded.get();
     }
 
     @Override
     public boolean isLoaded() {
-        return mIsLoaded;
+        return mIsLoaded.get();
     }
 
     @Override
     public void setIsLoaded(boolean isLoaded) {
-        mIsLoaded = isLoaded;
+
     }
 
     @Override
     public boolean isShowing() {
-        return mIsShowing;
+        return mIsShowing.get();
     }
 
     @Override
-    public String getAdUnitId() {
-        return mAdUnit;
+    public void setIsShowing(boolean isShowing) {
+        mIsShowing.set(isShowing);
     }
 
     @Override
-    public void setAdUnitId(String adUnitId) {
-        if (Validator.Ads.isValidAdMobAdUnitId(adUnitId)) {
-            mAdUnit = adUnitId;
-        }
-    }
-
-    @Override
-    public void callOnResume(Activity activity) {
+    public void onResume(Activity activity) {
 
     }
 
     @Override
-    public void callOnPause(Activity activity) {
+    public void onPause(Activity activity) {
 
     }
 
     @Override
-    public void callOnDestroy(Activity activity) {
+    public void onDestroy(Activity activity) {
 
     }
 
     @Override
-    public void callOnCreate(Activity activity) {
+    public void onCreate(Activity activity) {
 
+    }
+
+    @Override
+    public void setLoadingEventsListener(IAdLoadingEvents loadingEvents) {
+        mLoadingEventsListener = loadingEvents;
     }
 
     @Override
     public String getClassName() {
-        return "{AdMobInterstitial}";
+        return AdMobInterstitial.class.getSimpleName();
     }
 }

@@ -1,6 +1,6 @@
 package com.robinzon.medicationwizard.entities;
 
-import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
+import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Validator;
 
 import org.json.JSONArray;
@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class Medication implements ISuper {
+public class Medication extends MedicationWizardSuper {
     @Override
     public String getClassName() {
         return "{Medication}";

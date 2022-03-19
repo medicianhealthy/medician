@@ -6,14 +6,16 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.robinzon.medicationwizard.ads.rootclasses.ISuper;
+import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 
 import org.json.JSONArray;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class SharedPreferencesManager implements ISuper {
+public class SharedPreferencesManager extends MedicationWizardSuper {
 
     private static final String SHARED_PREFERENCES = "shared_prefernces";
     private SharedPreferences sAndroidSharedPreferencesInstance;
@@ -31,7 +33,7 @@ public class SharedPreferencesManager implements ISuper {
         if (!TextUtils.isEmpty(fileName)) {
             sAndroidSharedPreferencesInstance = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         } else {
-            Logger.getInstance().logSingleTag(getClassName(), SHARED_PREFERENCES,
+            Logger.getInstance().log(getClassName(), getSharedPreferencesLogs(),
                     "File name of shared preferences is invalid. Could not create instance");
         }
     }
@@ -76,21 +78,21 @@ public class SharedPreferencesManager implements ISuper {
     }
 
     public void setValue(final String key, final Object value) {
-        if(TextUtils.isEmpty(key) ||
+        if (TextUtils.isEmpty(key) ||
                 null == value ||
-                (value instanceof String && TextUtils.isEmpty((String)value))){
-            Logger.getInstance().logSingleTag(getClassName(),SHARED_PREFERENCES,
+                (value instanceof String && TextUtils.isEmpty((String) value))) {
+            Logger.getInstance().log(getClassName(), getSharedPreferencesLogs(),
                     "Trying to set value but key or value is invalid");
             return;
         }
         final SharedPreferences.Editor editor = getEditor();
-        if(null == editor){
-            Logger.getInstance().logSingleTag(getClassName(), SHARED_PREFERENCES,
+        if (null == editor) {
+            Logger.getInstance().log(getClassName(), getSharedPreferencesLogs(),
                     "Trying to set value but editor object is null");
             return;
         }
         if (value instanceof Integer) {
-            editor.putInt(key, (Integer)value).apply();
+            editor.putInt(key, (Integer) value).apply();
         } else if (value instanceof Float) {
             editor.putFloat(key, (Float) value).apply();
         } else if (value instanceof Long) {
@@ -102,8 +104,14 @@ public class SharedPreferencesManager implements ISuper {
         }
     }
 
-    public void setJsonArray(final String key, final JSONArray jsonArray){
-        if(Validator.isValidJsonArray(jsonArray)) {
+    private List<String> getSharedPreferencesLogs() {
+        return new ArrayList<String>() {{
+            add(SHARED_PREFERENCES);
+        }};
+    }
+
+    public void setJsonArray(final String key, final JSONArray jsonArray) {
+        if (Validator.isValidJsonArray(jsonArray)) {
             final SharedPreferences.Editor editor = getEditor();
             editor.putString(key, jsonArray.toString()).apply();
         }
@@ -111,28 +119,28 @@ public class SharedPreferencesManager implements ISuper {
 
     public int getInt(final String key, final int defaultValue) {
         if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getInt(key,defaultValue);
+            return sAndroidSharedPreferencesInstance.getInt(key, defaultValue);
         }
         return defaultValue;
     }
 
     public long getLong(final String key, final long defaultValue) {
         if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getLong(key,defaultValue);
+            return sAndroidSharedPreferencesInstance.getLong(key, defaultValue);
         }
         return defaultValue;
     }
 
     public float getFloat(final String key, final float defaultValue) {
         if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getFloat(key,defaultValue);
+            return sAndroidSharedPreferencesInstance.getFloat(key, defaultValue);
         }
         return defaultValue;
     }
 
     public String getString(final String key, final String defaultValue) {
         if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getString(key,defaultValue);
+            return sAndroidSharedPreferencesInstance.getString(key, defaultValue);
         }
         return defaultValue;
     }
@@ -145,7 +153,7 @@ public class SharedPreferencesManager implements ISuper {
 
     public boolean getBoolean(String key, Boolean defaultValue) {
         if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getBoolean(key,defaultValue);
+            return sAndroidSharedPreferencesInstance.getBoolean(key, defaultValue);
         }
         return defaultValue;
     }
