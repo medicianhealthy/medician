@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.utils;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.robinzon.medicationwizard.BuildConfig;
@@ -20,16 +21,10 @@ public class Logger {
         return sInstance.get();
     }
 
-    public void log(final String className,
-                    final List<String> tags,
-                    final String message,
-                    Object... params) {
-        if (Validator.isValidString(className) &&
-                Validator.isValidString(message) &&
-                Validator.isValidCollection(tags) &&
-                Validator.isValidObject(params)) {
+    public void log(final String className, final List<String> tags, final String message, Object... params) {
+        if (!TextUtils.isEmpty(className) && null != tags && !tags.isEmpty() && !TextUtils.isEmpty(message) && null != params) {
             for (String tag : tags) {
-                if (Validator.isValidString(tag)) {
+                if (null != tag) {
                     log(className, tag, message, params);
                 }
             }

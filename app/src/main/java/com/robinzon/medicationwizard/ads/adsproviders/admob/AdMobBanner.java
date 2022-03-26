@@ -101,7 +101,7 @@ public class AdMobBanner extends Banner {
                 if (null != mLoadingEventsListener) {
                     mLoadingEventsListener.onAdFailedToLoad(loadAdError.getMessage());
                 }
-                mRetryAttempts++;
+                markLoadFailAttempt();
                 activateReLoader();
                 if (Logger.isLoggingEnabled()){
                     Logger.getInstance().log(getClassName(),
@@ -127,7 +127,7 @@ public class AdMobBanner extends Banner {
                 if (null != mLoadingEventsListener) {
                     mLoadingEventsListener.onAdLoaded();
                 }
-                mRetryAttempts = 0;
+                setRetryAttemptsToZero();
                 if (Logger.isLoggingEnabled()){
                     Logger.getInstance().log(getClassName(), getAdMobBannerLogs(), "Banner loaded");
                 }
@@ -149,7 +149,7 @@ public class AdMobBanner extends Banner {
             mBannerReLoader = new BannerReLoader(AdMobBanner.this);
         }
         mBannerReLoader.removeMessages(BannerReLoader.RELOAD);
-        final double delaySeconds = Math.pow(2, Math.min(6, mRetryAttempts));
+        final double delaySeconds = Math.pow(2, Math.min(6, getRetryAttempts()));
         if (Logger.isLoggingEnabled()){
             Logger.getInstance().log(getClassName(),
                     getAdMobBannerLogs(),

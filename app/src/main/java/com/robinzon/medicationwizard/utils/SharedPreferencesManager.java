@@ -111,9 +111,11 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
     }
 
     public void setJsonArray(final String key, final JSONArray jsonArray) {
-        if (Validator.isValidJsonArray(jsonArray)) {
+        if (null != jsonArray && (byte)0 != jsonArray.length()) {
             final SharedPreferences.Editor editor = getEditor();
-            editor.putString(key, jsonArray.toString()).apply();
+            if (null != editor) {
+                editor.putString(key, jsonArray.toString()).apply();
+            }
         }
     }
 

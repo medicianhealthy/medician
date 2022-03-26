@@ -19,5 +19,4 @@ public interface IAd {
     void onDestroy(final Activity activity);
     void onCreate(final Activity activity);
     void setLoadingEventsListener(final IAdLoadingEvents loadingEvents);
-
 }

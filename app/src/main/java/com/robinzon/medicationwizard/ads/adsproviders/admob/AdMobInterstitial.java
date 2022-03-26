@@ -41,7 +41,7 @@ public class AdMobInterstitial extends Interstitial {
                 mInterstitialAd = null;
                 mIsLoaded.set(false);
                 mIsInLoadingProgress.set(false);
-                mRetryAttempts++;
+                markLoadFailAttempt();
                 if (null != mLoadingEventsListener){
                     mLoadingEventsListener.onAdFailedToLoad(loadAdError.getMessage());
                 }
@@ -53,7 +53,7 @@ public class AdMobInterstitial extends Interstitial {
                 mInterstitialAd = interstitialAd;
                 mIsLoaded.set(true);
                 mIsInLoadingProgress.set(false);
-                mRetryAttempts = 0;
+                setRetryAttemptsToZero();
                 if (null != mLoadingEventsListener){
                     mLoadingEventsListener.onAdLoaded();
                 }

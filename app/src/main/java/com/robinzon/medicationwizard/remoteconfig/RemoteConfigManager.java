@@ -8,12 +8,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.TimeInterval;
-import com.robinzon.medicationwizard.utils.Validator;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RemoteConfigManager extends MedicationWizardSuper {
 
@@ -44,9 +44,10 @@ public class RemoteConfigManager extends MedicationWizardSuper {
     public void fetchConfiguration(final FireBaseFetchCallBack fireBaseFetchCallBack) {
         mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if (Validator.isValidMap(mFirebaseRemoteConfig.getAll())) {
+                mFirebaseRemoteConfig.getAll();
+                if (!mFirebaseRemoteConfig.getAll().isEmpty()) {
                     mFirebaseValues = mFirebaseRemoteConfig.getAll();
-                    if (Logger.getInstance().isLoggingEnabled()) {
+                    if (Logger.isLoggingEnabled()) {
                         logRemoteConfigValues();
                     }
                     if (null != fireBaseFetchCallBack) {
@@ -62,7 +63,7 @@ public class RemoteConfigManager extends MedicationWizardSuper {
     }
 
     private void logRemoteConfigValues() {
-        if (Validator.isValidMap(mFirebaseValues)) {
+        if (null != mFirebaseValues && !mFirebaseValues.isEmpty()) {
             for (Map.Entry<String, FirebaseRemoteConfigValue> entry : mFirebaseValues.entrySet()) {
                 Logger.getInstance().log(getClassName(),
                         getRemoteConfigLogs(),
@@ -85,9 +86,9 @@ public class RemoteConfigManager extends MedicationWizardSuper {
 
     public int getIntValue(final @NonNull String key) {
 
-        if (Validator.isValidMap(mFirebaseValues)) {
+        if (null != mFirebaseValues && !mFirebaseValues.isEmpty()) {
             final FirebaseRemoteConfigValue remoteConfigValue = mFirebaseValues.get(key);
-            if (Validator.isValidObject(remoteConfigValue)) {
+            if (null != remoteConfigValue) {
                 try {
                     return (int) remoteConfigValue.asLong();
                 } catch (IllegalArgumentException e) {
@@ -105,18 +106,17 @@ public class RemoteConfigManager extends MedicationWizardSuper {
 
 
     public boolean getBooleanValue(final String key) {
-        if (Validator.isValidMap(mFirebaseValues)) {
-            final FirebaseRemoteConfigValue remoteConfigValue = mFirebaseValues.get(key);
-            if (Validator.isValidObject(remoteConfigValue)) {
-                try {
-                    return remoteConfigValue.asBoolean();
-                } catch (IllegalArgumentException e) {
-                    return getDefaultBooleanValue(key);
-                }
+        if (isFirBaseValueExist(key)) {
+            try {
+                return Objects.requireNonNull(mFirebaseValues.get(key)).asBoolean();
+            } catch (IllegalArgumentException e) {
+                return getDefaultBooleanValue(key);
             }
         }
         return getDefaultBooleanValue(key);
     }
+
+
 
     private boolean getDefaultBooleanValue(String key) {
         final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(key);
@@ -125,9 +125,9 @@ public class RemoteConfigManager extends MedicationWizardSuper {
 
 
     public String getStringValue(final String key) {
-        if (Validator.isValidMap(mFirebaseValues)) {
+        if (null != mFirebaseValues && !mFirebaseValues.isEmpty()) {
             final FirebaseRemoteConfigValue remoteConfigValue = mFirebaseValues.get(key);
-            if (Validator.isValidObject(remoteConfigValue)) {
+            if (null != remoteConfigValue) {
                 try {
                     return remoteConfigValue.asString();
                 } catch (IllegalArgumentException e) {
@@ -136,6 +136,15 @@ public class RemoteConfigManager extends MedicationWizardSuper {
             }
         }
         return (String) RemoteConfigKeysAndDefaults.VALUES.get(key);
+    }
+
+
+    boolean isFirBaseValueExist(final String key){
+        if (null != mFirebaseValues && !mFirebaseValues.isEmpty()) {
+            final FirebaseRemoteConfigValue remoteConfigValue = mFirebaseValues.get(key);
+            return null != remoteConfigValue;
+        }
+        return false;
     }
 
 

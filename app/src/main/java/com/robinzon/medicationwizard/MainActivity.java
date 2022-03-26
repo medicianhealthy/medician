@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -13,26 +14,22 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.ads.AdsManager;
-import com.robinzon.medicationwizard.ads.interfaces.EAdsInitializeState;
-import com.robinzon.medicationwizard.ads.interfaces.IAdsInitializeCallBack;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
-import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
-import com.robinzon.medicationwizard.utils.Validator;
+import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
+import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IContextProvider{
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding mBinding;
     private AdsManager mAdsManager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!AdsManager.DISABLE_ADS) {
-            initAds();
-        }
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
@@ -50,30 +47,23 @@ public class MainActivity extends AppCompatActivity {
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        SharedPreferencesManager.getInstance(this).getLong("d", 0);
+        RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
+            @Override
+            public void onFetchCompleted(boolean isSuccessFull) {
+                initAds();
+            }
+        });
+
     }
 
     private void initAds() {
-        mAdsManager = new AdsManager();
+        mAdsManager = new AdsManager(this);
         getAdsManager().onCreate(this);
-        getAdsManager().initializeAds(this, new IAdsInitializeCallBack() {
-            @Override
-            public void onAdsInitialized(EAdsInitializeState adsInitializeState) {
-                onAdsFinishedInitializing();
-            }
-        });
-
+        getAdsManager().initializeAds(this);
     }
 
-    private void onAdsFinishedInitializing() {
-        getAdsManager().loadBanner(this);
-        getAdsManager().loadInterstitial(this);
-        findViewById(R.id.text_home).setOnClickListener(v -> {
-            if (getAdsManager().hasRvToShow()) {
-                getAdsManager().showRv(MainActivity.this);
-            }
-        });
-        getAdsManager().loadRV(this);
+    private AdsManager getAdsManager() {
+        return mAdsManager;
     }
 
     @Override
@@ -92,15 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        if (Validator.isValidObject(getAdsManager())) {
+        super.onResume();
+        if (null != getAdsManager()) {
             getAdsManager().onResume(this);
         }
-        super.onResume();
+
     }
 
     @Override
     protected void onDestroy() {
-        if (Validator.isValidObject(getAdsManager())) {
+        if (null != getAdsManager()) {
             getAdsManager().onDestroy(this);
         }
         super.onDestroy();
@@ -108,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if (Validator.isValidObject(getAdsManager())) {
+        if (null != getAdsManager()) {
             getAdsManager().onPause(this);
         }
         super.onPause();
@@ -118,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
         return "{MainActivity}";
     }
 
-    public AdsManager getAdsManager() {
-        return mAdsManager;
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

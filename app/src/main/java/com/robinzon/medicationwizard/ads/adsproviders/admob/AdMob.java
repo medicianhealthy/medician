@@ -9,7 +9,10 @@ import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.ads.AdBreaker;
 import com.robinzon.medicationwizard.ads.AdsManager;
+import com.robinzon.medicationwizard.ads.EAdType;
+import com.robinzon.medicationwizard.ads.EMediator;
 import com.robinzon.medicationwizard.ads.interfaces.EAdsInitializeState;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsInitializeCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IBannerAd;
@@ -18,7 +21,6 @@ import com.robinzon.medicationwizard.ads.interfaces.IRewardedVideo;
 import com.robinzon.medicationwizard.ads.interfaces.ISdkInitializeCallBack;
 import com.robinzon.medicationwizard.ads.rootclasses.AdProvider;
 import com.robinzon.medicationwizard.utils.Logger;
-import com.robinzon.medicationwizard.utils.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.Map;
 public class AdMob extends AdProvider {
 
     public static final String AD_INIT_PREFIX = "ca-app-pub-";
+    public static final int ADS_EXPIRATION_MINUTES = 30;
 
     @Override
     public void onResume(Activity activity) {
@@ -100,7 +103,9 @@ public class AdMob extends AdProvider {
 
     @Override
     public void initializeAds(Activity activity, IAdsInitializeCallBack adsInitializeCallBack) {
-        if (!isSdkInitialized()) {
+        if (!AdBreaker.canShowAd(EAdType.SOME, EMediator.ADMOB)) {
+            adsInitializeCallBack.onAdsInitialized(EAdsInitializeState.FAILED);
+        } else if (!isSdkInitialized()) {
             initializeSdk(activity, new ISdkInitializeCallBack() {
                 @Override
                 public void onSdkInitialize(EAdsInitializeState state, boolean result) {
@@ -108,6 +113,8 @@ public class AdMob extends AdProvider {
                         mIsSdkInitialized = true;
                         createAds(activity);
                         adsInitializeCallBack.onAdsInitialized(EAdsInitializeState.SUCCESSFULLY);
+                    } else {
+                        adsInitializeCallBack.onAdsInitialized(EAdsInitializeState.FAILED);
                     }
                 }
             });
@@ -118,17 +125,17 @@ public class AdMob extends AdProvider {
     }
 
     private void createAds(Activity activity) {
-        if (null == getBanner()) {
+        if (null == getBanner() && AdBreaker.canShowAd(EAdType.BANNER, EMediator.ADMOB)) {
             mBanner = new AdMobBanner();
             mBanner.createFromLayout(activity, R.id.adView);
         }
-        if (null == getInterstitial()) {
+        if (null == getInterstitial() && AdBreaker.canShowAd(EAdType.INTERSTITIAL, EMediator.ADMOB)) {
             mInterstitial = new AdMobInterstitial();
             mInterstitial.create(activity, R.string.admob_interstitial_id_test);
         }
-        if (null == getRewardedVideo()){
+        if (null == getRewardedVideo() && AdBreaker.canShowAd(EAdType.REWARDED_VIDEO, EMediator.ADMOB)) {
             mRewardedVideo = new AdMobRewardedVideo();
-            mRewardedVideo.create(activity, R.string.admob_rewarded_interstitial_id_test);
+            mRewardedVideo.create(activity, R.string.admob_rv_id_test);
         }
     }
 
@@ -142,7 +149,7 @@ public class AdMob extends AdProvider {
                 boolean isOneOfAdaptersReady = false;
                 for (String key : statusMap.keySet()) {
                     final AdapterStatus adapterStatus = statusMap.get(key);
-                    if (Validator.isValidObject(adapterStatus)) {
+                    if (null != adapterStatus) {
                         if (AdapterStatus.State.READY == adapterStatus.getInitializationState()) {
                             isOneOfAdaptersReady = true;
                         }
@@ -155,7 +162,7 @@ public class AdMob extends AdProvider {
                 }
                 if (null != sdkInitializeCallBack) {
                     mIsSdkInitialized = isOneOfAdaptersReady;
-                    sdkInitializeCallBack.onSdkInitialize(mIsSdkInitialized ? EAdsInitializeState.SUCCESSFULLY :EAdsInitializeState.FAILED,
+                    sdkInitializeCallBack.onSdkInitialize(mIsSdkInitialized ? EAdsInitializeState.SUCCESSFULLY : EAdsInitializeState.FAILED,
                             mIsSdkInitialized);
                 }
             }
@@ -163,7 +170,7 @@ public class AdMob extends AdProvider {
     }
 
     private List<String> getAllAdsLogs() {
-        return new ArrayList<String>(){{
+        return new ArrayList<String>() {{
             add(AdsManager.LOG_BANNER);
             add(AdsManager.LOG_REWARDED_VIDEO);
             add(AdsManager.LOG_INTERSTITIAL);

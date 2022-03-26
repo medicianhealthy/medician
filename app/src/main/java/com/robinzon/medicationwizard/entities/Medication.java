@@ -1,7 +1,8 @@
 package com.robinzon.medicationwizard.entities;
 
+import android.text.TextUtils;
+
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
-import com.robinzon.medicationwizard.utils.Validator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +38,7 @@ public class Medication extends MedicationWizardSuper {
     private EInstructions mInstruction;
 
     public Medication(String commercialName, List<ActiveIngredient> activeIngredients) {
-        if(Validator.isValidString(commercialName) && Validator.isValidCollection(activeIngredients)) {
+        if(!TextUtils.isEmpty(commercialName) && null != activeIngredients && !activeIngredients.isEmpty()) {
             this.mCommercialName = commercialName;
             this.mActiveIngredients = activeIngredients;
         } else {

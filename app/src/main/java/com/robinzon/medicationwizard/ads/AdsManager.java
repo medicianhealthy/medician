@@ -1,14 +1,21 @@
 package com.robinzon.medicationwizard.ads;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 
+import com.robinzon.medicationwizard.IContextProvider;
+import com.robinzon.medicationwizard.MainActivity;
+import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ads.adsproviders.EAdsProvider;
 import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMob;
+import com.robinzon.medicationwizard.ads.interfaces.EAdsInitializeState;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsInitializeCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsProvider;
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Logger;
-import com.robinzon.medicationwizard.utils.Validator;
+import com.robinzon.medicationwizard.utils.TimeInterval;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,11 +25,24 @@ import java.util.Map;
 
 
 public class AdsManager extends MedicationWizardSuper {
-    public static boolean DISABLE_ADS = false;
     public static final String LOG_BANNER = "mwiz_Banner_Ad";
     public static final String LOG_INTERSTITIAL = "mwiz_Interstitial_Ad";
     public static final String LOG_REWARDED_INTERSTITIAL = "mwiz_Rewarded_Interstitial_Ad";
     public static final String LOG_REWARDED_VIDEO = "mwiz_Rewarded_Video_Ad";
+    public static final String RCKEY_ADS_TIMER_BANNER_GRACE_MINUTES = "ads_timer_banner_grace_minutes";
+    public static final String RCKEY_ADS_TIMER_INTER_GRACE_MINUTES = "ads_timer_inter_grace_minutes";
+    public static final String RCKEY_ADS_TIMER_RV_GRACE_MINUTES = "ads_timer_rv_grace_minutes";
+    public static final int TICK_INTERVAL_SECONDS = 8;
+    private static IContextProvider mContextProvider;
+    private Ticker mTicker;
+
+    /**
+     * Object to handle all App's logic for ads.
+     * Assumes that Firebase remote config values already fetched.
+     */
+    public AdsManager(final IContextProvider contextProvider) {
+        mContextProvider = contextProvider;
+    }
 
     private final Map<EAdsProvider, IAdsProvider> mAdsProviders =
             Collections.unmodifiableMap(new HashMap<EAdsProvider, IAdsProvider>() {{
@@ -30,11 +50,9 @@ public class AdsManager extends MedicationWizardSuper {
             }});
 
     private IAdsProvider getAdProvider() {
-        if (Validator.isValidMap(getAdProvidersList())) {
-            final IAdsProvider adProvider = getAdProvidersList().get(EAdsProvider.ADMOB);
-            if (Validator.isValidObject(adProvider)) {
-                return adProvider;
-            }
+        final IAdsProvider adProvider = getAdProvidersList().get(EAdsProvider.ADMOB);
+        if (null != adProvider) {
+            return adProvider;
         }
         return new AdMob();
     }
@@ -43,12 +61,33 @@ public class AdsManager extends MedicationWizardSuper {
         return mAdsProviders;
     }
 
-    public void initializeAds(final Activity activity, IAdsInitializeCallBack adsInitializeCallBack) {
-        getAdProvider().initializeAds(activity, adsInitializeCallBack);
+
+    public void onAdsFinishedInitializingSuccessfully(final Activity mainActivity) {
+        loadBanner(mainActivity);
+        loadInterstitial(mainActivity);
+        mainActivity.findViewById(R.id.text_home).setOnClickListener(v -> {
+            if (hasRvToShow()) {
+                showRv(mainActivity);
+            }
+        });
+        loadRV(mainActivity);
+    }
+
+    public void initializeAds(final Activity activity) {
+        getAdProvider().initializeAds(activity, new IAdsInitializeCallBack() {
+            @Override
+            public void onAdsInitialized(EAdsInitializeState adsInitializeState) {
+                if (EAdsInitializeState.SUCCESSFULLY == adsInitializeState) {
+                    onAdsFinishedInitializingSuccessfully(activity);
+                }
+            }
+        });
     }
 
     public void loadBanner(final Activity mainActivity) {
-        getAdProvider().loadBanner(mainActivity);
+        if (AdBreaker.canShowAd(EAdType.BANNER, EMediator.ADMOB)) {
+            getAdProvider().loadBanner(mainActivity);
+        }
     }
 
     public void showBanner(final Activity mainActivity) {
@@ -56,7 +95,9 @@ public class AdsManager extends MedicationWizardSuper {
     }
 
     public void loadInterstitial(final Activity mainActivity) {
-        getAdProvider().getInterstitial().load(mainActivity);
+        if (AdBreaker.canShowAd(EAdType.INTERSTITIAL, EMediator.ADMOB)) {
+            getAdProvider().getInterstitial().load(mainActivity);
+        }
     }
 
     public void showInterstitial(final Activity activity) {
@@ -67,28 +108,27 @@ public class AdsManager extends MedicationWizardSuper {
     public void loadRV(Activity mainActivity) {
         Logger.getInstance().log(getClassName(), getRvLogs(),
                 "Ads Manger calling to load rv");
-        if (!getAdProvider().getRewardedVideo().isLoaded()) {
-            Logger.getInstance().log(getClassName(), getRvLogs(),
-                    "Rv is not loaded. Loading one");
-            getAdProvider().getRewardedVideo().setLoadingEventsListener(new IAdLoadingEvents() {
-                @Override
-                public void onAdLoaded() {
-                    getAdProvider().getRewardedVideo().setIsLoaded(true);
-                    Logger.getInstance().log(getClassName(), getRvLogs(),
-                            "Rv ad loaded");
-                }
+        if (AdBreaker.canShowAd(EAdType.REWARDED_VIDEO, EMediator.ADMOB)) {
+            if (!getAdProvider().getRewardedVideo().hasAd()) {
+                Logger.getInstance().log(getClassName(), getRvLogs(),
+                        "Rv is not loaded. Loading one");
+                getAdProvider().getRewardedVideo().setLoadingEventsListener(new IAdLoadingEvents() {
+                    @Override
+                    public void onAdLoaded() {
+                        Logger.getInstance().log(getClassName(), getRvLogs(),
+                                "Rv ad loaded");
+                    }
 
-                @Override
-                public void onAdFailedToLoad(String reason) {
-                    getAdProvider().getRewardedVideo().setIsLoaded(false);
-                    Logger.getInstance().log(getClassName(), getRvLogs(),
-                            "Rv ad failed to load. Reason is[%s]",
-                            reason);
-                }
-            });
-            getAdProvider().getRewardedVideo().load(mainActivity);
+                    @Override
+                    public void onAdFailedToLoad(String reason) {
+                        Logger.getInstance().log(getClassName(), getRvLogs(),
+                                "Rv ad failed to load. Reason is[%s]",
+                                reason);
+                    }
+                });
+                getAdProvider().getRewardedVideo().load(mainActivity);
+            }
         }
-
     }
 
     private List<String> getRvLogs() {
@@ -108,26 +148,39 @@ public class AdsManager extends MedicationWizardSuper {
         return getAdProvider().getRewardedVideo().isLoaded();
     }
 
-    public void onResume(Activity activity) {
-        if (Validator.isValidObject(getAdProvider())) {
+    public void onResume(MainActivity activity) {
+        //Always put the below line on start of this method
+        setContextProvider(activity);
+        if (null != getAdProvider()) {
             getAdProvider().onResume(activity);
         }
+        getTicker().sendEmptyMessageDelayed(Ticker.MESSAGE_TICK, TimeInterval.MilliSeconds.getFromSeconds(TICK_INTERVAL_SECONDS));
+        AdBreaker.onResume(activity);
+
     }
 
     public void onPause(Activity activity) {
-        if (Validator.isValidObject(getAdProvider())) {
+        if (null != getAdProvider()) {
             getAdProvider().onPause(activity);
         }
+        AdBreaker.onPause(activity);
+        getTicker().removeMessages(Ticker.MESSAGE_TICK);
+        //Always put the below line on the end of this onPause
+        setContextProvider(null);
+    }
+
+    public void onStop() {
     }
 
     public void onDestroy(Activity activity) {
-        if (Validator.isValidObject(getAdProvider())) {
+        if (null != getAdProvider()) {
             getAdProvider().onDestroy(activity);
         }
     }
 
     public void onCreate(Activity activity) {
-        if (Validator.isValidObject(getAdProvider())) {
+        AdBreaker.setAdsGracePeriods(new AdsGracePeriod());
+        if (null != getAdProvider()) {
             getAdProvider().onCreate(activity);
         }
     }
@@ -141,7 +194,43 @@ public class AdsManager extends MedicationWizardSuper {
         return getAdProvider().getInterstitial().hasAd();
     }
 
-    public boolean hasRvToShow(){
+    public boolean hasRvToShow() {
         return getAdProvider().getRewardedVideo().hasAd();
     }
+
+    public void setContextProvider(MainActivity mainActivity) {
+        mContextProvider = mainActivity;
+    }
+
+
+    private static void tick() {
+        final Context context = null != mContextProvider ? mContextProvider.getContext() : null;
+        if (null != context) {
+            AdBreaker.tick(context);
+        }
+    }
+
+    private Ticker getTicker() {
+        if (null == mTicker) {
+            mTicker = new Ticker();
+        }
+        return mTicker;
+    }
+
+    private static class Ticker extends Handler {
+        public static final int MESSAGE_TICK = 1;
+        public void handleMessage(final Message message) {
+            switch (message.what) {
+                case MESSAGE_TICK:
+                    AdsManager.tick();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+
+
+
 }
