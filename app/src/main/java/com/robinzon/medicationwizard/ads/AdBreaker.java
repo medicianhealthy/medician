@@ -124,7 +124,7 @@ public class AdBreaker extends MedicationWizardSuper {
         sSessionStartTimeStamp = 0L;
     }
 
-    public static void tick(Context context){
+    public static void tick(Context context) {
         onPause(context);
     }
 
@@ -142,9 +142,11 @@ public class AdBreaker extends MedicationWizardSuper {
 
     private static boolean shouldShowBannerAdForAdMob() {
         final float totalPlayTimeMinutes = getAccumulatingSessionTimeMinutes();
-        if (totalPlayTimeMinutes < 2F){
+        if (totalPlayTimeMinutes < sAdsGracePeriod.getBannerGracePeriodMinutes()) {
             return false;
-        } else return hasEngagedEnoughForBanner() || totalPlayTimeMinutes >= 5F;
+        } else {
+            return hasEngagedEnoughForBanner() || totalPlayTimeMinutes >= 5F;
+        }
     }
 
     private static boolean hasEngagedEnoughForBanner() {

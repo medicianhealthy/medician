@@ -65,12 +65,12 @@ public class AdsManager extends MedicationWizardSuper {
     public void onAdsFinishedInitializingSuccessfully(final Activity mainActivity) {
         loadBanner(mainActivity);
         loadInterstitial(mainActivity);
+        loadRV(mainActivity);
         mainActivity.findViewById(R.id.text_home).setOnClickListener(v -> {
             if (hasRvToShow()) {
                 showRv(mainActivity);
             }
         });
-        loadRV(mainActivity);
     }
 
     public void initializeAds(final Activity activity) {
@@ -85,9 +85,23 @@ public class AdsManager extends MedicationWizardSuper {
     }
 
     public void loadBanner(final Activity mainActivity) {
-        if (AdBreaker.canShowAd(EAdType.BANNER, EMediator.ADMOB)) {
+        if (shouldShowAd(EAdType.BANNER, EMediator.ADMOB)) {
             getAdProvider().loadBanner(mainActivity);
         }
+    }
+
+    private boolean shouldShowAd(final EAdType adType, final EMediator mediator) {
+        if (mediator == EMediator.ADMOB) {
+            if (EAdType.BANNER == adType)
+                return true;
+            else if (EAdType.INTERSTITIAL == adType)
+                return true;
+            else if (EAdType.REWARDED_VIDEO == adType)
+                return true;
+            else
+                return false;
+        }
+        return false;
     }
 
     public void showBanner(final Activity mainActivity) {
@@ -139,6 +153,18 @@ public class AdsManager extends MedicationWizardSuper {
         };
     }
 
+    @Override
+    public List<String> getLogTags() {
+        if (null == mLogTags || null == getLogTags() || getLogTags().isEmpty()){
+            setLogTags(new ArrayList<String>() {{
+                add(LOG_BANNER);
+                add(LOG_REWARDED_VIDEO);
+                add(LOG_INTERSTITIAL);
+                add(LOG_REWARDED_INTERSTITIAL);
+           }});
+        }
+        return super.getLogTags();
+    }
 
     public void showRv(Activity activity) {
         getAdProvider().getRewardedVideo().show(activity, null);

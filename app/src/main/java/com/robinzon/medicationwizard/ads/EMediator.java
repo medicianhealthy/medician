@@ -2,8 +2,8 @@ package com.robinzon.medicationwizard.ads;
 
 public enum EMediator {
     ALL("All"),
-    ADMOB("All Ads"),
-    IRONSOURCE("No Type"),
+    ADMOB("AdMob"),
+    IRONSOURCE("IronSource"),
     NONE("None");
 
 

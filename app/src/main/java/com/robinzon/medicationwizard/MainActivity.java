@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements IContextProvider{
         getAdsManager().initializeAds(this);
     }
 
-    private AdsManager getAdsManager() {
+    public AdsManager getAdsManager() {
         return mAdsManager;
     }
 

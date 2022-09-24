@@ -1,17 +1,21 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    project.ext.set("VER_MIN_SDK", 21)
-    project.ext.set("VER_COMPILE_SDK", 31)
-    project.ext.set("VER_TARGET_SDK", 31)
-    project.ext.set("VER_BUILD_TOOLS_SDK", "31.0.0")
+    //Android sdk
+    project.ext.set("SDK_MINIMUM_VERSION", 21)
+    project.ext.set("SDK_COMPILE_VERSION", 32)
+    project.ext.set("SDK_TARGET_VERSION", 32)
+    project.ext.set("SDK_BUILD_TOOLS_VERSION", "32.0.0")
+    //App version
+    project.ext.set("VERSION_CODE", 101)
+    project.ext.set("VERSION_NAME", "1.0.1")
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.google.gms:google-services:4.3.13'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

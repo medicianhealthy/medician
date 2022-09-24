@@ -1,51 +1,139 @@
 package com.robinzon.medicationwizard.ads.rootclasses;
 
-import com.robinzon.medicationwizard.ads.IAdLoadingEvents;
-import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMob;
-import com.robinzon.medicationwizard.ads.interfaces.IAd;
-import com.robinzon.medicationwizard.utils.TimeInterval;
+import android.app.Activity;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.robinzon.medicationwizard.MainActivity;
+import com.robinzon.medicationwizard.ads.AdsManager;
+import com.robinzon.medicationwizard.ads.EAdCallBacks;
+import com.robinzon.medicationwizard.ads.EAdType;
+import com.robinzon.medicationwizard.ads.interfaces.IAdInterface;
 
-public abstract class Ad extends MedicationWizardSuper implements IAd {
-    protected String mAdUnitId;
-    protected final AtomicBoolean mIsLoaded = new AtomicBoolean(false);
-    protected final AtomicBoolean mIsInLoadingProgress = new AtomicBoolean(false);
-    protected final AtomicBoolean mIsShowing = new AtomicBoolean(false);
-    protected IAdLoadingEvents mLoadingEventsListener;
+import java.lang.ref.WeakReference;
+
+public abstract class Ad extends MedicationWizardSuper implements IAdInterface {
+
+    private final Activity mActivity;
+    private WeakReference<String> mAdUnitId = new WeakReference<String>(null);
+    private boolean mIsLoaded;
+    private boolean mIsInLoadingProgress;
+    private boolean mIsShowing;
     private int mRetryAttempts;
     private long mLastSuccessfulLoadTimeStamp;
+    private int mExpirationTimeInMinutes;
 
-    protected String getAdUnitId(){
-        return mAdUnitId;
-    }
-    protected void setAdUnitId(final String adUnitId){
-        mAdUnitId = adUnitId;
+    protected Ad(Activity mActivity) {
+        this.mActivity = mActivity;
     }
 
-    public boolean isExpired(){
-        final long adsExpirationTimeMillis = TimeInterval.MilliSeconds.getFromMinutes(AdMob.ADS_EXPIRATION_MINUTES);
-        final long delta = System.currentTimeMillis() - getLastSuccessfulLoadTimeStamp();
-        return delta > adsExpirationTimeMillis;
+    @Override
+    public String getAdUnitId() {
+        return mAdUnitId.get();
     }
 
-    public void setLastSuccessfulLoadTimeStamp(){
-        mLastSuccessfulLoadTimeStamp = System.currentTimeMillis();
+    @Override
+    public void setIsInLoadingProgress(boolean isLoading) {
+        mIsInLoadingProgress = isLoading;
     }
 
-    public long getLastSuccessfulLoadTimeStamp(){
-        return mLastSuccessfulLoadTimeStamp;
+    @Override
+    public boolean isInLoadingProgress() {
+        return mIsInLoadingProgress;
     }
 
-    public void markLoadFailAttempt(){
-       mRetryAttempts++;
+    @Override
+    public boolean isLoaded() {
+        return mIsLoaded;
     }
 
-    public void setRetryAttemptsToZero(){
-        mRetryAttempts = 0;
+    @Override
+    public void setIsLoaded(boolean isLoaded) {
+        mIsLoaded = isLoaded;
     }
 
-    public int getRetryAttempts(){
-        return mRetryAttempts;
+    @Override
+    public boolean canShow() {
+        return !isShowing() && isLoaded() && !isInLoadingProgress();
+    }
+
+    @Override
+    public boolean isShowing() {
+        return mIsShowing;
+    }
+
+    @Override
+    public void setIsShowing(boolean isShowing) {
+        mIsShowing = isShowing;
+    }
+
+    @Override
+    public boolean shouldLoad() {
+        return !isLoaded() && !isInLoadingProgress() ||
+                isLoaded() && isExpired();
+    }
+
+    @Override
+    public void handleAdCallBacks(EAdCallBacks adCallback) {
+        switch (adCallback) {
+            case STARTING_TO_LOAD:
+                setIsInLoadingProgress(true);
+                break;
+            case LOADED:
+                setIsLoaded(true);
+                setIsInLoadingProgress(false);
+                break;
+            case FAILED_TO_LOAD:
+                setIsLoaded(false);
+                setIsInLoadingProgress(false);
+                handleReloaderOnFaild();
+                break;
+            case SHOWN:
+                setIsShowing(true);
+                if (EAdType.BANNER != getAdType()) {
+                    setIsLoaded(false);
+                    load();
+                }
+                break;
+            case FAILED_TO_SHOW:
+                break;
+            case DISMISSED:
+                setIsShowing(false);
+                break;
+            case REWARDED:
+                break;
+            case CLICKED:
+                break;
+        }
+    }
+
+    @Override
+    public void handleReloaderOnFaild() {
+
+    }
+
+    @Override
+    public void handleReloaderOnSuccess() {
+    }
+
+    @Override
+    public boolean isExpired() {
+        final int expirationInMinutes = getExpirationTimeInMinutes();
+        final long currentTimeInMillis = System.currentTimeMillis();
+        final int deltaInMinutes = (int) ((currentTimeInMillis - mLastSuccessfulLoadTimeStamp) / 1000 / 60);
+        return deltaInMinutes > expirationInMinutes;
+    }
+
+    @Override
+    public int getExpirationTimeInMinutes() {
+        return this.mExpirationTimeInMinutes;
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this.mActivity;
+    }
+
+    @Override
+    public AdsManager getAdsManager() {
+        return ((MainActivity) getActivity()).getAdsManager();
     }
 }
