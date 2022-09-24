@@ -1,10 +1,23 @@
 package com.robinzon.medicationwizard.ads.rootclasses;
 
-import com.robinzon.medicationwizard.ads.interfaces.IInterstitialAd;
+import android.app.Activity;
 
-public abstract class Interstitial extends Ad implements IInterstitialAd {
+import com.robinzon.medicationwizard.ads.EAdType;
+import com.robinzon.medicationwizard.ads.interfaces.IInterstitial;
 
-    public Interstitial() {
-        super(mActivity);
+public abstract class Interstitial extends FullScreenAd implements IInterstitial {
+
+
+    protected Interstitial(Activity act, String placement) {
+        super(act, placement);
     }
+
+    @Override
+    public EAdType getAdType() {
+        return EAdType.INTERSTITIAL;
+    }
+
+
+
+
 }

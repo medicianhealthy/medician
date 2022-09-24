@@ -7,35 +7,30 @@ import com.robinzon.medicationwizard.ads.AdsManager;
 import com.robinzon.medicationwizard.ads.EAdCallBacks;
 import com.robinzon.medicationwizard.ads.EAdType;
 
-public interface IAdInterface {
+public interface IAd {
     String getAdUnitId();
+    String getPlacement();
     // Loading
-    boolean shouldLoad();
-    void load();
+    boolean shouldLoad(); //Both
+    void load(); //Implementation
     void setIsInLoadingProgress(boolean isLoading);
     boolean isInLoadingProgress();
     boolean isLoaded();
     void setIsLoaded(final boolean isLoaded);
-    void handleReloaderOnFaild();
-    void handleReloaderOnSuccess();
 
     // Showing
-    boolean canShow();
-    void show();
+    boolean canShow(); //Both
+    void show();//Implementation
     boolean isShowing();
     void setIsShowing(boolean isShowing);
 
     //AdCallBacks
-    void handleAdCallBacks(final EAdCallBacks adCallback);
+    void handleAdCallBacks(final EAdCallBacks adCallback);//Both
     //Life Cycle
-    void onResume();
-    void onPause();
-    void onDestroy();
-    void onCreate();
-
-    //Expiration
-    boolean isExpired();
-    int getExpirationTimeInMinutes();
+    void onResume();//Implementation
+    void onPause();//Implementation
+    void onDestroy();//Implementation
+    void onCreate();//Implementation
 
     Activity getActivity();
     AdsManager getAdsManager();

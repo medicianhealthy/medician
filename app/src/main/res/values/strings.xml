@@ -18,6 +18,7 @@
     <string name="admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
     <string name="admob_rewarded_interstitial_id_test">ca-app-pub-3940256099942544/5354046379</string>
     <string name="admob_rv_id_test">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="admob_app_open_id_test">ca-app-pub-3940256099942544/3419835294</string>
 
     <!--Live ad units-->
     <string name="admob_application_id_live">app</string>

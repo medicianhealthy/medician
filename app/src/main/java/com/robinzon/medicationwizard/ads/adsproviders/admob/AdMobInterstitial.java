@@ -10,64 +10,57 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.robinzon.medicationwizard.ads.IAdDisplayingEvent;
-import com.robinzon.medicationwizard.ads.IAdLoadingEvents;
+import com.robinzon.medicationwizard.ads.EAdCallBacks;
+import com.robinzon.medicationwizard.ads.EAdType;
 import com.robinzon.medicationwizard.ads.rootclasses.Interstitial;
 
-public class AdMobInterstitial extends Interstitial {
+public final class AdMobInterstitial extends Interstitial {
     private InterstitialAd mInterstitialAd;
 
-    @Override
-    public void create(Activity activity, int adUnitIdResourceId) {
-        setAdUnitId(activity.getString(adUnitIdResourceId));
+    public AdMobInterstitial(Activity act, String placement) {
+        super(act, placement);
     }
 
+
+
     @Override
-    public void load(final Activity activity) {
-        if (mIsInLoadingProgress.compareAndSet(false, true)) {
-            InterstitialAd.load(activity, getAdUnitId(), getAdRequest(), getInterstitialAdLoadCallBack());
+    public void load() {
+        if (shouldLoad()) {
+            InterstitialAd.load(getActivity(), getAdUnitId(), getAdRequest(), getLoadCallBack());
         }
+    }
+
+    private InterstitialAdLoadCallback getLoadCallBack() {
+        return new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD);
+            }
+
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                super.onAdLoaded(interstitialAd);
+                handleAdCallBacks(EAdCallBacks.LOADED);
+                mInterstitialAd = interstitialAd;
+            }
+        };
     }
 
     private AdRequest getAdRequest() {
         return new AdRequest.Builder().build();
     }
 
-    private InterstitialAdLoadCallback getInterstitialAdLoadCallBack() {
-        return new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-                mInterstitialAd = null;
-                mIsLoaded.set(false);
-                mIsInLoadingProgress.set(false);
-                markLoadFailAttempt();
-                if (null != mLoadingEventsListener){
-                    mLoadingEventsListener.onAdFailedToLoad(loadAdError.getMessage());
-                }
-            }
-
-            @Override
-            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                super.onAdLoaded(interstitialAd);
-                mInterstitialAd = interstitialAd;
-                mIsLoaded.set(true);
-                mIsInLoadingProgress.set(false);
-                setRetryAttemptsToZero();
-                if (null != mLoadingEventsListener){
-                    mLoadingEventsListener.onAdLoaded();
-                }
-            }
-        };
+    @Override
+    public boolean canShow() {
+        return null != mInterstitialAd && super.canShow();
     }
 
     @Override
-    public void show(Activity activity, IAdDisplayingEvent adDisplayingEvent) {
-        if (null != mInterstitialAd && mIsLoaded.get() && !mIsShowing.get()) {
-            if (null == mInterstitialAd.getFullScreenContentCallback()) {
-                mInterstitialAd.setFullScreenContentCallback(getFullScreenContentCallBack());
-            }
-            mInterstitialAd.show(activity);
+    public void show() {
+        if (canShow()) {
+            mInterstitialAd.setFullScreenContentCallback(getFullScreenContentCallBack());
+            mInterstitialAd.show(getActivity());
         }
     }
 
@@ -76,18 +69,19 @@ public class AdMobInterstitial extends Interstitial {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                handleAdCallBacks(EAdCallBacks.CLICKED);
             }
 
             @Override
             public void onAdDismissedFullScreenContent() {
                 super.onAdDismissedFullScreenContent();
-                mIsShowing.set(false);
+                handleAdCallBacks(EAdCallBacks.DISMISSED);
             }
 
             @Override
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                 super.onAdFailedToShowFullScreenContent(adError);
-                mIsShowing.set(false);
+                handleAdCallBacks(EAdCallBacks.FAILED_TO_SHOW);
             }
 
             @Override
@@ -98,63 +92,33 @@ public class AdMobInterstitial extends Interstitial {
             @Override
             public void onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent();
-                mIsShowing.set(true);
+                handleAdCallBacks(EAdCallBacks.SHOWN);
             }
         };
     }
 
     @Override
-    public boolean hasAd() {
-        return null != mInterstitialAd && mIsLoaded.get();
-    }
-
-    @Override
-    public boolean isLoaded() {
-        return mIsLoaded.get();
-    }
-
-    @Override
-    public void setIsLoaded(boolean isLoaded) {
+    public void onResume() {
 
     }
 
     @Override
-    public boolean isShowing() {
-        return mIsShowing.get();
-    }
-
-    @Override
-    public void setIsShowing(boolean isShowing) {
-        mIsShowing.set(isShowing);
-    }
-
-    @Override
-    public void onResume(Activity activity) {
+    public void onPause() {
 
     }
 
     @Override
-    public void onPause(Activity activity) {
+    public void onDestroy() {
 
     }
 
     @Override
-    public void onDestroy(Activity activity) {
+    public void onCreate() {
 
     }
 
     @Override
-    public void onCreate(Activity activity) {
-
-    }
-
-    @Override
-    public void setLoadingEventsListener(IAdLoadingEvents loadingEvents) {
-        mLoadingEventsListener = loadingEvents;
-    }
-
-    @Override
-    public String getClassName() {
-        return AdMobInterstitial.class.getSimpleName();
+    public EAdType getAdType() {
+        return EAdType.INTERSTITIAL;
     }
 }

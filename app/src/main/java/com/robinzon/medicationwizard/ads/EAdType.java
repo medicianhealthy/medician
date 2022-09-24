@@ -7,7 +7,8 @@ public enum EAdType {
     BANNER("Banner"),
     INTERSTITIAL("Interstitial"),
     INTERSTITIAL_REWARDED("Rewarded Interstitial"),
-    REWARDED_VIDEO("Rewarded Video");
+    REWARDED_VIDEO("Rewarded Video"),
+    APP_OPEN("App open");
 
     private final String mName;
 

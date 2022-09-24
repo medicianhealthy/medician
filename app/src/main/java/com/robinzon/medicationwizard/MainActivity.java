@@ -1,8 +1,8 @@
 package com.robinzon.medicationwizard;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,10 +19,9 @@ import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 
 
-public class MainActivity extends AppCompatActivity implements IContextProvider{
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityMainBinding mBinding;
     private AdsManager mAdsManager;
 
 
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements IContextProvider{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.robinzon.medicationwizard.databinding.ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
         setSupportActionBar(mBinding.appBarMain.toolbar);
@@ -47,20 +46,23 @@ public class MainActivity extends AppCompatActivity implements IContextProvider{
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        mAdsManager = new AdsManager();
         RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
             @Override
             public void onFetchCompleted(boolean isSuccessFull) {
-                initAds();
+                getAdsManager().initializeAds(MainActivity.this);
+            }
+        });
+
+        mBinding.getRoot().findViewById(R.id.text_home).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAdsManager().showRv();
             }
         });
 
     }
 
-    private void initAds() {
-        mAdsManager = new AdsManager(this);
-        getAdsManager().onCreate(this);
-        getAdsManager().initializeAds(this);
-    }
 
     public AdsManager getAdsManager() {
         return mAdsManager;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements IContextProvider{
     protected void onResume() {
         super.onResume();
         if (null != getAdsManager()) {
-            getAdsManager().onResume(this);
+            getAdsManager().onResume();
         }
 
     }
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements IContextProvider{
     @Override
     protected void onDestroy() {
         if (null != getAdsManager()) {
-            getAdsManager().onDestroy(this);
+            getAdsManager().onDestroy();
         }
         super.onDestroy();
     }
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements IContextProvider{
     @Override
     protected void onPause() {
         if (null != getAdsManager()) {
-            getAdsManager().onPause(this);
+            getAdsManager().onPause();
         }
         super.onPause();
     }
@@ -110,8 +112,5 @@ public class MainActivity extends AppCompatActivity implements IContextProvider{
     }
 
 
-    @Override
-    public Context getContext() {
-        return this;
-    }
+
 }

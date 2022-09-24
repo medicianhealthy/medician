@@ -1,9 +1,23 @@
 package com.robinzon.medicationwizard.ads.rootclasses;
 
-import com.robinzon.medicationwizard.ads.interfaces.IBannerAd;
+import android.app.Activity;
 
-public abstract class Banner extends Ad implements IBannerAd {
-    public Banner() {
-        super(mActivity);
+import com.robinzon.medicationwizard.ads.EAdType;
+import com.robinzon.medicationwizard.ads.interfaces.IBanner;
+
+public abstract class Banner extends Ad implements IBanner {
+    private long mLastSuccessfulLoadTimeStamp;
+    private int mExpirationTimeInMinutes;
+
+    protected Banner(final Activity activity, final String placement) {
+        super(activity, placement);
     }
+
+    @Override
+    public EAdType getAdType() {
+        return EAdType.BANNER;
+    }
+
+
+
 }

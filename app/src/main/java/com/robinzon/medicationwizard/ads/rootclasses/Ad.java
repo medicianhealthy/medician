@@ -1,33 +1,40 @@
 package com.robinzon.medicationwizard.ads.rootclasses;
 
 import android.app.Activity;
+import android.text.TextUtils;
 
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.ads.AdsManager;
+import com.robinzon.medicationwizard.ads.AdsUnitProvider;
 import com.robinzon.medicationwizard.ads.EAdCallBacks;
 import com.robinzon.medicationwizard.ads.EAdType;
-import com.robinzon.medicationwizard.ads.interfaces.IAdInterface;
+import com.robinzon.medicationwizard.ads.interfaces.IAd;
 
 import java.lang.ref.WeakReference;
 
-public abstract class Ad extends MedicationWizardSuper implements IAdInterface {
+public abstract class Ad extends MedicationWizardSuper implements IAd {
 
     private final Activity mActivity;
-    private WeakReference<String> mAdUnitId = new WeakReference<String>(null);
+    private WeakReference<String> mAdUnitId = new WeakReference<>(null);
     private boolean mIsLoaded;
     private boolean mIsInLoadingProgress;
     private boolean mIsShowing;
-    private int mRetryAttempts;
-    private long mLastSuccessfulLoadTimeStamp;
-    private int mExpirationTimeInMinutes;
+    private final String mPlacement;
 
-    protected Ad(Activity mActivity) {
+    protected Ad(Activity mActivity, String placement) {
         this.mActivity = mActivity;
+        this.mPlacement = placement;
     }
 
     @Override
     public String getAdUnitId() {
-        return mAdUnitId.get();
+       if (null == mAdUnitId.get()){
+           final String adUnit = AdsUnitProvider.getAdUnit(getActivity(), getAdType(), getPlacement());
+           if (!TextUtils.isEmpty(adUnit)) {
+               mAdUnitId = new WeakReference<>(adUnit);
+           }
+       }
+       return mAdUnitId.get();
     }
 
     @Override
@@ -52,7 +59,7 @@ public abstract class Ad extends MedicationWizardSuper implements IAdInterface {
 
     @Override
     public boolean canShow() {
-        return !isShowing() && isLoaded() && !isInLoadingProgress();
+        return !isShowing() && isLoaded();
     }
 
     @Override
@@ -67,8 +74,7 @@ public abstract class Ad extends MedicationWizardSuper implements IAdInterface {
 
     @Override
     public boolean shouldLoad() {
-        return !isLoaded() && !isInLoadingProgress() ||
-                isLoaded() && isExpired();
+        return !isLoaded() && !isInLoadingProgress();
     }
 
     @Override
@@ -84,7 +90,6 @@ public abstract class Ad extends MedicationWizardSuper implements IAdInterface {
             case FAILED_TO_LOAD:
                 setIsLoaded(false);
                 setIsInLoadingProgress(false);
-                handleReloaderOnFaild();
                 break;
             case SHOWN:
                 setIsShowing(true);
@@ -94,38 +99,16 @@ public abstract class Ad extends MedicationWizardSuper implements IAdInterface {
                 }
                 break;
             case FAILED_TO_SHOW:
-                break;
             case DISMISSED:
                 setIsShowing(false);
                 break;
-            case REWARDED:
-                break;
             case CLICKED:
+                break;
+            default:
                 break;
         }
     }
 
-    @Override
-    public void handleReloaderOnFaild() {
-
-    }
-
-    @Override
-    public void handleReloaderOnSuccess() {
-    }
-
-    @Override
-    public boolean isExpired() {
-        final int expirationInMinutes = getExpirationTimeInMinutes();
-        final long currentTimeInMillis = System.currentTimeMillis();
-        final int deltaInMinutes = (int) ((currentTimeInMillis - mLastSuccessfulLoadTimeStamp) / 1000 / 60);
-        return deltaInMinutes > expirationInMinutes;
-    }
-
-    @Override
-    public int getExpirationTimeInMinutes() {
-        return this.mExpirationTimeInMinutes;
-    }
 
     @Override
     public Activity getActivity() {
@@ -136,4 +119,10 @@ public abstract class Ad extends MedicationWizardSuper implements IAdInterface {
     public AdsManager getAdsManager() {
         return ((MainActivity) getActivity()).getAdsManager();
     }
+
+    @Override
+    public String getPlacement() {
+        return mPlacement;
+    }
+
 }

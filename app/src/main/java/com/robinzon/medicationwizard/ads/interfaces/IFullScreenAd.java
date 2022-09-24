@@ -1,7 +1,7 @@
 package com.robinzon.medicationwizard.ads.interfaces;
 
-public interface IFullScreenAd extends IAdInterface {
-    void setIsExpired(boolean isExpired);
+public interface IFullScreenAd extends IAd {
     boolean isExpired();
-    void setLoadTime(long loadTime);
+    void stampLoadTime();
+    int getExpirationTimeInMinutes();
 }
