@@ -14,12 +14,14 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ads.EAdCallBacks;
+import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.rootclasses.Banner;
+import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
 
 public final class AdMobBanner extends Banner {
     private final AdView mBanner;
 
-    public AdMobBanner(Activity activity, String placement) {
+    public AdMobBanner(Activity activity, EAdPlacement placement) {
         super(activity, placement);
         mBanner = getActivity().findViewById(R.id.adView);
     }
@@ -30,35 +32,40 @@ public final class AdMobBanner extends Banner {
     }
 
     @Override
-    public void load() {
+    public void load(final IAdsLifeCycleCallBack adsLifeCycleCallBack) {
         if (shouldLoad()){
-            mBanner.setAdListener(getAdListener());
+            mBanner.setAdListener(getAdListener(adsLifeCycleCallBack));
             mBanner.loadAd(getAdRequest());
         }
+    }
+
+    @Override
+    public void load() {
+        load(null);
     }
 
     private AdRequest getAdRequest() {
         return new AdRequest.Builder().build();
     }
 
-    private AdListener getAdListener() {
+    private AdListener getAdListener(final IAdsLifeCycleCallBack adsLifeCycleCallBack) {
         return new AdListener() {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
-                handleAdCallBacks(EAdCallBacks.CLICKED);
+                handleAdCallBacks(EAdCallBacks.CLICKED, adsLifeCycleCallBack);
             }
 
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                handleAdCallBacks(EAdCallBacks.DISMISSED);
+                handleAdCallBacks(EAdCallBacks.DISMISSED, adsLifeCycleCallBack);
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD);
+                handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack);
             }
 
             @Override
@@ -69,13 +76,13 @@ public final class AdMobBanner extends Banner {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                handleAdCallBacks(EAdCallBacks.LOADED);
+                handleAdCallBacks(EAdCallBacks.LOADED, adsLifeCycleCallBack);
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                handleAdCallBacks(EAdCallBacks.SHOWN);
+                handleAdCallBacks(EAdCallBacks.SHOWN, adsLifeCycleCallBack);
             }
         };
     }
@@ -87,6 +94,11 @@ public final class AdMobBanner extends Banner {
 
     @Override
     public void show() {
+
+    }
+
+    @Override
+    public void show(IAdsLifeCycleCallBack adsLifeCycleCallBack) {
 
     }
 
@@ -137,5 +149,10 @@ public final class AdMobBanner extends Banner {
         }
         final int adWidth = (int) (screenWidth / density);
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getActivity(), adWidth);
+    }
+
+    @Override
+    public Object getAdCoreObject() {
+        return mBanner;
     }
 }

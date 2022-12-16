@@ -6,6 +6,7 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -14,16 +15,21 @@ import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobBanner;
 import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobInterstitial;
 import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobRewardedVideo;
 import com.robinzon.medicationwizard.ads.interfaces.IAd;
+import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IBanner;
 import com.robinzon.medicationwizard.ads.interfaces.IInterstitial;
 import com.robinzon.medicationwizard.ads.interfaces.IRewardedVideo;
+import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
+import com.robinzon.medicationwizard.utils.Logger;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
-public class AdsManager extends MedicationWizardSuper {
+public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCallBack{
     public static final String LOG_BANNER = "mwiz_Banner_Ad";
     public static final String LOG_INTERSTITIAL = "mwiz_Interstitial_Ad";
     public static final String LOG_REWARDED_INTERSTITIAL = "mwiz_Rewarded_Interstitial_Ad";
@@ -37,16 +43,17 @@ public class AdsManager extends MedicationWizardSuper {
     private IInterstitial mInterstitial;
     private IRewardedVideo mRewardedVideo;
 
+
     private final Set<IAd> mAds = new HashSet<>();
 
 
     private void createAds(Activity activity) {
         mBanner = new AdMobBanner(activity,
-                BuildConfig.DEBUG ? AdsUnitProvider.BANNER_AD_PLACEMENT_TEST :AdsUnitProvider.BANNER_AD_PLACEMENT_MAIN);
+                BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST :EAdPlacement.BANNER_AD_PLACEMENT_MAIN);
         mInterstitial = new AdMobInterstitial(activity,
-                BuildConfig.DEBUG ? AdsUnitProvider.INTERSTITIAL_AD_PLACEMENT_TEST : AdsUnitProvider.INTERSTITIAL_AD_PLACEMENT_ADD_MED);
+                BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED);
         mRewardedVideo = new AdMobRewardedVideo(activity ,
-                BuildConfig.DEBUG ? AdsUnitProvider.REWARDED_VIDEO_AD_PLACEMENT_TEST :AdsUnitProvider.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR);
+                BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST :EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR);
         mAds.add(mBanner);
         mAds.add(mInterstitial);
         mAds.add(mRewardedVideo);
@@ -65,17 +72,17 @@ public class AdsManager extends MedicationWizardSuper {
     private void loadAds(Activity activity) {
         for (IAd ad : mAds) {
             if (null != ad) {
-                ad.load();
+                ad.load(this);
             }
         }
     }
 
     public void showInterstitial() {
-       mInterstitial.show();
+       mInterstitial.show(this);
     }
 
     public void showRv() {
-        mRewardedVideo.show();
+        mRewardedVideo.show(this);
     }
 
 
@@ -112,9 +119,6 @@ public class AdsManager extends MedicationWizardSuper {
         return AdsManager.class.getSimpleName();
     }
 
-
-
-
     private static void tick() {
 
     }
@@ -139,7 +143,30 @@ public class AdsManager extends MedicationWizardSuper {
         }
     }
 
+    @Override
+    public void onInterstitialLifeCycleStageChanged(IAd ad, EAdCallBacks adCallBack, AdError adError) {
+        logMessageOnAdLifeCycleChanges(ad, adCallBack, adError);
+    }
 
+    private void logMessageOnAdLifeCycleChanges(IAd ad, EAdCallBacks adCallBack, AdError adError) {
+        if (null != ad && null != adCallBack) {
+            final StringBuilder builder = new StringBuilder();
+            builder.append(String.format("Ads call back receiver - {%s} Ad lifecycle stage changed to {%s}.", ad.getAdType().getName(), adCallBack.name()));
+            if (null != adError){
+                builder.append(String.format("Error is {%s}", adError.getMessage()));
+            }
+            logMessage(builder.toString());
+        }
+    }
 
+    @Override
+    protected List<String> getLogTags() {
+        if (Logger.isLoggingEnabled() ){
+            final ArrayList<String> tags = new ArrayList<>(1);
+            tags.add("AdsManger_call_back_center");
+            return tags;
+        }
+        return null;
+    }
 
 }

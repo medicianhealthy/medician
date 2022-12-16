@@ -1,20 +1,30 @@
 package com.robinzon.medicationwizard.ads.rootclasses;
 
-import java.lang.ref.WeakReference;
+import com.robinzon.medicationwizard.utils.Logger;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MedicationWizardSuper {
-    protected WeakReference<List<String>> mLogTags;
 
     public String getClassName(){
         return getClass().getSimpleName();
     }
 
     protected List<String> getLogTags(){
-        return mLogTags.get();
+        if (Logger.isLoggingEnabled()) {
+            return new ArrayList<String>() {{
+                add(getClass().getSimpleName());
+            }};
+        }
+        return null;
     }
 
-    protected void setLogTags(final List<String> logTags){
-        mLogTags = new WeakReference<>(logTags);
+    protected void logMessage(final String message, final Object... params){
+        if (Logger.isLoggingEnabled()){
+            Logger.getInstance().log(getClassName() , getLogTags() , message, params);
+        }
     }
+
+
 }

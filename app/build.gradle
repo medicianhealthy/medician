@@ -51,22 +51,31 @@ android {
 
 dependencies {
     //Ads
-    implementation 'com.google.android.gms:play-services-ads:21.2.0'
-    implementation 'com.google.firebase:firebase-ads:21.2.0'
+    implementation 'com.google.android.gms:play-services-ads:21.4.0'
+    implementation 'com.google.firebase:firebase-ads:21.4.0'
     //Material
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
     //Android X
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'androidx.navigation:navigation-fragment:2.5.2'
-    implementation 'androidx.navigation:navigation-ui:2.5.2'
+    implementation 'androidx.navigation:navigation-fragment:2.5.3'
+    implementation 'androidx.navigation:navigation-ui:2.5.3'
     //Firebase
     // https://firebase.google.com/docs/android/learn-more#compare-bom-versions
-    implementation platform('com.google.firebase:firebase-bom:30.4.1')
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-config'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.google.firebase:firebase-inappmessaging'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
+
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    implementation 'com.google.android.gms:play-services-ads:21.4.0'
+
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-process:2.5.1'
+    annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.5.1'
 }

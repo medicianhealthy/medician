@@ -4,14 +4,17 @@ import android.app.Activity;
 
 import com.robinzon.medicationwizard.ads.EAdCallBacks;
 import com.robinzon.medicationwizard.ads.EAdType;
+import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IRewardedVideo;
+
+import java.util.List;
 
 public abstract class RewardedVideo extends FullScreenAd implements IRewardedVideo {
     protected int mRewardAmount;
     private boolean mIsSkipped;
 
 
-    protected RewardedVideo(Activity activity, String placement) {
+    protected RewardedVideo(Activity activity, EAdPlacement placement) {
         super(activity, placement);
     }
 
@@ -21,8 +24,8 @@ public abstract class RewardedVideo extends FullScreenAd implements IRewardedVid
     }
 
     @Override
-    public void handleAdCallBacks(EAdCallBacks adCallback) {
-        super.handleAdCallBacks(adCallback);
+    public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack) {
+        super.handleAdCallBacks(adCallback, adsLifeCycleCallBack);
         switch (adCallback){
             case SHOWN:
                 setIsSkipped(true);
@@ -57,4 +60,10 @@ public abstract class RewardedVideo extends FullScreenAd implements IRewardedVid
     }
 
 
+    @Override
+    protected List<String> getLogTags() {
+        final List<String> thisLogTags = super.getLogTags();
+        thisLogTags.add(getClass().getSimpleName());
+        return thisLogTags;
+    }
 }
