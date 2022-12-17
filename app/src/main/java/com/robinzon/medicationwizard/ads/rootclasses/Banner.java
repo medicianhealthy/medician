@@ -16,5 +16,8 @@ public abstract class Banner extends PartialScreenAd implements IBanner {
         return EAdType.BANNER;
     }
 
-
+    @Override
+    public boolean hasCoolDownPassedSinceLastImpression() {
+        return true;
+    }
 }

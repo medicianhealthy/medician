@@ -29,7 +29,8 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
     private boolean mIsShowing;
     private final EAdPlacement mPlacement;
     private AdReloadWorker mAdReloadWorker;
-    private int mRetryAttempts;
+    private byte mRetryAttempts;
+
 
     public Ad(Activity mActivity, EAdPlacement placement) {
         this.mActivity = mActivity;
@@ -107,12 +108,11 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
                     mAdReloadWorker.removeMessages(AdReloadWorker.MESSAGE_RELOAD);
                     mAdReloadWorker = null;
                 }
-
                 break;
             case FAILED_TO_LOAD:
                 setIsLoaded(false);
                 setIsInLoadingProgress(false);
-                activateReloaderOnFailedLoad();
+                activateReloadOnFailedLoad();
                 break;
             case SHOWN:
                 setIsShowing(true);
@@ -145,13 +145,16 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
         }
     }
 
-    private void activateReloaderOnFailedLoad() {
+    private void activateReloadOnFailedLoad() {
         mRetryAttempts++;
         if (null == mAdReloadWorker) {
             mAdReloadWorker = new AdReloadWorker(Looper.myLooper(), this);
         }
-        final long delay = Math.max(mRetryAttempts, 6L) * 10L;
-        mAdReloadWorker.sendEmptyMessageDelayed(AdReloadWorker.MESSAGE_RELOAD, TimeInterval.MilliSeconds.getFromSeconds(delay));
+        final byte power = (byte) Math.min(mRetryAttempts , 6);
+        final short deltaInSecondsToNextLoadAttempt = (short) Math.pow(2, power);
+        final long deltaInMillisToNextLoadAttempt = TimeInterval.MilliSeconds.getFromSeconds(deltaInSecondsToNextLoadAttempt);
+        mAdReloadWorker.sendEmptyMessageDelayed(AdReloadWorker.MESSAGE_RELOAD,deltaInMillisToNextLoadAttempt);
+        logMessage("Scheduling a new reload attempt in [%d] seconds", deltaInSecondsToNextLoadAttempt);
     }
 
 

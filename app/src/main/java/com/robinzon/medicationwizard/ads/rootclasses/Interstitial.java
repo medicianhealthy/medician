@@ -17,12 +17,49 @@ public abstract class Interstitial extends FullScreenAd implements IInterstitial
         super(act, placement);
     }
 
+    protected void logMessageOnInterstitialShouldNotBeLoaded() {
+        final boolean isLoadedButExpired = isLoaded() && isExpired();
+        final boolean isLoaded = isLoaded();
+        final boolean isInLoadingProgress = isInLoadingProgress();
+        logMessage("Got a call to load interstitial. Interstitial shouldn't be loaded now. Possible reasons are %s",
+                "Load but expired {" +
+                        isLoadedButExpired +
+                        "}, loaded {" +
+                        isLoaded +
+                        "}, is in loading progress{" +
+                        isInLoadingProgress +
+                        "}");
+    }
+
     @Override
     public boolean canShow() {
+        return hasCoolDownPassedSinceLastImpression() && super.canShow();
+    }
+
+    @Override
+    public boolean hasCoolDownPassedSinceLastImpression() {
         final int secondsPassedFromLastInterstitialDismissed = AdsStatsManger.getSecondsPassedFromLastInterstitialDismissed(getActivity());
         final int remoteConfigCoolDownValue = RemoteConfigManager.getInstance().getIntValue(RemoteConfigKeysAndDefaults.AD_INTERSTITIAL_COOL_DOWN_SECONDS);
-        boolean hasCoolDownPassed = secondsPassedFromLastInterstitialDismissed > remoteConfigCoolDownValue;
-        return hasCoolDownPassed && super.canShow();
+        return secondsPassedFromLastInterstitialDismissed > remoteConfigCoolDownValue;
+    }
+
+    protected void logMessageOnInterstitialCantBeShown() {
+        final boolean isObjectValid = null != getAdCoreObject();
+        final boolean hasCoolDownPassed = hasCoolDownPassedSinceLastImpression();
+        final boolean isExpired = isExpired();
+        final boolean isShowing = isShowing();
+        final boolean isLoaded = isLoaded();
+        final String builder = "object valid {" +
+                isObjectValid +
+                "}, cool down passes {" +
+                hasCoolDownPassed +
+                "}, expired {" +
+                isExpired +
+                "}, showing {" +
+                isShowing +
+                "}, loaded {" +
+                isLoaded + "}";
+        logMessage("Got a call to show interstitial. Interstitial can't be shown now. Possible reasons are %s", builder);
     }
 
     @Override

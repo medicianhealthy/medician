@@ -57,4 +57,9 @@ public abstract class RewardedVideo extends FullScreenAd implements IRewardedVid
         return mRewardAmount;
     }
 
+    @Override
+    public boolean hasCoolDownPassedSinceLastImpression() {
+        return false;
+    }
+
 }

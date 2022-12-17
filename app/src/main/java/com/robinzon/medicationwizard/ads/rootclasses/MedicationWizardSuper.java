@@ -15,7 +15,7 @@ public abstract class MedicationWizardSuper {
         return null;
     }
 
-    protected void setLogTags(final List<String> tags) {
+    protected void  setLogTags(final List<String> tags) {
         if (Logger.isLoggingEnabled()) {
             mLogTags = tags;
         }

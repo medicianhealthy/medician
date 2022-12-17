@@ -43,4 +43,6 @@ public interface IAd {
     EAdType getAdType();
 
     Object getAdCoreObject();
+
+    boolean hasCoolDownPassedSinceLastImpression();
 }

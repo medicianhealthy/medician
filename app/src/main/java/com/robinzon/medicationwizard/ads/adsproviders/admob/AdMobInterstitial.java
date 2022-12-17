@@ -15,6 +15,7 @@ import com.robinzon.medicationwizard.ads.EAdType;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
 import com.robinzon.medicationwizard.ads.rootclasses.Interstitial;
+import com.robinzon.medicationwizard.utils.Logger;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public final class AdMobInterstitial extends Interstitial {
         }});
     }
 
-
     @Override
     public void load() {
         load(null);
@@ -37,7 +37,10 @@ public final class AdMobInterstitial extends Interstitial {
     @Override
     public void load(final IAdsLifeCycleCallBack adsLifeCycleCallBack) {
         if (shouldLoad()) {
+            logMessage("Got a call to load interstitial. Starting to load now");
             InterstitialAd.load(getActivity(), getAdUnitId(), getAdRequest(), getLoadCallBack(adsLifeCycleCallBack));
+        } else if (Logger.isLoggingEnabled()){
+            logMessageOnInterstitialShouldNotBeLoaded();
         }
     }
 
@@ -75,8 +78,11 @@ public final class AdMobInterstitial extends Interstitial {
     @Override
     public void show(IAdsLifeCycleCallBack adsLifeCycleCallBack) {
         if (canShow()) {
+            logMessage("Got a call to show interstitial. Showing now");
             mInterstitialAd.setFullScreenContentCallback(getFullScreenContentCallBack(adsLifeCycleCallBack));
             mInterstitialAd.show(getActivity());
+        } else if (Logger.isLoggingEnabled()) {
+            logMessageOnInterstitialCantBeShown();
         }
     }
 

@@ -18,12 +18,17 @@ import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.rootclasses.Banner;
 import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
 
+import java.util.ArrayList;
+
 public final class AdMobBanner extends Banner {
     private final AdView mBanner;
 
     public AdMobBanner(Activity activity, EAdPlacement placement) {
         super(activity, placement);
         mBanner = getActivity().findViewById(R.id.adView);
+        setLogTags(new ArrayList<String>(1) {{
+            add(getClassName());
+        }});
     }
 
     @Override
@@ -65,7 +70,7 @@ public final class AdMobBanner extends Banner {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack);
+                handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack , loadAdError);
             }
 
             @Override
