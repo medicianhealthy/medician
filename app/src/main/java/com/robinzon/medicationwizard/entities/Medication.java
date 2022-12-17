@@ -168,8 +168,4 @@ public class Medication extends MedicationWizardSuper {
         }
         return jsonArray;
     }
-
-    private String getClassNameForLogs() {
-        return "{Medication}";
-    }
 }

@@ -6,14 +6,17 @@ import com.google.android.gms.ads.AdError;
 import com.robinzon.medicationwizard.ads.EAdCallBacks;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IFullScreenAd;
+import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 
 public abstract class FullScreenAd extends Ad implements IFullScreenAd {
 
     private long mLastSuccessfulLoadTimeStamp;
-    private int mExpirationTimeInMinutes = 60;
+    private int mExpirationTimeInMinutes;
+    private final static String RCKEY_EXPIRATION_TIME_MINUTES_FULL_SCREEN_ADS = "expiration_time_minutes_full_screen_ads";
 
     protected FullScreenAd(Activity act, EAdPlacement placement) {
         super(act, placement);
+        setExpirationTimeInMinutes(RemoteConfigManager.getInstance().getIntValue(RCKEY_EXPIRATION_TIME_MINUTES_FULL_SCREEN_ADS));
     }
 
     @Override
@@ -27,6 +30,11 @@ public abstract class FullScreenAd extends Ad implements IFullScreenAd {
     @Override
     public int getExpirationTimeInMinutes() {
         return this.mExpirationTimeInMinutes;
+    }
+
+    @Override
+    public void setExpirationTimeInMinutes(int expirationTimeInMinutes) {
+        this.mExpirationTimeInMinutes = expirationTimeInMinutes;
     }
 
     @Override

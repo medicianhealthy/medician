@@ -20,5 +20,5 @@ public enum EAdPlacement {
 
     APP_OPEN_AD_PLACEMENT_PREFIX,
     APP_OPEN_MAIN,
-    APP_OPEN_TEST;
+    APP_OPEN_TEST
 }

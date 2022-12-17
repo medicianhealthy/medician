@@ -105,11 +105,6 @@ public final class AdMobRewardedVideo extends RewardedVideo {
             }
 
             @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-            }
-
-            @Override
             public void onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent();
                 AdMobRewardedVideo.super.handleAdCallBacks(EAdCallBacks.SHOWN, adsLifeCycleCallBack);

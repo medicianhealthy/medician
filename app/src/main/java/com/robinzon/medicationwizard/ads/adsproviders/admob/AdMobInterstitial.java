@@ -100,10 +100,6 @@ public final class AdMobInterstitial extends Interstitial {
                 AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.FAILED_TO_SHOW, adsLifeCycleCallBack, adError);
             }
 
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-            }
 
             @Override
             public void onAdShowedFullScreenContent() {

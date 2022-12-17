@@ -1,8 +1,6 @@
 package com.robinzon.medicationwizard.ads;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.os.Message;
 
 import androidx.annotation.NonNull;
 
@@ -22,26 +20,20 @@ import com.robinzon.medicationwizard.ads.interfaces.IRewardedVideo;
 import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCallBack {
-    public static final String LOG_BANNER = "mwiz_Banner_Ad";
-    public static final String LOG_INTERSTITIAL = "mwiz_Interstitial_Ad";
-    public static final String LOG_REWARDED_INTERSTITIAL = "mwiz_Rewarded_Interstitial_Ad";
-    public static final String LOG_REWARDED_VIDEO = "mwiz_Rewarded_Video_Ad";
     public static final String RCKEY_ADS_TIMER_BANNER_GRACE_MINUTES = "ads_timer_banner_grace_minutes";
     public static final String RCKEY_ADS_TIMER_INTER_GRACE_MINUTES = "ads_timer_inter_grace_minutes";
     public static final String RCKEY_ADS_TIMER_RV_GRACE_MINUTES = "ads_timer_rv_grace_minutes";
-    public static final int TICK_INTERVAL_SECONDS = 8;
-    private Ticker mTicker;
     private IBanner mBanner;
     private IInterstitial mInterstitial;
     private IRewardedVideo mRewardedVideo;
 
 
-    private final Set<IAd> mAds = new HashSet<>();
+    private final Map<EAdType, Map<EAdPlacement, IAd>> mAds = new HashMap<>();
 
 
     private void createAds(Activity activity) {
@@ -51,9 +43,17 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
                 BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED);
         mRewardedVideo = new AdMobRewardedVideo(activity,
                 BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR);
-        mAds.add(mBanner);
-        mAds.add(mInterstitial);
-        mAds.add(mRewardedVideo);
+
+        mAds.put(EAdType.BANNER, new HashMap<EAdPlacement, IAd>() {{
+            put((BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST : EAdPlacement.BANNER_AD_PLACEMENT_MAIN), mBanner);
+        }});
+        mAds.put(EAdType.INTERSTITIAL, new HashMap<EAdPlacement, IAd>() {{
+            put((BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED), mInterstitial);
+        }});
+        mAds.put(EAdType.REWARDED_VIDEO, new HashMap<EAdPlacement, IAd>() {{
+            put((BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR), mRewardedVideo);
+        }});
+
     }
 
     public void initializeAds(final Activity activity) {
@@ -61,15 +61,17 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
             @Override
             public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
                 createAds(activity);
-                loadAds(activity);
+                loadAds();
             }
         });
     }
 
-    private void loadAds(Activity activity) {
-        for (IAd ad : mAds) {
-            if (null != ad) {
-                ad.load(this);
+    private void loadAds() {
+        for (Map<EAdPlacement, IAd> map : mAds.values()) {
+            for (IAd ad : map.values()) {
+                if (null != ad) {
+                    ad.load(this);
+                }
             }
         }
     }
@@ -84,27 +86,32 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
 
 
     public void onResume() {
-        for (IAd ad : mAds) {
-            if (null != ad) {
-                ad.onResume();
+        for (Map<EAdPlacement, IAd> map : mAds.values()) {
+            for (IAd ad : map.values()) {
+                if (null != ad) {
+                    ad.onResume();
+                }
             }
         }
-
     }
 
     public void onPause() {
-        for (IAd ad : mAds) {
-            if (null != ad) {
-                ad.onPause();
+        for (Map<EAdPlacement, IAd> map : mAds.values()) {
+            for (IAd ad : map.values()) {
+                if (null != ad) {
+                    ad.onPause();
+                }
             }
         }
     }
 
 
     public void onDestroy() {
-        for (IAd ad : mAds) {
-            if (null != ad) {
-                ad.onDestroy();
+        for (Map<EAdPlacement, IAd> map : mAds.values()) {
+            for (IAd ad : map.values()) {
+                if (null != ad) {
+                    ad.onDestroy();
+                }
             }
         }
     }
@@ -114,30 +121,6 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
         return AdsManager.class.getSimpleName();
     }
 
-    private static void tick() {
-
-    }
-
-    private Ticker getTicker() {
-        if (null == mTicker) {
-            mTicker = new Ticker();
-        }
-        return mTicker;
-    }
-
-    private static class Ticker extends Handler {
-        public static final int MESSAGE_TICK = 1;
-
-        public void handleMessage(final Message message) {
-            switch (message.what) {
-                case MESSAGE_TICK:
-                    AdsManager.tick();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
 
     @Override
     public void onInterstitialLifeCycleStageChanged(IAd ad, EAdCallBacks adCallBack, AdError adError) {

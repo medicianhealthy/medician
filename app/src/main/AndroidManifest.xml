@@ -12,7 +12,6 @@
         android:fullBackupContent="@xml/backup_rules">
         <activity
             android:name="com.robinzon.medicationwizard.MainActivity"
-            android:label="@string/app_name"
             android:theme="@style/Theme.MedicationWizard.NoActionBar"
             android:exported="true">
             <intent-filter>

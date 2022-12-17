@@ -38,10 +38,6 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
         }
     }
 
-    private String getClassNameForLog() {
-        return "{SharedPreferencesManager} - ";
-    }
-
     private static String getFileName(final Context context) {
         if (null != context) {
             final Context applicationContext = context.getApplicationContext();
