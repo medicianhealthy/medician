@@ -41,11 +41,11 @@ public abstract class FullScreenAd extends Ad implements IFullScreenAd {
 
     @Override
     public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-       handleAdCallBacks(adCallback, adsLifeCycleCallBack , null);
+        handleAdCallBacks(adCallback, adsLifeCycleCallBack, null);
     }
 
     @Override
-    public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack , AdError adError) {
+    public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack, AdError adError) {
         super.handleAdCallBacks(adCallback, adsLifeCycleCallBack, adError);
         if (adCallback == EAdCallBacks.LOADED) {
             stampLoadTime();

@@ -39,7 +39,7 @@ public abstract class Interstitial extends FullScreenAd implements IInterstitial
     @Override
     public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack, AdError adError) {
         super.handleAdCallBacks(adCallback, adsLifeCycleCallBack, adError);
-        if (adCallback == EAdCallBacks.DISMISSED){
+        if (adCallback == EAdCallBacks.DISMISSED) {
             AdsStatsManger.onInterstitialDismissed(getActivity());
         }
     }

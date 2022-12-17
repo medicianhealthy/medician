@@ -27,6 +27,7 @@ public class Medication extends MedicationWizardSuper {
         public static final String JSON_KEY_AMOUNT_LEFT = "mAmountLeft";
         public static final String JSON_KEY_INSTRUCTIONS = "mInstruction";
     }
+
     private final String mCommercialName;
     private final List<ActiveIngredient> mActiveIngredients;
     private EForm mForm;
@@ -38,7 +39,7 @@ public class Medication extends MedicationWizardSuper {
     private EInstructions mInstruction;
 
     public Medication(String commercialName, List<ActiveIngredient> activeIngredients) {
-        if(!TextUtils.isEmpty(commercialName) && null != activeIngredients && !activeIngredients.isEmpty()) {
+        if (!TextUtils.isEmpty(commercialName) && null != activeIngredients && !activeIngredients.isEmpty()) {
             this.mCommercialName = commercialName;
             this.mActiveIngredients = activeIngredients;
         } else {
@@ -50,7 +51,6 @@ public class Medication extends MedicationWizardSuper {
     public String getCommercialName() {
         return mCommercialName;
     }
-
 
 
     public List<ActiveIngredient> getActiveIngredients() {
@@ -128,11 +128,11 @@ public class Medication extends MedicationWizardSuper {
                 '}';
     }
 
-    public JSONObject toJson(){
+    public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
             json.put(JsonKeys.JSON_KEY_COMMERCIAL_NAME, mCommercialName);
-            json.put(JsonKeys.JSON_KEY_ACTIVE_INGREDIENTS , getActiveIngredientsAsJsonArray());
+            json.put(JsonKeys.JSON_KEY_ACTIVE_INGREDIENTS, getActiveIngredientsAsJsonArray());
             json.put(JsonKeys.JSON_KEY_FORM, mForm.name());
             json.put(JsonKeys.JSON_KEY_STRENGTH, mStrength);
             json.put(JsonKeys.JSON_KEY_MEDICAL_CONDITION, mMedicalCondition);
@@ -161,7 +161,7 @@ public class Medication extends MedicationWizardSuper {
         return jsonArray;
     }
 
-    private JSONArray getActiveIngredientsAsJsonArray(){
+    private JSONArray getActiveIngredientsAsJsonArray() {
         final JSONArray jsonArray = new JSONArray();
         for (ActiveIngredient activeIngredient : mActiveIngredients) {
             jsonArray.put(activeIngredient.toJsonObject());
@@ -169,7 +169,7 @@ public class Medication extends MedicationWizardSuper {
         return jsonArray;
     }
 
-    private String getClassNameForLogs(){
+    private String getClassNameForLogs() {
         return "{Medication}";
     }
 }

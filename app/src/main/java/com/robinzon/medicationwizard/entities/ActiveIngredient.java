@@ -11,10 +11,11 @@ public class ActiveIngredient extends MedicationWizardSuper {
         return "{ActiveIngredient}";
     }
 
-    public static class JsonKeys{
+    public static class JsonKeys {
         public static final String JSON_KEY_NAME = "mName";
         public static final String JSON_MEASUREMENT_UNIT = "mMeasurementUnit";
     }
+
     public final String mName;
     public final EMeasurementUnit mMeasurementUnit;
 
@@ -23,7 +24,7 @@ public class ActiveIngredient extends MedicationWizardSuper {
         this.mMeasurementUnit = measurementUnit;
     }
 
-    public JSONObject toJsonObject(){
+    public JSONObject toJsonObject() {
         final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(JsonKeys.JSON_KEY_NAME, mName);

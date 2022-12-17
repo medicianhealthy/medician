@@ -117,7 +117,6 @@ public class RemoteConfigManager extends MedicationWizardSuper {
     }
 
 
-
     private boolean getDefaultBooleanValue(String key) {
         final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(key);
         return null != defaultValueFromMap && (boolean) defaultValueFromMap;
@@ -139,7 +138,7 @@ public class RemoteConfigManager extends MedicationWizardSuper {
     }
 
 
-    boolean isFirBaseValueExist(final String key){
+    boolean isFirBaseValueExist(final String key) {
         if (null != mFirebaseValues && !mFirebaseValues.isEmpty()) {
             final FirebaseRemoteConfigValue remoteConfigValue = mFirebaseValues.get(key);
             return null != remoteConfigValue;

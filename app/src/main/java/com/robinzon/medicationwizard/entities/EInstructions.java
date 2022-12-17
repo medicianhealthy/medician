@@ -1,10 +1,10 @@
 package com.robinzon.medicationwizard.entities;
 
 public enum EInstructions {
-    BeforeEating ("Before eating"),
-    WhileEating ("While eating"),
-    AfterEating ("After eating"),
-    DoesNotMatter ("Doesn't matter");
+    BeforeEating("Before eating"),
+    WhileEating("While eating"),
+    AfterEating("After eating"),
+    DoesNotMatter("Doesn't matter");
 
     final String mDescription;
 
@@ -12,7 +12,7 @@ public enum EInstructions {
         this.mDescription = description;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return mDescription;
     }
 }

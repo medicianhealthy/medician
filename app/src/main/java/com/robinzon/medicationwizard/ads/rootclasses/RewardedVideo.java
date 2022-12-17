@@ -24,7 +24,7 @@ public abstract class RewardedVideo extends FullScreenAd implements IRewardedVid
     @Override
     public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack) {
         super.handleAdCallBacks(adCallback, adsLifeCycleCallBack);
-        switch (adCallback){
+        switch (adCallback) {
             case SHOWN:
                 setIsSkipped(true);
                 break;

@@ -9,8 +9,8 @@ public class AdsGracePeriod {
 
     public AdsGracePeriod() {
         mBannerGracePeriodMinutes = RemoteConfigManager.getInstance().getIntValue(AdsManager.RCKEY_ADS_TIMER_BANNER_GRACE_MINUTES);
-        mInterGracePeriodMinutes = RemoteConfigManager.getInstance().getIntValue(AdsManager.RCKEY_ADS_TIMER_INTER_GRACE_MINUTES);;
-        mRvGracePeriodMinutes = RemoteConfigManager.getInstance().getIntValue(AdsManager.RCKEY_ADS_TIMER_RV_GRACE_MINUTES);;
+        mInterGracePeriodMinutes = RemoteConfigManager.getInstance().getIntValue(AdsManager.RCKEY_ADS_TIMER_INTER_GRACE_MINUTES);
+        mRvGracePeriodMinutes = RemoteConfigManager.getInstance().getIntValue(AdsManager.RCKEY_ADS_TIMER_RV_GRACE_MINUTES);
     }
 
     public int getBannerGracePeriodMinutes() {

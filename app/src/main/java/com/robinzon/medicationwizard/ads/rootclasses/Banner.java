@@ -19,5 +19,4 @@ public abstract class Banner extends PartialScreenAd implements IBanner {
     }
 
 
-
 }
