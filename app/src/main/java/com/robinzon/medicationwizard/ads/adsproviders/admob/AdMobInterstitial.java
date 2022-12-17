@@ -23,7 +23,7 @@ public final class AdMobInterstitial extends Interstitial {
 
     public AdMobInterstitial(Activity act, EAdPlacement placement) {
         super(act, placement);
-        setLogTags(new ArrayList<String>(1){{
+        setLogTags(new ArrayList<String>(1) {{
             add(getClassName());
         }});
     }
