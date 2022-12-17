@@ -21,9 +21,9 @@
     <string name="admob_app_open_id_test">ca-app-pub-3940256099942544/3419835294</string>
 
     <!--Live ad units-->
-    <string name="admob_application_id_live">app</string>
-    <string name="admob_banner_id_live">banner</string>
-    <string name="admob_interstitial_id_live">inter</string>
+    <string name="admob_application_id_live">ca-app-pub-1732884929436465~8629726144</string>
+    <string name="admob_banner_id_live">ca-app-pub-1732884929436465/8454840017</string>
+    <string name="admob_interstitial_id_live">ca-app-pub-1732884929436465/1796850753</string>
+    <string name="admob_rv_id_live">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live">RInter</string>
-    <string name="admob_rv_id_live">Rv</string>
 </resources>
