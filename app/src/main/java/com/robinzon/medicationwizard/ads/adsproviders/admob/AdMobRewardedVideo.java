@@ -24,7 +24,7 @@ public final class AdMobRewardedVideo extends RewardedVideo {
 
     public AdMobRewardedVideo(Activity activity, EAdPlacement placement) {
         super(activity, placement);
-        setLogTags(new ArrayList<String>(1){{
+        setLogTags(new ArrayList<String>(1) {{
             add(getClassName());
         }});
     }
@@ -39,9 +39,8 @@ public final class AdMobRewardedVideo extends RewardedVideo {
 
     @Override
     public void load() {
-       load(null);
+        load(null);
     }
-
 
 
     private RewardedAdLoadCallback getAdLoadCallBack(IAdsLifeCycleCallBack adsLifeCycleCallBack) {
@@ -77,8 +76,8 @@ public final class AdMobRewardedVideo extends RewardedVideo {
 
     @Override
     public void show(IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        if (canShow()){
-            if (null == mRewardedVideo.getFullScreenContentCallback()){
+        if (canShow()) {
+            if (null == mRewardedVideo.getFullScreenContentCallback()) {
                 mRewardedVideo.setFullScreenContentCallback(getFullScreenContentCallBack(adsLifeCycleCallBack));
             }
             mRewardedVideo.show(getActivity(), getOnRewardListener(adsLifeCycleCallBack));

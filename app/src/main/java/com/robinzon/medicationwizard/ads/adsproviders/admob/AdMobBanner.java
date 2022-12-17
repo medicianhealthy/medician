@@ -33,7 +33,7 @@ public final class AdMobBanner extends Banner {
 
     @Override
     public void load(final IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        if (shouldLoad()){
+        if (shouldLoad()) {
             mBanner.setAdListener(getAdListener(adsLifeCycleCallBack));
             mBanner.loadAd(getAdRequest());
         }
@@ -104,21 +104,21 @@ public final class AdMobBanner extends Banner {
 
     @Override
     public void onResume() {
-        if (null != mBanner){
+        if (null != mBanner) {
             mBanner.resume();
         }
     }
 
     @Override
     public void onPause() {
-        if (null != mBanner){
+        if (null != mBanner) {
             mBanner.pause();
         }
     }
 
     @Override
     public void onDestroy() {
-        if (null != mBanner){
+        if (null != mBanner) {
             mBanner.destroy();
         }
     }
