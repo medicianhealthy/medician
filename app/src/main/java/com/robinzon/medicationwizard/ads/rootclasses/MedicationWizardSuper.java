@@ -2,22 +2,27 @@ package com.robinzon.medicationwizard.ads.rootclasses;
 
 import com.robinzon.medicationwizard.utils.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MedicationWizardSuper {
 
-    public String getClassName(){
-        return getClass().getSimpleName();
-    }
+    private List<String> mLogTags;
 
     protected List<String> getLogTags(){
-        if (Logger.isLoggingEnabled()) {
-            return new ArrayList<String>() {{
-                add(getClass().getSimpleName());
-            }};
+        if (Logger.isLoggingEnabled()){
+            return mLogTags;
         }
         return null;
+    }
+
+    protected void setLogTags(final List<String> tags){
+        if (Logger.isLoggingEnabled()){
+            mLogTags = tags;
+        }
+    }
+
+    protected String getClassName(){
+        return getClass().getSimpleName();
     }
 
     protected void logMessage(final String message, final Object... params){
@@ -25,6 +30,4 @@ public abstract class MedicationWizardSuper {
             Logger.getInstance().log(getClassName() , getLogTags() , message, params);
         }
     }
-
-
 }

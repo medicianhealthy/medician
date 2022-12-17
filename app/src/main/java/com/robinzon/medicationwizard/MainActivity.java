@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         mBinding.getRoot().findViewById(R.id.text_home).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getAdsManager().showRv();
+                getAdsManager().showInterstitial();
             }
         });
 

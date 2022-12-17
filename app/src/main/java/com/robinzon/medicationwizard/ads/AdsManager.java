@@ -21,15 +21,12 @@ import com.robinzon.medicationwizard.ads.interfaces.IInterstitial;
 import com.robinzon.medicationwizard.ads.interfaces.IRewardedVideo;
 import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
-import com.robinzon.medicationwizard.utils.Logger;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
-public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCallBack{
+public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCallBack {
     public static final String LOG_BANNER = "mwiz_Banner_Ad";
     public static final String LOG_INTERSTITIAL = "mwiz_Interstitial_Ad";
     public static final String LOG_REWARDED_INTERSTITIAL = "mwiz_Rewarded_Interstitial_Ad";
@@ -49,11 +46,11 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
 
     private void createAds(Activity activity) {
         mBanner = new AdMobBanner(activity,
-                BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST :EAdPlacement.BANNER_AD_PLACEMENT_MAIN);
+                BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST : EAdPlacement.BANNER_AD_PLACEMENT_MAIN);
         mInterstitial = new AdMobInterstitial(activity,
                 BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED);
-        mRewardedVideo = new AdMobRewardedVideo(activity ,
-                BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST :EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR);
+        mRewardedVideo = new AdMobRewardedVideo(activity,
+                BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR);
         mAds.add(mBanner);
         mAds.add(mInterstitial);
         mAds.add(mRewardedVideo);
@@ -78,7 +75,7 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
     }
 
     public void showInterstitial() {
-       mInterstitial.show(this);
+        mInterstitial.show(this);
     }
 
     public void showRv() {
@@ -86,10 +83,9 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
     }
 
 
-
     public void onResume() {
         for (IAd ad : mAds) {
-            if (null != ad){
+            if (null != ad) {
                 ad.onResume();
             }
         }
@@ -98,17 +94,16 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
 
     public void onPause() {
         for (IAd ad : mAds) {
-            if (null != ad){
+            if (null != ad) {
                 ad.onPause();
             }
         }
     }
 
 
-
     public void onDestroy() {
         for (IAd ad : mAds) {
-            if (null != ad){
+            if (null != ad) {
                 ad.onDestroy();
             }
         }
@@ -132,6 +127,7 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
 
     private static class Ticker extends Handler {
         public static final int MESSAGE_TICK = 1;
+
         public void handleMessage(final Message message) {
             switch (message.what) {
                 case MESSAGE_TICK:
@@ -152,21 +148,10 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
         if (null != ad && null != adCallBack) {
             final StringBuilder builder = new StringBuilder();
             builder.append(String.format("Ads call back receiver - {%s} Ad lifecycle stage changed to {%s}.", ad.getAdType().getName(), adCallBack.name()));
-            if (null != adError){
+            if (null != adError) {
                 builder.append(String.format("Error is {%s}", adError.getMessage()));
             }
             logMessage(builder.toString());
         }
     }
-
-    @Override
-    protected List<String> getLogTags() {
-        if (Logger.isLoggingEnabled() ){
-            final ArrayList<String> tags = new ArrayList<>(1);
-            tags.add("AdsManger_call_back_center");
-            return tags;
-        }
-        return null;
-    }
-
 }

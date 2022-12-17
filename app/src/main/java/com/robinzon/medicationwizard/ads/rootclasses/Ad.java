@@ -16,12 +16,9 @@ import com.robinzon.medicationwizard.ads.EAdCallBacks;
 import com.robinzon.medicationwizard.ads.EAdType;
 import com.robinzon.medicationwizard.ads.interfaces.IAd;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
-import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.TimeInterval;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Ad extends MedicationWizardSuper implements IAd {
 
@@ -41,13 +38,13 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
 
     @Override
     public String getAdUnitId() {
-       if (null == mAdUnitId.get()){
-           final String adUnit = AdsUnitProvider.getAdUnit(getActivity(), getAdType(), getPlacement());
-           if (!TextUtils.isEmpty(adUnit)) {
-               mAdUnitId = new WeakReference<>(adUnit);
-           }
-       }
-       return mAdUnitId.get();
+        if (null == mAdUnitId.get()) {
+            final String adUnit = AdsUnitProvider.getAdUnit(getActivity(), getAdType(), getPlacement());
+            if (!TextUtils.isEmpty(adUnit)) {
+                mAdUnitId = new WeakReference<>(adUnit);
+            }
+        }
+        return mAdUnitId.get();
     }
 
     @Override
@@ -92,7 +89,7 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
 
     @Override
     public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        handleAdCallBacks(adCallback, adsLifeCycleCallBack , null);
+        handleAdCallBacks(adCallback, adsLifeCycleCallBack, null);
     }
 
     @Override
@@ -106,10 +103,11 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
                 setIsLoaded(true);
                 setIsInLoadingProgress(false);
                 mRetryAttempts = 0;
-                if (null != mAdReloadWorker){
+                if (null != mAdReloadWorker) {
                     mAdReloadWorker.removeMessages(AdReloadWorker.MESSAGE_RELOAD);
                     mAdReloadWorker = null;
                 }
+
                 break;
             case FAILED_TO_LOAD:
                 setIsLoaded(false);
@@ -118,14 +116,14 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
                 break;
             case SHOWN:
                 setIsShowing(true);
-                if (EAdType.BANNER != getAdType()) {
-                    setIsLoaded(false);
-                    load();
-                }
                 break;
             case FAILED_TO_SHOW:
             case DISMISSED:
                 setIsShowing(false);
+                if (EAdType.BANNER != getAdType()) {
+                    setIsLoaded(false);
+                    load();
+                }
                 break;
             case CLICKED:
                 break;
@@ -134,7 +132,7 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
         }
 
         final boolean hasAnAdsLifeCycleCallBack = (null != adsLifeCycleCallBack);
-        if (hasAnAdsLifeCycleCallBack){
+        if (hasAnAdsLifeCycleCallBack) {
             adsLifeCycleCallBack.onInterstitialLifeCycleStageChanged(this, adCallback, adError);
         }
     }
@@ -149,10 +147,10 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
 
     private void activateReloaderOnFailedLoad() {
         mRetryAttempts++;
-        if (null == mAdReloadWorker){
+        if (null == mAdReloadWorker) {
             mAdReloadWorker = new AdReloadWorker(Looper.myLooper(), this);
         }
-        final long delay = Math.max(mRetryAttempts , 6L) * 10L;
+        final long delay = Math.max(mRetryAttempts, 6L) * 10L;
         mAdReloadWorker.sendEmptyMessageDelayed(AdReloadWorker.MESSAGE_RELOAD, TimeInterval.MilliSeconds.getFromSeconds(delay));
     }
 
@@ -172,19 +170,7 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
         return mPlacement;
     }
 
-
-    @Override
-    protected List<String> getLogTags() {
-        if (Logger.isLoggingEnabled()) {
-            return new ArrayList<String>() {{
-                add(getClass().getSimpleName());
-            }};
-        }
-        return null;
-    }
-
-
-    public static final class AdReloadWorker extends Handler{
+    public static final class AdReloadWorker extends Handler {
         private final WeakReference<IAd> mAd;
         public static final int MESSAGE_RELOAD = 1;
 
@@ -196,9 +182,9 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
         @Override
         public void handleMessage(@NonNull Message message) {
             super.handleMessage(message);
-            if (MESSAGE_RELOAD == message.what){
+            if (MESSAGE_RELOAD == message.what) {
                 final IAd ad = mAd.get();
-                if (null != ad){
+                if (null != ad) {
                     ad.load();
                 }
             }

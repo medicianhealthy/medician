@@ -7,8 +7,6 @@ import com.robinzon.medicationwizard.ads.EAdType;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IRewardedVideo;
 
-import java.util.List;
-
 public abstract class RewardedVideo extends FullScreenAd implements IRewardedVideo {
     protected int mRewardAmount;
     private boolean mIsSkipped;
@@ -59,11 +57,4 @@ public abstract class RewardedVideo extends FullScreenAd implements IRewardedVid
         return mRewardAmount;
     }
 
-
-    @Override
-    protected List<String> getLogTags() {
-        final List<String> thisLogTags = super.getLogTags();
-        thisLogTags.add(getClass().getSimpleName());
-        return thisLogTags;
-    }
 }

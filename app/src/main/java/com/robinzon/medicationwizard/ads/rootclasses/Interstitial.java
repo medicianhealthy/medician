@@ -10,10 +10,6 @@ import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IInterstitial;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigKeysAndDefaults;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
-import com.robinzon.medicationwizard.utils.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Interstitial extends FullScreenAd implements IInterstitial {
 
@@ -37,8 +33,7 @@ public abstract class Interstitial extends FullScreenAd implements IInterstitial
 
     @Override
     public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        super.handleAdCallBacks(adCallback, adsLifeCycleCallBack);
-        handleAdCallBacks(adCallback, adsLifeCycleCallBack, null);
+        this.handleAdCallBacks(adCallback, adsLifeCycleCallBack, null);
     }
 
     @Override
@@ -49,13 +44,4 @@ public abstract class Interstitial extends FullScreenAd implements IInterstitial
         }
     }
 
-    @Override
-    protected List<String> getLogTags() {
-        if (Logger.isLoggingEnabled()){
-            final ArrayList<String> tags = new ArrayList<>(1);
-            tags.add("interstitial_ad");
-            return tags;
-        }
-        return null;
-    }
 }

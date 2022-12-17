@@ -16,13 +16,17 @@ import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
 import com.robinzon.medicationwizard.ads.rootclasses.Interstitial;
 
+import java.util.ArrayList;
+
 public final class AdMobInterstitial extends Interstitial {
     private InterstitialAd mInterstitialAd;
 
     public AdMobInterstitial(Activity act, EAdPlacement placement) {
         super(act, placement);
+        setLogTags(new ArrayList<String>(1){{
+            add(getClassName());
+        }});
     }
-
 
 
     @Override
@@ -42,14 +46,14 @@ public final class AdMobInterstitial extends Interstitial {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack);
+                AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack, loadAdError);
             }
 
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
-                handleAdCallBacks(EAdCallBacks.LOADED, adsLifeCycleCallBack);
                 mInterstitialAd = interstitialAd;
+                AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.LOADED, adsLifeCycleCallBack);
             }
         };
     }
@@ -81,19 +85,19 @@ public final class AdMobInterstitial extends Interstitial {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
-                handleAdCallBacks(EAdCallBacks.CLICKED, adsLifeCycleCallBack);
+                AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.CLICKED, adsLifeCycleCallBack);
             }
 
             @Override
             public void onAdDismissedFullScreenContent() {
                 super.onAdDismissedFullScreenContent();
-                handleAdCallBacks(EAdCallBacks.DISMISSED, adsLifeCycleCallBack);
+                AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.DISMISSED, adsLifeCycleCallBack);
             }
 
             @Override
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                 super.onAdFailedToShowFullScreenContent(adError);
-                handleAdCallBacks(EAdCallBacks.FAILED_TO_SHOW, adsLifeCycleCallBack);
+                AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.FAILED_TO_SHOW, adsLifeCycleCallBack, adError);
             }
 
             @Override
@@ -104,7 +108,7 @@ public final class AdMobInterstitial extends Interstitial {
             @Override
             public void onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent();
-                handleAdCallBacks(EAdCallBacks.SHOWN, adsLifeCycleCallBack);
+                AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.SHOWN, adsLifeCycleCallBack);
             }
         };
     }
