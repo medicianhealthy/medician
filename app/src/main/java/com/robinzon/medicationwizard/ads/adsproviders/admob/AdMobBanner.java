@@ -68,8 +68,6 @@ public final class AdMobBanner extends Banner {
                 handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack);
             }
 
-
-
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
