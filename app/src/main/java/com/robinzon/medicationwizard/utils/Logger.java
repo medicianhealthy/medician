@@ -11,7 +11,7 @@ import java.util.Locale;
 
 public class Logger {
 
-    private static boolean mIsLoggingEnabled;
+    private static boolean sIsLoggingEnabled;
     private static WeakReference<Logger> sInstance;
 
     public static Logger getInstance() {
@@ -36,10 +36,10 @@ public class Logger {
     }
 
     public static boolean isLoggingEnabled() {
-        return BuildConfig.DEBUG || mIsLoggingEnabled;
+        return BuildConfig.DEBUG || sIsLoggingEnabled;
     }
 
     public void setLoggingEnabled(final boolean isEnabled) {
-        mIsLoggingEnabled = isEnabled;
+        sIsLoggingEnabled = isEnabled;
     }
 }
