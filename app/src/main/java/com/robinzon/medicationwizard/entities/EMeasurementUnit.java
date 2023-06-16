@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.entities;
 
+@SuppressWarnings("unused")
 public enum EMeasurementUnit {
     GRAMS("g"),
     MILLIGRAM("mg"),

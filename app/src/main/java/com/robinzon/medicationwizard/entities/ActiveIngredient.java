@@ -1,38 +1,50 @@
 package com.robinzon.medicationwizard.entities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ActiveIngredient extends MedicationWizardSuper {
+
+    public static final String JSON_KEY_NAME = "mName";
+    public static final String JSON_MEASUREMENT_UNIT = "mMeasurementUnit";
+
+
+
+    public final String Name;
+    public final EMeasurementUnit mMeasurementUnit;
+
+    @SuppressWarnings("unused")
+    public ActiveIngredient(@NonNull String name, @NonNull EMeasurementUnit measurementUnit) {
+        this.Name = name;
+        this.mMeasurementUnit = measurementUnit;
+    }
+
+    @Nullable public JSONObject toJsonObject() {
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(JSON_KEY_NAME, getName());
+            jsonObject.put(JSON_MEASUREMENT_UNIT, getMeasurementUnit().getName());
+            return jsonObject;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
     @Override
     public String getClassName() {
         return ActiveIngredient.class.getSimpleName();
     }
 
-    public static class JsonKeys {
-        public static final String JSON_KEY_NAME = "mName";
-        public static final String JSON_MEASUREMENT_UNIT = "mMeasurementUnit";
+    private String getName() {
+        return Name;
     }
 
-    public final String mName;
-    public final EMeasurementUnit mMeasurementUnit;
-
-    @SuppressWarnings("unused")
-    public ActiveIngredient(String name, EMeasurementUnit measurementUnit) {
-        this.mName = name;
-        this.mMeasurementUnit = measurementUnit;
-    }
-
-    public JSONObject toJsonObject() {
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put(JsonKeys.JSON_KEY_NAME, mName);
-            jsonObject.put(JsonKeys.JSON_MEASUREMENT_UNIT, mMeasurementUnit.getName());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
+    private EMeasurementUnit getMeasurementUnit() {
+        return mMeasurementUnit;
     }
 }

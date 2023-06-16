@@ -2,7 +2,11 @@ package com.robinzon.medicationwizard.entities;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
+import com.robinzon.medicationwizard.utils.Validator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,13 +42,13 @@ public class Medication extends MedicationWizardSuper {
     private int mAmountLeft;
     private EInstructions mInstruction;
 
-    public Medication(String commercialName, List<ActiveIngredient> activeIngredients) {
-        if (!TextUtils.isEmpty(commercialName) && null != activeIngredients && !activeIngredients.isEmpty()) {
+    public Medication(String commercialName, @NonNull List<ActiveIngredient> activeIngredients) {
+        if (!TextUtils.isEmpty(commercialName) && !activeIngredients.isEmpty()) {
             this.mCommercialName = commercialName;
             this.mActiveIngredients = activeIngredients;
         } else {
-            this.mCommercialName = null;
-            this.mActiveIngredients = null;
+            mCommercialName = null;
+            mActiveIngredients = null;
         }
     }
 
@@ -161,11 +165,17 @@ public class Medication extends MedicationWizardSuper {
         return jsonArray;
     }
 
-    private JSONArray getActiveIngredientsAsJsonArray() {
+    @Nullable private JSONArray getActiveIngredientsAsJsonArray() {
         final JSONArray jsonArray = new JSONArray();
         for (ActiveIngredient activeIngredient : mActiveIngredients) {
-            jsonArray.put(activeIngredient.toJsonObject());
+            if (null != activeIngredient.toJsonObject()) {
+                jsonArray.put(activeIngredient.toJsonObject());
+            }
         }
-        return jsonArray;
+        return Validator.getInstance().isValidJsonArray(jsonArray) ? jsonArray : null;
+    }
+
+    private void invalidate(){
+
     }
 }

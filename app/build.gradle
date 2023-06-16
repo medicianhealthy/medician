@@ -40,8 +40,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_10
+        targetCompatibility JavaVersion.VERSION_1_10
     }
     buildFeatures {
         viewBinding true
@@ -50,19 +50,20 @@ android {
 }
 
 dependencies {
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     //Ads
-    implementation 'com.google.android.gms:play-services-ads:22.0.0'
-    implementation 'com.google.firebase:firebase-ads:22.0.0'
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
+    implementation 'com.google.firebase:firebase-ads:22.1.0'
     //Material
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     //Android X
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.navigation:navigation-fragment:2.5.3'
-    implementation 'androidx.navigation:navigation-ui:2.5.3'
+    implementation 'androidx.navigation:navigation-fragment:2.6.0'
+    implementation 'androidx.navigation:navigation-ui:2.6.0'
     //Firebase
     // https://firebase.google.com/docs/android/learn-more#compare-bom-versions
-    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation platform('com.google.firebase:firebase-bom:32.1.1')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-config'
     implementation 'com.google.firebase:firebase-messaging'
@@ -73,7 +74,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation 'com.google.android.gms:play-services-ads:22.0.0'
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
 
     implementation 'androidx.lifecycle:lifecycle-runtime:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-process:2.6.1'
