@@ -1,4 +1,4 @@
-package com.robinzon.medicationwizard.ads.adsproviders.admob;
+package com.robinzon.medicationwizard.ads.admob;
 
 import android.app.Activity;
 import android.graphics.Rect;
@@ -148,5 +148,10 @@ public final class AdMobBanner extends Banner {
     @Override
     public Object getAdCoreObject() {
         return mBanner;
+    }
+
+    @Override
+    public void nullifyCoreObject() {
+
     }
 }

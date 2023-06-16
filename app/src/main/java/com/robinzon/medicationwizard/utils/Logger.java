@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class Logger {
 
-    private boolean sIsLoggingEnabled;
+    public static boolean IS_LOGGING_ENABLED;
     private static WeakReference<Logger> sInstance;
 
     public static Logger getInstance() {
@@ -28,10 +28,12 @@ public class Logger {
                     @Nullable final List<String> tags,
                     @Nullable final String message,
                     @Nullable Object... params) {
-        if (!TextUtils.isEmpty(className) && null != tags && !tags.isEmpty() && !TextUtils.isEmpty(message) && null != params) {
-            for (String tag : tags) {
-                if (null != tag) {
-                    log(className, tag, message, params);
+        if (!IS_LOGGING_ENABLED) {
+            if (!TextUtils.isEmpty(className) && null != tags && !tags.isEmpty() && !TextUtils.isEmpty(message) && null != params) {
+                for (String tag : tags) {
+                    if (null != tag) {
+                        log(className, tag, message, params);
+                    }
                 }
             }
         }
@@ -42,11 +44,11 @@ public class Logger {
     }
 
     public static boolean isLoggingEnabled() {
-        return BuildConfig.DEBUG || getInstance().sIsLoggingEnabled;
+        return BuildConfig.DEBUG || IS_LOGGING_ENABLED;
     }
 
     @SuppressWarnings("unused")
     public void setLoggingEnabled(final boolean isEnabled) {
-        sIsLoggingEnabled = isEnabled;
+        IS_LOGGING_ENABLED = isEnabled;
     }
 }

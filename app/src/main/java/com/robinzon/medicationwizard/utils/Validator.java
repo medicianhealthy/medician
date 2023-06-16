@@ -1,11 +1,11 @@
 package com.robinzon.medicationwizard.utils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
 
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 public class Validator {
 
@@ -23,9 +23,20 @@ public class Validator {
      * @return null if the json array is empty or null.
      * Otherwise the json array received as the param
      */
-    @Nullable public boolean isValidJsonArray(final JSONArray jsonArray) {
+    public boolean isValidJsonArray(final JSONArray jsonArray) {
         return null != jsonArray && 0 != jsonArray.length();
     }
+
+    @SuppressWarnings("unused")
+    public boolean isValidMap(final Map<Object, Object> map) {
+        return null != map && !map.isEmpty();
+    }
+
+
+
+
+
+
 
 
 

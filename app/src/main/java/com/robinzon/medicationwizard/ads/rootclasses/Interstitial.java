@@ -13,8 +13,12 @@ import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 
 public abstract class Interstitial extends FullScreenAd implements IInterstitial {
 
+
+
+    private final byte COOL_DOWN_SECONDS;
     protected Interstitial(Activity act, EAdPlacement placement) {
         super(act, placement);
+        COOL_DOWN_SECONDS = (byte) RemoteConfigManager.getInstance().getIntValue(RemoteConfigKeysAndDefaults.AD_INTERSTITIAL_COOL_DOWN_SECONDS);
     }
 
     protected void logMessageOnInterstitialShouldNotBeLoaded() {
@@ -79,6 +83,10 @@ public abstract class Interstitial extends FullScreenAd implements IInterstitial
         if (adCallback == EAdCallBacks.DISMISSED) {
             AdsStatsManger.getInstance().onInterstitialDismissed(getActivity());
         }
+    }
+
+    public byte getCoolDownInSeconds() {
+        return COOL_DOWN_SECONDS;
     }
 
 }

@@ -24,6 +24,8 @@ public interface IAd {
 
     // Showing
     boolean canShow(); //Both
+    boolean shouldShow();
+    boolean canAndShouldShow();
     void show();//Implementation
     void show(IAdsLifeCycleCallBack adsLifeCycleCallBack);
     boolean isShowing();//to be implemented on root class - Ad/to be implemented on root class - Ad
@@ -43,5 +45,8 @@ public interface IAd {
 
     Object getAdCoreObject();
 
+    void nullifyCoreObject();
+
     boolean hasCoolDownPassedSinceLastImpression();
+
 }

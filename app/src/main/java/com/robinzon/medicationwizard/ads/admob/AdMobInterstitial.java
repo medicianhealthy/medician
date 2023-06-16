@@ -1,4 +1,4 @@
-package com.robinzon.medicationwizard.ads.adsproviders.admob;
+package com.robinzon.medicationwizard.ads.admob;
 
 import android.app.Activity;
 
@@ -10,6 +10,7 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.robinzon.medicationwizard.ads.AdsStatsManger;
 import com.robinzon.medicationwizard.ads.EAdCallBacks;
 import com.robinzon.medicationwizard.ads.EAdType;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
@@ -48,15 +49,15 @@ public final class AdMobInterstitial extends Interstitial {
         return new InterstitialAdLoadCallback() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
                 AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack, loadAdError);
+                super.onAdFailedToLoad(loadAdError);
             }
 
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                super.onAdLoaded(interstitialAd);
                 mInterstitialAd = interstitialAd;
                 AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.LOADED, adsLifeCycleCallBack);
+                super.onAdLoaded(interstitialAd);
             }
         };
     }
@@ -77,7 +78,7 @@ public final class AdMobInterstitial extends Interstitial {
 
     @Override
     public void show(IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        if (canShow()) {
+        if (canAndShouldShow()) {
             logMessage("Got a call to show interstitial. Showing now");
             mInterstitialAd.setFullScreenContentCallback(getFullScreenContentCallBack(adsLifeCycleCallBack));
             mInterstitialAd.show(getActivity());
@@ -90,27 +91,27 @@ public final class AdMobInterstitial extends Interstitial {
         return new FullScreenContentCallback() {
             @Override
             public void onAdClicked() {
-                super.onAdClicked();
                 AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.CLICKED, adsLifeCycleCallBack);
+                super.onAdClicked();
             }
 
             @Override
             public void onAdDismissedFullScreenContent() {
-                super.onAdDismissedFullScreenContent();
                 AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.DISMISSED, adsLifeCycleCallBack);
+                super.onAdDismissedFullScreenContent();
             }
 
             @Override
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                super.onAdFailedToShowFullScreenContent(adError);
                 AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.FAILED_TO_SHOW, adsLifeCycleCallBack, adError);
+                super.onAdFailedToShowFullScreenContent(adError);
             }
 
 
             @Override
             public void onAdShowedFullScreenContent() {
-                super.onAdShowedFullScreenContent();
                 AdMobInterstitial.super.handleAdCallBacks(EAdCallBacks.SHOWN, adsLifeCycleCallBack);
+                super.onAdShowedFullScreenContent();
             }
         };
     }
@@ -139,5 +140,15 @@ public final class AdMobInterstitial extends Interstitial {
     @Override
     public Object getAdCoreObject() {
         return mInterstitialAd;
+    }
+
+    @Override
+    public void nullifyCoreObject() {
+        mInterstitialAd = null;
+    }
+
+    @Override
+    public boolean shouldShow() {
+        return AdsStatsManger.getInstance().getSecondsPassedFromLastInterstitialDismissed(getActivity()) > getCoolDownInSeconds();
     }
 }

@@ -9,9 +9,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.robinzon.medicationwizard.BuildConfig;
-import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobBanner;
-import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobInterstitial;
-import com.robinzon.medicationwizard.ads.adsproviders.admob.AdMobRewardedVideo;
+import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
+import com.robinzon.medicationwizard.ads.admob.AdMobInterstitial;
+import com.robinzon.medicationwizard.ads.admob.AdMobRewardedVideo;
 import com.robinzon.medicationwizard.ads.interfaces.IAd;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
 import com.robinzon.medicationwizard.ads.interfaces.IBanner;
@@ -28,30 +28,30 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
     public static final String RCKEY_ADS_TIMER_BANNER_GRACE_MINUTES = "ads_timer_banner_grace_minutes";
     public static final String RCKEY_ADS_TIMER_INTER_GRACE_MINUTES = "ads_timer_inter_grace_minutes";
     public static final String RCKEY_ADS_TIMER_RV_GRACE_MINUTES = "ads_timer_rv_grace_minutes";
-    private IBanner mBanner;
-    private IInterstitial mInterstitial;
-    private IRewardedVideo mRewardedVideo;
+    private IBanner mBannerAtMainPlacement;
+    private IInterstitial mInterstitialAtAddMedPLacement;
+    private IRewardedVideo mRewardedVideoAtMedColorPlacement;
 
 
     private final Map<EAdType, Map<EAdPlacement, IAd>> mAds = new HashMap<>();
 
 
     private void createAds(Activity activity) {
-        mBanner = new AdMobBanner(activity,
+        mBannerAtMainPlacement = new AdMobBanner(activity,
                 BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST : EAdPlacement.BANNER_AD_PLACEMENT_MAIN);
-        mInterstitial = new AdMobInterstitial(activity,
+        mInterstitialAtAddMedPLacement = new AdMobInterstitial(activity,
                 BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED);
-        mRewardedVideo = new AdMobRewardedVideo(activity,
+        mRewardedVideoAtMedColorPlacement = new AdMobRewardedVideo(activity,
                 BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR);
 
-        mAds.put(EAdType.BANNER, new HashMap<EAdPlacement, IAd>() {{
-            put((BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST : EAdPlacement.BANNER_AD_PLACEMENT_MAIN), mBanner);
+        mAds.put(EAdType.BANNER, new HashMap<>() {{
+            put((BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST : EAdPlacement.BANNER_AD_PLACEMENT_MAIN), mBannerAtMainPlacement);
         }});
-        mAds.put(EAdType.INTERSTITIAL, new HashMap<EAdPlacement, IAd>() {{
-            put((BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED), mInterstitial);
+        mAds.put(EAdType.INTERSTITIAL, new HashMap<>() {{
+            put((BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED), mInterstitialAtAddMedPLacement);
         }});
-        mAds.put(EAdType.REWARDED_VIDEO, new HashMap<EAdPlacement, IAd>() {{
-            put((BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR), mRewardedVideo);
+        mAds.put(EAdType.REWARDED_VIDEO, new HashMap<>() {{
+            put((BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR), mRewardedVideoAtMedColorPlacement);
         }});
 
     }
@@ -77,11 +77,11 @@ public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCa
     }
 
     public void showInterstitial() {
-        mInterstitial.show(this);
+        mInterstitialAtAddMedPLacement.show(this);
     }
 
     public void showRv() {
-        mRewardedVideo.show(this);
+        mRewardedVideoAtMedColorPlacement.show(this);
     }
 
 

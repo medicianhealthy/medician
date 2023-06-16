@@ -1,4 +1,4 @@
-package com.robinzon.medicationwizard.ads.adsproviders.admob;
+package com.robinzon.medicationwizard.ads.admob;
 
 import android.app.Activity;
 
@@ -76,10 +76,8 @@ public final class AdMobRewardedVideo extends RewardedVideo {
 
     @Override
     public void show(IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        if (canShow()) {
-            if (null == mRewardedVideo.getFullScreenContentCallback()) {
-                mRewardedVideo.setFullScreenContentCallback(getFullScreenContentCallBack(adsLifeCycleCallBack));
-            }
+        if (canAndShouldShow()) {
+            mRewardedVideo.setFullScreenContentCallback(getFullScreenContentCallBack(adsLifeCycleCallBack));
             mRewardedVideo.show(getActivity(), getOnRewardListener(adsLifeCycleCallBack));
         }
     }
@@ -142,4 +140,8 @@ public final class AdMobRewardedVideo extends RewardedVideo {
         return mRewardedVideo;
     }
 
+    @Override
+    public void nullifyCoreObject() {
+        mRewardedVideo = null;
+    }
 }

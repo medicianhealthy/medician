@@ -70,7 +70,12 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
 
     @Override
     public boolean canShow() {
-        return !isShowing() && isLoaded();
+        return null != getActivity()
+                && !getActivity().isDestroyed()
+                && !getActivity().isFinishing()
+                && !isShowing()
+                && isLoaded()
+                && null != getAdCoreObject();
     }
 
     @Override
@@ -98,11 +103,11 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
         logAdMessageOnAdCallBack(adCallback, adError);
         switch (adCallback) {
             case STARTING_TO_LOAD:
-                setIsInLoadingProgress(true);
+                setFlags(true, false, false);
+                nullifyCoreObject();
                 break;
             case LOADED:
-                setIsLoaded(true);
-                setIsInLoadingProgress(false);
+                setFlags(false, true, false);
                 mRetryAttempts = 0;
                 if (null != mAdReloadWorker) {
                     mAdReloadWorker.removeMessages(AdReloadWorker.MESSAGE_RELOAD);
@@ -110,22 +115,21 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
                 }
                 break;
             case FAILED_TO_LOAD:
-                setIsLoaded(false);
-                setIsInLoadingProgress(false);
+                setFlags(false, false, false);
                 activateReloadOnFailedLoad();
+                nullifyCoreObject();
                 break;
             case SHOWN:
-                setIsShowing(true);
+            case CLICKED:
+                setFlags(false, false, true);
                 break;
             case FAILED_TO_SHOW:
             case DISMISSED:
-                setIsShowing(false);
+                setFlags(false, false , false);
+                nullifyCoreObject();
                 if (EAdType.BANNER != getAdType()) {
-                    setIsLoaded(false);
                     load();
                 }
-                break;
-            case CLICKED:
                 break;
             default:
                 break;
@@ -135,6 +139,12 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
         if (hasAnAdsLifeCycleCallBack) {
             adsLifeCycleCallBack.onInterstitialLifeCycleStageChanged(this, adCallback, adError);
         }
+    }
+
+    private void setFlags(final boolean isInLoadingProgress, final boolean isLoaded, final boolean isShowing) {
+        setIsInLoadingProgress(isInLoadingProgress);
+        setIsLoaded(isLoaded);
+        setIsShowing(isShowing);
     }
 
     private void logAdMessageOnAdCallBack(EAdCallBacks adCallback, AdError adError) {
@@ -172,6 +182,18 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
     public EAdPlacement getPlacement() {
         return mPlacement;
     }
+
+    @Override
+    public boolean shouldShow() {
+        return true;
+    }
+
+    @Override
+    public boolean canAndShouldShow() {
+        return canShow() && shouldShow();
+    }
+
+
 
     public static final class AdReloadWorker extends Handler {
         private final WeakReference<IAd> mAd;

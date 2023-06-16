@@ -11,7 +11,6 @@ public abstract class RewardedVideo extends FullScreenAd implements IRewardedVid
     protected int mRewardAmount;
     private boolean mIsSkipped;
 
-
     protected RewardedVideo(Activity activity, EAdPlacement placement) {
         super(activity, placement);
     }

@@ -78,16 +78,20 @@ public class RemoteConfigManager extends MedicationWizardSuper {
         final Map<String, FirebaseRemoteConfigValue> firebaseValues = getFirebaseValues();
         if (null != firebaseValues && !firebaseValues.isEmpty()) {
             for (Map.Entry<String, FirebaseRemoteConfigValue> entry : firebaseValues.entrySet()) {
-                Logger.getInstance().log(getClassName(),
-                        getRemoteConfigLogs(),
-                        "[%s, %s]",
-                        entry.getKey(),
-                        entry.getValue().asString());
+                if (Logger.IS_LOGGING_ENABLED) {
+                    Logger.getInstance().log(getClassName(),
+                            getRemoteConfigLogs(),
+                            "[%s, %s]",
+                            entry.getKey(),
+                            entry.getValue().asString());
+                }
             }
         } else {
-            Logger.getInstance().log(getClassName(),
-                    getRemoteConfigLogs(),
-                    "Remote config values are empty");
+            if (Logger.IS_LOGGING_ENABLED) {
+                Logger.getInstance().log(getClassName(),
+                        getRemoteConfigLogs(),
+                        "Remote config values are empty");
+            }
         }
     }
 
