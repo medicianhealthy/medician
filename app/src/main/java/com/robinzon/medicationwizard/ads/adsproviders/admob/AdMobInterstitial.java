@@ -130,10 +130,6 @@ public final class AdMobInterstitial extends Interstitial {
 
     }
 
-    @Override
-    public void onCreate() {
-
-    }
 
     @Override
     public EAdType getAdType() {

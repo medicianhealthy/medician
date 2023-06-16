@@ -138,11 +138,6 @@ public final class AdMobRewardedVideo extends RewardedVideo {
     }
 
     @Override
-    public void onCreate() {
-
-    }
-
-    @Override
     public Object getAdCoreObject() {
         return mRewardedVideo;
     }

@@ -38,7 +38,7 @@ public abstract class Interstitial extends FullScreenAd implements IInterstitial
 
     @Override
     public boolean hasCoolDownPassedSinceLastImpression() {
-        final int secondsPassedFromLastInterstitialDismissed = AdsStatsManger.getSecondsPassedFromLastInterstitialDismissed(getActivity());
+        final int secondsPassedFromLastInterstitialDismissed = AdsStatsManger.getInstance().getSecondsPassedFromLastInterstitialDismissed(getActivity());
         final int remoteConfigCoolDownValue = RemoteConfigManager.getInstance().getIntValue(RemoteConfigKeysAndDefaults.AD_INTERSTITIAL_COOL_DOWN_SECONDS);
         return secondsPassedFromLastInterstitialDismissed > remoteConfigCoolDownValue;
     }
@@ -77,7 +77,7 @@ public abstract class Interstitial extends FullScreenAd implements IInterstitial
     public void handleAdCallBacks(EAdCallBacks adCallback, IAdsLifeCycleCallBack adsLifeCycleCallBack, AdError adError) {
         super.handleAdCallBacks(adCallback, adsLifeCycleCallBack, adError);
         if (adCallback == EAdCallBacks.DISMISSED) {
-            AdsStatsManger.onInterstitialDismissed(getActivity());
+            AdsStatsManger.getInstance().onInterstitialDismissed(getActivity());
         }
     }
 

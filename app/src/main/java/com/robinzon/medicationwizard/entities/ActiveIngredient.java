@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class ActiveIngredient extends MedicationWizardSuper {
     @Override
     public String getClassName() {
-        return "{ActiveIngredient}";
+        return ActiveIngredient.class.getSimpleName();
     }
 
     public static class JsonKeys {
@@ -19,6 +19,7 @@ public class ActiveIngredient extends MedicationWizardSuper {
     public final String mName;
     public final EMeasurementUnit mMeasurementUnit;
 
+    @SuppressWarnings("unused")
     public ActiveIngredient(String name, EMeasurementUnit measurementUnit) {
         this.mName = name;
         this.mMeasurementUnit = measurementUnit;

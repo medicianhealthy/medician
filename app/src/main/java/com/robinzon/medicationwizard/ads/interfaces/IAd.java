@@ -36,7 +36,6 @@ public interface IAd {
     void onResume();//Implementation
     void onPause();//Implementation
     void onDestroy();//Implementation
-    void onCreate();//Implementation
 
     Activity getActivity();
     AdsManager getAdsManager();

@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getClassName() {
-        return "{MainActivity}";
+        return MainActivity.class.getSimpleName();
     }
 
 

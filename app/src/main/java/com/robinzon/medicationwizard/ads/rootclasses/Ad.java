@@ -16,7 +16,7 @@ import com.robinzon.medicationwizard.ads.EAdCallBacks;
 import com.robinzon.medicationwizard.ads.EAdType;
 import com.robinzon.medicationwizard.ads.interfaces.IAd;
 import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
-import com.robinzon.medicationwizard.utils.TimeInterval;
+import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.lang.ref.WeakReference;
 
@@ -152,8 +152,8 @@ public abstract class Ad extends MedicationWizardSuper implements IAd {
         }
         final byte power = (byte) Math.min(mRetryAttempts , 6);
         final short deltaInSecondsToNextLoadAttempt = (short) Math.pow(2, power);
-        final long deltaInMillisToNextLoadAttempt = TimeInterval.MilliSeconds.getFromSeconds(deltaInSecondsToNextLoadAttempt);
-        mAdReloadWorker.sendEmptyMessageDelayed(AdReloadWorker.MESSAGE_RELOAD,deltaInMillisToNextLoadAttempt);
+        mAdReloadWorker.sendEmptyMessageDelayed(AdReloadWorker.MESSAGE_RELOAD,
+                TimeManager.getInstance().toMillisFromSeconds(deltaInSecondsToNextLoadAttempt));
         logMessage("Scheduling a new reload attempt in [%d] seconds", deltaInSecondsToNextLoadAttempt);
     }
 

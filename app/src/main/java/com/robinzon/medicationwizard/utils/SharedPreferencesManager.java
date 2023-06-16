@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 
@@ -12,18 +13,24 @@ import org.json.JSONArray;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SharedPreferencesManager extends MedicationWizardSuper {
 
-    private static final String SHARED_PREFERENCES = "shared_prefernces";
-    private SharedPreferences sAndroidSharedPreferencesInstance;
+    private WeakReference<String> SHARED_PREFERENCES;
+    private WeakReference<SharedPreferences> mAndroidSharedPreferencesInstance;
     private static WeakReference<SharedPreferencesManager> sManagerInstance;
+    private WeakReference<ArrayList<String>> LOG_TAGS;
 
     public static SharedPreferencesManager getInstance(@NonNull final Context context) {
         if (null == sManagerInstance || null == sManagerInstance.get()) {
             sManagerInstance = new WeakReference<>(new SharedPreferencesManager(context));
+        } else if (null == sManagerInstance.get().getAndroidSharedPreferencesInstance()) {
+            final String fileName = getFileName(context);
+            if (!TextUtils.isEmpty(fileName)) {
+                final SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+                sManagerInstance.get().mAndroidSharedPreferencesInstance = new WeakReference<>(sharedPreferences);
+            }
         }
         return sManagerInstance.get();
     }
@@ -31,14 +38,15 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
     private SharedPreferencesManager(@NonNull final Context context) {
         final String fileName = getFileName(context);
         if (!TextUtils.isEmpty(fileName)) {
-            sAndroidSharedPreferencesInstance = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+            final SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+            mAndroidSharedPreferencesInstance = new WeakReference<>(sharedPreferences);
         } else {
             Logger.getInstance().log(getClassName(), getSharedPreferencesLogs(),
                     "File name of shared preferences is invalid. Could not create instance");
         }
     }
 
-    private static String getFileName(final Context context) {
+    @Nullable private static String getFileName(final Context context) {
         if (null != context) {
             final Context applicationContext = context.getApplicationContext();
             if (null != applicationContext) {
@@ -52,6 +60,7 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
     }
 
 
+    @SuppressWarnings("unused")
     public void removeKey(String key) {
         final SharedPreferences.Editor editor = getEditor();
         if (null != editor) {
@@ -60,15 +69,16 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
     }
 
     private SharedPreferences.Editor getEditor() {
-        if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.edit();
+        if (null != getAndroidSharedPreferencesInstance()) {
+            return getAndroidSharedPreferencesInstance().edit();
         }
         return null;
     }
 
+    @SuppressWarnings("unused")
     public boolean containsKey(String key) {
-        if (null != sAndroidSharedPreferencesInstance && !TextUtils.isEmpty(key)) {
-            return sAndroidSharedPreferencesInstance.contains(key);
+        if (null != getAndroidSharedPreferencesInstance() && !TextUtils.isEmpty(key)) {
+            return getAndroidSharedPreferencesInstance().contains(key);
         }
         return false;
     }
@@ -100,45 +110,53 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
         }
     }
 
-    private List<String> getSharedPreferencesLogs() {
-        return new ArrayList<String>() {{
-            add(SHARED_PREFERENCES);
-        }};
+    @NonNull private ArrayList<String> getSharedPreferencesLogs() {
+        if (null == LOG_TAGS || null == LOG_TAGS.get()) {
+            LOG_TAGS = new WeakReference<>(new ArrayList<>() {{
+                if (null == SHARED_PREFERENCES.get()){
+                    SHARED_PREFERENCES = new WeakReference<>("shared_prefernces");
+                }
+                add(SHARED_PREFERENCES.get());
+            }});
+        }
+        return LOG_TAGS.get();
     }
 
-    public void setJsonArray(final String key, final JSONArray jsonArray) {
-        if (null != jsonArray && (byte)0 != jsonArray.length()) {
+    @SuppressWarnings("unused")
+    public void setJsonArray(@Nullable final String key, @NonNull final JSONArray jsonArray) {
+        if (0 != jsonArray.length()) {
             final SharedPreferences.Editor editor = getEditor();
-            if (null != editor) {
+            if (null != editor && !TextUtils.isEmpty(key)) {
                 editor.putString(key, jsonArray.toString()).apply();
             }
         }
     }
 
-    public int getInt(final String key, final int defaultValue) {
-        if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getInt(key, defaultValue);
+    @SuppressWarnings("unused")
+    public int getInt(@NonNull final String key, final int defaultValue) {
+        if (null != getAndroidSharedPreferencesInstance()) {
+            return getAndroidSharedPreferencesInstance().getInt(key, defaultValue);
         }
         return defaultValue;
     }
 
     public long getLong(final String key, final long defaultValue) {
-        if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getLong(key, defaultValue);
+        if (null != getAndroidSharedPreferencesInstance()) {
+            return getAndroidSharedPreferencesInstance().getLong(key, defaultValue);
         }
         return defaultValue;
     }
-
+    @SuppressWarnings("unused")
     public float getFloat(final String key, final float defaultValue) {
-        if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getFloat(key, defaultValue);
+        if (null != getAndroidSharedPreferencesInstance()) {
+            return getAndroidSharedPreferencesInstance().getFloat(key, defaultValue);
         }
         return defaultValue;
     }
-
+    @SuppressWarnings("unused")
     public String getString(final String key, final String defaultValue) {
-        if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getString(key, defaultValue);
+        if (null != getAndroidSharedPreferencesInstance()) {
+            return getAndroidSharedPreferencesInstance().getString(key, defaultValue);
         }
         return defaultValue;
     }
@@ -149,10 +167,15 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
         return "{SharedPreferencesManager}";
     }
 
+    @SuppressWarnings("unused")
     public boolean getBoolean(String key, Boolean defaultValue) {
-        if (null != sAndroidSharedPreferencesInstance) {
-            return sAndroidSharedPreferencesInstance.getBoolean(key, defaultValue);
+        if (null != getAndroidSharedPreferencesInstance()) {
+            return getAndroidSharedPreferencesInstance().getBoolean(key, defaultValue);
         }
         return defaultValue;
+    }
+
+    @Nullable private SharedPreferences getAndroidSharedPreferencesInstance() {
+        return mAndroidSharedPreferencesInstance.get();
     }
 }

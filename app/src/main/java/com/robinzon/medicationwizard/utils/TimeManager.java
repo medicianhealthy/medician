@@ -17,19 +17,38 @@ public class TimeManager {
         return sInstance.get();
     }
 
-    public long toMillisFromSeconds(final short seconds){
+    //Milliseconds
+
+    public long toMillisFromSeconds(final long seconds){
         return seconds * 1000L;
     }
 
-    public long toMillisFromMinutes(final byte minutes){
+    public long toMillisFromMinutes(final int minutes){
         return minutes * 60 * 1000L;
     }
 
-    public long toMillisFromHours(final byte hours){
+    public long toMillisFromHours(final int hours){
         return hours * 60 * 60 * 1000L;
     }
 
-    public long toMillisFromDays(final byte days){
+    public long toMillisFromDays(final int days){
         return days * 24 * 60 * 60 * 1000L;
+    }
+
+    //Seconds
+    public long toSecondsFromMillis(final long millis){
+        return millis / 1000L;
+    }
+
+    public long toSecondsFromMinutes(final float minutes){
+        return (long) (minutes * 60);
+    }
+
+    public long toSecondsFromHours(final float hours){
+        return (long) (hours * 60 * 60);
+    }
+
+    public long toSecondsFromDays(final int days){
+        return (long) days * 24 * 60 * 60;
     }
 }

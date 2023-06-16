@@ -124,12 +124,6 @@ public final class AdMobBanner extends Banner {
     }
 
     @Override
-    public void onCreate() {
-
-    }
-
-
-    @Override
     public int getBannerHeightInPixels() {
         return getAdSize().getHeightInPixels(getActivity());
     }
