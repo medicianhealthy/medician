@@ -46,18 +46,18 @@ public class MainActivity extends AppCompatActivity {
         final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        mAdsManager = new AdsManager();
+        mAdsManager = new AdsManager(this);
         RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
             @Override
             public void onFetchCompleted(boolean isSuccessFull) {
-                getAdsManager().initializeAds(MainActivity.this);
+                getAdsManager().initializeAds();
             }
         });
 
         mBinding.getRoot().findViewById(R.id.text_home).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getAdsManager().showInterstitial();
+                getAdsManager().showRewarded();
             }
         });
 

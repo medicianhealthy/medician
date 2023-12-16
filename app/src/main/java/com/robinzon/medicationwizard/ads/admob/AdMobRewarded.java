@@ -6,8 +6,10 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.robinzon.medicationwizard.ads.AdPlacement;
 import com.robinzon.medicationwizard.ads.AdType;
 import com.robinzon.medicationwizard.ads.AdsManager;
@@ -17,23 +19,22 @@ import com.robinzon.medicationwizard.utils.NetworkUtils;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AdMobInterstitial extends AdMobAd {
-    private InterstitialAdLoadCallback mAdLoadCallBack;
-    private InterstitialAd mInterstitialAd;
+public class AdMobRewarded extends AdMobAd {
 
-    public AdMobInterstitial(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
+    RewardedAd mRewardedAd;
+    public AdMobRewarded(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
         log("%s Creating object.\n%s",getLogTag() , thisToString());
     }
 
     @NonNull
     private String thisToString() {
-        return AdMobInterstitial.this.toString();
+        return AdMobRewarded.this.toString();
     }
 
     @Override
     public AdType getAdType() {
-        return AdType.InterstitialVideo;
+        return AdType.Rewarded;
     }
 
     @Override
@@ -41,9 +42,27 @@ public class AdMobInterstitial extends AdMobAd {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
         if (shouldBeLoaded()) {
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
-            setIsLoaded(true);
+            final RewardedAdLoadCallback rewardedAdLoadCallback = new RewardedAdLoadCallback() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    // Handle the error.
+                    mRewardedAd = null;
+                    setIsLoaded(false);
+                    setIsLoading(false);
+                    failedToLoad(loadAdError);
+                    log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
+                }
+
+                @Override
+                public void onAdLoaded(@NonNull RewardedAd ad) {
+                    mRewardedAd = ad;
+                    setIsLoading(false);
+                    setIsLoaded(true);
+                    log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(ad.getResponseInfo().getMediationAdapterClassName()), thisToString());
+                }
+            };
             log("%s Loading.\n%s",getLogTag() , thisToString());
-            InterstitialAd.load(getActivity(), getAdUnitId() , getAdRequest() , getAdLoadCallBack());
+            RewardedAd.load(getActivity(), getAdUnitId(),getAdRequest(), rewardedAdLoadCallback);
         } else {
             log("%s Refusing load. Has network %b. \n%s",
                     getLogTag() ,
@@ -52,35 +71,10 @@ public class AdMobInterstitial extends AdMobAd {
         }
     }
 
-    private InterstitialAdLoadCallback getAdLoadCallBack() {
-        if (null == mAdLoadCallBack) {
-            mAdLoadCallBack = new InterstitialAdLoadCallback(){
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    super.onAdFailedToLoad(loadAdError);
-                    setIsLoaded(false);
-                    setIsLoading(false);
-                    mInterstitialAd = null;
-                    log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
-                }
-
-                @Override
-                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                    super.onAdLoaded(interstitialAd);
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                    mInterstitialAd = interstitialAd;
-                    log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(interstitialAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
-                }
-            };
-        }
-        return mAdLoadCallBack;
-    }
-
     @Override
     public void show() {
-        if (canShow() && shouldShow()) {
-            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+        if (shouldShow() && canShow()) {
+            mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdClicked() {
                     // Called when a click is recorded for an ad.
@@ -91,10 +85,10 @@ public class AdMobInterstitial extends AdMobAd {
                 public void onAdDismissedFullScreenContent() {
                     // Called when ad is dismissed.
                     // Set the ad reference to null so you don't show the ad a second time.
+                    mRewardedAd = null;
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
-                    mInterstitialAd = null;
                     final Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
@@ -114,7 +108,7 @@ public class AdMobInterstitial extends AdMobAd {
                 @Override
                 public void onAdFailedToShowFullScreenContent(AdError adError) {
                     // Called when ad fails to show.
-                    mInterstitialAd = null;
+                    mRewardedAd = null;
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
@@ -128,16 +122,25 @@ public class AdMobInterstitial extends AdMobAd {
 
                 @Override
                 public void onAdShowedFullScreenContent() {
+                    // Called when ad is shown.
                     setIsShowing(true);
+                    setIsLoaded(false);
+                    setIsLoading(false);
                     log("%s Showed.\n%s",getLogTag() , thisToString());
                 }
             });
-            mInterstitialAd.show(getActivity());
+            mRewardedAd.show(getActivity(), new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    log("%s Rewarded.\n%s",getLogTag() , thisToString());
+                }
+            });
         }
     }
 
     @Override
     public boolean shouldShow() {
+        //TODO
         return true;
     }
 
@@ -163,6 +166,8 @@ public class AdMobInterstitial extends AdMobAd {
 
     @Override
     public Object getCoreAdObject() {
-        return mInterstitialAd;
+        return mRewardedAd;
     }
+
+
 }

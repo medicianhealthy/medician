@@ -1,11 +1,15 @@
 package com.robinzon.medicationwizard.ads.admob;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.WindowMetrics;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -13,83 +17,163 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.robinzon.medicationwizard.R;
-import com.robinzon.medicationwizard.ads.EAdCallBacks;
-import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
-import com.robinzon.medicationwizard.ads.rootclasses.Banner;
-import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
+import com.robinzon.medicationwizard.ads.AdPlacement;
+import com.robinzon.medicationwizard.ads.AdType;
+import com.robinzon.medicationwizard.ads.AdsManager;
+import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
+import com.robinzon.medicationwizard.utils.NetworkUtils;
 
-import java.util.ArrayList;
+public class AdMobBanner extends AdMobAd {
 
-public final class AdMobBanner extends Banner {
-    private final AdView mBanner;
+    private final AdView mAdView;
+    private AdListener mAdListener;
+    private boolean mInitialLayoutComplete;
+    private ConstraintLayout mAdContainerView;
 
-    public AdMobBanner(Activity activity, EAdPlacement placement) {
-        super(activity, placement);
-        mBanner = getActivity().findViewById(R.id.adView);
-        setLogTags(new ArrayList<String>(1) {{
-            add(getClassName());
-        }});
+    public AdMobBanner(final @NonNull String adUnitId,
+                       final @NonNull AdsManager adsManager,
+                       final @NonNull AdPlacement placement) {
+        super(adUnitId, adsManager, placement);
+        log("%s Creating object.\n%s",getLogTag() , thisToString());
+        this.mAdView = new AdView(getActivity());
+        getAdView().setId(R.id.adView);
+        getAdView().setAdUnitId(adUnitId);
+        createAdListener();
+        getAdView().setAdListener(getAdListener());
     }
 
+    @NonNull
+    private String thisToString() {
+        return AdMobBanner.this.toString();
+    }
     @Override
-    public boolean shouldLoad() {
-        return null != mBanner && super.shouldLoad();
+    public boolean shouldShow() {
+        return true;
     }
 
-    @Override
-    public void load(final IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        if (shouldLoad()) {
-            mBanner.setAdListener(getAdListener(adsLifeCycleCallBack));
-            mBanner.loadAd(getAdRequest());
-        }
-    }
-
-    @Override
-    public void load() {
-        load(null);
-    }
-
-    private AdRequest getAdRequest() {
-        return new AdRequest.Builder().build();
-    }
-
-    private AdListener getAdListener(final IAdsLifeCycleCallBack adsLifeCycleCallBack) {
-        return new AdListener() {
+    private void createAdListener() {
+        mAdListener = new AdListener() {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
-                handleAdCallBacks(EAdCallBacks.CLICKED, adsLifeCycleCallBack);
             }
 
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                handleAdCallBacks(EAdCallBacks.DISMISSED, adsLifeCycleCallBack);
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                handleAdCallBacks(EAdCallBacks.FAILED_TO_LOAD, adsLifeCycleCallBack , loadAdError);
+                setIsLoaded(false);
+                setIsLoading(false);
+                log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
+            }
+
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                handleAdCallBacks(EAdCallBacks.LOADED, adsLifeCycleCallBack);
+                setIsLoaded(true);
+                setIsLoading(false);
+                log("%s Loaded.\n%s",getLogTag(), thisToString());
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                handleAdCallBacks(EAdCallBacks.SHOWN, adsLifeCycleCallBack);
+                log("%s Opened.\n%s",getLogTag(), thisToString());
+            }
+
+            @Override
+            public void onAdSwipeGestureClicked() {
+                super.onAdSwipeGestureClicked();
             }
         };
     }
 
+    private @NonNull AdListener getAdListener() {
+        return mAdListener;
+    }
+
+    public @NonNull AdView getAdView() {
+        return mAdView;
+    }
+
     @Override
-    public boolean canShow() {
-        return null != mBanner && super.canShow();
+    public AdType getAdType() {
+        return AdType.AdaptiveBanner;
+    }
+
+    @Override
+    public void load() {
+        log("%s Requesting load.\n%s",getLogTag() , thisToString());
+        if (shouldBeLoaded()) {
+            log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
+            try {
+                mAdContainerView = getActivity().findViewById(R.id.adViewParent);
+                mAdContainerView.addView(getAdView());
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(mAdContainerView);
+                constraintSet.connect(getAdView().getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                constraintSet.connect(getAdView().getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(getAdView().getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+                constraintSet.applyTo(mAdContainerView);
+                // Since we're loading the banner based on the adContainerView size, we need
+                // to wait until this view is laid out before we can get the width.
+                mAdContainerView.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                if (!mInitialLayoutComplete) {
+                                    mInitialLayoutComplete = true;
+                                    mAdView.setAdSize(getAdSize());
+                                    mAdView.loadAd(getAdRequest());
+                                }
+                            }
+                        });
+                setIsLoading(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            log("%s Refusing load. Has network %b. \n%s",
+                    getLogTag() ,
+                    NetworkUtils.isNetworkAvailable(getContext().getApplicationContext()),
+                    thisToString());
+        }
+    }
+
+    private AdSize getAdSize() {
+        WindowMetrics windowMetrics;
+        Rect bounds;
+        float availableWidth = 0F;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            windowMetrics = getActivity().getWindowManager().getCurrentWindowMetrics();
+            bounds = windowMetrics.getBounds();
+            availableWidth = bounds.width();
+        } else {
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
+            final WindowManager windowManager = (WindowManager) getContext().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+            if (null != windowManager) {
+                windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+                availableWidth = displayMetrics.widthPixels;
+            }
+        }
+        float adWidthPixels = mAdContainerView.getWidth();
+        // If the ad hasn't been laid out, default to the full screen width.
+        if (0f == adWidthPixels) {
+            adWidthPixels = availableWidth;
+        }
+        final float density = getActivity().getResources().getDisplayMetrics().density;
+        final int adWidth = (int) (adWidthPixels / density);
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getActivity(), adWidth);
     }
 
     @Override
@@ -98,60 +182,27 @@ public final class AdMobBanner extends Banner {
     }
 
     @Override
-    public void show(IAdsLifeCycleCallBack adsLifeCycleCallBack) {
+    public void hide() {
 
-    }
-
-    @Override
-    public void onResume() {
-        if (null != mBanner) {
-            mBanner.resume();
-        }
     }
 
     @Override
     public void onPause() {
-        if (null != mBanner) {
-            mBanner.pause();
-        }
+        getAdView().pause();
     }
 
     @Override
-    public void onDestroy() {
-        if (null != mBanner) {
-            mBanner.destroy();
-        }
+    public void onResume() {
+        getAdView().resume();
     }
 
     @Override
-    public int getBannerHeightInPixels() {
-        return getAdSize().getHeightInPixels(getActivity());
-    }
-
-    private AdSize getAdSize() {
-        final float density = getActivity().getResources().getDisplayMetrics().density;
-
-        final float screenWidth;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            final WindowMetrics windowMetrics = getActivity().getWindowManager().getCurrentWindowMetrics();
-            final Rect bounds = windowMetrics.getBounds();
-            screenWidth = bounds.width();
-        } else {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            screenWidth = displayMetrics.widthPixels;
-        }
-        final int adWidth = (int) (screenWidth / density);
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getActivity(), adWidth);
+    public @NonNull AdRequest getAdRequest() {
+        return new AdRequest.Builder().build();
     }
 
     @Override
-    public Object getAdCoreObject() {
-        return mBanner;
-    }
-
-    @Override
-    public void nullifyCoreObject() {
-
+    public Object getCoreAdObject() {
+        return getAdView();
     }
 }

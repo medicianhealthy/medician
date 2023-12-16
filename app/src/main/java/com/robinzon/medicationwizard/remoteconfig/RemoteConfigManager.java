@@ -7,7 +7,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import com.robinzon.medicationwizard.BuildConfig;
-import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.TimeManager;
 
@@ -17,10 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class RemoteConfigManager extends MedicationWizardSuper {
+public class RemoteConfigManager {
 
     private String LOG_REMOTE_CONFIG_VALUES;
-    private final boolean mIsLoggingEnabled;
     public static WeakReference<RemoteConfigManager> sThisInstance;
 
 
@@ -29,8 +27,7 @@ public class RemoteConfigManager extends MedicationWizardSuper {
     public static final byte FETCH_TIMEOUT_SECONDS = 5;
 
     private RemoteConfigManager() {
-        mIsLoggingEnabled = Logger.isLoggingEnabled();
-        if (mIsLoggingEnabled) {
+        if (Logger.IS_LOGGING_ENABLED) {
             LOG_REMOTE_CONFIG_VALUES = "remote_config";
         }
         final FirebaseRemoteConfigSettings firebaseRemoteConfigSettings = new FirebaseRemoteConfigSettings.
@@ -66,7 +63,7 @@ public class RemoteConfigManager extends MedicationWizardSuper {
         getFirebaseClient().fetchAndActivate().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 setFirebaseValues(getFirebaseClient().getAll());
-                if (mIsLoggingEnabled) {
+                if (Logger.IS_LOGGING_ENABLED) {
                     logRemoteConfigValues();
                 }
             }
@@ -79,8 +76,7 @@ public class RemoteConfigManager extends MedicationWizardSuper {
         if (null != firebaseValues && !firebaseValues.isEmpty()) {
             for (Map.Entry<String, FirebaseRemoteConfigValue> entry : firebaseValues.entrySet()) {
                 if (Logger.IS_LOGGING_ENABLED) {
-                    Logger.getInstance().log(getClassName(),
-                            getRemoteConfigLogs(),
+                    Logger.log(Logger.REMOTE_CONFIG,
                             "[%s, %s]",
                             entry.getKey(),
                             entry.getValue().asString());
@@ -88,15 +84,14 @@ public class RemoteConfigManager extends MedicationWizardSuper {
             }
         } else {
             if (Logger.IS_LOGGING_ENABLED) {
-                Logger.getInstance().log(getClassName(),
-                        getRemoteConfigLogs(),
+                Logger.log(Logger.REMOTE_CONFIG,
                         "Remote config values are empty");
             }
         }
     }
 
     @Nullable private List<String> getRemoteConfigLogs() {
-        if (mIsLoggingEnabled) {
+        if (Logger.IS_LOGGING_ENABLED) {
             return new ArrayList<>() {{
                 add(null != LOG_REMOTE_CONFIG_VALUES ? LOG_REMOTE_CONFIG_VALUES : "null");
             }};
@@ -182,9 +177,4 @@ public class RemoteConfigManager extends MedicationWizardSuper {
         mFirebaseValues = firebaseValues;
     }
 
-
-    @Override
-    public String getClassName() {
-        return RemoteConfigManager.class.getCanonicalName();
-    }
 }

@@ -3,12 +3,10 @@ package com.robinzon.medicationwizard.entities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ActiveIngredient extends MedicationWizardSuper {
+public class ActiveIngredient{
 
     public static final String JSON_KEY_NAME = "mName";
     public static final String JSON_MEASUREMENT_UNIT = "mMeasurementUnit";
@@ -35,10 +33,7 @@ public class ActiveIngredient extends MedicationWizardSuper {
         }
     }
 
-    @Override
-    public String getClassName() {
-        return ActiveIngredient.class.getSimpleName();
-    }
+
 
     private String getName() {
         return Name;

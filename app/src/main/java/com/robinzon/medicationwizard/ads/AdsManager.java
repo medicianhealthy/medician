@@ -4,137 +4,121 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.robinzon.medicationwizard.BuildConfig;
 import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.ads.admob.AdMobInterstitial;
-import com.robinzon.medicationwizard.ads.admob.AdMobRewardedVideo;
-import com.robinzon.medicationwizard.ads.interfaces.IAd;
-import com.robinzon.medicationwizard.ads.interfaces.IAdsLifeCycleCallBack;
-import com.robinzon.medicationwizard.ads.interfaces.IBanner;
-import com.robinzon.medicationwizard.ads.interfaces.IInterstitial;
-import com.robinzon.medicationwizard.ads.interfaces.IRewardedVideo;
-import com.robinzon.medicationwizard.ads.rootclasses.EAdPlacement;
-import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
+import com.robinzon.medicationwizard.ads.admob.AdMobRewarded;
+import com.robinzon.medicationwizard.utils.NetworkUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+public class AdsManager {
 
 
-public class AdsManager extends MedicationWizardSuper implements IAdsLifeCycleCallBack {
-    public static final String RCKEY_ADS_TIMER_BANNER_GRACE_MINUTES = "ads_timer_banner_grace_minutes";
-    public static final String RCKEY_ADS_TIMER_INTER_GRACE_MINUTES = "ads_timer_inter_grace_minutes";
-    public static final String RCKEY_ADS_TIMER_RV_GRACE_MINUTES = "ads_timer_rv_grace_minutes";
-    private IBanner mBannerAtMainPlacement;
-    private IInterstitial mInterstitialAtAddMedPLacement;
-    private IRewardedVideo mRewardedVideoAtMedColorPlacement;
 
+    private final Activity mActivity;
+    private AdMobBanner mMainBanner;
+    private AdMobInterstitial mMainInterstitial;
+    private AdMobRewarded mMainRewarded;
 
-    private final Map<EAdType, Map<EAdPlacement, IAd>> mAds = new HashMap<>();
-
-
-    private void createAds(Activity activity) {
-        mBannerAtMainPlacement = new AdMobBanner(activity,
-                BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST : EAdPlacement.BANNER_AD_PLACEMENT_MAIN);
-        mInterstitialAtAddMedPLacement = new AdMobInterstitial(activity,
-                BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED);
-        mRewardedVideoAtMedColorPlacement = new AdMobRewardedVideo(activity,
-                BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR);
-
-        mAds.put(EAdType.BANNER, new HashMap<>() {{
-            put((BuildConfig.DEBUG ? EAdPlacement.BANNER_AD_PLACEMENT_TEST : EAdPlacement.BANNER_AD_PLACEMENT_MAIN), mBannerAtMainPlacement);
-        }});
-        mAds.put(EAdType.INTERSTITIAL, new HashMap<>() {{
-            put((BuildConfig.DEBUG ? EAdPlacement.INTERSTITIAL_AD_PLACEMENT_TEST : EAdPlacement.INTERSTITIAL_AD_PLACEMENT_ADD_MED), mInterstitialAtAddMedPLacement);
-        }});
-        mAds.put(EAdType.REWARDED_VIDEO, new HashMap<>() {{
-            put((BuildConfig.DEBUG ? EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_TEST : EAdPlacement.REWARDED_VIDEO_AD_PLACEMENT_MED_COLOR), mRewardedVideoAtMedColorPlacement);
-        }});
-
+    public AdsManager(final @NonNull Activity activity) {
+        this.mActivity = activity;
     }
 
-    public void initializeAds(final Activity activity) {
-        MobileAds.initialize(activity, new OnInitializationCompleteListener() {
+    public Activity getActivity() {
+        return mActivity;
+    }
+
+    public void initializeAds() {
+        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-                createAds(activity);
+                createAds();
                 loadAds();
             }
         });
     }
 
-    private void loadAds() {
-        for (Map<EAdPlacement, IAd> map : mAds.values()) {
-            for (IAd ad : map.values()) {
-                if (null != ad) {
-                    ad.load(this);
-                }
-            }
+    private void createAds() {
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            mMainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AdaptiveBanner) : "a",
+                    this,
+                    AdPlacement.Main);
+            mMainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z" ,
+                    this ,
+                    AdPlacement.Main);
+            mMainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a" ,
+                    this,
+                    AdPlacement.Main);
         }
     }
 
-    public void showInterstitial() {
-        mInterstitialAtAddMedPLacement.show(this);
+    private void loadAds() {
+        if (null != mMainBanner) {
+            mMainBanner.load();
+        }
+        if (null != mMainInterstitial) {
+            mMainInterstitial.load();
+        }
+        if (null != mMainRewarded) {
+            mMainRewarded.load();
+        }
     }
 
-    public void showRv() {
-        mRewardedVideoAtMedColorPlacement.show(this);
-    }
 
+    /** @noinspection SameParameterValue*/
+    private @NonNull String getTestAdForAdType(@NonNull final AdType adType) {
+        switch (adType) {
+            case AppOpen:
+                return "ca-app-pub-3940256099942544/9257395921";
+            case AdaptiveBanner:
+                return "ca-app-pub-3940256099942544/9214589741";
+            case Banner:
+                return "ca-app-pub-3940256099942544/6300978111";
+            case Interstitial:
+                return "ca-app-pub-3940256099942544/1033173712";
+            case InterstitialVideo:
+                return "ca-app-pub-3940256099942544/8691691433";
+            case Rewarded:
+                return "ca-app-pub-3940256099942544/5224354917";
+            case RewardedInterstitial:
+                return "ca-app-pub-3940256099942544/5354046379";
+            case NativeAdvanced:
+                return "ca-app-pub-3940256099942544/2247696110";
+            case NativeAdvancedVideo:
+                return "ca-app-pub-3940256099942544/1044960115";
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 
     public void onResume() {
-        for (Map<EAdPlacement, IAd> map : mAds.values()) {
-            for (IAd ad : map.values()) {
-                if (null != ad) {
-                    ad.onResume();
-                }
-            }
+        if (null != mMainBanner) {
+            mMainBanner.onResume();
         }
+    }
+
+    public void onDestroy() {
+
     }
 
     public void onPause() {
-        for (Map<EAdPlacement, IAd> map : mAds.values()) {
-            for (IAd ad : map.values()) {
-                if (null != ad) {
-                    ad.onPause();
-                }
-            }
+        if (null != mMainBanner) {
+            mMainBanner.onPause();
+        }
+
+    }
+
+    public void showInterstitialAd() {
+        if (null != mMainInterstitial) {
+            mMainInterstitial.show();
         }
     }
 
-
-    public void onDestroy() {
-        for (Map<EAdPlacement, IAd> map : mAds.values()) {
-            for (IAd ad : map.values()) {
-                if (null != ad) {
-                    ad.onDestroy();
-                }
-            }
-        }
-    }
-
-    @Override
-    public String getClassName() {
-        return AdsManager.class.getSimpleName();
-    }
-
-
-    @Override
-    public void onInterstitialLifeCycleStageChanged(IAd ad, EAdCallBacks adCallBack, AdError adError) {
-        logMessageOnAdLifeCycleChanges(ad, adCallBack, adError);
-    }
-
-    private void logMessageOnAdLifeCycleChanges(IAd ad, EAdCallBacks adCallBack, AdError adError) {
-        if (null != ad && null != adCallBack) {
-            final StringBuilder builder = new StringBuilder();
-            builder.append(String.format("Ads call back receiver - {%s} Ad lifecycle stage changed to {%s}.", ad.getAdType().getName(), adCallBack.name()));
-            if (null != adError) {
-                builder.append(String.format("Error is {%s}", adError.getMessage()));
-            }
-            logMessage(builder.toString());
+    public void showRewarded() {
+        if (null != mMainRewarded) {
+            mMainRewarded.show();
         }
     }
 }

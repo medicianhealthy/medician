@@ -7,8 +7,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.robinzon.medicationwizard.ads.rootclasses.MedicationWizardSuper;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -16,7 +14,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
-public class SharedPreferencesManager extends MedicationWizardSuper {
+public class SharedPreferencesManager {
 
     private WeakReference<String> SHARED_PREFERENCES;
     private WeakReference<SharedPreferences> mAndroidSharedPreferencesInstance;
@@ -43,7 +41,7 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
             mAndroidSharedPreferencesInstance = new WeakReference<>(sharedPreferences);
         } else {
             if (Logger.IS_LOGGING_ENABLED) {
-                Logger.getInstance().log(getClassName(), getSharedPreferencesLogs(),
+                Logger.log(Logger.SHARED_PREFS,
                         "File name of shared preferences is invalid. Could not create instance");
             }
         }
@@ -176,10 +174,6 @@ public class SharedPreferencesManager extends MedicationWizardSuper {
     }
 
 
-    @Override
-    public String getClassName() {
-        return "{SharedPreferencesManager}";
-    }
 
     @SuppressWarnings("unused")
     public boolean getBoolean(String key, Boolean defaultValue) {
