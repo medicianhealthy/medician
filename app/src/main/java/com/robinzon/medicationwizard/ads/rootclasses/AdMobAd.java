@@ -14,6 +14,7 @@ import com.robinzon.medicationwizard.ads.AdType;
 import com.robinzon.medicationwizard.ads.AdsManager;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.NetworkUtils;
+import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,6 +29,7 @@ public abstract class AdMobAd {
     private int mLoadRetryAttempts;
 
     private Timer mReloadTimer;
+    private long mLastLoadTime;
 
 
     public AdMobAd(final @NonNull String adUnitId,
@@ -97,13 +99,23 @@ public abstract class AdMobAd {
     public abstract void load();
 
     protected boolean shouldBeLoaded() {
-        return !isLoading() && !isLoaded() && NetworkUtils.isNetworkAvailable(getContext().getApplicationContext());
+        final boolean shouldLoad;
+        if (!isExpired()) {
+            return !isLoading() && !isLoaded() && NetworkUtils.isNetworkAvailable(getContext().getApplicationContext());
+        }
+        return !isLoading() && NetworkUtils.isNetworkAvailable(getContext().getApplicationContext());
     }
 
     public abstract void show();
 
     protected boolean canShow() {
         return null != getCoreAdObject() && isLoaded() && !isShowing() && !isLoading();
+    }
+
+    public  boolean isExpired() {
+        final long timeFromLastLoadInMillis = System.currentTimeMillis() - mLastLoadTime;
+        final float timeFromLastLoadInMinutes = TimeManager.getInstance().toMinutesFromMillis(timeFromLastLoadInMillis);
+        return timeFromLastLoadInMinutes > 58;
     }
 
     public abstract boolean shouldShow();
@@ -142,6 +154,11 @@ public abstract class AdMobAd {
             mReloadTimer.cancel();
             mLoadRetryAttempts = 0;
         }
+
+    }
+
+    private void setLastLoadTime() {
+        mLastLoadTime = System.currentTimeMillis();
     }
 
     protected String getLastWord(@Nullable final String string) {

@@ -68,6 +68,7 @@ public class AdMobBanner extends AdMobAd {
                 super.onAdFailedToLoad(loadAdError);
                 setIsLoaded(false);
                 setIsLoading(false);
+                failedToLoad(loadAdError);
                 log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
             }
 
@@ -82,6 +83,7 @@ public class AdMobBanner extends AdMobAd {
                 setIsLoaded(true);
                 setIsLoading(false);
                 log("%s Loaded.\n%s",getLogTag(), thisToString());
+                loaded();
             }
 
             @Override
@@ -179,6 +181,11 @@ public class AdMobBanner extends AdMobAd {
     @Override
     public void show() {
 
+    }
+
+    @Override
+    public boolean isExpired() {
+        return false;
     }
 
     @Override

@@ -61,6 +61,7 @@ public class AdMobInterstitial extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     mInterstitialAd = null;
+                    failedToLoad(loadAdError);
                     log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
                 }
 
@@ -70,6 +71,7 @@ public class AdMobInterstitial extends AdMobAd {
                     setIsLoading(false);
                     setIsLoaded(true);
                     mInterstitialAd = interstitialAd;
+                    loaded();
                     log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(interstitialAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
                 }
             };
@@ -134,6 +136,11 @@ public class AdMobInterstitial extends AdMobAd {
             });
             mInterstitialAd.show(getActivity());
         }
+    }
+
+    @Override
+    public boolean isExpired() {
+        return false;
     }
 
     @Override

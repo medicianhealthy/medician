@@ -4,10 +4,8 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.robinzon.medicationwizard.BuildConfig;
+import com.robinzon.medicationwizard.ads.admob.AdMobAppOpen;
 import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.ads.admob.AdMobInterstitial;
 import com.robinzon.medicationwizard.ads.admob.AdMobRewarded;
@@ -16,11 +14,11 @@ import com.robinzon.medicationwizard.utils.NetworkUtils;
 public class AdsManager {
 
 
-
     private final Activity mActivity;
     private AdMobBanner mMainBanner;
     private AdMobInterstitial mMainInterstitial;
     private AdMobRewarded mMainRewarded;
+    private AdMobAppOpen mAppOpenAd;
 
     public AdsManager(final @NonNull Activity activity) {
         this.mActivity = activity;
@@ -31,13 +29,8 @@ public class AdsManager {
     }
 
     public void initializeAds() {
-        MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-                createAds();
-                loadAds();
-            }
-        });
+        createAds();
+        loadAds();
     }
 
     private void createAds() {
@@ -45,10 +38,13 @@ public class AdsManager {
             mMainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AdaptiveBanner) : "a",
                     this,
                     AdPlacement.Main);
-            mMainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z" ,
-                    this ,
+            mMainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
+                    this,
                     AdPlacement.Main);
-            mMainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a" ,
+            mMainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
+                    this,
+                    AdPlacement.Main);
+            mAppOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
                     this,
                     AdPlacement.Main);
         }
@@ -64,10 +60,16 @@ public class AdsManager {
         if (null != mMainRewarded) {
             mMainRewarded.load();
         }
+
+        if (null != mAppOpenAd) {
+            mAppOpenAd.load();
+        }
     }
 
 
-    /** @noinspection SameParameterValue*/
+    /**
+     * @noinspection SameParameterValue
+     */
     private @NonNull String getTestAdForAdType(@NonNull final AdType adType) {
         switch (adType) {
             case AppOpen:
@@ -119,6 +121,12 @@ public class AdsManager {
     public void showRewarded() {
         if (null != mMainRewarded) {
             mMainRewarded.show();
+        }
+    }
+
+    public void showAppOpenAd() {
+        if (null != mAppOpenAd) {
+            mAppOpenAd.show();
         }
     }
 }

@@ -6,10 +6,7 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.robinzon.medicationwizard.ads.AdPlacement;
 import com.robinzon.medicationwizard.ads.AdType;
 import com.robinzon.medicationwizard.ads.AdsManager;
@@ -19,75 +16,73 @@ import com.robinzon.medicationwizard.utils.NetworkUtils;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class AdMobRewarded extends AdMobAd {
+public class AdMobAppOpen extends AdMobAd {
+    private AppOpenAd mAppOpenAd;
 
-    RewardedAd mRewardedAd;
-    public AdMobRewarded(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
+    public AdMobAppOpen(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
-        log("%s Creating object.\n%s",getLogTag() , thisToString());
-    }
-
-    @NonNull
-    private String thisToString() {
-        return AdMobRewarded.this.toString();
     }
 
     @Override
     public AdType getAdType() {
-        return AdType.Rewarded;
+        return AdType.AppOpen;
     }
 
     @Override
     public void load() {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
         if (shouldBeLoaded()) {
-            setIsLoading(true);
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
-            final RewardedAdLoadCallback rewardedAdLoadCallback = new RewardedAdLoadCallback() {
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    // Handle the error.
-                    mRewardedAd = null;
-                    setIsLoaded(false);
-                    setIsLoading(false);
-                    failedToLoad(loadAdError);
-                    log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
-                }
+            setIsLoading(true);
+            AppOpenAd.load(getContext().getApplicationContext(),
+                    getAdUnitId(),
+                    getAdRequest(),
+                    new AppOpenAd.AppOpenAdLoadCallback() {
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            super.onAdFailedToLoad(loadAdError);
+                            setIsLoading(false);
+                            setIsLoaded(false);
+                            mAppOpenAd = null;
+                            failedToLoad(loadAdError);
+                            log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
+                        }
 
-                @Override
-                public void onAdLoaded(@NonNull RewardedAd ad) {
-                    mRewardedAd = ad;
-                    setIsLoading(false);
-                    setIsLoaded(true);
-                    loaded();
-                    log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(ad.getResponseInfo().getMediationAdapterClassName()), thisToString());
-                }
-            };
-            log("%s Loading.\n%s",getLogTag() , thisToString());
-            RewardedAd.load(getActivity(), getAdUnitId(),getAdRequest(), rewardedAdLoadCallback);
+                        @Override
+                        public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
+                            super.onAdLoaded(appOpenAd);
+                            setIsLoading(false);
+                            setIsLoaded(true);
+                            mAppOpenAd = appOpenAd;
+                            loaded();
+                            log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(appOpenAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
+                        }
+
+                    });
         } else {
             log("%s Refusing load. Has network %b. \n%s",
                     getLogTag() ,
                     NetworkUtils.isNetworkAvailable(getContext().getApplicationContext()),
                     thisToString());
+
         }
     }
 
     @Override
     public void show() {
         if (shouldShow() && canShow()) {
-            mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            setIsShowing(true);
+            mAppOpenAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdClicked() {
-                    // Called when a click is recorded for an ad.
+                    super.onAdClicked();
                     log("%s Clicked.\n%s",getLogTag() , thisToString());
                 }
 
                 @Override
                 public void onAdDismissedFullScreenContent() {
-                    // Called when ad is dismissed.
-                    // Set the ad reference to null so you don't show the ad a second time.
-                    mRewardedAd = null;
+                    super.onAdDismissedFullScreenContent();
+                    mAppOpenAd = null;
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
@@ -108,9 +103,9 @@ public class AdMobRewarded extends AdMobAd {
                 }
 
                 @Override
-                public void onAdFailedToShowFullScreenContent(AdError adError) {
-                    // Called when ad fails to show.
-                    mRewardedAd = null;
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                    super.onAdFailedToShowFullScreenContent(adError);
+                    mAppOpenAd = null;
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
@@ -119,24 +114,19 @@ public class AdMobRewarded extends AdMobAd {
 
                 @Override
                 public void onAdImpression() {
-                    // Called when an impression is recorded for an ad.
+                    super.onAdImpression();
                 }
 
                 @Override
                 public void onAdShowedFullScreenContent() {
-                    // Called when ad is shown.
+                    super.onAdShowedFullScreenContent();
                     setIsShowing(true);
                     setIsLoaded(false);
                     setIsLoading(false);
                     log("%s Showed.\n%s",getLogTag() , thisToString());
                 }
             });
-            mRewardedAd.show(getActivity(), new OnUserEarnedRewardListener() {
-                @Override
-                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                    log("%s Rewarded.\n%s",getLogTag() , thisToString());
-                }
-            });
+            mAppOpenAd.show(getActivity());
         }
     }
 
@@ -145,9 +135,13 @@ public class AdMobRewarded extends AdMobAd {
         return false;
     }
 
+    @NonNull
+    private String thisToString() {
+        return AdMobAppOpen.this.toString();
+    }
+
     @Override
     public boolean shouldShow() {
-        //TODO
         return true;
     }
 
@@ -173,8 +167,6 @@ public class AdMobRewarded extends AdMobAd {
 
     @Override
     public Object getCoreAdObject() {
-        return mRewardedAd;
+        return mAppOpenAd;
     }
-
-
 }

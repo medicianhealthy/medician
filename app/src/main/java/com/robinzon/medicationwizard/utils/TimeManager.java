@@ -51,4 +51,17 @@ public class TimeManager {
     public long toSecondsFromDays(final int days){
         return (long) days * 24 * 60 * 60;
     }
+
+
+
+    //Minutes
+    public float toMinutesFromMillis(final long millis){
+        return (float) millis / 1000L / 60L;
+    }
+
+
+    public long toMinutesFromHours(final float hours){
+        return (long) (hours * 60);
+    }
+
 }
