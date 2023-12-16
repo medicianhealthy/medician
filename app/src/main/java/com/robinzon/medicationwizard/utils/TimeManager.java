@@ -59,7 +59,6 @@ public class TimeManager {
         return (float) millis / 1000L / 60L;
     }
 
-
     public long toMinutesFromHours(final float hours){
         return (long) (hours * 60);
     }

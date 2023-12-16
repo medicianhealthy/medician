@@ -18,11 +18,15 @@ import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private AdsManager mAdsManager;
+    private boolean mHasCreated;
 
 
     @Override
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 getAdsManager().showRewarded();
             }
         });
-
+        mHasCreated = true;
     }
 
 
@@ -113,6 +117,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onMoveToForeground() {
-        getAdsManager().showAppOpenAd();
+        if (!mHasCreated) {
+            final Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getAdsManager().showAppOpenAd();
+                        }
+                    });
+                }
+            }, 300L);
+        }
+        mHasCreated = false;
     }
 }
