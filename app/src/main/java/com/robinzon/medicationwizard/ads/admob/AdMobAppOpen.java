@@ -7,6 +7,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.robinzon.medicationwizard.ads.AdAction;
 import com.robinzon.medicationwizard.ads.AdPlacement;
 import com.robinzon.medicationwizard.ads.AdType;
 import com.robinzon.medicationwizard.ads.AdsManager;
@@ -33,6 +34,7 @@ public class AdMobAppOpen extends AdMobAd {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
         if (shouldBeLoaded()) {
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
+            getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.StartingToLoad);
             setIsLoading(true);
             AppOpenAd.load(getContext().getApplicationContext(),
                     getAdUnitId(),
@@ -46,6 +48,7 @@ public class AdMobAppOpen extends AdMobAd {
                             mAppOpenAd = null;
                             failedToLoad(loadAdError);
                             log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
+                            getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.FailedToLoad);
                         }
 
                         @Override
@@ -56,6 +59,7 @@ public class AdMobAppOpen extends AdMobAd {
                             mAppOpenAd = appOpenAd;
                             loaded();
                             log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(appOpenAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
+                            getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.LoadedSuccessfully);
                         }
 
                     });
@@ -77,6 +81,7 @@ public class AdMobAppOpen extends AdMobAd {
                 public void onAdClicked() {
                     super.onAdClicked();
                     log("%s Clicked.\n%s",getLogTag() , thisToString());
+                    getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Clicked);
                 }
 
                 @Override
@@ -91,6 +96,7 @@ public class AdMobAppOpen extends AdMobAd {
                         @Override
                         public void run() {
                             getActivity().runOnUiThread(AdMobAppOpen.this::load);
+                            getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Dismissed);
                         }
                     },500L);
 
@@ -105,11 +111,13 @@ public class AdMobAppOpen extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     log("%s Failed to show. Reason is %s.\n%s",getLogTag() ,adError.getMessage(), thisToString());
+                    getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.FailedToShow);
                 }
 
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
+                    getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Impression);
                 }
 
                 @Override
@@ -119,6 +127,7 @@ public class AdMobAppOpen extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     log("%s Showed.\n%s",getLogTag() , thisToString());
+                    getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Showing);
                 }
             });
             mAppOpenAd.show(getActivity());
@@ -137,7 +146,7 @@ public class AdMobAppOpen extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        return true;
+        return getAdsManager().hasCoolDownForFullScreenNonUserInitiatedAd();
     }
 
     @Override

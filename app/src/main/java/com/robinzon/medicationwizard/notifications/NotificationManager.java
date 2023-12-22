@@ -1,0 +1,180 @@
+package com.robinzon.medicationwizard.notifications;
+//https://developer.android.com/develop/ui/views/notifications/notification-permission
+
+import android.Manifest;
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.os.Build;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.ui.CustomMaterialDialog;
+import com.robinzon.medicationwizard.utils.PermissionManager;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
+
+import java.lang.ref.WeakReference;
+
+public class NotificationManager implements DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
+
+    private static final String SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL = "do_not_show_rational";
+    private static final String SHARED_PREF_KEY_REFUSE_COUNT = "refuse_count";
+    private static WeakReference<NotificationManager> sInstance;
+    private final Activity mActivity;
+    private Integer mButtonClickedBeforeDismissed;
+
+    public NotificationManager(@NonNull final Activity activity) {
+        this.mActivity = activity;
+    }
+
+    /**
+     * Determines whether the app should ask the user for notification permissions.
+     * This check is necessary as from Android Tiramisu (API level 33) and onwards,
+     * apps need explicit permission to send notifications. The method also checks
+     * if the user has previously refused the permission and the frequency at which
+     * the rational should be shown based on user refusals.
+     *
+     * @return true if the app should request notification permissions, false otherwise.
+     */
+    private boolean shouldAskForNotificationPermission() {
+        // Check if the Android version is Tiramisu (API level 33) or higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Check if notifications are not enabled and if the user hasn't previously
+            // chosen not to show the rationale again (based on shared preferences).
+            // Also checks if the count of refusals has reached the specified delta to show the rationale.
+            return !areNotificationsEnabled() &&
+                    !SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, false);
+        }
+        // For Android versions below Tiramisu, notification permission is not required,
+        // so return false indicating that the app should not request permission.
+        return false;
+    }
+
+
+    private int getDeltaToShowRational() {
+        return 5;
+    }
+
+
+    private boolean areNotificationsEnabled() {
+        final NotificationManagerCompat notificationManager = getNotificationManager();
+        return notificationManager.areNotificationsEnabled();
+    }
+
+
+    @NonNull
+    private NotificationManagerCompat getNotificationManager() {
+        return NotificationManagerCompat.from(getActivity().getApplicationContext());
+    }
+
+    public static NotificationManager getInstance(final Activity activity) {
+        if (null == sInstance || null == sInstance.get()) {
+            sInstance = new WeakReference<>(new NotificationManager(activity));
+        }
+        return sInstance.get();
+    }
+
+
+    public void requestPermissionIfNeeded() {
+        if (shouldAskForNotificationPermission()) {
+            if (PermissionManager.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.POST_NOTIFICATIONS)) {
+                increaseRefuseNumber();
+                if (0 == getCountRefusedSoFar() % getDeltaToShowRational()) {
+                    showRationaleDialog();
+                }
+            } else {
+                requestPermission();
+            }
+        } else if (!areNotificationsEnabled()) {
+            showSnackNoPermission();
+        }
+    }
+
+    private void showSnackNoPermission() {
+        Snackbar.make(getActivity().findViewById(R.id.fab), getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
+                .setAction("ALLOW", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestPermission();
+                    }
+                }).show();
+    }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            PermissionManager.askForPermission(getActivity(),
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    PermissionManager.REQUEST_PERMISSION_CODE_POST_NOTIFICATIONS);
+        }
+    }
+
+    private void showRationaleDialog() {
+        final CustomMaterialDialog dialog = new CustomMaterialDialog(getActivity());
+        dialog.setTitle(getActivity().getString(R.string.permission_rational_notification_title));
+        dialog.setMessage(getActivity().getString(R.string.permission_rational_notification_message));
+        dialog.setPositiveButton(getActivity().getString(R.string.buttoh_sure), this);
+        dialog.setNegativeButton(getActivity().getString(R.string.buttoh_not_now), this);
+        dialog.setNeutralButton(getActivity().getString(R.string.buttoh_never), this);
+        dialog.setOnDismissListener(this);
+        dialog.show();
+    }
+
+    @Override
+    public void onClick(final DialogInterface dialog, final int which) {
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE -> {
+                setButtonClickedBeforeDismissed(DialogInterface.BUTTON_POSITIVE);
+            }
+            case DialogInterface.BUTTON_NEGATIVE -> {
+                setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEGATIVE);
+            }
+            case DialogInterface.BUTTON_NEUTRAL -> {
+                setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEUTRAL);
+            }
+        }
+
+    }
+
+    private Integer getButtonClickedBeforeDismissed() {
+        return mButtonClickedBeforeDismissed;
+    }
+
+    private void setButtonClickedBeforeDismissed(Integer buttonClickedBeforeDismissed) {
+        this.mButtonClickedBeforeDismissed = buttonClickedBeforeDismissed;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        final Integer buttonClickedBeforeDismissed = getButtonClickedBeforeDismissed();
+        final boolean hasAReferenceToLastButtonClicked = (null != buttonClickedBeforeDismissed);
+        if (hasAReferenceToLastButtonClicked) {
+            if (DialogInterface.BUTTON_NEUTRAL == buttonClickedBeforeDismissed) {
+                setDoNotShowRationalAgain();
+            } else if (DialogInterface.BUTTON_POSITIVE == buttonClickedBeforeDismissed) {
+                requestPermission();
+            }
+        }
+        setButtonClickedBeforeDismissed(null);
+    }
+
+    private void increaseRefuseNumber() {
+        final int countRefusedSoFar = getCountRefusedSoFar();
+        SharedPreferencesManager.getInstance(getActivity()).setInt(SHARED_PREF_KEY_REFUSE_COUNT, countRefusedSoFar + 1);
+    }
+
+    private int getCountRefusedSoFar() {
+        return SharedPreferencesManager.getInstance(getActivity()).getInt(SHARED_PREF_KEY_REFUSE_COUNT, 0);
+    }
+
+    private void setDoNotShowRationalAgain() {
+        SharedPreferencesManager.getInstance(getActivity()).setBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, true);
+    }
+
+    @NonNull
+    public Activity getActivity() {
+        return mActivity;
+    }
+}

@@ -37,7 +37,6 @@ public class Statisticator {
         AsyncTask.execute(runnable);
     }
 
-    /** @noinspection unused*/
     public static void onMoveToForeground(final Context context) {
         Runnable runnable = new Runnable() {
             public void run() {

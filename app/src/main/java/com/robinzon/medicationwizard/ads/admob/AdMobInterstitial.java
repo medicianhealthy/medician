@@ -140,7 +140,7 @@ public class AdMobInterstitial extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        return true;
+        return getAdsManager().hasCoolDownForFullScreenNonUserInitiatedAd();
     }
 
     @Override

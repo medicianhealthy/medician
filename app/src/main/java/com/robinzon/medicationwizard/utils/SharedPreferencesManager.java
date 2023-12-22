@@ -129,7 +129,7 @@ public class SharedPreferencesManager {
 
     public void setInt (@NonNull final String key, final int value){
         if (null != getEditor()){
-            getEditor().putInt(key, value);
+            getEditor().putInt(key, value).apply();
         }
     }
 
@@ -142,7 +142,7 @@ public class SharedPreferencesManager {
 
     public void setLong (@NonNull final String key, final long value){
         if (null != getEditor()){
-            getEditor().putLong(key, value);
+            getEditor().putLong(key, value).apply();
         }
     }
 
@@ -156,7 +156,7 @@ public class SharedPreferencesManager {
 
     public void setFloat (@NonNull final String key, final float value){
         if (null != getEditor()){
-            getEditor().putFloat(key, value);
+            getEditor().putFloat(key, value).apply();
         }
     }
     @SuppressWarnings("unused")
@@ -169,7 +169,7 @@ public class SharedPreferencesManager {
 
     public void setString (@NonNull final String key, @NonNull final String value){
         if (null != getEditor()){
-            getEditor().putString(key, value);
+            getEditor().putString(key, value).apply();
         }
     }
 
@@ -185,7 +185,7 @@ public class SharedPreferencesManager {
 
     public void setBoolean (@NonNull final String key, final boolean value){
         if (null != getEditor()){
-            getEditor().putBoolean(key, value);
+            getEditor().putBoolean(key, value).apply();
         }
     }
 

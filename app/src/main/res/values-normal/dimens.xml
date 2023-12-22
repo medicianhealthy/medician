@@ -12,5 +12,8 @@
     <dimen name="medication_strength_txt_size">16sp</dimen>
     <dimen name="take_text_size">18sp</dimen>
     <dimen name="take_text_quantity">20sp</dimen>
+
     <dimen name="bannerTopMargin">7dp</dimen>
+
+
 </resources>

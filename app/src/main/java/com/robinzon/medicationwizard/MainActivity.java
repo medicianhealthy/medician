@@ -3,7 +3,9 @@ package com.robinzon.medicationwizard;
 import android.os.Bundle;
 import android.view.Menu;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -11,9 +13,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.ads.AdsManager;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
+import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.utils.Statisticator;
@@ -22,7 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private AppBarConfiguration mAppBarConfiguration;
     private AdsManager mAdsManager;
@@ -36,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mBinding.getRoot());
 
         setSupportActionBar(mBinding.appBarMain.toolbar);
-        mBinding.appBarMain.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        mBinding.appBarMain.fab.setOnClickListener(view ->
+                NotificationManager.getInstance(this).requestPermissionIfNeeded()
+        );
         final DrawerLayout drawer = mBinding.drawerLayout;
         final NavigationView navigationView = mBinding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -89,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
             getAdsManager().onResume();
         }
         Statisticator.onMoveToForeground(this);
-
     }
 
     @Override
@@ -132,6 +134,15 @@ public class MainActivity extends AppCompatActivity {
         mHasCreated = false;
     }
 
-
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 1:
+                break;
+            case 2 :
+                int i =0;
+                break;
+        }
+    }
 }

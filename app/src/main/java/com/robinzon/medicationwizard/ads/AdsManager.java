@@ -10,11 +10,13 @@ import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.ads.admob.AdMobInterstitial;
 import com.robinzon.medicationwizard.ads.admob.AdMobRewarded;
 import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
+import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.NetworkUtils;
+import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.util.ArrayList;
 
-public class AdsManager {
+public class AdsManager implements OnAdActionListener{
 
 
     private final Activity mActivity;
@@ -24,6 +26,8 @@ public class AdsManager {
     private AdMobAppOpen mAppOpenAd;
 
     private ArrayList<AdMobAd> mAdsCollections;
+    private long mFullAdDismissedTimeStamp;
+    private long mBannerClickTimeStamp;
 
     public AdsManager(final @NonNull Activity activity) {
         this.mActivity = activity;
@@ -144,7 +148,7 @@ public class AdsManager {
     }
 
     public void showInterstitialAd() {
-        if (null != mMainInterstitial) {
+        if (null != mMainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             mMainInterstitial.show();
         }
     }
@@ -156,8 +160,65 @@ public class AdsManager {
     }
 
     public void showAppOpenAd() {
-        if (null != mAppOpenAd) {
+        if (null != mAppOpenAd && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             mAppOpenAd.show();
         }
+    }
+
+    @Override
+    public void onAdAction(@NonNull AdMobAd adMobAd, AdAction adAction) {
+        final AdType adType = adMobAd.getAdType();
+        final String AD_ACTIONS = "medi_ad_actions";
+        final String CLASS_NAME = AdsManager.class.getSimpleName();
+        Logger.log(AD_ACTIONS, "%s ad action: %s, " +
+                "%s.", CLASS_NAME, adType.name(), adAction.name());
+        switch (adType) {
+            case AppOpen, RewardedInterstitial, Interstitial, InterstitialVideo, Rewarded -> {
+                if (AdAction.Dismissed == adAction) {
+                    setFullScreenNonUserInitiatedAdDismissTimeStamp();
+                }
+            }
+            case AdaptiveBanner, Banner -> {
+                if (AdAction.Clicked == adAction) {
+                    setBannerClickTimeStamp();
+                }
+            }
+            case NativeAdvanced -> {
+            }
+            case NativeAdvancedVideo -> {
+            }
+            default -> {
+                break;
+            }
+        }
+    }
+
+    private void setFullScreenNonUserInitiatedAdDismissTimeStamp() {
+        this.mFullAdDismissedTimeStamp = System.currentTimeMillis();
+    }
+
+    private void setBannerClickTimeStamp() {
+        this.mBannerClickTimeStamp = System.currentTimeMillis();
+    }
+
+    public long getFullScreenNonUserInitiatedAdDismissTimeStamp() {
+        return mFullAdDismissedTimeStamp;
+    }
+
+    public long getBannerClickTimeStamp() {
+        return mBannerClickTimeStamp;
+    }
+
+    public boolean hasCoolDownForFullScreenNonUserInitiatedAd() {
+        final long coolDownMillis = TimeManager.getInstance().toMillisFromSeconds(getCoolDownSecondsForFullScreenNonUserInitiatedAd());
+        final long now = System.currentTimeMillis();
+        final long fullScreenNonUserInitiatedAdDismissTimeStamp = getFullScreenNonUserInitiatedAdDismissTimeStamp();
+        final long lastBannerClick = getBannerClickTimeStamp();
+        return (now - fullScreenNonUserInitiatedAdDismissTimeStamp) > coolDownMillis &&
+                (now - lastBannerClick) >  coolDownMillis;
+    }
+
+    private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
+        return 30L;
     }
 }

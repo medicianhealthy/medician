@@ -10,6 +10,7 @@ import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.robinzon.medicationwizard.ads.AdAction;
 import com.robinzon.medicationwizard.ads.AdPlacement;
 import com.robinzon.medicationwizard.ads.AdType;
 import com.robinzon.medicationwizard.ads.AdsManager;
@@ -41,6 +42,7 @@ public class AdMobRewarded extends AdMobAd {
     public void load() {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
         if (shouldBeLoaded()) {
+            getAdsManager().onAdAction(AdMobRewarded.this, AdAction.StartingToLoad);
             setIsLoading(true);
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
             final RewardedAdLoadCallback rewardedAdLoadCallback = new RewardedAdLoadCallback() {
@@ -51,6 +53,7 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     failedToLoad(loadAdError);
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.FailedToLoad);
                     log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
                 }
 
@@ -60,6 +63,7 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoading(false);
                     setIsLoaded(true);
                     loaded();
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.LoadedSuccessfully);
                     log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(ad.getResponseInfo().getMediationAdapterClassName()), thisToString());
                 }
             };
@@ -81,6 +85,7 @@ public class AdMobRewarded extends AdMobAd {
                 public void onAdClicked() {
                     // Called when a click is recorded for an ad.
                     log("%s Clicked.\n%s",getLogTag() , thisToString());
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Clicked);
                 }
 
                 @Override
@@ -95,11 +100,13 @@ public class AdMobRewarded extends AdMobAd {
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
+                            getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Dismissed);
                             getActivity().runOnUiThread(AdMobRewarded.this::load);
                         }
                     },500L);
 
                     log("%s Dismissed.\n%s",getLogTag() , thisToString());
+
                 }
 
                 @Override
@@ -110,11 +117,13 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     log("%s Failed to show. Reason is %s.\n%s",getLogTag() ,adError.getMessage(), thisToString());
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.FailedToShow);
                 }
 
                 @Override
                 public void onAdImpression() {
                     // Called when an impression is recorded for an ad.
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Impression);
                 }
 
                 @Override
@@ -124,12 +133,14 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     log("%s Showed.\n%s",getLogTag() , thisToString());
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Showing);
                 }
             });
             mRewardedAd.show(getActivity(), new OnUserEarnedRewardListener() {
                 @Override
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                     log("%s Rewarded.\n%s",getLogTag() , thisToString());
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Rewarding);
                 }
             });
         }
