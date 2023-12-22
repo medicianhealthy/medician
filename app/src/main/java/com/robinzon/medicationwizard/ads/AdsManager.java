@@ -9,7 +9,10 @@ import com.robinzon.medicationwizard.ads.admob.AdMobAppOpen;
 import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.ads.admob.AdMobInterstitial;
 import com.robinzon.medicationwizard.ads.admob.AdMobRewarded;
+import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
 import com.robinzon.medicationwizard.utils.NetworkUtils;
+
+import java.util.ArrayList;
 
 public class AdsManager {
 
@@ -19,6 +22,8 @@ public class AdsManager {
     private AdMobInterstitial mMainInterstitial;
     private AdMobRewarded mMainRewarded;
     private AdMobAppOpen mAppOpenAd;
+
+    private ArrayList<AdMobAd> mAdsCollections;
 
     public AdsManager(final @NonNull Activity activity) {
         this.mActivity = activity;
@@ -35,19 +40,38 @@ public class AdsManager {
 
     private void createAds() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            mMainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AdaptiveBanner) : "a",
-                    this,
-                    AdPlacement.Main);
-            mMainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
-                    this,
-                    AdPlacement.Main);
-            mMainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
-                    this,
-                    AdPlacement.Main);
-            mAppOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
-                    this,
-                    AdPlacement.Main);
+            if (null == mMainBanner) {
+                mMainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AdaptiveBanner) : "a",
+                        this,
+                        AdPlacement.Main);
+                getAdsCollection().add(mMainBanner);
+            }
+            if (null == mMainInterstitial) {
+                mMainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
+                        this,
+                        AdPlacement.Main);
+                getAdsCollection().add(mMainInterstitial);
+            }
+            if (null == mMainRewarded) {
+                mMainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
+                        this,
+                        AdPlacement.Main);
+                getAdsCollection().add(mMainRewarded);
+            }
+            if (null == mAppOpenAd) {
+                mAppOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
+                        this,
+                        AdPlacement.Main);
+                getAdsCollection().add(mAppOpenAd);
+            }
         }
+    }
+
+    public ArrayList<AdMobAd> getAdsCollection() {
+        if (null == mAdsCollections) {
+            mAdsCollections = new ArrayList<>();
+        }
+        return mAdsCollections;
     }
 
     private void loadAds() {
@@ -96,20 +120,27 @@ public class AdsManager {
     }
 
     public void onResume() {
-        if (null != mMainBanner) {
-            mMainBanner.onResume();
+        for (AdMobAd ad : getAdsCollection()) {
+            if (null != ad) {
+                ad.onResume();
+            }
         }
     }
 
     public void onDestroy() {
-
+        for (AdMobAd ad : getAdsCollection()) {
+            if (null != ad) {
+                ad.onDestroy();
+            }
+        }
     }
 
     public void onPause() {
-        if (null != mMainBanner) {
-            mMainBanner.onPause();
+        for (AdMobAd ad : getAdsCollection()) {
+            if (null != ad) {
+                ad.onPause();
+            }
         }
-
     }
 
     public void showInterstitialAd() {

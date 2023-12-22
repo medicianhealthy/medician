@@ -26,4 +26,5 @@
     <string name="admob_interstitial_id_live">ca-app-pub-1732884929436465/1796850753</string>
     <string name="admob_rv_id_live">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live">RInter</string>
+    <string name="take">Take</string>
 </resources>

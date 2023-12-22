@@ -101,12 +101,7 @@ public class AdMobInterstitial extends AdMobAd {
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    load();
-                                }
-                            });
+                            getActivity().runOnUiThread(AdMobInterstitial.this::load);
                         }
                     },500L);
 
@@ -114,7 +109,7 @@ public class AdMobInterstitial extends AdMobAd {
                 }
 
                 @Override
-                public void onAdFailedToShowFullScreenContent(AdError adError) {
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                     // Called when ad fails to show.
                     mInterstitialAd = null;
                     setIsShowing(false);
@@ -171,5 +166,11 @@ public class AdMobInterstitial extends AdMobAd {
     @Override
     public Object getCoreAdObject() {
         return mInterstitialAd;
+    }
+
+
+    @Override
+    public void onDestroy() {
+
     }
 }

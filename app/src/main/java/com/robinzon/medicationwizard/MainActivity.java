@@ -2,7 +2,6 @@ package com.robinzon.medicationwizard;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -17,6 +16,7 @@ import com.robinzon.medicationwizard.ads.AdsManager;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
+import com.robinzon.medicationwizard.utils.Statisticator;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         com.robinzon.medicationwizard.databinding.ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
@@ -58,14 +57,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mBinding.getRoot().findViewById(R.id.text_home).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getAdsManager().showRewarded();
-            }
-        });
         mHasCreated = true;
+        Statisticator.onSessionStarted(this);
     }
+
+
 
 
     public AdsManager getAdsManager() {
@@ -92,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         if (null != getAdsManager()) {
             getAdsManager().onResume();
         }
+        Statisticator.onMoveToForeground(this);
 
     }
 
@@ -105,10 +102,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        super.onPause();
         if (null != getAdsManager()) {
             getAdsManager().onPause();
         }
-        super.onPause();
+        Statisticator.onMoveToBackground(this);
     }
 
     public String getClassName() {
@@ -133,4 +131,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mHasCreated = false;
     }
+
+
+
 }

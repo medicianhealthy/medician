@@ -212,4 +212,9 @@ public class AdMobBanner extends AdMobAd {
     public Object getCoreAdObject() {
         return getAdView();
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

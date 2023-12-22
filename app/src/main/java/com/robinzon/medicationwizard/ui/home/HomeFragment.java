@@ -4,34 +4,54 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.robinzon.medicationwizard.databinding.FragmentHomeBinding;
+import com.robinzon.medicationwizard.entities.ActiveIngredient;
+import com.robinzon.medicationwizard.entities.EForm;
+import com.robinzon.medicationwizard.entities.EInstructions;
+import com.robinzon.medicationwizard.entities.EMeasurementUnit;
+import com.robinzon.medicationwizard.entities.Medication;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel mHomeViewModel;
     private FragmentHomeBinding mBinding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mHomeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         mBinding = FragmentHomeBinding.inflate(inflater, container, false);
         final View rootView = mBinding.getRoot();
-        final TextView textView = mBinding.textHome;
-        mHomeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        final RecyclerView recyclerView = mBinding.recyclerView;
+
+        final ArrayList<Medication> data = new ArrayList<>();
+        final Medication e = new Medication("Cymbalta", new ArrayList<>() {{
+            add(new ActiveIngredient("Doluxine", EMeasurementUnit.MILLIGRAM));
+        }});
+        e.setForm(EForm.Pill);
+        e.setInstruction(EInstructions.AFTER_EATING);
+        e.setStrength(60F);
+
+        data.add(e);
+        data.add(e);
+        data.add(e);
+        data.add(e);
+        data.add(e);
+        data.add(e);
+        data.add(e);
+        data.add(e);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerView.Adapter customAdapter = new MedicationsAdapter(data);
+        recyclerView.setAdapter(customAdapter);
 
         return rootView;
+
     }
 
     @Override

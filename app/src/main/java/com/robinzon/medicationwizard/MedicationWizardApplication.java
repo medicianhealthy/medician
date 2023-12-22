@@ -11,6 +11,8 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import com.robinzon.medicationwizard.utils.Statisticator;
+
 public class MedicationWizardApplication extends Application
         implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
 
@@ -20,12 +22,12 @@ public class MedicationWizardApplication extends Application
         super.onCreate();
         this.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
-
     }
 
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
         mCurrentActivity = activity;
+
     }
 
     @Override
@@ -36,11 +38,13 @@ public class MedicationWizardApplication extends Application
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
         mCurrentActivity = activity;
+
     }
 
     @Override
     public void onActivityPaused(@NonNull Activity activity) {
         mCurrentActivity = activity;
+
     }
 
     @Override
@@ -65,6 +69,7 @@ public class MedicationWizardApplication extends Application
         if (null != mCurrentActivity) {
             ((MainActivity)mCurrentActivity).onMoveToForeground();
         }
+
 
     }
 }

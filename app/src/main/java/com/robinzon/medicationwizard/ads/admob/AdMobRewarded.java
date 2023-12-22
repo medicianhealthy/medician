@@ -95,12 +95,7 @@ public class AdMobRewarded extends AdMobAd {
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    load();
-                                }
-                            });
+                            getActivity().runOnUiThread(AdMobRewarded.this::load);
                         }
                     },500L);
 
@@ -108,7 +103,7 @@ public class AdMobRewarded extends AdMobAd {
                 }
 
                 @Override
-                public void onAdFailedToShowFullScreenContent(AdError adError) {
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                     // Called when ad fails to show.
                     mRewardedAd = null;
                     setIsShowing(false);
@@ -176,5 +171,10 @@ public class AdMobRewarded extends AdMobAd {
         return mRewardedAd;
     }
 
+
+    @Override
+    public void onDestroy() {
+
+    }
 
 }

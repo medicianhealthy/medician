@@ -193,4 +193,6 @@ public abstract class AdMobAd {
             }, delay);
         }
     }
+
+    public abstract void  onDestroy();
 }

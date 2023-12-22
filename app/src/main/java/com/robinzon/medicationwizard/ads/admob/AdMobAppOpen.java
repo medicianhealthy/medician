@@ -90,12 +90,7 @@ public class AdMobAppOpen extends AdMobAd {
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    load();
-                                }
-                            });
+                            getActivity().runOnUiThread(AdMobAppOpen.this::load);
                         }
                     },500L);
 
@@ -168,5 +163,10 @@ public class AdMobAppOpen extends AdMobAd {
     @Override
     public Object getCoreAdObject() {
         return mAppOpenAd;
+    }
+
+    @Override
+    public void onDestroy() {
+
     }
 }
