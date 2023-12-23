@@ -45,7 +45,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
             // Check if notifications are not enabled and if the user hasn't previously
             // chosen not to show the rationale again (based on shared preferences).
             // Also checks if the count of refusals has reached the specified delta to show the rationale.
-            return !areNotificationsEnabled() &&
+            return notificationsAreDisabled() &&
                     !SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, false);
         }
         // For Android versions below Tiramisu, notification permission is not required,
@@ -59,9 +59,9 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
 
-    private boolean areNotificationsEnabled() {
+    private boolean notificationsAreDisabled() {
         final NotificationManagerCompat notificationManager = getNotificationManager();
-        return notificationManager.areNotificationsEnabled();
+        return !notificationManager.areNotificationsEnabled();
     }
 
 
@@ -81,21 +81,23 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     public void requestPermissionIfNeeded() {
         if (shouldAskForNotificationPermission()) {
             if (PermissionManager.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.POST_NOTIFICATIONS)) {
-                increaseRefuseNumber();
-                if (0 == getCountRefusedSoFar() % getDeltaToShowRational()) {
+                if (0 == (getCountRefusedSoFar() % getDeltaToShowRational())) {
                     showRationaleDialog();
+                } else {
+                    showSnackNoPermission();
                 }
+                increaseRefuseNumber();
             } else {
                 requestPermission();
             }
-        } else if (!areNotificationsEnabled()) {
+        } else if (notificationsAreDisabled()) {
             showSnackNoPermission();
         }
     }
 
     private void showSnackNoPermission() {
         Snackbar.make(getActivity().findViewById(R.id.fab), getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
-                .setAction("ALLOW", new View.OnClickListener() {
+                .setAction(getActivity().getString(R.string.button_allow), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestPermission();
@@ -115,7 +117,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         final CustomMaterialDialog dialog = new CustomMaterialDialog(getActivity());
         dialog.setTitle(getActivity().getString(R.string.permission_rational_notification_title));
         dialog.setMessage(getActivity().getString(R.string.permission_rational_notification_message));
-        dialog.setPositiveButton(getActivity().getString(R.string.buttoh_sure), this);
+        dialog.setPositiveButton(getActivity().getString(R.string.button_sure), this);
         dialog.setNegativeButton(getActivity().getString(R.string.buttoh_not_now), this);
         dialog.setNeutralButton(getActivity().getString(R.string.buttoh_never), this);
         dialog.setOnDismissListener(this);
@@ -174,7 +176,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     @NonNull
-    public Activity getActivity() {
+    private Activity getActivity() {
         return mActivity;
     }
 }
