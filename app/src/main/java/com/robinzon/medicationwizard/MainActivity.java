@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -18,6 +19,7 @@ import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
+import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.Statisticator;
 
 import java.util.Timer;
@@ -137,12 +139,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case 1:
-                break;
-            case 2 :
-                int i =0;
-                break;
+        switch (requestCode) {
+            case PermissionManager.REQUEST_PERMISSION_CODE_POST_NOTIFICATIONS -> {
+                final boolean permissionsArrayValid = permissions.length > 0;
+                final boolean grantResultsArrayIsValid = grantResults.length > 0;
+                final boolean permissionHasGranted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+                final boolean granted = permissionsArrayValid && grantResultsArrayIsValid && permissionHasGranted;
+                NotificationManager.getInstance(this).setHasGrantedPermission(granted);
+            }
+            case 2 -> {
+                int i = 0;
+            }
         }
     }
 }
