@@ -3,7 +3,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_subtitle">My Name</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -13,25 +13,28 @@
 
     <!--***********************   Ads   ************************************************************************-->
     <!--Test ad units-->
-    <string name="admob_application_id_test">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="admob_banner_id_test">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="admob_interstitial_id_test">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="admob_rewarded_interstitial_id_test">ca-app-pub-3940256099942544/5354046379</string>
-    <string name="admob_rv_id_test">ca-app-pub-3940256099942544/5224354917</string>
-    <string name="admob_app_open_id_test">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="admob_application_id_test" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banner_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="admob_rewarded_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/5354046379</string>
+    <string name="admob_rv_id_test" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="admob_app_open_id_test" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
 
     <!--Live ad units-->
-    <string name="admob_application_id_live">ca-app-pub-1732884929436465~8629726144</string>
-    <string name="admob_banner_id_live">ca-app-pub-1732884929436465/8454840017</string>
-    <string name="admob_interstitial_id_live">ca-app-pub-1732884929436465/1796850753</string>
-    <string name="admob_rv_id_live">ca-app-pub-1732884929436465/6375471588</string>
-    <string name="admob_rewarded_interstitial_id_live">RInter</string>
+    <string name="admob_application_id_live" translatable="false">ca-app-pub-1732884929436465~8629726144</string>
+    <string name="admob_banner_id_live" translatable="false">ca-app-pub-1732884929436465/8454840017</string>
+    <string name="admob_interstitial_id_live" translatable="false">ca-app-pub-1732884929436465/1796850753</string>
+    <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
+    <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="take">Take</string>
     <string name="permission_rational_notification_title">Need you permission</string>
     <string name="permission_rational_notification_message">I don\'t want you to forget your meds,
         so please let me have permission to show you notifications.</string>
-    <string name="buttoh_sure">SURE</string>
-    <string name="buttoh_not_now">NOT NOW</string>
-    <string name="buttoh_never">NEVER</string>
+    <string name="button_sure">Sure</string>
+    <string name="buttoh_not_now">Not now</string>
+    <string name="buttoh_never">Never</string>
     <string name="notification_missing">No notifications permission</string>
+    <string name="button_allow">Allow</string>
+    <string name="button_grant">Grant</string>
+    <string name="button_ok">Ok</string>
 </resources>

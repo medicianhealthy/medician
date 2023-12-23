@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">קוסם התרופות</string>
+    <string name="navigation_drawer_open">פתח ת\'מגירה</string>
+    <string name="navigation_drawer_close">סגור ת\'מגירה</string>
+    <string name="nav_header_title">מגירה טייטל</string>
+    <string name="nav_header_subtitle">מגירה סאבטייטל</string>
+    <string name="nav_header_desc">כותרת מגירה</string>
+    <string name="action_settings">הגדרות</string>
+    <string name="menu_home">בית</string>
+    <string name="menu_gallery">גלריה</string>
+    <string name="menu_slideshow">שקופיות</string>
+    <string name="take">לקחתי</string>
+    <string name="permission_rational_notification_title">צריך הרשאות להודעות</string>
+    <string name="permission_rational_notification_message">כדי שלא תשכחי לקחת את התרופות בזמן אני צריך הרשאות להודעות</string>
+    <string name="button_sure">בטח</string>
+    <string name="buttoh_not_now">לא עכשיו</string>
+    <string name="buttoh_never">לעולם לא</string>
+    <string name="notification_missing">אין הרשאות להודעות</string>
+    <string name="button_allow">תן הרשאה</string>
+    <string name="button_grant">הענק</string>
+    <string name="button_ok">אוקיי</string>
+</resources>
