@@ -37,4 +37,5 @@
     <string name="button_allow">Allow</string>
     <string name="button_grant">Grant</string>
     <string name="button_ok">Ok</string>
+    <string name="button_skip">skip</string>
 </resources>

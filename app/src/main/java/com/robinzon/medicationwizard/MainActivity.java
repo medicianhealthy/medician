@@ -139,17 +139,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PermissionManager.REQUEST_PERMISSION_CODE_POST_NOTIFICATIONS -> {
-                final boolean permissionsArrayValid = permissions.length > 0;
-                final boolean grantResultsArrayIsValid = grantResults.length > 0;
-                final boolean permissionHasGranted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
-                final boolean granted = permissionsArrayValid && grantResultsArrayIsValid && permissionHasGranted;
-                NotificationManager.getInstance(this).setHasGrantedPermission(granted);
-            }
-            case 2 -> {
-                int i = 0;
-            }
+        if (requestCode == PermissionManager.REQUEST_PERMISSION_CODE_POST_NOTIFICATIONS) {
+            final boolean permissionsArrayValid = permissions.length > 0;
+            final boolean permissionHasGranted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+            final boolean granted = permissionsArrayValid && permissionHasGranted;
+            NotificationManager.getInstance(this).setHasGrantedPermission(granted);
         }
     }
 }

@@ -20,4 +20,5 @@
     <string name="button_allow">תן הרשאה</string>
     <string name="button_grant">הענק</string>
     <string name="button_ok">אוקיי</string>
+    <string name="button_skip">skip</string>
 </resources>

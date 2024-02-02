@@ -156,15 +156,9 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
         switch (which) {
-            case DialogInterface.BUTTON_POSITIVE -> {
-                setButtonClickedBeforeDismissed(DialogInterface.BUTTON_POSITIVE);
-            }
-            case DialogInterface.BUTTON_NEGATIVE -> {
-                setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEGATIVE);
-            }
-            case DialogInterface.BUTTON_NEUTRAL -> {
-                setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEUTRAL);
-            }
+            case DialogInterface.BUTTON_POSITIVE -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_POSITIVE);
+            case DialogInterface.BUTTON_NEGATIVE -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEGATIVE);
+            case DialogInterface.BUTTON_NEUTRAL -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEUTRAL);
         }
 
     }

@@ -112,7 +112,7 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Skip"
+            android:text="@string/button_skip"
             android:textSize="15sp"
             app:layout_constraintLeft_toLeftOf="@id/medication_list_row_parent"
             app:layout_constraintTop_toBottomOf="@id/directions" />
