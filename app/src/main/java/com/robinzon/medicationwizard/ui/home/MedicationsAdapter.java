@@ -106,7 +106,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         // contents of the view with that element
         final Medication medication = mLocalDataSet.get(position);
         viewHolder.getMedName().setText(medication.getCommercialName());
-        viewHolder.getStrength().setText(String.valueOf(medication.getStrength()));
+        viewHolder.getStrength().setText(String.valueOf(medication.getStrength()).concat("mg"));
         viewHolder.getDirections().setText(medication.getInstruction().getDescription());
     }
 

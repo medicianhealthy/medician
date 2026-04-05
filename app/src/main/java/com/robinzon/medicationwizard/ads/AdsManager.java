@@ -99,28 +99,17 @@ public class AdsManager implements OnAdActionListener{
      * @noinspection SameParameterValue
      */
     private @NonNull String getTestAdForAdType(@NonNull final AdType adType) {
-        switch (adType) {
-            case AppOpen:
-                return "ca-app-pub-3940256099942544/9257395921";
-            case AdaptiveBanner:
-                return "ca-app-pub-3940256099942544/9214589741";
-            case Banner:
-                return "ca-app-pub-3940256099942544/6300978111";
-            case Interstitial:
-                return "ca-app-pub-3940256099942544/1033173712";
-            case InterstitialVideo:
-                return "ca-app-pub-3940256099942544/8691691433";
-            case Rewarded:
-                return "ca-app-pub-3940256099942544/5224354917";
-            case RewardedInterstitial:
-                return "ca-app-pub-3940256099942544/5354046379";
-            case NativeAdvanced:
-                return "ca-app-pub-3940256099942544/2247696110";
-            case NativeAdvancedVideo:
-                return "ca-app-pub-3940256099942544/1044960115";
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (adType) {
+            case AppOpen -> "ca-app-pub-3940256099942544/9257395921";
+            case AdaptiveBanner -> "ca-app-pub-3940256099942544/9214589741";
+            case Banner -> "ca-app-pub-3940256099942544/6300978111";
+            case Interstitial -> "ca-app-pub-3940256099942544/1033173712";
+            case InterstitialVideo -> "ca-app-pub-3940256099942544/8691691433";
+            case Rewarded -> "ca-app-pub-3940256099942544/5224354917";
+            case RewardedInterstitial -> "ca-app-pub-3940256099942544/5354046379";
+            case NativeAdvanced -> "ca-app-pub-3940256099942544/2247696110";
+            case NativeAdvancedVideo -> "ca-app-pub-3940256099942544/1044960115";
+        };
     }
 
     public void onResume() {
@@ -147,12 +136,13 @@ public class AdsManager implements OnAdActionListener{
         }
     }
 
+    /** @noinspection unused*/
     public void showInterstitialAd() {
         if (null != mMainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             mMainInterstitial.show();
         }
     }
-
+    /** @noinspection unused*/
     public void showRewarded() {
         if (null != mMainRewarded) {
             mMainRewarded.show();
@@ -188,7 +178,6 @@ public class AdsManager implements OnAdActionListener{
             case NativeAdvancedVideo -> {
             }
             default -> {
-                break;
             }
         }
     }

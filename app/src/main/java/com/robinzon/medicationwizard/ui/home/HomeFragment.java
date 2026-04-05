@@ -18,6 +18,7 @@ import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 import com.robinzon.medicationwizard.entities.Medication;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -29,25 +30,25 @@ public class HomeFragment extends Fragment {
         final RecyclerView recyclerView = mBinding.recyclerView;
 
         final ArrayList<Medication> data = new ArrayList<>();
-        final Medication e = new Medication("Cymbalta", new ArrayList<>() {{
+        final Medication medication = new Medication("Cymbalta", new ArrayList<>() {{
             add(new ActiveIngredient("Doluxine", EMeasurementUnit.MILLIGRAM));
         }});
-        e.setForm(EForm.Pill);
-        e.setInstruction(EInstructions.AFTER_EATING);
-        e.setStrength(60F);
+        medication.setForm(EForm.Pill);
+        medication.setInstruction(EInstructions.AFTER_EATING);
+        medication.setStrength(60F);
 
-        data.add(e);
-        data.add(e);
-        data.add(e);
-        data.add(e);
-        data.add(e);
-        data.add(e);
-        data.add(e);
-        data.add(e);
+        data.add(medication);
+        data.add(medication);
+        data.add(medication);
+        data.add(medication);
+        data.add(medication);
+        data.add(medication);
+        data.add(medication);
+        data.add(medication);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerView.Adapter customAdapter = new MedicationsAdapter(data);
+        RecyclerView.Adapter<MedicationsAdapter.ViewHolder> customAdapter = new MedicationsAdapter(data);
         recyclerView.setAdapter(customAdapter);
 
         return rootView;

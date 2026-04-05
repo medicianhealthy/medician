@@ -5,7 +5,6 @@ plugins {
 }
 
 android {
-    compileSdk rootProject.SDK_COMPILE_VERSION
 
     defaultConfig {
         applicationId "com.robinzon.medicationwizard"
@@ -15,6 +14,8 @@ android {
         versionName rootProject.VERSION_NAME
         multiDexEnabled true
     }
+
+    compileSdk = rootProject.SDK_COMPILE_VERSION
 
     buildTypes {
         release {
@@ -50,20 +51,20 @@ android {
 }
 
 dependencies {
-    implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.9.22'))
+    implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.1.20'))
     //Ads
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
-    implementation 'com.google.firebase:firebase-ads:22.6.0'
+    implementation 'com.google.android.gms:play-services-ads:25.1.0'
+    implementation 'com.google.firebase:firebase-ads:23.6.0'
     //Material
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.13.0'
     //Android X
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.navigation:navigation-fragment:2.7.6'
-    implementation 'androidx.navigation:navigation-ui:2.7.6'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.navigation:navigation-fragment:2.9.7'
+    implementation 'androidx.navigation:navigation-ui:2.9.7'
     //Firebase
     // https://firebase.google.com/docs/android/learn-more#compare-bom-versions
-    implementation platform('com.google.firebase:firebase-bom:32.7.0')
+    implementation platform('com.google.firebase:firebase-bom:34.11.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-config'
     implementation 'com.google.firebase:firebase-messaging'
@@ -71,14 +72,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
 
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    implementation 'com.google.android.gms:play-services-ads:25.1.0'
 
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-process:2.7.0'
-    annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.10.0'
+    annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.10.0'
 
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.13.0'
 }

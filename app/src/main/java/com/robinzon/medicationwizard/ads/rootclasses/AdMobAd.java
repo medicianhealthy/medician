@@ -47,7 +47,7 @@ public abstract class AdMobAd {
 
     @NonNull
     public Context getContext() {
-        return (Context) getActivity();
+        return getActivity();
     }
 
     @NonNull
@@ -60,11 +60,16 @@ public abstract class AdMobAd {
         return mAdsManager;
     }
 
+    /**
+     * @return The placement of this specific ad
+     * @noinspection unused
+     */
     @NonNull
     public AdPlacement getPlacement() {
         return mPlacement;
     }
 
+    /** @noinspection BooleanMethodIsAlwaysInverted*/
     public boolean isLoading() {
         return mIsLoading;
     }
@@ -98,12 +103,20 @@ public abstract class AdMobAd {
     //Actions
     public abstract void load();
 
-    protected boolean shouldBeLoaded() {
-        final boolean shouldLoad;
-        if (!isExpired()) {
-            return !isLoading() && !isLoaded() && NetworkUtils.isNetworkAvailable(getContext().getApplicationContext());
+    @Nullable
+    protected Boolean shouldBeLoaded() {
+        final Context applicationContext = getContext().getApplicationContext();
+        if (null != applicationContext) {
+            final boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable(applicationContext);
+            final boolean isLoading = isLoading();
+            if (!isExpired()) {
+                return !isLoading && !isLoaded() && isNetworkAvailable;
+            } else {
+                return !isLoading && isNetworkAvailable;
+            }
+        } else {
+            return null;
         }
-        return !isLoading() && NetworkUtils.isNetworkAvailable(getContext().getApplicationContext());
     }
 
     public abstract void show();
@@ -120,6 +133,7 @@ public abstract class AdMobAd {
 
     public abstract boolean shouldShow();
 
+    /** @noinspection unused*/
     public abstract void hide();
 
     public abstract void onPause();
@@ -140,6 +154,7 @@ public abstract class AdMobAd {
         }
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "AdUnitId='" + mAdUnitId + '\'' + "\n" +
@@ -157,6 +172,7 @@ public abstract class AdMobAd {
 
     }
 
+    /** @noinspection unused*/
     private void setLastLoadTime() {
         mLastLoadTime = System.currentTimeMillis();
     }
@@ -183,12 +199,7 @@ public abstract class AdMobAd {
             mReloadTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            load();
-                        }
-                    });
+                    getActivity().runOnUiThread(AdMobAd.this::load);
                 }
             }, delay);
         }

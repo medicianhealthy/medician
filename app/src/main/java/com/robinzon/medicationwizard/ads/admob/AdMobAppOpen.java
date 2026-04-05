@@ -32,7 +32,7 @@ public class AdMobAppOpen extends AdMobAd {
     @Override
     public void load() {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
-        if (shouldBeLoaded()) {
+        if (Boolean.TRUE.equals(shouldBeLoaded())) {
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
             getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.StartingToLoad);
             setIsLoading(true);

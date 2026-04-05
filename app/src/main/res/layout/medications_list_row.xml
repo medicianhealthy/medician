@@ -1,143 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
-    app:cardCornerRadius="10dp"
-    android:elevation="10dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="6dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="?attr/colorSurface"
+    style="@style/Widget.Material3.CardView.Elevated">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/medication_list_row_parent"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:elevation="5dp"
-        android:padding="8dp">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/med_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"  android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:paddingEnd="10dp"
-            android:text="Symbalta Symbalta Symbalta Symbalta SymbaltaS ymbalta Symbal"
-            android:textSize="@dimen/medication_name_txt_size"
-            app:layout_constraintLeft_toLeftOf="@id/medication_list_row_parent"
-            app:layout_constraintTop_toTopOf="@id/medication_list_row_parent"
-            app:layout_constraintWidth_max="300dp" />
+            android:text="Cymbalta"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="?attr/colorOnSurface"
+            app:drawableStartCompat="@drawable/ic_medication"
+            android:drawablePadding="8dp"
+            app:drawableTint="?attr/colorPrimary"
+
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@+id/med_strength"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/med_strength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="60mg"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="@dimen/medication_strength_txt_size"
+            android:layout_marginStart="8dp"
+            android:text="60.0 mg"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintBottom_toBottomOf="@id/med_name"
-            app:layout_constraintLeft_toRightOf="@id/med_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/med_name"
             app:layout_constraintTop_toTopOf="@id/med_name" />
 
         <TextView
             android:id="@+id/take"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
+            android:layout_marginTop="4dp"
             android:text="@string/take"
-            android:textSize="@dimen/take_text_size"
-            app:layout_constraintLeft_toLeftOf="@id/med_name"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/med_name" />
 
         <TextView
             android:id="@+id/quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
+            android:layout_marginStart="4dp"
             android:text="3"
-            android:textSize="@dimen/take_text_quantity"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintBottom_toBottomOf="@id/take"
-            app:layout_constraintLeft_toRightOf="@id/take"
-            app:layout_constraintTop_toBottomOf="@id/med_name"
+            app:layout_constraintStart_toEndOf="@id/take"
             app:layout_constraintTop_toTopOf="@id/take" />
 
         <TextView
             android:id="@+id/form"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
+            android:layout_marginStart="4dp"
             android:text="Pills"
-            android:textSize="@dimen/take_text_quantity"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintBottom_toBottomOf="@id/quantity"
-            app:layout_constraintLeft_toRightOf="@id/quantity"
-            app:layout_constraintTop_toBottomOf="@id/quantity"
+            app:layout_constraintStart_toEndOf="@id/quantity"
             app:layout_constraintTop_toTopOf="@id/quantity" />
 
         <TextView
             android:id="@+id/at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
+            android:layout_marginStart="4dp"
             android:text="At"
-            android:textSize="@dimen/take_text_quantity"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintBottom_toBottomOf="@id/form"
-            app:layout_constraintLeft_toRightOf="@id/form"
-            app:layout_constraintTop_toBottomOf="@id/form"
+            app:layout_constraintStart_toEndOf="@id/form"
             app:layout_constraintTop_toTopOf="@id/form" />
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="10dp"
+            android:layout_marginStart="4dp"
             android:text="13:30"
-            android:textSize="@dimen/take_text_quantity"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+
+            app:drawableStartCompat="@drawable/ic_clock"
+            android:drawablePadding="4dp"
+            app:drawableTint="?attr/colorOnSurfaceVariant"
             app:layout_constraintBottom_toBottomOf="@id/at"
-            app:layout_constraintLeft_toRightOf="@id/at"
-            app:layout_constraintTop_toBottomOf="@id/at"
+            app:layout_constraintStart_toEndOf="@id/at"
             app:layout_constraintTop_toTopOf="@id/at" />
 
         <TextView
             android:id="@+id/directions"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="After a meal with a glass of water"
-            android:textSize="@dimen/take_text_quantity"
-            app:layout_constraintLeft_toLeftOf="@id/medication_list_row_parent"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/take" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/skip_btn"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/button_skip"
-            android:textSize="15sp"
-            app:layout_constraintLeft_toLeftOf="@id/medication_list_row_parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/directions" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/take_btn"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Take"
-            android:textSize="15sp"
-            app:layout_constraintRight_toRightOf="@id/medication_list_row_parent"
-            app:layout_constraintTop_toBottomOf="@id/directions" />
+            app:layout_constraintBottom_toBottomOf="@id/skip_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/skip_btn" />
 
-
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/rescheduele"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="Reschedule"
-            android:textSize="15sp"
-            app:layout_constraintRight_toLeftOf="@id/take_btn"
-            app:layout_constraintTop_toBottomOf="@id/directions" />
-
+            app:layout_constraintBottom_toBottomOf="@id/take_btn"
+            app:layout_constraintEnd_toStartOf="@id/take_btn"
+            app:layout_constraintTop_toTopOf="@id/take_btn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

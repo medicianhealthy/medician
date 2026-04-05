@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -51,9 +52,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
-        final NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        // 1. Find the NavHostFragment
+        final NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment_content_main); // Make sure this ID matches your layout!
+
+        // 2. Get the NavController from the fragment
+        if (navHostFragment != null) {
+            final NavController navController = navHostFragment.getNavController();
+            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+            NavigationUI.setupWithNavController(navigationView, navController);
+        }
+
         mAdsManager = new AdsManager(this);
         RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
             @Override

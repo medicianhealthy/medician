@@ -1,8 +1,11 @@
 package com.robinzon.medicationwizard.ads.admob;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -33,6 +36,7 @@ public class AdMobBanner extends AdMobAd {
     private boolean mInitialLayoutComplete;
     private ConstraintLayout mAdContainerView;
     private int mBannerHeight;
+    private AdSize mAdSize;
 
     public AdMobBanner(final @NonNull String adUnitId,
                        final @NonNull AdsManager adsManager,
@@ -152,20 +156,24 @@ public class AdMobBanner extends AdMobAd {
     @Override
     public void load() {
         log("%s Requesting load.\n%s", getLogTag(), thisToString());
-        if (shouldBeLoaded()) {
+        if (Boolean.TRUE.equals(shouldBeLoaded())) {
             getAdsManager().onAdAction(AdMobBanner.this, AdAction.StartingToLoad);
             log("%s Preparing for loading.\n%s", getLogTag(), thisToString());
             try {
-                mAdContainerView = getActivity().findViewById(R.id.adViewParent);
-                mAdContainerView.addView(getAdView());
+                mAdContainerView = getActivity().findViewById(R.id.content_main);
+                // Locked in as final
+                final View adView = getAdView();
+                final int adViewId = adView.getId();
+
+                mAdContainerView.addView(adView);
 
                 ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(mAdContainerView);
-                // Connect the bottom of the ad view to the bottom of its parent layout.
-                // This ensures that the ad view is anchored to the bottom edge of the screen.
-                constraintSet.connect(getAdView().getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-                constraintSet.connect(getAdView().getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.connect(getAdView().getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+
+                constraintSet.connect(adViewId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+                constraintSet.connect(adViewId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+                constraintSet.connect(adViewId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+
                 constraintSet.applyTo(mAdContainerView);
                 // Since we're loading the banner based on the adContainerView size, we need
                 // to wait until this view is laid out before we can get the width.
@@ -193,29 +201,32 @@ public class AdMobBanner extends AdMobAd {
     }
 
     private AdSize getAdSize() {
-        WindowMetrics windowMetrics;
-        Rect bounds;
-        float availableWidth = 0F;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            windowMetrics = getActivity().getWindowManager().getCurrentWindowMetrics();
-            bounds = windowMetrics.getBounds();
-            availableWidth = bounds.width();
-        } else {
-            final DisplayMetrics displayMetrics = new DisplayMetrics();
-            final WindowManager windowManager = (WindowManager) getContext().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-            if (null != windowManager) {
-                windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-                availableWidth = displayMetrics.widthPixels;
+        if(null != mAdSize){
+            return mAdSize;
+        }
+        // 1. Secure a single, non-null Activity reference
+        final Activity activity = getActivity();
+
+        int adWidthPixels = mAdContainerView.getWidth();
+
+        // 2. If the view hasn't been laid out yet, calculate the screen width
+        if (adWidthPixels == 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
+                adWidthPixels = bounds.width();
+            } else {
+                final DisplayMetrics displayMetrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                adWidthPixels = displayMetrics.widthPixels;
             }
         }
-        float adWidthPixels = mAdContainerView.getWidth();
-        // If the ad hasn't been laid out, default to the full screen width.
-        if (0f == adWidthPixels) {
-            adWidthPixels = availableWidth;
-        }
-        final float density = getActivity().getResources().getDisplayMetrics().density;
-        final int adWidth = (int) (adWidthPixels / density);
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getActivity(), adWidth);
+
+        // 3. Convert pixels to density-independent pixels (dp)
+        final float density = activity.getResources().getDisplayMetrics().density;
+        final int adWidthDp = (int) (adWidthPixels / density);
+
+        mAdSize  = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
+        return mAdSize;
     }
 
     @Override
