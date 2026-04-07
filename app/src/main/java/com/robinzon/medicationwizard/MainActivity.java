@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private AppBarConfiguration mAppBarConfiguration;
     private AdsManager mAdsManager;
     private boolean mHasCreated;
-    public static final float BANNER_HEIGHT_MULTIPLIER = 1.05F;
+    public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
 
 
     @Override

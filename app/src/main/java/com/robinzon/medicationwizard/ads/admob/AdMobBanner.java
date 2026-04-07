@@ -212,6 +212,9 @@ public class AdMobBanner extends AdMobAd {
         }
         // 1. Secure a single, non-null Activity reference
         mAdContainerView = activity.findViewById(R.id.content_main);
+        if (null == mAdContainerView) {
+            return AdSize.BANNER;
+        }
         int adWidthPixels = mAdContainerView.getWidth();
 
         // 2. If the view hasn't been laid out yet, calculate the screen width
