@@ -3,6 +3,8 @@ package com.robinzon.medicationwizard;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,23 +17,29 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.robinzon.medicationwizard.ads.AdAction;
 import com.robinzon.medicationwizard.ads.AdsManager;
+import com.robinzon.medicationwizard.ads.OnAdActionListener;
+import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
+import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.utils.PermissionManager;
+import com.robinzon.medicationwizard.utils.Screen;
 import com.robinzon.medicationwizard.utils.Statisticator;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnAdActionListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private AdsManager mAdsManager;
     private boolean mHasCreated;
+    public static final float BANNER_HEIGHT_MULTIPLIER = 1.05F;
 
 
     @Override
@@ -63,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             NavigationUI.setupWithNavController(navigationView, navController);
         }
 
+        setBottomMarginToFab();
+
         mAdsManager = new AdsManager(this);
         RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
             @Override
@@ -75,7 +85,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Statisticator.onSessionStarted(this);
     }
 
-
+    private void setBottomMarginToFab() {
+        final View fab = findViewById(R.id.fab);
+        // 1. Convert your target DP into Pixels (e.g., 76dp to clear the ad banner)
+        int marginBottomDp = (int) (AdMobBanner.getBannerHeightDP(this) * BANNER_HEIGHT_MULTIPLIER );
+        int marginBottomPx = (int) (marginBottomDp * Screen.getDensity(getResources()));
+        // 2. Get the current LayoutParams and cast to MarginLayoutParams
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
+        // 3. Update the bottom margin (while safely preserving the left/top/right margins)
+        layoutParams.setMargins(
+                layoutParams.leftMargin,
+                layoutParams.topMargin,
+                layoutParams.rightMargin,
+                marginBottomPx
+        );
+        // 4. Apply the updated LayoutParams back to the FAB
+        fab.setLayoutParams(layoutParams);
+    }
 
 
     public AdsManager getAdsManager() {
@@ -155,4 +181,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             NotificationManager.getInstance(this).setHasGrantedPermission(granted);
         }
     }
+
+    @Override
+    public void onAdAction(@NonNull AdMobAd adMobAd, AdAction adAction) {
+
+    }
+
+
 }

@@ -8,5 +8,5 @@ public enum AdAction {
     FailedToShow,
     Clicked,
     Dismissed,
-    Impression, Rewarding
+    Impression, Created, Rewarding
 }

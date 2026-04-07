@@ -45,10 +45,11 @@ public class AdsManager implements OnAdActionListener{
     private void createAds() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             if (null == mMainBanner) {
-                mMainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AdaptiveBanner) : "a",
+                mMainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Banner) : "a",
                         this,
                         AdPlacement.Main);
                 getAdsCollection().add(mMainBanner);
+
             }
             if (null == mMainInterstitial) {
                 mMainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
@@ -171,6 +172,9 @@ public class AdsManager implements OnAdActionListener{
             case AdaptiveBanner, Banner -> {
                 if (AdAction.Clicked == adAction) {
                     setBannerClickTimeStamp();
+                }
+                if (AdAction.Created == adAction){
+                    ((OnAdActionListener)getActivity()).onAdAction(adMobAd, AdAction.Created);
                 }
             }
             case NativeAdvanced -> {

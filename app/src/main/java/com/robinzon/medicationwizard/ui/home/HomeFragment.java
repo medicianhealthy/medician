@@ -1,5 +1,8 @@
 package com.robinzon.medicationwizard.ui.home;
 
+import static com.robinzon.medicationwizard.MainActivity.BANNER_HEIGHT_MULTIPLIER;
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +13,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.databinding.FragmentHomeBinding;
 import com.robinzon.medicationwizard.entities.ActiveIngredient;
 import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 import com.robinzon.medicationwizard.entities.Medication;
+import com.robinzon.medicationwizard.utils.Screen;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -28,6 +32,7 @@ public class HomeFragment extends Fragment {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false);
         final View rootView = mBinding.getRoot();
         final RecyclerView recyclerView = mBinding.recyclerView;
+        setPaddingForRecyclerView(recyclerView);
 
         final ArrayList<Medication> data = new ArrayList<>();
         final Medication medication = new Medication("Cymbalta", new ArrayList<>() {{
@@ -59,5 +64,21 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
+    }
+
+    private void setPaddingForRecyclerView(@NonNull final RecyclerView recyclerView) {
+
+        // 1. Define your desired bottom padding in DP (e.g., 84dp to clear the ad)
+        int paddingBottomDp = (int) (AdMobBanner.getBannerHeightDP((Activity) recyclerView.getContext()) * BANNER_HEIGHT_MULTIPLIER);
+        int paddingBottomPx = (int) (paddingBottomDp * Screen.getDensity(getResources()));
+        // We use getPadding...() for the other sides so we don't accidentally erase them!
+        recyclerView.setPadding(
+                recyclerView.getPaddingLeft(),
+                recyclerView.getPaddingTop(),
+                recyclerView.getPaddingRight(),
+                paddingBottomPx
+        );
+        // 4. Critically important: allow items to scroll into that padded area
+        recyclerView.setClipToPadding(false);
     }
 }

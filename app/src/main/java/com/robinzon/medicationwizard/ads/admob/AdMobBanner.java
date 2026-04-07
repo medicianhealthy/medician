@@ -1,20 +1,12 @@
 package com.robinzon.medicationwizard.ads.admob;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Rect;
-import android.os.Build;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.WindowMetrics;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -28,15 +20,15 @@ import com.robinzon.medicationwizard.ads.AdType;
 import com.robinzon.medicationwizard.ads.AdsManager;
 import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
 import com.robinzon.medicationwizard.utils.NetworkUtils;
+import com.robinzon.medicationwizard.utils.Screen;
 
 public class AdMobBanner extends AdMobAd {
 
     private final AdView mAdView;
     private AdListener mAdListener;
     private boolean mInitialLayoutComplete;
-    private ConstraintLayout mAdContainerView;
-    private int mBannerHeight;
-    private AdSize mAdSize;
+    private static ConstraintLayout mAdContainerView;
+    private static AdSize mAdSize;
 
     public AdMobBanner(final @NonNull String adUnitId,
                        final @NonNull AdsManager adsManager,
@@ -44,11 +36,14 @@ public class AdMobBanner extends AdMobAd {
         super(adUnitId, adsManager, placement);
         log("%s Creating object.\n%s", getLogTag(), thisToString());
         this.mAdView = new AdView(getActivity());
-        getAdView().setId(R.id.adView);
-        getAdView().setAdUnitId(adUnitId);
+        getAdType();
+        mAdView.setId(R.id.adView);
+        mAdView.setAdUnitId(adUnitId);
         createAdListener();
-        getAdView().setAdListener(getAdListener());
+        mAdView.setAdListener(getAdListener());
         addBannerHeightListener();
+        mAdView.setAdSize(getAdSize(getActivity()));
+        getAdsManager().onAdAction(this, AdAction.Created);
     }
 
     private void addBannerHeightListener() {
@@ -57,22 +52,22 @@ public class AdMobBanner extends AdMobAd {
                     @Override
                     public void onGlobalLayout() {
                         // Get the current height of the AdView
-                        int newBannerHeight = mAdView.getHeight();
+//                        int newBannerHeight = mAdView.getHeight();
                         // Check if the banner height has changed and is not zero
-                        if (newBannerHeight != mBannerHeight && newBannerHeight != 0) {
+//                        if (newBannerHeight != mBannerHeight && newBannerHeight != 0) {
                             // Update mBannerHeight with the new value
-                            mBannerHeight = newBannerHeight;
+//                            mBannerHeight = newBannerHeight;
                             // Find the RecyclerView in the current activity
-                            RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView);
-                            // Get the current layout parameters of the RecyclerView
-                            ViewGroup.MarginLayoutParams layoutParams =
-                                    (ViewGroup.MarginLayoutParams) recyclerView.getLayoutParams();
-                            // Retrieve the top margin dimension from resources
-                            int marginInPixels = getActivity().getResources().getDimensionPixelSize(R.dimen.bannerTopMargin);
-                            layoutParams.bottomMargin = mBannerHeight + marginInPixels;
-                            // Apply the new layout parameters to the RecyclerView
-                            recyclerView.setLayoutParams(layoutParams);
-                        }
+//                            RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView);
+//                            // Get the current layout parameters of the RecyclerView
+//                            ViewGroup.MarginLayoutParams layoutParams =
+//                                    (ViewGroup.MarginLayoutParams) recyclerView.getLayoutParams();
+//                            // Retrieve the top margin dimension from resources
+//                            int marginInPixels = getActivity().getResources().getDimensionPixelSize(R.dimen.bannerTopMargin);
+//                            layoutParams.bottomMargin = mBannerHeight + marginInPixels;
+//                            // Apply the new layout parameters to the RecyclerView
+//                            recyclerView.setLayoutParams(layoutParams);
+//                        }
                     }
                 });
     }
@@ -177,17 +172,19 @@ public class AdMobBanner extends AdMobAd {
                 constraintSet.applyTo(mAdContainerView);
                 // Since we're loading the banner based on the adContainerView size, we need
                 // to wait until this view is laid out before we can get the width.
-                mAdContainerView.getViewTreeObserver().addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                if (!mInitialLayoutComplete) {
-                                    mInitialLayoutComplete = true;
-                                    mAdView.setAdSize(getAdSize());
-                                    mAdView.loadAd(getAdRequest());
-                                }
-                            }
-                        });
+//                mAdContainerView.getViewTreeObserver().addOnGlobalLayoutListener(
+//                        new ViewTreeObserver.OnGlobalLayoutListener() {
+//                            @Override
+//                            public void onGlobalLayout() {
+//                                if (!mInitialLayoutComplete) {
+//                                    mInitialLayoutComplete = true;
+//                                    mAdView.setAdSize(getAdSize());
+//                                    mAdView.loadAd(getAdRequest());
+//                                }
+//                            }
+//                        });
+
+                mAdView.loadAd(getAdRequest());
                 setIsLoading(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -200,32 +197,34 @@ public class AdMobBanner extends AdMobAd {
         }
     }
 
-    private AdSize getAdSize() {
+    public static int getBannerHeightDP(final Activity activity){
+        return getAdSize(activity).getHeight();
+    }
+
+    public static int getBannerWidthDP(final Activity activity){
+        return getAdSize(activity).getWidth();
+    }
+
+
+    private static AdSize getAdSize(final Activity activity) {
         if(null != mAdSize){
             return mAdSize;
         }
         // 1. Secure a single, non-null Activity reference
-        final Activity activity = getActivity();
-
+        mAdContainerView = activity.findViewById(R.id.content_main);
         int adWidthPixels = mAdContainerView.getWidth();
 
         // 2. If the view hasn't been laid out yet, calculate the screen width
         if (adWidthPixels == 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
-                adWidthPixels = bounds.width();
-            } else {
-                final DisplayMetrics displayMetrics = new DisplayMetrics();
-                activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                adWidthPixels = displayMetrics.widthPixels;
-            }
+            adWidthPixels = Screen.getScreenWidthPX(activity);
         }
 
         // 3. Convert pixels to density-independent pixels (dp)
-        final float density = activity.getResources().getDisplayMetrics().density;
-        final int adWidthDp = (int) (adWidthPixels / density);
+        final int adWidthDp = (int) (adWidthPixels / Screen.getDensity(activity.getResources()));
 
-        mAdSize  = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
+        // Replacement for the deprecated getCurrentOrientation... method
+        //mAdSize = AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
+        mAdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
         return mAdSize;
     }
 
