@@ -35,9 +35,7 @@ public class HomeFragment extends Fragment {
         setPaddingForRecyclerView(recyclerView);
 
         final ArrayList<Medication> data = new ArrayList<>();
-        final Medication medication = new Medication("Cymbalta", new ArrayList<>() {{
-            add(new ActiveIngredient("Doluxine", EMeasurementUnit.MILLIGRAM));
-        }});
+        final Medication medication = new Medication("Cymbalta");
         medication.setForm(EForm.Pill);
         medication.setInstruction(EInstructions.AFTER_EATING);
         medication.setStrength(60F);

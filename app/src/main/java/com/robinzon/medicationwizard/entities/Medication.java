@@ -17,33 +17,27 @@ public class Medication {
 
     public static final class JsonKeys {
         public static final String JSON_KEY_COMMERCIAL_NAME = "mCommercialName";
-        public static final String JSON_KEY_ACTIVE_INGREDIENTS = "mActiveIngredients";
         public static final String JSON_KEY_FORM = "mForm";
         public static final String JSON_KEY_STRENGTH = "mStrength";
         public static final String JSON_KEY_MEDICAL_CONDITION = "mMedicalCondition";
         public static final String JSON_KEY_DAILY_SCHEDULE = "mDailySchedule";
-        public static final String JSON_KEY_DAYS_CYCLE = "mDaysCycle";
         public static final String JSON_KEY_AMOUNT_LEFT = "mAmountLeft";
         public static final String JSON_KEY_INSTRUCTIONS = "mInstruction";
     }
 
     private final String mCommercialName;
-    private final List<ActiveIngredient> mActiveIngredients;
     private EForm mForm;
     private float mStrength;
     private String mMedicalCondition;
     private List<Long> mDailySchedule;
-    private int mDaysCycle;
     private int mAmountLeft;
     private EInstructions mInstruction;
 
-    public Medication(String commercialName, @NonNull List<ActiveIngredient> activeIngredients) {
-        if (!TextUtils.isEmpty(commercialName) && !activeIngredients.isEmpty()) {
+    public Medication(String commercialName) {
+        if (!TextUtils.isEmpty(commercialName)) {
             this.mCommercialName = commercialName;
-            this.mActiveIngredients = activeIngredients;
         } else {
             mCommercialName = null;
-            mActiveIngredients = null;
         }
     }
 
@@ -52,9 +46,6 @@ public class Medication {
     }
 
 
-    public List<ActiveIngredient> getActiveIngredients() {
-        return mActiveIngredients;
-    }
 
     public EForm getForm() {
         return mForm;
@@ -88,13 +79,7 @@ public class Medication {
         this.mDailySchedule = mDailySchedule;
     }
 
-    public int getDaysCycle() {
-        return mDaysCycle;
-    }
 
-    public void setDaysCycle(int mDaysSchedule) {
-        this.mDaysCycle = mDaysSchedule;
-    }
 
     public int getAmountLeft() {
         return mAmountLeft;
@@ -116,12 +101,10 @@ public class Medication {
     public String toString() {
         return "Medication{" +
                 "mCommercialName='" + mCommercialName + '\'' +
-                ", mActiveIngredients=" + mActiveIngredients +
                 ", mForm=" + mForm +
                 ", mStrength=" + mStrength +
                 ", mMedicalCondition='" + mMedicalCondition + '\'' +
                 ", mDailySchedule=" + mDailySchedule +
-                ", mDaysSchedule=" + mDaysCycle +
                 ", mAmountLeft=" + mAmountLeft +
                 ", mInstruction=" + mInstruction +
                 '}';
@@ -131,12 +114,10 @@ public class Medication {
         JSONObject json = new JSONObject();
         try {
             json.put(JsonKeys.JSON_KEY_COMMERCIAL_NAME, mCommercialName);
-            json.put(JsonKeys.JSON_KEY_ACTIVE_INGREDIENTS, getActiveIngredientsAsJsonArray());
             json.put(JsonKeys.JSON_KEY_FORM, mForm.name());
             json.put(JsonKeys.JSON_KEY_STRENGTH, mStrength);
             json.put(JsonKeys.JSON_KEY_MEDICAL_CONDITION, mMedicalCondition);
             json.put(JsonKeys.JSON_KEY_DAILY_SCHEDULE, getDailyScheduleAsJsonArray());
-            json.put(JsonKeys.JSON_KEY_DAYS_CYCLE, mDaysCycle);
             json.put(JsonKeys.JSON_KEY_AMOUNT_LEFT, mAmountLeft);
             json.put(JsonKeys.JSON_KEY_INSTRUCTIONS, mInstruction.getDescription());
         } catch (JSONException e) {
@@ -160,15 +141,7 @@ public class Medication {
         return jsonArray;
     }
 
-    @Nullable private JSONArray getActiveIngredientsAsJsonArray() {
-        final JSONArray jsonArray = new JSONArray();
-        for (ActiveIngredient activeIngredient : mActiveIngredients) {
-            if (null != activeIngredient.toJsonObject()) {
-                jsonArray.put(activeIngredient.toJsonObject());
-            }
-        }
-        return Validator.getInstance().isValidJsonArray(jsonArray) ? jsonArray : null;
-    }
+
 
     private void invalidate(){
 

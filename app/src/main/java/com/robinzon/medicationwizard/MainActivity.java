@@ -26,6 +26,7 @@ import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
+import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.Screen;
 import com.robinzon.medicationwizard.utils.Statisticator;
@@ -48,10 +49,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         com.robinzon.medicationwizard.databinding.ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
+        mBinding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 1. Create a new instance of our bottom sheet
+                AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
+
+                // 2. Show it! The string tag is just for Android's internal fragment manager.
+                bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
+            }
+        });
         setSupportActionBar(mBinding.appBarMain.toolbar);
-        mBinding.appBarMain.fab.setOnClickListener(view ->
-                NotificationManager.getInstance(this).requestPermissionIfNeeded()
-        );
+//        mBinding.appBarMain.fab.setOnClickListener(view ->
+//                //NotificationManager.getInstance(this).requestPermissionIfNeeded()
+//                // 1. Create a new instance of our bottom sheet
+//                AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
+//
+//        // 2. Show it! The string tag is just for Android's internal fragment manager.
+//        bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
+//        );
         final DrawerLayout drawer = mBinding.drawerLayout;
         final NavigationView navigationView = mBinding.navView;
         // Passing each menu ID as a set of Ids because each
