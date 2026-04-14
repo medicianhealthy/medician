@@ -86,7 +86,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     public void requestPermissionIfNeeded() {
         if (shouldAskForNotificationPermission()) {
             //This method shouldShowRequestPermissionRationale will return true only if user denied once
-            //If he didn't denied it will return false, if he denied more than once it will return false;
+            //If he didn't deny it will return false, if he denied more than once it will return false;
             if (shouldShowRationalInnerDialog()) {
                 if (0 == (getCountRefusedSoFar() % getDeltaToShowRational())) {
                     showRationaleDialog();

@@ -2,11 +2,6 @@ package com.robinzon.medicationwizard.entities;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.robinzon.medicationwizard.utils.Validator;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

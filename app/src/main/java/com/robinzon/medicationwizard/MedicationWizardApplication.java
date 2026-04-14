@@ -11,8 +11,6 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
-import com.robinzon.medicationwizard.utils.Statisticator;
-
 public class MedicationWizardApplication extends Application
         implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
 

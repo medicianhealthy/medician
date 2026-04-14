@@ -39,7 +39,7 @@ public class AdMobInterstitial extends AdMobAd {
     @Override
     public void load() {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
-        if (shouldBeLoaded()) {
+        if (Boolean.TRUE.equals(shouldBeLoaded())) {
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
             setIsLoaded(true);
             log("%s Loading.\n%s",getLogTag() , thisToString());

@@ -19,9 +19,8 @@ public class Validator {
     }
 
     /**
-     * @param jsonArray
-     * @return null if the json array is empty or null.
-     * Otherwise the json array received as the param
+     * @param jsonArray The JSON array
+     * @return boolean if the JSON array is empty or null.
      */
     public boolean isValidJsonArray(final JSONArray jsonArray) {
         return null != jsonArray && 0 != jsonArray.length();

@@ -41,7 +41,7 @@ public class AdMobRewarded extends AdMobAd {
     @Override
     public void load() {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
-        if (shouldBeLoaded()) {
+        if (Boolean.TRUE.equals(shouldBeLoaded())) {
             getAdsManager().onAdAction(AdMobRewarded.this, AdAction.StartingToLoad);
             setIsLoading(true);
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());

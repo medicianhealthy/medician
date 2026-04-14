@@ -14,7 +14,7 @@ import com.robinzon.medicationwizard.entities.Medication;
 import java.util.ArrayList;
 
 public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.ViewHolder> {
-    private ArrayList<Medication> mLocalDataSet;
+    private final ArrayList<Medication> mLocalDataSet;
 
     /**
      * Initialize the dataset of the Adapter
@@ -44,14 +44,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
-            mMedName = (TextView) view.findViewById(R.id.med_name);
-            mStrength = (TextView) view.findViewById(R.id.med_strength);
-            mQuantity = (TextView) view.findViewById(R.id.quantity);
-            mTime = (TextView) view.findViewById(R.id.time);
-            mDirections = (TextView) view.findViewById(R.id.directions);
-            mSkip = (AppCompatButton) view.findViewById(R.id.skip_btn);
-            mReschduele = (AppCompatButton) view.findViewById(R.id.rescheduele);
-            mTake = (AppCompatButton) view.findViewById(R.id.take_btn);
+            mMedName = view.findViewById(R.id.med_name);
+            mStrength = view.findViewById(R.id.med_strength);
+            mQuantity = view.findViewById(R.id.quantity);
+            mTime = view.findViewById(R.id.time);
+            mDirections = view.findViewById(R.id.directions);
+            mSkip = view.findViewById(R.id.skip_btn);
+            mReschduele = view.findViewById(R.id.rescheduele);
+            mTake = view.findViewById(R.id.take_btn);
         }
 
         public TextView getMedName() {

@@ -177,10 +177,6 @@ public class AdsManager implements OnAdActionListener{
                     ((OnAdActionListener)getActivity()).onAdAction(adMobAd, AdAction.Created);
                 }
             }
-            case NativeAdvanced -> {
-            }
-            case NativeAdvancedVideo -> {
-            }
             default -> {
             }
         }

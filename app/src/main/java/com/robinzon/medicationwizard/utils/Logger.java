@@ -10,7 +10,7 @@ import com.robinzon.medicationwizard.BuildConfig;
 public class Logger {
     public static final String REMOTE_CONFIG = "medi_remoteconfig";
     public static final String SHARED_PREFS = "medi_shared_prefs";
-    public static boolean IS_LOGGING_ENABLED = BuildConfig.DEBUG;
+    public static final boolean IS_LOGGING_ENABLED = BuildConfig.DEBUG;
 
     public static void log(@NonNull final String tag,
                            @NonNull final String message,

@@ -6,23 +6,20 @@ import androidx.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ActiveIngredient{
+public record ActiveIngredient(String Name, EMeasurementUnit mMeasurementUnit) {
 
     public static final String JSON_KEY_NAME = "mName";
     public static final String JSON_MEASUREMENT_UNIT = "mMeasurementUnit";
 
 
-
-    public final String Name;
-    public final EMeasurementUnit mMeasurementUnit;
-
     @SuppressWarnings("unused")
-    public ActiveIngredient(@NonNull String name, @NonNull EMeasurementUnit measurementUnit) {
-        this.Name = name;
-        this.mMeasurementUnit = measurementUnit;
+    public ActiveIngredient(@NonNull String Name, @NonNull EMeasurementUnit mMeasurementUnit) {
+        this.Name = Name;
+        this.mMeasurementUnit = mMeasurementUnit;
     }
 
-    @Nullable public JSONObject toJsonObject() {
+    @Nullable
+    public JSONObject toJsonObject() {
         final JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(JSON_KEY_NAME, getName());
@@ -32,7 +29,6 @@ public class ActiveIngredient{
             return null;
         }
     }
-
 
 
     private String getName() {

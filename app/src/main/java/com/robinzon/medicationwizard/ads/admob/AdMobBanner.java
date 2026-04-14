@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -55,9 +56,9 @@ public class AdMobBanner extends AdMobAd {
 //                        int newBannerHeight = mAdView.getHeight();
                         // Check if the banner height has changed and is not zero
 //                        if (newBannerHeight != mBannerHeight && newBannerHeight != 0) {
-                            // Update mBannerHeight with the new value
+                        // Update mBannerHeight with the new value
 //                            mBannerHeight = newBannerHeight;
-                            // Find the RecyclerView in the current activity
+                        // Find the RecyclerView in the current activity
 //                            RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView);
 //                            // Get the current layout parameters of the RecyclerView
 //                            ViewGroup.MarginLayoutParams layoutParams =
@@ -65,8 +66,7 @@ public class AdMobBanner extends AdMobAd {
 //                            // Retrieve the top margin dimension from resources
 //                            int marginInPixels = getActivity().getResources().getDimensionPixelSize(R.dimen.bannerTopMargin);
 //                            layoutParams.bottomMargin = mBannerHeight + marginInPixels;
-//                            // Apply the new layout parameters to the RecyclerView
-//                            recyclerView.setLayoutParams(layoutParams);
+//                            // Apply the new layout parameters to the RecyclerView.setLayoutParams(layoutParams);
 //                        }
                     }
                 });
@@ -148,47 +148,42 @@ public class AdMobBanner extends AdMobAd {
         return AdType.AdaptiveBanner;
     }
 
+    public @Nullable ConstraintLayout getAdContainerView() {
+        if(null == mAdContainerView){
+            mAdContainerView = getActivity().findViewById(R.id.content_main);
+        }
+        return mAdContainerView;
+    }
+
     @Override
     public void load() {
         log("%s Requesting load.\n%s", getLogTag(), thisToString());
         if (Boolean.TRUE.equals(shouldBeLoaded())) {
             getAdsManager().onAdAction(AdMobBanner.this, AdAction.StartingToLoad);
             log("%s Preparing for loading.\n%s", getLogTag(), thisToString());
-            try {
-                mAdContainerView = getActivity().findViewById(R.id.content_main);
-                // Locked in as final
-                final View adView = getAdView();
-                final int adViewId = adView.getId();
 
-                mAdContainerView.addView(adView);
+            final View adView = getAdView();
+            final int adViewId = adView.getId();
 
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(mAdContainerView);
-
-                constraintSet.connect(adViewId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-                constraintSet.connect(adViewId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.connect(adViewId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-
-                constraintSet.applyTo(mAdContainerView);
-                // Since we're loading the banner based on the adContainerView size, we need
-                // to wait until this view is laid out before we can get the width.
-//                mAdContainerView.getViewTreeObserver().addOnGlobalLayoutListener(
-//                        new ViewTreeObserver.OnGlobalLayoutListener() {
-//                            @Override
-//                            public void onGlobalLayout() {
-//                                if (!mInitialLayoutComplete) {
-//                                    mInitialLayoutComplete = true;
-//                                    mAdView.setAdSize(getAdSize());
-//                                    mAdView.loadAd(getAdRequest());
-//                                }
-//                            }
-//                        });
-
-                mAdView.loadAd(getAdRequest());
-                setIsLoading(true);
-            } catch (Exception e) {
-                e.printStackTrace();
+            final ConstraintLayout adContainerView = getAdContainerView();
+            if (null != adContainerView) {
+                adContainerView.addView(adView);
+            } else {
+                //TODO log;
+                log("Couldn't hold reference to the main view.\nAborting load");
+                return;
             }
+
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(mAdContainerView);
+
+            constraintSet.connect(adViewId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+            constraintSet.connect(adViewId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+            constraintSet.connect(adViewId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+            constraintSet.applyTo(mAdContainerView);
+
+            mAdView.loadAd(getAdRequest());
+            setIsLoading(true);
         } else {
             log("%s Refusing load. Has network %b. \n%s",
                     getLogTag(),
@@ -197,17 +192,17 @@ public class AdMobBanner extends AdMobAd {
         }
     }
 
-    public static int getBannerHeightDP(final Activity activity){
+    public static int getBannerHeightDP(final Activity activity) {
         return getAdSize(activity).getHeight();
     }
 
-    public static int getBannerWidthDP(final Activity activity){
+    public static int getBannerWidthDP(final Activity activity) {
         return getAdSize(activity).getWidth();
     }
 
 
     private static AdSize getAdSize(final Activity activity) {
-        if(null != mAdSize){
+        if (null != mAdSize) {
             return mAdSize;
         }
         // 1. Secure a single, non-null Activity reference
