@@ -2,14 +2,12 @@ package com.robinzon.medicationwizard.entities;
 
 @SuppressWarnings("unused")
 public enum EMeasurementUnit {
-    GRAMS("g"),
-    MILLIGRAM("mg"),
-    INTERNATIONAL_UNITS("IU"),
-    MICRO_GRAM("mcg"),
-    MICRO_GRAM_PER_MILLILITER("mcg/ml"),
-    MILLI_EQUIVALENT("mEq"),
-    MILLILITER("mL"),
-    PERCENTAGE("%");
+    Grams("g"),
+    Milligram("mg"),
+    IU("IU"),
+    Microgram("mcg"),
+    Milliliter("mL"),
+    Percentage("%");
 
     private final String mName;
 

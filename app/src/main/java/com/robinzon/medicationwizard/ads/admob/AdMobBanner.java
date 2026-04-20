@@ -222,7 +222,7 @@ public class AdMobBanner extends AdMobAd {
 
         // Replacement for the deprecated getCurrentOrientation... method
         //mAdSize = AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
-        mAdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
+        mAdSize = AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity,adWidthDp);
         return mAdSize;
     }
 

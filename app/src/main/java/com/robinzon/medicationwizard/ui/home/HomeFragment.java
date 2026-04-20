@@ -38,15 +38,6 @@ public class HomeFragment extends Fragment {
         medication.setInstruction(EInstructions.AFTER_EATING);
         medication.setStrength(60F);
 
-//        data.add(medication);
-//        data.add(medication);
-//        data.add(medication);
-//        data.add(medication);
-//        data.add(medication);
-//        data.add(medication);
-//        data.add(medication);
-//        data.add(medication);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerView.Adapter<MedicationsAdapter.ViewHolder> customAdapter = new MedicationsAdapter(data);

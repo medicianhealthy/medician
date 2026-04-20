@@ -59,6 +59,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
 
+    @SuppressWarnings("SameReturnValue")
     private int getDeltaToShowRational() {
         return 5;
     }

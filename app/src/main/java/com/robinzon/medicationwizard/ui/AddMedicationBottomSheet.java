@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -13,14 +14,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.entities.EForm;
+import com.robinzon.medicationwizard.entities.EMeasurementUnit;
+import com.robinzon.medicationwizard.entities.Medication;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
     private LinearLayout timesContainer;
+    private Medication mMedication;
 
     @Nullable
     @Override
@@ -41,25 +50,9 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
     private void setupDropdowns(View view) {
         // 1. Form Dropdown
-        AutoCompleteTextView dropdownForm = view.findViewById(R.id.dropdown_form);
-        String[] forms = new String[]{"Pill", "Drop", "Injection", "Powder", "Inhaler"};
-        ArrayAdapter<String> formAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, forms);
-        dropdownForm.setAdapter(formAdapter);
-
-        // Optional UX trick: Change the start icon when they pick a form
-        TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
-        dropdownForm.setOnItemClickListener((parent, view1, position, id) -> {
-            String selected = forms[position];
-            // You can add your own custom drawable icons here!
-            // if (selected.equals("Pill")) layoutForm.setStartIconDrawable(R.drawable.ic_pill);
-        });
-
+        setFormDropDown(view);
         // 2. Unit Dropdown
-        AutoCompleteTextView dropdownUnit = view.findViewById(R.id.dropdown_unit);
-        String[] units = new String[]{"mg", "g", "ml", "drops", "IU", "mcg"};
-        ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, units);
-        dropdownUnit.setAdapter(unitAdapter);
-
+        setUnitDropDown(view);
         // 3. Frequency Dropdown
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.dropdown_frequency);
         String[] frequencies = new String[]{"Once a day", "Twice a day", "3 times a day", "4 times a day", "5 times a day"};
@@ -70,6 +63,52 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         dropdownFrequency.setOnItemClickListener((parent, view12, position, id) -> {
             int timesPerDay = position + 1;
             generateTimePickers(timesPerDay);
+        });
+    }
+
+    private void setFormDropDown(View view) {
+        AutoCompleteTextView dropdownForm = view.findViewById(R.id.dropdown_form);
+        String[] forms = Arrays.stream(EForm.values())
+                .map(Enum::name)
+                .toArray(String[]::new);
+
+        ArrayAdapter<String> formAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, forms);
+        dropdownForm.setAdapter(formAdapter);
+
+        // Optional UX trick: Change the start icon when they pick a form
+        TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
+        dropdownForm.setOnItemClickListener((parent, view1, position, id) -> {
+            String selected = forms[position];
+            // You can add your own custom drawable icons here!
+            // if (selected.equals("Pill")) layoutForm.setStartIconDrawable(R.drawable.ic_pill);
+        });
+    }
+
+    private void setUnitDropDown(View view) {
+        AutoCompleteTextView dropdownUnit = view.findViewById(R.id.dropdown_unit);
+        final ArrayList<String> measurementUnits = new ArrayList<>();
+        for (EMeasurementUnit unit : EMeasurementUnit.values()) {
+            final String unitShortName = unit.getName();
+            measurementUnits.add(unitShortName);
+        }
+        ArrayAdapter<String> unitAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, measurementUnits);
+        dropdownUnit.setAdapter(unitAdapter);
+        dropdownUnit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                EMeasurementUnit measurementUnit = EMeasurementUnit.values()[i];
+                mMedication.setMeasurementUnit(measurementUnit);
+                final TextInputEditText strengthView = view.findViewById(R.id.medication_strength);
+                
+                String amountString = strengthView.getText().toString().trim();
+
+                if (!amountString.isEmpty()) {
+                    // Convert the string to a double so you can do math/save it properly
+                    float amount = Float.parseFloat(amountString);
+                    mMedication.setStrength(amount);
+                }
+
+            }
         });
     }
 

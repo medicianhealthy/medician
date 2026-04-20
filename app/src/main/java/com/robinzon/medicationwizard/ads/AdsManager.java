@@ -207,6 +207,7 @@ public class AdsManager implements OnAdActionListener{
                 (now - lastBannerClick) >  coolDownMillis;
     }
 
+    @SuppressWarnings("SameReturnValue")
     private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
         return 30L;
     }

@@ -2,13 +2,16 @@ package com.robinzon.medicationwizard.entities;
 
 import android.text.TextUtils;
 
+import com.robinzon.medicationwizard.MedicationWizardSuper;
+import com.robinzon.medicationwizard.utils.Logger;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
-public class Medication {
+public class Medication extends MedicationWizardSuper {
 
     public static final class JsonKeys {
         public static final String JSON_KEY_COMMERCIAL_NAME = "mCommercialName";
@@ -27,6 +30,10 @@ public class Medication {
     private List<Long> mDailySchedule;
     private int mAmountLeft;
     private EInstructions mInstruction;
+
+
+
+    private EMeasurementUnit mMeasurementUnit;
 
     public Medication(String commercialName) {
         if (!TextUtils.isEmpty(commercialName)) {
@@ -74,6 +81,13 @@ public class Medication {
         this.mDailySchedule = mDailySchedule;
     }
 
+    public EMeasurementUnit getMeasurementUnit() {
+        return mMeasurementUnit;
+    }
+
+    public void setMeasurementUnit(EMeasurementUnit mMeasurementUnit) {
+        this.mMeasurementUnit = mMeasurementUnit;
+    }
 
 
     public int getAmountLeft() {
@@ -116,7 +130,8 @@ public class Medication {
             json.put(JsonKeys.JSON_KEY_AMOUNT_LEFT, mAmountLeft);
             json.put(JsonKeys.JSON_KEY_INSTRUCTIONS, mInstruction.getDescription());
         } catch (JSONException e) {
-            e.printStackTrace();
+            Logger.log(Me(), "Tried to convert myself to JSONObject but an exception happen");
+            return null;
         }
         return json;
     }
@@ -130,7 +145,7 @@ public class Medication {
                 jsonObject.put(String.valueOf(counter), timeOfDay);
                 counter++;
             } catch (JSONException e) {
-                e.printStackTrace();
+                Logger.log(Me(), "Error while trying to getDailyScheduleAsJsonArray");
             }
         }
         return jsonArray;
