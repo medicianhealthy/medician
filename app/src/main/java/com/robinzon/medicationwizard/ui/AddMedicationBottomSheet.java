@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.ui;
 
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.utils.Logger;
+import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +33,8 @@ import java.util.Objects;
 public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
     private LinearLayout timesContainer;
-    private final Medication mMedication = new Medication();
+    final SparseArray<View> mTimeButtons = new SparseArray<>();
+    private Medication mMedication = new Medication();
 
 
     @Nullable
@@ -57,6 +60,30 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
     private void trySaveMedication(View view) {
 
+        populateMedication(view);
+
+        if (mMedication.isValid()){
+            Logger.log(getClass().getSimpleName(), "Medication is valid");
+        } else {
+            mMedication = new Medication();
+            Logger.log(getClass().getSimpleName(), "Medication is not valid");
+            return;
+        }
+
+        if (mMedication.getDailyFrequency() != mTimeButtons.size()){
+            Logger.log(getClass().getSimpleName(), "Medication is not valid");
+        } else {
+            mMedication.addTimeStampsForDay(mTimeButtons);
+            if (mMedication.getDailyFrequency() != mMedication.getTimesADay().size()){
+                Logger.log(getClass().getSimpleName(), "Medication is not valid");
+                return;
+            }
+            Logger.log(getClass().getSimpleName(), "Medication is valid");
+            mMedication.addToMedicationList();
+        }
+    }
+
+    private void populateMedication(View view) {
         //1. Get the input from the medication name input text
         final TextInputEditText nameInputEditText = getNameInputEditText(view);
         try {
@@ -75,25 +102,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
         // 3. No need to check the form here because the view has a listener to the form chosen.
 
-        // 4. Get the input from the medication frequency input text
-        final AutoCompleteTextView frequencyInputEditText = getFrequencyInputEditText(view);
-        try {
-            final int frequency = Integer.parseInt(Objects.requireNonNull(frequencyInputEditText.getText()).toString());
-            //TODO set frequency to med
-            mMedication.setDailyFrequency(frequency);
-        } catch (NullPointerException | NumberFormatException ignored) {
-
-        }
-
-
-
-
-
-        if (mMedication.isValid()){
-            Logger.log(getClass().getSimpleName(), "Medication is valid");
-        } else {
-            Logger.log(getClass().getSimpleName(), "Medication is not valid");
-        }
+        // 4. No need to check the frequency here because the view has a listener to the form chosen.
     }
 
     private AutoCompleteTextView getFrequencyInputEditText(View view) {
@@ -101,12 +110,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
     }
 
 
-    private boolean isMedicationNowValid() {
 
-        final TextInputEditText amountTextView = getAmountInputEditText(view);
-        return true;
-
-    }
 
     private TextInputEditText getAmountInputEditText(View view) {
         return view.findViewById(R.id.amount);
@@ -115,6 +119,8 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
     private TextInputEditText getNameInputEditText(View view) {
         return view.findViewById(R.id.med_name);
     }
+
+
 
     private void setupDropdowns(View view) {
         // 1. Form Dropdown
@@ -130,8 +136,8 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         // When Frequency changes, generate the Time Pickers!
         dropdownFrequency.setOnItemClickListener((parent, view12, position, id) -> {
             int timesPerDay = position + 1;
+            mMedication.setDailyFrequency(timesPerDay);
             generateTimePickers(timesPerDay);
-            
         });
     }
 
@@ -197,7 +203,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-    private void generateTimePickers(int amount) {
+    private void generateTimePickers(final int amount) {
         timesContainer.removeAllViews(); // Clear old buttons
 
         for (int i = 1; i <= amount; i++) {
@@ -212,15 +218,17 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             timeButton.setLayoutParams(params);
 
             // Open the Time Picker when clicked
-            timeButton.setOnClickListener(v -> showTimePicker(timeButton));
-
+            int finalIndex = i;
+            timeButton.setOnClickListener(v -> {showTimePicker(finalIndex, timeButton);});
+            //TODO make the button look not ugly
             timesContainer.addView(timeButton);
         }
     }
 
-    private void showTimePicker(Button buttonToUpdate) {
+    private void showTimePicker(final int finalIndex, final Button buttonToUpdate) {
         // Build the modern Android Time Picker
-        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+        // TODO time format like the system
+        final MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H) // Or CLOCK_12H
                 .setHour(12)
                 .setMinute(0)
@@ -231,6 +239,8 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             // Format the time nicely (e.g., 08:30)
             String formattedTime = String.format("%02d:%02d", picker.getHour(), picker.getMinute());
             buttonToUpdate.setText("Time set: " + formattedTime);
+            buttonToUpdate.setTag(new SimpleDayTime((byte) picker.getHour(), (byte) picker.getMinute()));
+            mTimeButtons.put(finalIndex, buttonToUpdate);
         });
 
         picker.show(getParentFragmentManager(), "timePicker");

@@ -1,41 +1,72 @@
 package com.robinzon.medicationwizard.entities;
 
 import android.text.TextUtils;
+import android.util.SparseArray;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.robinzon.medicationwizard.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Logger;
+import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Medication extends MedicationWizardSuper {
 
 
     private float mAmount;
-    private int mFrequencey;
+    private int mFrequency;
+
+    HashSet<SimpleDayTime> mTimesADay;
 
     public Medication() {
 
     }
 
     public void setDailyFrequency(final int frequency) {
-        this.mFrequencey = frequency;
+        this.mFrequency = frequency;
     }
 
     public int getDailyFrequency() {
-        return mFrequencey;
+        return mFrequency;
     }
 
     public boolean isValid() {
         return !TextUtils.isEmpty(mCommercialName)
                 && mAmount >0
                 && mForm != null
-                && mFrequencey > 0;
+                && mFrequency > 0;
+    }
+
+    public void addToMedicationList() {
+    }
+
+    public void addTimeStampsForDay(@NonNull final SparseArray<View> mTimeButtons) {
+        if (mTimeButtons.size() == 0){
+            mTimesADay = null;
+            return;
+        }
+        mTimesADay = new HashSet<>(mTimeButtons.size());
+        for (int i = 0; i < mTimeButtons.size(); i++) {
+            final View view = mTimeButtons.valueAt(i);
+            try {
+                mTimesADay.add((SimpleDayTime) view.getTag());
+            } catch (ClassCastException | NullPointerException e) {
+                mTimesADay = null;
+                break;
+            }
+            // Update or manipulate the view...
+        }
+
+
+
     }
 
     public static final class JsonKeys {
@@ -128,6 +159,10 @@ public class Medication extends MedicationWizardSuper {
 
     public int getAmountLeft() {
         return mAmountLeft;
+    }
+
+    public HashSet<SimpleDayTime> getTimesADay() {
+        return mTimesADay;
     }
 
     public void setAmountLeft(int mAmountLeft) {
