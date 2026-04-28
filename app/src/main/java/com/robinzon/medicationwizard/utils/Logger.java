@@ -15,10 +15,12 @@ public class Logger {
     public static void log(@NonNull final String tag,
                            @NonNull final String message,
                            @NonNull Object... params) {
-        if (IS_LOGGING_ENABLED) {
-            if (!TextUtils.isEmpty(tag) && !TextUtils.isEmpty(message)) {
-                Log.i(tag, String.format(message, params));
-            }
+
+        if (IS_LOGGING_ENABLED &&
+                !TextUtils.isEmpty(tag) &&
+                !TextUtils.isEmpty(message)) {
+            Log.i(tag, String.format(message, params));
         }
+
     }
 }

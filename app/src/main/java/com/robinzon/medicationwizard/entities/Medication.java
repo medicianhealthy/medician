@@ -2,6 +2,8 @@ package com.robinzon.medicationwizard.entities;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.robinzon.medicationwizard.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Logger;
 
@@ -13,7 +15,31 @@ import java.util.List;
 
 public class Medication extends MedicationWizardSuper {
 
+
+    private float mAmount;
+    private int mFrequencey;
+
+    public Medication() {
+
+    }
+
+    public void setDailyFrequency(final int frequency) {
+        this.mFrequencey = frequency;
+    }
+
+    public int getDailyFrequency() {
+        return mFrequencey;
+    }
+
+    public boolean isValid() {
+        return !TextUtils.isEmpty(mCommercialName)
+                && mAmount >0
+                && mForm != null
+                && mFrequencey > 0;
+    }
+
     public static final class JsonKeys {
+        //TODO add json keys to fields added
         public static final String JSON_KEY_COMMERCIAL_NAME = "mCommercialName";
         public static final String JSON_KEY_FORM = "mForm";
         public static final String JSON_KEY_STRENGTH = "mStrength";
@@ -23,14 +49,14 @@ public class Medication extends MedicationWizardSuper {
         public static final String JSON_KEY_INSTRUCTIONS = "mInstruction";
     }
 
-    private final String mCommercialName;
+
+    private String mCommercialName;
     private EForm mForm;
     private float mStrength;
     private String mMedicalCondition;
     private List<Long> mDailySchedule;
     private int mAmountLeft;
     private EInstructions mInstruction;
-
 
 
     private EMeasurementUnit mMeasurementUnit;
@@ -47,7 +73,17 @@ public class Medication extends MedicationWizardSuper {
         return mCommercialName;
     }
 
+    public void setCommercialName(@NonNull final String commercialName) {
+        this.mCommercialName = commercialName;
+    }
 
+    public void setAmount(final float amount) {
+        this.mAmount = amount;
+    }
+
+    public float getAmount() {
+        return mAmount;
+    }
 
     public EForm getForm() {
         return mForm;
@@ -152,8 +188,7 @@ public class Medication extends MedicationWizardSuper {
     }
 
 
-
-    private void invalidate(){
+    private void invalidate() {
 
     }
 }

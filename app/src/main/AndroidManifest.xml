@@ -9,6 +9,7 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedicationWizard"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules">
         <activity
             android:name="com.robinzon.medicationwizard.MainActivity"

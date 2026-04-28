@@ -36,6 +36,7 @@
                 android:hint="Medication Name"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/med_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapWords" />
@@ -55,6 +56,7 @@
                     android:hint="Amount"
                     android:layout_marginEnd="8dp">
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -86,7 +88,7 @@
                     android:id="@+id/dropdown_frequency"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout

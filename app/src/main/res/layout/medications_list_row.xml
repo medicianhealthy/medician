@@ -24,7 +24,7 @@
             android:text="Cymbalta"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
-            app:drawableStartCompat="@drawable/ic_medication"
+            app:drawableStartCompat="@drawable/ic_med_pill"
             android:drawablePadding="8dp"
             app:drawableTint="?attr/colorPrimary"
 
