@@ -11,6 +11,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import android.content.Context;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -32,9 +35,9 @@ import java.util.Objects;
 
 public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
+    private final SparseArray<View> mTimeButtons = new SparseArray<>();
     private LinearLayout timesContainer;
-    final SparseArray<View> mTimeButtons = new SparseArray<>();
-    private Medication mMedication = new Medication();
+    private final Medication mMedication = new Medication();
 
 
     @Nullable
@@ -51,76 +54,11 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         timesContainer = view.findViewById(R.id.times_container);
 
         view.findViewById(R.id.btn_save).setOnClickListener(v -> {
-            dismiss();
             trySaveMedication(view);
         });
 
 
     }
-
-    private void trySaveMedication(View view) {
-
-        populateMedication(view);
-
-        if (mMedication.isValid()){
-            Logger.log(getClass().getSimpleName(), "Medication is valid");
-        } else {
-            mMedication = new Medication();
-            Logger.log(getClass().getSimpleName(), "Medication is not valid");
-            return;
-        }
-
-        if (mMedication.getDailyFrequency() != mTimeButtons.size()){
-            Logger.log(getClass().getSimpleName(), "Medication is not valid");
-        } else {
-            mMedication.addTimeStampsForDay(mTimeButtons);
-            if (mMedication.getDailyFrequency() != mMedication.getTimesADay().size()){
-                Logger.log(getClass().getSimpleName(), "Medication is not valid");
-                return;
-            }
-            Logger.log(getClass().getSimpleName(), "Medication is valid");
-            mMedication.addToMedicationList();
-        }
-    }
-
-    private void populateMedication(View view) {
-        //1. Get the input from the medication name input text
-        final TextInputEditText nameInputEditText = getNameInputEditText(view);
-        try {
-            mMedication.setCommercialName(Objects.requireNonNull(nameInputEditText.getText()).toString());
-        } catch (NullPointerException ignored) {
-        }
-
-        //2. Get the input from the medication amount input text
-        final TextInputEditText amountTextView = getAmountInputEditText(view);
-        try {
-            final float amount = Float.parseFloat(Objects.requireNonNull(amountTextView.getText()).toString());
-            mMedication.setAmount(amount > 0 ? amount : 0);
-        } catch (NullPointerException | NumberFormatException ignored) {
-
-        }
-
-        // 3. No need to check the form here because the view has a listener to the form chosen.
-
-        // 4. No need to check the frequency here because the view has a listener to the form chosen.
-    }
-
-    private AutoCompleteTextView getFrequencyInputEditText(View view) {
-        return view.findViewById(R.id.dropdown_frequency);
-    }
-
-
-
-
-    private TextInputEditText getAmountInputEditText(View view) {
-        return view.findViewById(R.id.amount);
-    }
-
-    private TextInputEditText getNameInputEditText(View view) {
-        return view.findViewById(R.id.med_name);
-    }
-
-
 
     private void setupDropdowns(View view) {
         // 1. Form Dropdown
@@ -141,9 +79,95 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         });
     }
 
+    private void trySaveMedication(@NonNull View view) {
+
+        populateMedication(view);
+
+        if (mMedication.isValid()) {
+            Logger.log(getClass().getSimpleName(), "Medication is valid");
+            highLightInValidFields();
+        } else {
+            Logger.log(getClass().getSimpleName(), "Medication is not valid");
+            return;
+        }
+
+        if (mMedication.getDailyFrequency() != mTimeButtons.size()) {
+            //TODO show error dialog
+            showErrorDialog("Pick a time", "Just hit the select time button and pick a time");
+            Logger.log(getClass().getSimpleName(), "Medication is not valid");
+        } else {
+            mMedication.addTimeStampsForDay(mTimeButtons);
+            if (mMedication.getDailyFrequency() != mMedication.getTimesADay().size()) {
+
+                Logger.log(getClass().getSimpleName(), "Medication is not valid");
+                return;
+            }
+            Logger.log(getClass().getSimpleName(), "Medication is valid");
+            mMedication.addToMedicationList();
+            dismiss();
+        }
+    }
+
+    /**
+     * Shows a robust Material Design 3 error dialog with an optional action button.
+     *
+     * @param title          The dialog title.
+     * @param message        The dialog message.
+     * @param actionText     (Optional) The text for the custom action button. Pass null to hide.
+     * @param actionCallback (Optional) The callback to execute when the action is clicked. Pass null to hide.
+     */
+    private void showErrorDialog(@NonNull String title, @NonNull String message,
+                                 @Nullable String actionText, @Nullable Runnable actionCallback) {
+
+        // 1. Robustness check: Ensure the fragment is attached and has a context
+        Context context = getContext();
+        if (context == null) {
+            Logger.log(getClass().getSimpleName(), "Cannot show dialog: Context is null");
+            return;
+        }
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context)
+                .setTitle(title)
+                .setMessage(message);
+
+        // 2. Configure buttons based on whether an action was provided
+        if (actionText != null && actionCallback != null) {
+            // M3 Standard: The primary action is the Positive Button, "OK/Cancel" is the Negative Button
+            builder.setPositiveButton(actionText, (dialog, which) -> {
+                actionCallback.run();
+                dialog.dismiss();
+            });
+            // Using Android's native localized "OK" string
+            builder.setNegativeButton(android.R.string.ok, (dialog, which) -> dialog.dismiss());
+        } else {
+            // If no action is provided, just show an "OK" button to dismiss
+            builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                dialog.dismiss();
+            });
+        }
+
+        // 3. Robustness check: Catch BadTokenExceptions (happens if the activity is closing)
+        try {
+            builder.show();
+        } catch (Exception e) {
+            Logger.log(getClass().getSimpleName(), "Failed to show error dialog: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Overloaded helper method for simple error dialogs that only need an "OK" dismiss button.
+     */
+    private void showErrorDialog(@NonNull String title, @NonNull String message) {
+        showErrorDialog(title, message, null, null);
+    }
+
+    private void highLightInValidFields() {
+
+    }
+
     private void setFormDropDown(View view) {
         final AutoCompleteTextView dropdownForm = view.findViewById(R.id.dropdown_form);
-        if (null == dropdownForm){
+        if (null == dropdownForm) {
             return;
         }
         String[] forms = Arrays.stream(EForm.values())
@@ -160,7 +184,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
         // Optional UX trick: Change the start icon when they pick a form
         final TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
-        if (null == layoutForm){
+        if (null == layoutForm) {
             return;
         }
         dropdownForm.setOnItemClickListener((parent, view1, position, id) -> {
@@ -207,22 +231,43 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         timesContainer.removeAllViews(); // Clear old buttons
 
         for (int i = 1; i <= amount; i++) {
-            // Create a nice Material 3 Button for each time slot
-            Button timeButton = new Button(requireContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
-            timeButton.setText("Select Time " + i);
 
-            // Set margins so they aren't squished together
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 0, 16);
-            timeButton.setLayoutParams(params);
+            // Inflate our beautiful custom M3 Tonal Button
+            Button timeButton = (Button) LayoutInflater.from(requireContext())
+                    .inflate(R.layout.item_time_picker, timesContainer, false);
+
+            timeButton.setText("Select Time " + i);
 
             // Open the Time Picker when clicked
             int finalIndex = i;
-            timeButton.setOnClickListener(v -> {showTimePicker(finalIndex, timeButton);});
-            //TODO make the button look not ugly
+            timeButton.setOnClickListener(v -> {
+                showTimePicker(finalIndex, timeButton);
+            });
+
             timesContainer.addView(timeButton);
         }
+    }
+
+    private void populateMedication(@NonNull View view) {
+        //1. Get the input from the medication name input text
+        final TextInputEditText nameInputEditText = getNameInputEditText(view);
+        try {
+            mMedication.setCommercialName(Objects.requireNonNull(nameInputEditText.getText()).toString());
+        } catch (NullPointerException ignored) {
+        }
+
+        //2. Get the input from the medication amount input text
+        final TextInputEditText amountTextView = getAmountInputEditText(view);
+        try {
+            final float amount = Float.parseFloat(Objects.requireNonNull(amountTextView.getText()).toString());
+            mMedication.setAmount(amount > 0 ? amount : 0);
+        } catch (NullPointerException | NumberFormatException ignored) {
+
+        }
+
+        // 3. No need to check the form here because the view has a listener to the form chosen.
+
+        // 4. No need to check the frequency here because the view has a listener to the form chosen.
     }
 
     private void showTimePicker(final int finalIndex, final Button buttonToUpdate) {
@@ -244,5 +289,17 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         });
 
         picker.show(getParentFragmentManager(), "timePicker");
+    }
+
+    private TextInputEditText getNameInputEditText(@NonNull View view) {
+        return view.findViewById(R.id.med_name);
+    }
+
+    private TextInputEditText getAmountInputEditText(@NonNull View view) {
+        return view.findViewById(R.id.amount);
+    }
+
+    private AutoCompleteTextView getFrequencyInputEditText(View view) {
+        return view.findViewById(R.id.dropdown_frequency);
     }
 }

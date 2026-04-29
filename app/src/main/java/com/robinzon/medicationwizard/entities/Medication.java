@@ -16,40 +16,62 @@ import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Medication extends MedicationWizardSuper {
 
 
+    private HashSet<SimpleDayTime> mTimesADay;
     private float mAmount;
     private int mFrequency;
-
-    HashSet<SimpleDayTime> mTimesADay;
-
+    private String mCommercialName;
+    private EForm mForm;
+    private float mStrength;
+    private String mMedicalCondition;
+    private List<Long> mDailySchedule;
+    private int mAmountLeft;
+    private EInstructions mInstruction;
+    private EMeasurementUnit mMeasurementUnit;
     public Medication() {
 
+    }
+    public Medication(String commercialName) {
+        if (!TextUtils.isEmpty(commercialName)) {
+            this.mCommercialName = commercialName;
+        } else {
+            mCommercialName = null;
+        }
+    }
+
+    public int getDailyFrequency() {
+        return this.mFrequency;
     }
 
     public void setDailyFrequency(final int frequency) {
         this.mFrequency = frequency;
     }
 
-    public int getDailyFrequency() {
-        return mFrequency;
-    }
-
+    /**
+     * Validates the current state of the medication to ensure all required fields are correctly populated.
+     * <p>
+     * A medication is considered valid only if all of the following conditions are met:
+     * <ul>
+     * <li>The commercial name is not null or empty.</li>
+     * <li>The amount to take per dose is greater than 0.</li>
+     * <li>The physical form of the medication (e.g., Pill, Drop, Inhaler) has been specified.</li>
+     * <li>The frequency (doses per day) is greater than 0.</li>
+     * </ul>
+     *
+     * @return {@code true} if the medication contains all required, valid data; {@code false} otherwise.
+     */
     public boolean isValid() {
-        return !TextUtils.isEmpty(mCommercialName)
-                && mAmount >0
-                && mForm != null
-                && mFrequency > 0;
+        return !TextUtils.isEmpty(mCommercialName) && mAmount > 0 && mForm != null && mFrequency > 0;
     }
 
     public void addToMedicationList() {
     }
 
     public void addTimeStampsForDay(@NonNull final SparseArray<View> mTimeButtons) {
-        if (mTimeButtons.size() == 0){
+        if (mTimeButtons.size() == 0) {
             mTimesADay = null;
             return;
         }
@@ -66,38 +88,6 @@ public class Medication extends MedicationWizardSuper {
         }
 
 
-
-    }
-
-    public static final class JsonKeys {
-        //TODO add json keys to fields added
-        public static final String JSON_KEY_COMMERCIAL_NAME = "mCommercialName";
-        public static final String JSON_KEY_FORM = "mForm";
-        public static final String JSON_KEY_STRENGTH = "mStrength";
-        public static final String JSON_KEY_MEDICAL_CONDITION = "mMedicalCondition";
-        public static final String JSON_KEY_DAILY_SCHEDULE = "mDailySchedule";
-        public static final String JSON_KEY_AMOUNT_LEFT = "mAmountLeft";
-        public static final String JSON_KEY_INSTRUCTIONS = "mInstruction";
-    }
-
-
-    private String mCommercialName;
-    private EForm mForm;
-    private float mStrength;
-    private String mMedicalCondition;
-    private List<Long> mDailySchedule;
-    private int mAmountLeft;
-    private EInstructions mInstruction;
-
-
-    private EMeasurementUnit mMeasurementUnit;
-
-    public Medication(String commercialName) {
-        if (!TextUtils.isEmpty(commercialName)) {
-            this.mCommercialName = commercialName;
-        } else {
-            mCommercialName = null;
-        }
     }
 
     public String getCommercialName() {
@@ -108,12 +98,12 @@ public class Medication extends MedicationWizardSuper {
         this.mCommercialName = commercialName;
     }
 
-    public void setAmount(final float amount) {
-        this.mAmount = amount;
-    }
-
     public float getAmount() {
         return mAmount;
+    }
+
+    public void setAmount(final float amount) {
+        this.mAmount = amount;
     }
 
     public EForm getForm() {
@@ -156,17 +146,16 @@ public class Medication extends MedicationWizardSuper {
         this.mMeasurementUnit = mMeasurementUnit;
     }
 
-
     public int getAmountLeft() {
         return mAmountLeft;
     }
 
-    public HashSet<SimpleDayTime> getTimesADay() {
-        return mTimesADay;
-    }
-
     public void setAmountLeft(int mAmountLeft) {
         this.mAmountLeft = mAmountLeft;
+    }
+
+    public HashSet<SimpleDayTime> getTimesADay() {
+        return mTimesADay;
     }
 
     public EInstructions getInstruction() {
@@ -179,27 +168,21 @@ public class Medication extends MedicationWizardSuper {
 
     @Override
     public String toString() {
-        return "Medication{" +
-                "mCommercialName='" + mCommercialName + '\'' +
-                ", mForm=" + mForm +
-                ", mStrength=" + mStrength +
-                ", mMedicalCondition='" + mMedicalCondition + '\'' +
-                ", mDailySchedule=" + mDailySchedule +
-                ", mAmountLeft=" + mAmountLeft +
-                ", mInstruction=" + mInstruction +
-                '}';
+        return "Medication{" + "mCommercialName='" + mCommercialName + '\'' + ", mForm=" + mForm + ", mStrength=" + mStrength + ", mMedicalCondition='" + mMedicalCondition + '\'' + ", mDailySchedule=" + mDailySchedule + ", mAmountLeft=" + mAmountLeft + ", mInstruction=" + mInstruction + '}';
     }
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
-            json.put(JsonKeys.JSON_KEY_COMMERCIAL_NAME, mCommercialName);
-            json.put(JsonKeys.JSON_KEY_FORM, mForm.name());
-            json.put(JsonKeys.JSON_KEY_STRENGTH, mStrength);
-            json.put(JsonKeys.JSON_KEY_MEDICAL_CONDITION, mMedicalCondition);
-            json.put(JsonKeys.JSON_KEY_DAILY_SCHEDULE, getDailyScheduleAsJsonArray());
-            json.put(JsonKeys.JSON_KEY_AMOUNT_LEFT, mAmountLeft);
-            json.put(JsonKeys.JSON_KEY_INSTRUCTIONS, mInstruction.getDescription());
+            json.put(JsonKeys.COMMERCIAL_NAME, mCommercialName);
+            json.put(JsonKeys.FORM, mForm.name());
+            json.put(JsonKeys.FREQUENCY, mFrequency);
+            json.put(JsonKeys.AMOUNT, mAmount);
+            json.put(JsonKeys.STRENGTH, mStrength);
+            json.put(JsonKeys.MEDICAL_CONDITION, mMedicalCondition);
+            json.put(JsonKeys.DAILY_SCHEDULE, getDailyScheduleAsJsonArray());
+            json.put(JsonKeys.AMOUNT_LEFT, mAmountLeft);
+            json.put(JsonKeys.INSTRUCTIONS, mInstruction.getDescription());
         } catch (JSONException e) {
             Logger.log(Me(), "Tried to convert myself to JSONObject but an exception happen");
             return null;
@@ -222,8 +205,24 @@ public class Medication extends MedicationWizardSuper {
         return jsonArray;
     }
 
-
     private void invalidate() {
+
+    }
+
+    public static final class JsonKeys {
+        //TODO add json keys to fields added
+        public static String TIMES_IN_DAY = "mTimesADay";
+        public static final String AMOUNT = "mAmount";
+        public static final String FREQUENCY = "mFrequency";
+        public static final String COMMERCIAL_NAME = "mCommercialName";
+        public static final String FORM = "mForm";
+        public static final String STRENGTH = "mStrength";
+        public static final String MEDICAL_CONDITION = "mMedicalCondition";
+        public static final String DAILY_SCHEDULE = "mDailySchedule";
+        public static final String AMOUNT_LEFT = "mAmountLeft";
+        public static final String INSTRUCTIONS = "mInstruction";
+        public static final String MEASUREMENT_UNIT = "mMeasurementUnit";
+
 
     }
 }
