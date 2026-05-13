@@ -37,6 +37,19 @@ public class HomeFragment extends Fragment {
         medication.setForm(EForm.Pill);
         medication.setInstruction(EInstructions.AFTER_EATING);
         medication.setStrength(60F);
+        data.add(medication);
+
+        final Medication medication2 = new Medication("Lisinopril");
+        medication2.setForm(EForm.Pill);
+        medication2.setInstruction(EInstructions.BEFORE_EATING);
+        medication2.setStrength(10F);
+        data.add(medication2);
+
+        final Medication medication3 = new Medication("Metformin");
+        medication3.setForm(EForm.Pill);
+        medication3.setInstruction(EInstructions.WHILE_EATING);
+        medication3.setStrength(500F);
+        data.add(medication3);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireActivity().getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);

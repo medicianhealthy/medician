@@ -1,26 +1,27 @@
 package com.robinzon.medicationwizard.entities;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.SparseArray;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.robinzon.medicationwizard.MedicationWizardSuper;
 import com.robinzon.medicationwizard.utils.Logger;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashSet;
 import java.util.List;
 
-public class Medication extends MedicationWizardSuper {
+public class Medication extends MedicationWizardSuper implements Comparable<Medication> {
 
 
-    private HashSet<SimpleDayTime> mTimesADay;
+    private static final String SPK_MEDICATION_LIST = "shared_pref_medications_list";
+    private SparseArray<SimpleDayTime> mTimesADay;
     private float mAmount;
     private int mFrequency;
     private String mCommercialName;
@@ -67,26 +68,28 @@ public class Medication extends MedicationWizardSuper {
         return !TextUtils.isEmpty(mCommercialName) && mAmount > 0 && mForm != null && mFrequency > 0;
     }
 
-    public void addToMedicationList() {
+    public void addToMedicationList(final Context context) {
+        final JSONObject json = toJson();
+        if (json == null) return;
+        JSONArray existingMeds = SharedPreferencesManager.getInstance(context).getJsonArray(SPK_MEDICATION_LIST, null);
+        if (existingMeds == null) {
+            existingMeds = new JSONArray();
+        }
+        existingMeds.put(json);
+        SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, existingMeds);
     }
 
-    public void addTimeStampsForDay(@NonNull final SparseArray<View> mTimeButtons) {
-        if (mTimeButtons.size() == 0) {
+    public void addTimeStampsForDay(@NonNull final SparseArray<SimpleDayTime> simpleDayTimeSparseArray) {
+        if (simpleDayTimeSparseArray.size() == 0) {
             mTimesADay = null;
             return;
         }
-        mTimesADay = new HashSet<>(mTimeButtons.size());
-        for (int i = 0; i < mTimeButtons.size(); i++) {
-            final View view = mTimeButtons.valueAt(i);
-            try {
-                mTimesADay.add((SimpleDayTime) view.getTag());
-            } catch (ClassCastException | NullPointerException e) {
-                mTimesADay = null;
-                break;
-            }
-            // Update or manipulate the view...
+        mTimesADay = new SparseArray<>(simpleDayTimeSparseArray.size());
+        for (int i = 0; i < simpleDayTimeSparseArray.size(); i++) {
+            int key = simpleDayTimeSparseArray.keyAt(i);
+            SimpleDayTime value = simpleDayTimeSparseArray.valueAt(i);
+            mTimesADay.put(key, new SimpleDayTime(value));
         }
-
 
     }
 
@@ -154,7 +157,7 @@ public class Medication extends MedicationWizardSuper {
         this.mAmountLeft = mAmountLeft;
     }
 
-    public HashSet<SimpleDayTime> getTimesADay() {
+    public SparseArray<SimpleDayTime> getTimesADay() {
         return mTimesADay;
     }
 
@@ -167,9 +170,31 @@ public class Medication extends MedicationWizardSuper {
     }
 
     @Override
-    public String toString() {
-        return "Medication{" + "mCommercialName='" + mCommercialName + '\'' + ", mForm=" + mForm + ", mStrength=" + mStrength + ", mMedicalCondition='" + mMedicalCondition + '\'' + ", mDailySchedule=" + mDailySchedule + ", mAmountLeft=" + mAmountLeft + ", mInstruction=" + mInstruction + '}';
+    public int compareTo(@NonNull Medication other) {
+        if (this.mCommercialName == null && other.mCommercialName == null) return 0;
+        if (this.mCommercialName == null) return 1;
+        if (other.mCommercialName == null) return -1;
+        return this.mCommercialName.compareToIgnoreCase(other.mCommercialName);
     }
+
+    @Override
+    public String toString() {
+        return "Medication{" +
+                "mTimesADay=" + mTimesADay +
+                ", mAmount=" + mAmount +
+                ", mFrequency=" + mFrequency +
+                ", mCommercialName='" + mCommercialName + '\'' +
+                ", mForm=" + mForm +
+                ", mStrength=" + mStrength +
+                ", mMedicalCondition='" + mMedicalCondition + '\'' +
+                ", mDailySchedule=" + mDailySchedule +
+                ", mAmountLeft=" + mAmountLeft +
+                ", mInstruction=" + mInstruction +
+                ", mMeasurementUnit=" + mMeasurementUnit +
+                '}';
+    }
+
+   
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -180,9 +205,11 @@ public class Medication extends MedicationWizardSuper {
             json.put(JsonKeys.AMOUNT, mAmount);
             json.put(JsonKeys.STRENGTH, mStrength);
             json.put(JsonKeys.MEDICAL_CONDITION, mMedicalCondition);
-            json.put(JsonKeys.DAILY_SCHEDULE, getDailyScheduleAsJsonArray());
             json.put(JsonKeys.AMOUNT_LEFT, mAmountLeft);
-            json.put(JsonKeys.INSTRUCTIONS, mInstruction.getDescription());
+            if (mInstruction != null) json.put(JsonKeys.INSTRUCTIONS, mInstruction.name());
+            if (mMeasurementUnit != null) json.put(JsonKeys.MEASUREMENT_UNIT, mMeasurementUnit.name());
+            if (mDailySchedule != null) json.put(JsonKeys.DAILY_SCHEDULE, getDailyScheduleAsJsonArray());
+            json.put(JsonKeys.TIMES_IN_DAY, getTimesADayAsJsonArray());
         } catch (JSONException e) {
             Logger.log(Me(), "Tried to convert myself to JSONObject but an exception happen");
             return null;
@@ -190,14 +217,32 @@ public class Medication extends MedicationWizardSuper {
         return json;
     }
 
+    private JSONArray getTimesADayAsJsonArray() {
+        final JSONArray jsonArray = new JSONArray();
+        if (mTimesADay == null) return jsonArray;
+        for (int i = 0; i < mTimesADay.size(); i++) {
+            try {
+                JSONObject item = new JSONObject();
+                item.put("key", mTimesADay.keyAt(i));
+                item.put("value", mTimesADay.valueAt(i).toString()); // Assuming SimpleDayTime has a parseable string format
+                jsonArray.put(item);
+            } catch (JSONException e) {
+                Logger.log(Me(), "Error while trying to getTimesADayAsJsonArray");
+            }
+        }
+        return jsonArray;
+    }
+
     private JSONArray getDailyScheduleAsJsonArray() {
         final JSONArray jsonArray = new JSONArray();
+        if (mDailySchedule == null) return jsonArray;
         int counter = 1;
         for (Long timeOfDay : mDailySchedule) {
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put(String.valueOf(counter), timeOfDay);
                 counter++;
+                jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 Logger.log(Me(), "Error while trying to getDailyScheduleAsJsonArray");
             }

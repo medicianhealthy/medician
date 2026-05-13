@@ -23,9 +23,10 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:id="@+id/title_fragment_add_med"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Medication"
+                android:text="@string/fragment_add_med_title"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
                 android:layout_marginBottom="16dp" />
 
@@ -36,7 +37,7 @@
                 android:hint="Medication Name"
                 android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/med_name"
+                    android:id="@+id/med_name_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapWords" />
@@ -56,7 +57,7 @@
                     android:hint="Amount"
                     android:layout_marginEnd="8dp">
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/amount"
+                        android:id="@+id/med_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -71,7 +72,7 @@
                     android:hint="Form"
                     app:startIconDrawable="@android:drawable/ic_menu_edit">
                     <AutoCompleteTextView
-                        android:id="@+id/dropdown_form"
+                        android:id="@+id/med_form_fragment_add_med"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none" />
@@ -85,7 +86,7 @@
                 android:hint="How often?"
                 android:layout_marginBottom="12dp">
                 <AutoCompleteTextView
-                    android:id="@+id/dropdown_frequency"
+                    android:id="@+id/med_frequency_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number" />
@@ -140,25 +141,41 @@
                 android:layout_marginBottom="8dp"/>
 
             <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_instructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:singleSelection="true"
                 android:layout_marginBottom="24dp">
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="After eating" />
-                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_before_eating"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Before eating" />
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_after_eating"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fasting" />
+                    android:text="After eating" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_while_eating"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="While eating" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_before_sleep"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Before sleep" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_does_not_matter"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Doesn't matter" />
             </com.google.android.material.chip.ChipGroup>
 
             <Button

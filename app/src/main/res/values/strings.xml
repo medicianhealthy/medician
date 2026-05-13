@@ -38,4 +38,5 @@
     <string name="button_grant">Grant</string>
     <string name="button_ok">Ok</string>
     <string name="button_skip">Skip</string>
+    <string name="fragment_add_med_title">New Medication</string>
 </resources>

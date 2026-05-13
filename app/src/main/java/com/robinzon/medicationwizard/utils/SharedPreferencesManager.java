@@ -100,23 +100,22 @@ public class SharedPreferencesManager {
 
     @SuppressWarnings("unused")
     public void setJsonArray(@Nullable final String key, @NonNull final JSONArray jsonArray) {
-        if (0 != jsonArray.length()) {
-            final SharedPreferences.Editor editor = getEditor();
-            if (null != editor && !TextUtils.isEmpty(key)) {
-                editor.putString(key, jsonArray.toString()).apply();
-            }
+        final SharedPreferences.Editor editor = getEditor();
+        if (null != editor && !TextUtils.isEmpty(key)) {
+            editor.putString(key, jsonArray.toString()).apply();
         }
     }
 
-    @Nullable public JSONArray getJsonArray(@Nullable final String key, @NonNull final JSONArray defaultValue) {
+    @Nullable public JSONArray getJsonArray(@Nullable final String key, @Nullable final JSONArray defaultValue) {
         if (null != getAndroidSharedPreferencesInstance()) {
             try {
-                return new JSONArray(getAndroidSharedPreferencesInstance().getString(key , null));
+                String jsonString = getAndroidSharedPreferencesInstance().getString(key, null);
+                return jsonString == null ? defaultValue : new JSONArray(jsonString);
             } catch (JSONException e) {
-                return null;
+                return defaultValue;
             }
         }
-        return null;
+        return defaultValue;
     }
 
     @SuppressWarnings("unused")
