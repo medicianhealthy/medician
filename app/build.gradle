@@ -61,6 +61,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.navigation:navigation-fragment:2.9.8'
     implementation 'androidx.navigation:navigation-ui:2.9.8'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
     //Firebase
     // https://firebase.google.com/docs/android/learn-more#compare-bom-versions
     implementation platform('com.google.firebase:firebase-bom:34.13.0')

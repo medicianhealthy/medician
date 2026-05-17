@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.robinzon.medicationwizard.ui.gallery.GalleryFragment"
+        android:id="@+id/nav_medications_list"
+        android:name="com.robinzon.medicationwizard.ui.medicationslist.MedicationsListFragment"
         android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_medications_list" />
 
     <fragment
         android:id="@+id/nav_slideshow"

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_medications_list, R.id.nav_slideshow)
                 .setOpenableLayout(drawer)
                 .build();
         // 1. Find the NavHostFragment
@@ -168,6 +168,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return MainActivity.class.getSimpleName();
     }
 
+    public void setFabVisible(boolean visible) {
+        final View fab = findViewById(R.id.fab);
+        if (fab != null) {
+            fab.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+    }
 
     public void onMoveToForeground() {
         if (!mHasCreated) {

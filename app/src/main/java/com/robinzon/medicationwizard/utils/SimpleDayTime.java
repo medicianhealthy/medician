@@ -1,6 +1,10 @@
 package com.robinzon.medicationwizard.utils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     public final byte hour;
@@ -48,5 +52,44 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     @Override
     public String toString() {
         return String.format(java.util.Locale.getDefault(), "%02d:%02d", hour, minute);
+    }
+
+    @Nullable
+    public static SimpleDayTime fromJson(Object obj) {
+        if (obj instanceof JSONObject) {
+            JSONObject json = (JSONObject) obj;
+            try {
+                return new SimpleDayTime(
+                        (byte) json.getInt("hour"),
+                        (byte) json.getInt("minute")
+                );
+            } catch (JSONException e) {
+                return null;
+            }
+        } else if (obj instanceof String) {
+            String timeStr = (String) obj;
+            try {
+                String[] parts = timeStr.split(":");
+                if (parts.length == 2) {
+                    return new SimpleDayTime(
+                            Byte.parseByte(parts[0].trim()),
+                            Byte.parseByte(parts[1].trim())
+                    );
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("hour", hour);
+            json.put("minute", minute);
+        } catch (JSONException ignored) {
+        }
+        return json;
     }
 }

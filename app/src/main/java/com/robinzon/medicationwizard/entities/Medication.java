@@ -15,12 +15,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Medication extends MedicationWizardSuper implements Comparable<Medication> {
 
 
-    private static final String SPK_MEDICATION_LIST = "shared_pref_medications_list";
+    public static final String SPK_MEDICATION_LIST = "shared_pref_medications_list";
     private SparseArray<SimpleDayTime> mTimesADay;
     private float mAmount;
     private int mFrequency;
@@ -77,6 +79,61 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         }
         existingMeds.put(json);
         SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, existingMeds);
+    }
+
+    public static ArrayList<Medication> getSavedMedications(Context context) {
+        ArrayList<Medication> medications = new ArrayList<>();
+        JSONArray jsonArray = SharedPreferencesManager.getInstance(context).getJsonArray(SPK_MEDICATION_LIST, null);
+        if (jsonArray != null) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    Medication med = fromJson(jsonArray.getJSONObject(i));
+                    if (med != null) {
+                        medications.add(med);
+                    }
+                } catch (JSONException ignored) {
+                }
+            }
+        }
+        Collections.sort(medications);
+        return medications;
+    }
+
+    public static Medication fromJson(JSONObject json) {
+        if (json == null) return null;
+        Medication med = new Medication();
+        try {
+            med.mCommercialName = json.optString(JsonKeys.COMMERCIAL_NAME);
+            med.mForm = EForm.valueOf(json.optString(JsonKeys.FORM, EForm.Pill.name()));
+            med.mFrequency = json.optInt(JsonKeys.FREQUENCY);
+            med.mAmount = (float) json.optDouble(JsonKeys.AMOUNT);
+            med.mStrength = (float) json.optDouble(JsonKeys.STRENGTH);
+            med.mMedicalCondition = json.optString(JsonKeys.MEDICAL_CONDITION);
+            med.mAmountLeft = json.optInt(JsonKeys.AMOUNT_LEFT);
+            if (json.has(JsonKeys.INSTRUCTIONS)) {
+                med.mInstruction = EInstructions.valueOf(json.getString(JsonKeys.INSTRUCTIONS));
+            }
+            if (json.has(JsonKeys.MEASUREMENT_UNIT)) {
+                med.mMeasurementUnit = EMeasurementUnit.valueOf(json.getString(JsonKeys.MEASUREMENT_UNIT));
+            }
+            if (json.has(JsonKeys.TIMES_IN_DAY)) {
+                JSONArray timesArray = json.getJSONArray(JsonKeys.TIMES_IN_DAY);
+                SparseArray<SimpleDayTime> times = new SparseArray<>();
+                for (int i = 0; i < timesArray.length(); i++) {
+                    JSONObject item = timesArray.getJSONObject(i);
+                    int key = item.getInt("key");
+                    SimpleDayTime value = SimpleDayTime.fromJson(item.get("value"));
+                    if (value != null) {
+                        times.put(key, value);
+                    }
+                }
+                med.mTimesADay = times;
+            }
+        } catch (Exception e) {
+            Logger.log("Medication", "Error deserializing medication: " + e.getMessage());
+            return null;
+        }
+        return med;
     }
 
     public void addTimeStampsForDay(@NonNull final SparseArray<SimpleDayTime> simpleDayTimeSparseArray) {
@@ -224,7 +281,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             try {
                 JSONObject item = new JSONObject();
                 item.put("key", mTimesADay.keyAt(i));
-                item.put("value", mTimesADay.valueAt(i).toString()); // Assuming SimpleDayTime has a parseable string format
+                item.put("value", mTimesADay.valueAt(i).toJson());
                 jsonArray.put(item);
             } catch (JSONException e) {
                 Logger.log(Me(), "Error while trying to getTimesADayAsJsonArray");

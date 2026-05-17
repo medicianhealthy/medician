@@ -39,4 +39,15 @@
     <string name="button_ok">Ok</string>
     <string name="button_skip">Skip</string>
     <string name="fragment_add_med_title">New Medication</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="once_a_day">Once a day</string>
+    <string name="twice_a_day">Twice a day</string>
+    <string name="times_a_day">%1$d times a day</string>
+    <string name="scheduled_at">Scheduled at: %1$s</string>
+    <string name="no_instructions">No instructions</string>
+    <string name="medication_icon_desc">Medication Icon</string>
+    <string name="empty_meds_title">Your list is looking a bit lonely!</string>
+    <string name="empty_meds_subtitle">It looks like you haven’t added any medications yet. Tap below to add your first and let’s keep you feeling great!</string>
+    <string name="empty_meds_action">Add my first medication</string>
 </resources>

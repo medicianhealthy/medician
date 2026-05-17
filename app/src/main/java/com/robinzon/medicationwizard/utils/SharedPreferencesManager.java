@@ -188,7 +188,19 @@ public class SharedPreferencesManager {
         }
     }
 
-    @Nullable private SharedPreferences getAndroidSharedPreferencesInstance() {
-        return mAndroidSharedPreferencesInstance.get();
+    public void registerListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        if (getAndroidSharedPreferencesInstance() != null) {
+            getAndroidSharedPreferencesInstance().registerOnSharedPreferenceChangeListener(listener);
+        }
+    }
+
+    public void unregisterListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        if (getAndroidSharedPreferencesInstance() != null) {
+            getAndroidSharedPreferencesInstance().unregisterOnSharedPreferenceChangeListener(listener);
+        }
+    }
+
+    @Nullable public SharedPreferences getAndroidSharedPreferencesInstance() {
+        return mAndroidSharedPreferencesInstance != null ? mAndroidSharedPreferencesInstance.get() : null;
     }
 }

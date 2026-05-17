@@ -9,7 +9,7 @@
             android:icon="@drawable/ic_med_pill"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_medications_list"
             android:icon="@drawable/ic_list"
             android:title="@string/menu_gallery" />
         <item
