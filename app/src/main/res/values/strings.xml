@@ -20,6 +20,14 @@
     <string name="settings_quiet_hours_summary">Don\'t notify me while I\'m sleeping.</string>
     <string name="settings_quiet_hours_format">Don\'t notify me while I\'m sleeping (%1$s).</string>
 
+    <string name="settings_sound_title">Alert Sound</string>
+    <string name="settings_sound_summary">Current sound: %1$s</string>
+
+    <string name="settings_bypass_title">Bypass Volume</string>
+    <string name="settings_bypass_summary">Reminders will play even if your phone is on silent.</string>
+
+    <string name="settings_volume_title">Alert Volume</string>
+
     <string name="settings_category_appearance">Appearance</string>
     <string name="settings_theme_title">App Theme</string>
     <string name="settings_theme_summary">Switch between light, dark, or let the system decide.</string>
@@ -67,6 +75,7 @@
     <string name="button_allow">Allow</string>
     <string name="button_grant">Grant</string>
     <string name="button_ok">Ok</string>
+    <string name="button_select">Select</string>
     <string name="button_skip">Skip</string>
     <string name="fragment_add_med_title">New Medication</string>
     <string name="edit">Edit</string>

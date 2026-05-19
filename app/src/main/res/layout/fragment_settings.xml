@@ -60,6 +60,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_toStartOf="@+id/switch_notifications"
                         android:layout_toEndOf="@id/icon_notif"
                         android:orientation="vertical">
@@ -83,8 +84,154 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true" />
+                        android:layout_centerVertical="true"
+                        android:clickable="false"
+                        android:focusable="false" />
                 </RelativeLayout>
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp" />
+
+                <!-- Sub-settings Container -->
+                <LinearLayout
+                    android:id="@+id/container_alert_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <!-- Alert Sound -->
+                    <RelativeLayout
+                        android:id="@+id/btn_notif_sound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:id="@+id/icon_sound"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@null"
+                            app:srcCompat="@android:drawable/ic_lock_silent_mode_off"
+                            app:tint="?attr/colorOnSurface" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_toEndOf="@id/icon_sound"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_sound_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                            <TextView
+                                android:id="@+id/txt_sound_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="Current sound: Default"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="60dp" />
+
+                    <!-- Bypass System Volume Toggle -->
+                    <RelativeLayout
+                        android:id="@+id/btn_bypass_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:id="@+id/icon_bypass"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@null"
+                            app:srcCompat="@android:drawable/ic_lock_power_off"
+                            app:tint="?attr/colorOnSurface" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_toStartOf="@+id/switch_bypass"
+                            android:layout_toEndOf="@id/icon_bypass"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_bypass_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_bypass_summary"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_bypass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:clickable="false"
+                            android:focusable="false" />
+                    </RelativeLayout>
+
+                    <!-- Volume Slider (Visible only if bypass is ON) -->
+                    <LinearLayout
+                        android:id="@+id/layout_volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="20dp"
+                        android:paddingBottom="20dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="40dp"
+                            android:text="@string/settings_volume_title"
+                            android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/slider_volume"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:valueFrom="0"
+                            android:valueTo="100" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"

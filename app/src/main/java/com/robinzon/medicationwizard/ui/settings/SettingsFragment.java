@@ -62,9 +62,37 @@ public class SettingsFragment extends MedicationWizardFragment {
             if (!isGranted) {
                 NotificationManager.getInstance(requireActivity()).requestPermissionIfNeeded();
             } else {
-                // If already granted, show feedback
-                Snackbar.make(binding.getRoot(), "Notifications are already active!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "Notifications are already active! To disable, please use system settings.", Snackbar.LENGTH_LONG).show();
+                binding.switchNotifications.setChecked(true);
             }
+        });
+
+        // 2b. Sound Setting
+        viewModel.getSoundName().observe(getViewLifecycleOwner(), name -> 
+            binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name)));
+        
+        binding.btnNotifSound.setOnClickListener(v -> {
+            SoundPickerBottomSheet picker = new SoundPickerBottomSheet();
+            picker.setCurrentSoundUri(viewModel.getSoundUri().getValue());
+            picker.setOnSoundSelectedListener((name, uri) -> viewModel.setSound(name, uri));
+            picker.show(getChildFragmentManager(), "SoundPicker");
+        });
+
+        // 2c. Bypass Volume
+        viewModel.getBypassVolume().observe(getViewLifecycleOwner(), bypass -> {
+            binding.switchBypass.setChecked(bypass);
+            binding.layoutVolume.setVisibility(bypass ? View.VISIBLE : View.GONE);
+        });
+        
+        binding.btnBypassVolume.setOnClickListener(v -> 
+            viewModel.setBypassVolume(!Boolean.TRUE.equals(viewModel.getBypassVolume().getValue())));
+
+        // 2d. Volume Slider
+        viewModel.getNotifVolume().observe(getViewLifecycleOwner(), volume -> 
+            binding.sliderVolume.setValue(volume));
+        
+        binding.sliderVolume.addOnChangeListener((slider, value, fromUser) -> {
+            if (fromUser) viewModel.setNotifVolume((int) value);
         });
 
         // 3. Theme Setting (Segmented Toggle Group)
@@ -145,6 +173,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     private void updateNotificationStatus() {
         boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
         binding.switchNotifications.setChecked(isGranted);
+        binding.containerAlertDetails.setVisibility(isGranted ? View.VISIBLE : View.GONE);
     }
 
     @Override
