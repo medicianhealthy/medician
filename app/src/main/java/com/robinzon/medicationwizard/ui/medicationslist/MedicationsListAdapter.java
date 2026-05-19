@@ -74,13 +74,19 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
         public void bind(Medication medication, boolean isExpanded) {
             binding.medName.setText(medication.getCommercialName());
             
-            String strengthStr = medication.getStrength() == (long) medication.getStrength() ?
-                    String.format(Locale.getDefault(), "%d", (long) medication.getStrength()) :
-                    String.format(Locale.getDefault(), "%.1f", medication.getStrength());
-            
-            binding.medStrength.setText(String.format(Locale.getDefault(), "%s %s",
-                    strengthStr,
-                    medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getName() : ""));
+            // Smart Strength Formatting & Visibility
+            if (medication.getStrength() <= 0) {
+                binding.medStrength.setVisibility(View.GONE);
+            } else {
+                binding.medStrength.setVisibility(View.VISIBLE);
+                String strengthStr = medication.getStrength() == (long) medication.getStrength() ?
+                        String.format(Locale.getDefault(), "%d", (long) medication.getStrength()) :
+                        String.format(Locale.getDefault(), "%.1f", medication.getStrength());
+
+                binding.medStrength.setText(String.format(Locale.getDefault(), "%s %s",
+                        strengthStr,
+                        medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getName() : ""));
+            }
 
             // Set icon based on form for both Header and Instructions
             int formIconRes = R.drawable.ic_med_pill; // Default

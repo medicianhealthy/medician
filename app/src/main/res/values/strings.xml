@@ -9,7 +9,37 @@
 
     <string name="menu_home">Today\'s medications</string>
     <string name="menu_gallery">Medications list</string>
-    <string name="menu_slideshow">Settings</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">Reminders</string>
+    <string name="settings_notifications_title">Health Alerts</string>
+    <string name="settings_notifications_summary">Keep your reminders active so you never miss a dose. Stay healthy!</string>
+
+    <string name="settings_quiet_hours_title">Quiet Hours</string>
+    <string name="settings_quiet_hours_summary">Don\'t notify me while I\'m sleeping.</string>
+    <string name="settings_quiet_hours_format">Don\'t notify me while I\'m sleeping (%1$s).</string>
+
+    <string name="settings_category_appearance">Appearance</string>
+    <string name="settings_theme_title">App Theme</string>
+    <string name="settings_theme_summary">Switch between light, dark, or let the system decide.</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_system">System</string>
+
+    <string name="settings_category_data">Data &amp; Privacy</string>
+    <string name="settings_backup_title">Backup &amp; Restore</string>
+    <string name="settings_backup_summary">Safe-keep your data or move it to a new device.</string>
+
+    <string name="settings_clear_data_title">Start Fresh</string>
+    <string name="settings_clear_data_summary">Wipe all medications and history. Careful, this can\'t be undone!</string>
+
+    <string name="settings_category_about">About</string>
+    <string name="settings_version_title">App Version</string>
+    <string name="settings_version_summary">You\'re currently running version %1$s</string>
+
+    <string name="settings_support_title">Need help?</string>
+    <string name="settings_support_summary">Have questions or found a bug? We\'d love to hear from you!</string>
 
     <!--***********************   Ads   ************************************************************************-->
     <!--Test ad units-->

@@ -38,6 +38,12 @@ public class HomeFragment extends MedicationWizardFragment implements SharedPref
         setupEmptyView();
         refreshData();
         SharedPreferencesManager.getInstance(requireContext()).registerListener(this);
+        
+        // Ensure FAB is visible if there is data
+        final ArrayList<Medication> data = Medication.getSavedMedications(getContext());
+        if (!data.isEmpty() && getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setFabVisible(true);
+        }
     }
 
     private void updateUiState(boolean isEmpty) {

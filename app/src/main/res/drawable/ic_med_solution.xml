@@ -3,13 +3,18 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M 11,7 C 10.5,6.5 10.5,5.5 10.5,4.5 C 10.5,3 11.2,2 12,2 C 12.8,2 13.5,3 13.5,4.5 C 13.5,5.5 13.5,6.5 13,7 Z" />
-
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M 11,8.5 L 8.7,10.8 C 8.3,11.2 8,11.7 8,12.3 L 8,20 C 8,21.1 8.9,22 10,22 L 14,22 C 15.1,22 16,21.1 16,20 L 16,12.3 C 16,11.7 15.7,11.2 15.3,10.8 L 13,8.5 Z" />
-
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:scaleX="0.8"
+        android:scaleY="0.8">
+        <!-- Cap -->
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M9,2h6c1.1,0 2,0.9 2,2v2h-10V4C7,2.9 7.9,2 9,2z" />
+        <!-- Bottle -->
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M7,8h10c1.1,0 2,0.9 2,2v10c0,1.1 -0.9,2 -2,2H7c-1.1,0 -2,-0.9 -2,-2V10C5,8.9 5.9,8 7,8zM17,14H7v6h10V14z" />
+    </group>
 </vector>

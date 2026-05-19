@@ -55,6 +55,9 @@ public class MedicationsListFragment extends MedicationWizardFragment {
             updateUiState(isEmpty);
             if (!isEmpty) {
                 adapter.setMedications(medications);
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).setFabVisible(true);
+                }
             }
             binding.swipeRefresh.setRefreshing(false);
         });
@@ -85,7 +88,8 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
             @Override
             public void onEdit(Medication medication) {
-                // Future edit logic
+                AddMedicationBottomSheet bottomSheet = AddMedicationBottomSheet.newInstance(medication);
+                bottomSheet.show(getChildFragmentManager(), "EditMedBottomSheet");
             }
         });
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -96,14 +100,18 @@ public class MedicationsListFragment extends MedicationWizardFragment {
     private void showDeleteSnackbar(Medication medication, int position) {
         String message = medication.getCommercialName() + " was deleted";
 
-        // Remove from the UI immediately (but not from storage yet)
+        // 1. Delete from storage immediately to stay in sync with refreshes
+        Medication.deleteMedication(requireContext(), medication.getId());
+
+        // 2. Update the UI
         adapter.removeItem(position);
         updateUiState(adapter.getItemCount() == 0);
 
         Snackbar.make(binding.getRoot(), message, SNACKBAR_DURATION_MS)
                 .setAction("Undo", v -> {
-                    // Refresh data to bring it back since it's still in storage
-                    viewModel.refreshMedications();
+                    // 3. Restore to storage if undone
+                    medication.addToMedicationList(requireContext());
+                    // 4. refreshMedications will be triggered automatically by our listener in VM
                 })
                 .show();
     }

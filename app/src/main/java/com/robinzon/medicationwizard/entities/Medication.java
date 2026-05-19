@@ -18,11 +18,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class Medication extends MedicationWizardSuper implements Comparable<Medication> {
 
 
     public static final String SPK_MEDICATION_LIST = "shared_pref_medications_list";
+    private String mId;
     private SparseArray<SimpleDayTime> mTimesADay;
     private float mAmount;
     private int mFrequency;
@@ -35,9 +37,10 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
     private EInstructions mInstruction;
     private EMeasurementUnit mMeasurementUnit;
     public Medication() {
-
+        this.mId = UUID.randomUUID().toString();
     }
     public Medication(String commercialName) {
+        this();
         if (!TextUtils.isEmpty(commercialName)) {
             this.mCommercialName = commercialName;
         } else {
@@ -77,8 +80,44 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         if (existingMeds == null) {
             existingMeds = new JSONArray();
         }
-        existingMeds.put(json);
+        
+        // If it already exists (ID check), update it instead of adding
+        boolean found = false;
+        for (int i = 0; i < existingMeds.length(); i++) {
+            try {
+                JSONObject obj = existingMeds.getJSONObject(i);
+                if (mId.equals(obj.optString(JsonKeys.ID))) {
+                    existingMeds.put(i, json);
+                    found = true;
+                    break;
+                }
+            } catch (JSONException ignored) {}
+        }
+        
+        if (!found) {
+            existingMeds.put(json);
+        }
         SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, existingMeds);
+    }
+
+    public static void deleteMedication(Context context, String id) {
+        JSONArray existingMeds = SharedPreferencesManager.getInstance(context).getJsonArray(SPK_MEDICATION_LIST, null);
+        if (existingMeds == null) return;
+
+        JSONArray newList = new JSONArray();
+        for (int i = 0; i < existingMeds.length(); i++) {
+            try {
+                JSONObject obj = existingMeds.getJSONObject(i);
+                if (!id.equals(obj.optString(JsonKeys.ID))) {
+                    newList.put(obj);
+                }
+            } catch (JSONException ignored) {}
+        }
+        SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, newList);
+    }
+
+    public static void clearAllMedications(Context context) {
+        SharedPreferencesManager.getInstance(context).removeKey(SPK_MEDICATION_LIST);
     }
 
     public static ArrayList<Medication> getSavedMedications(Context context) {
@@ -103,6 +142,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         if (json == null) return null;
         Medication med = new Medication();
         try {
+            med.mId = json.optString(JsonKeys.ID, UUID.randomUUID().toString());
             med.mCommercialName = json.optString(JsonKeys.COMMERCIAL_NAME);
             med.mForm = EForm.valueOf(json.optString(JsonKeys.FORM, EForm.Pill.name()));
             med.mFrequency = json.optInt(JsonKeys.FREQUENCY);
@@ -148,6 +188,10 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             mTimesADay.put(key, new SimpleDayTime(value));
         }
 
+    }
+
+    public String getId() {
+        return mId;
     }
 
     public String getCommercialName() {
@@ -256,6 +300,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
+            json.put(JsonKeys.ID, mId);
             json.put(JsonKeys.COMMERCIAL_NAME, mCommercialName);
             json.put(JsonKeys.FORM, mForm.name());
             json.put(JsonKeys.FREQUENCY, mFrequency);
@@ -313,6 +358,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
 
     public static final class JsonKeys {
         //TODO add json keys to fields added
+        public static final String ID = "mId";
         public static String TIMES_IN_DAY = "mTimesADay";
         public static final String AMOUNT = "mAmount";
         public static final String FREQUENCY = "mFrequency";

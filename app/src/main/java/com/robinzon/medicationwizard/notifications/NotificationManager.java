@@ -76,6 +76,10 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return NotificationManagerCompat.from(getActivity().getApplicationContext());
     }
 
+    public boolean hasPermission() {
+        return !notificationsAreDisabled();
+    }
+
     public static NotificationManager getInstance(final Activity activity) {
         if (null == sInstance || null == sInstance.get()) {
             sInstance = new WeakReference<>(new NotificationManager(activity));

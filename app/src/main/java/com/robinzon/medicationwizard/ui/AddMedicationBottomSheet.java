@@ -38,6 +38,9 @@ import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -48,8 +51,19 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
     private final SparseArray<SimpleDayTime> mTimesInDay = new SparseArray<>();
     private LinearLayout timesContainer;
-    private final Medication mMedication = new Medication();
+    private Medication mMedication = new Medication();
     private boolean mSaveWasHitAlready;
+    private boolean mIsEditMode = false;
+
+    public static AddMedicationBottomSheet newInstance(@Nullable Medication medication) {
+        AddMedicationBottomSheet fragment = new AddMedicationBottomSheet();
+        if (medication != null) {
+            Bundle args = new Bundle();
+            args.putString("medication_json", medication.toJson().toString());
+            fragment.setArguments(args);
+        }
+        return fragment;
+    }
 
 
     @Nullable
@@ -61,10 +75,25 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (getArguments() != null && getArguments().containsKey("medication_json")) {
+            try {
+                String json = getArguments().getString("medication_json");
+                if (json != null) {
+                    mMedication = Medication.fromJson(new JSONObject(json));
+                    mIsEditMode = true;
+                }
+            } catch (JSONException ignored) {}
+        }
+
         setupDropdowns(view);
         setupInstructions(view);
         setTextChangeListeners(view);
         timesContainer = view.findViewById(R.id.times_container);
+
+        if (mIsEditMode) {
+            preFillData(view);
+        }
 
         view.findViewById(R.id.btn_save).setOnClickListener(v -> {
             trySaveMedication(view);
@@ -72,6 +101,82 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         });
 
 
+    }
+
+    private void preFillData(View view) {
+        TextView titleView = getTitleTextView(view);
+        if (titleView != null) titleView.setText(mMedication.getCommercialName());
+
+        TextInputEditText nameEdit = getCommercialNameInputEditText(view);
+        if (nameEdit != null) nameEdit.setText(mMedication.getCommercialName());
+
+        TextInputEditText amountEdit = getAmountInputEditText(view);
+        if (amountEdit != null) {
+            String val = mMedication.getAmount() == (long) mMedication.getAmount() ?
+                    String.valueOf((long) mMedication.getAmount()) : String.valueOf(mMedication.getAmount());
+            amountEdit.setText(val);
+        }
+
+        AutoCompleteTextView formEdit = getFormInputEditText(view);
+        if (formEdit != null && mMedication.getForm() != null) {
+            formEdit.setText(mMedication.getForm().name(), false);
+            final TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
+            if (layoutForm != null) {
+                switch (mMedication.getForm()) {
+                    case Pill -> layoutForm.setStartIconDrawable(R.drawable.ic_med_pill);
+                    case Drops -> layoutForm.setStartIconDrawable(R.drawable.ic_med_drops);
+                    case Injection -> layoutForm.setStartIconDrawable(R.drawable.ic_med_injection);
+                    case Solution -> layoutForm.setStartIconDrawable(R.drawable.ic_med_solution);
+                    case Inhaler -> layoutForm.setStartIconDrawable(R.drawable.ic_med_inhaler);
+                    case Powder -> layoutForm.setStartIconDrawable(R.drawable.ic_med_powder);
+                    case Other -> layoutForm.setStartIconDrawable(R.drawable.ic_med_other);
+                }
+            }
+        }
+
+        AutoCompleteTextView freqEdit = getFrequencyInputEditText(view);
+        if (freqEdit != null && mMedication.getDailyFrequency() > 0) {
+            String[] frequencies = new String[]{"Once a day", "Twice a day", "3 times a day", "4 times a day", "5 times a day"};
+            if (mMedication.getDailyFrequency() <= frequencies.length) {
+                freqEdit.setText(frequencies[mMedication.getDailyFrequency() - 1], false);
+            }
+            generateTimePickers(mMedication.getDailyFrequency());
+            if (mMedication.getTimesADay() != null) {
+                for (int i = 0; i < mMedication.getTimesADay().size(); i++) {
+                    int key = mMedication.getTimesADay().keyAt(i);
+                    SimpleDayTime time = mMedication.getTimesADay().valueAt(i);
+                    mTimesInDay.put(key, time);
+                    if (i < timesContainer.getChildCount()) {
+                        Button btn = (Button) timesContainer.getChildAt(i);
+                        btn.setText("Time set: " + time.toString());
+                    }
+                }
+            }
+        }
+
+        TextInputEditText strengthEdit = view.findViewById(R.id.medication_strength);
+        if (strengthEdit != null) {
+            String val = mMedication.getStrength() == (long) mMedication.getStrength() ?
+                    String.valueOf((long) mMedication.getStrength()) : String.valueOf(mMedication.getStrength());
+            strengthEdit.setText(val);
+        }
+
+        AutoCompleteTextView unitEdit = view.findViewById(R.id.dropdown_unit);
+        if (unitEdit != null && mMedication.getMeasurementUnit() != null) {
+            unitEdit.setText(mMedication.getMeasurementUnit().getName(), false);
+        }
+
+        ChipGroup chipGroup = view.findViewById(R.id.chip_group_instructions);
+        if (chipGroup != null && mMedication.getInstruction() != null) {
+            int chipId = switch (mMedication.getInstruction()) {
+                case BEFORE_EATING -> R.id.chip_before_eating;
+                case AFTER_EATING -> R.id.chip_after_eating;
+                case WHILE_EATING -> R.id.chip_while_eating;
+                case BEFORE_SLEEP -> R.id.chip_before_sleep;
+                case DOES_NOT_MATTER -> R.id.chip_does_not_matter;
+            };
+            chipGroup.check(chipId);
+        }
     }
 
 

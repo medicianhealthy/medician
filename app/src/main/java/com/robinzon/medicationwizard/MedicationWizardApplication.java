@@ -6,10 +6,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
+
+import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 public class MedicationWizardApplication extends Application
         implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
@@ -20,6 +24,17 @@ public class MedicationWizardApplication extends Application
         super.onCreate();
         this.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        
+        applyTheme();
+    }
+
+    private void applyTheme() {
+        int theme = SharedPreferencesManager.getInstance(this).getInt(SettingsViewModel.KEY_APP_THEME, SettingsViewModel.THEME_SYSTEM);
+        switch (theme) {
+            case SettingsViewModel.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            case SettingsViewModel.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            default -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
     }
 
     @Override

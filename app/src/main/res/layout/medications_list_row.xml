@@ -16,24 +16,32 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <ImageView
+            android:id="@+id/med_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_med_pill"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@string/medication_icon_desc" />
+
         <TextView
             android:id="@+id/med_name"
-            android:layout_width="wrap_content"  android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Cymbalta"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:textColor="?attr/colorOnSurface"
-            app:drawableStartCompat="@drawable/ic_med_pill"
-            android:drawablePadding="8dp"
-            app:drawableTint="?attr/colorPrimary"
-
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toStartOf="@+id/med_strength"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/med_icon"
+            app:layout_constraintTop_toTopOf="@id/med_icon" />
 
         <TextView
             android:id="@+id/med_strength"
@@ -53,10 +61,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:layout_marginStart="16dp"
             android:text="@string/take"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/med_icon"
             app:layout_constraintTop_toBottomOf="@id/med_name" />
 
         <TextView
@@ -116,11 +125,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_marginStart="16dp"
             android:text="After a meal with a glass of water"
             android:textAppearance="?attr/textAppearanceBodySmall"
             android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/med_icon"
             app:layout_constraintTop_toBottomOf="@id/take" />
 
         <com.google.android.material.button.MaterialButton
@@ -129,8 +139,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
             android:text="@string/button_skip"
-            app:layout_constraintStart_toStartOf="parent"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:gravity="start|center_vertical"
+            app:layout_constraintStart_toEndOf="@id/med_icon"
             app:layout_constraintTop_toBottomOf="@id/directions" />
 
         <com.google.android.material.button.MaterialButton

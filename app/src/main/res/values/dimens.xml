@@ -13,4 +13,5 @@
     <dimen name="take_text_size">18sp</dimen>
     <dimen name="take_text_quantity">20sp</dimen>
     <dimen name="bannerTopMargin">7dp</dimen>
+    <dimen name="fab_margin_bottom_extra">86dp</dimen>
 </resources>

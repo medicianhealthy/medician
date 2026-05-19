@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    style="@style/Widget.Material3.CardView.Elevated"
+    style="@style/Widget.Material3.CardView.Filled"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardCornerRadius="12dp">
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,8 +24,8 @@
 
             <ImageView
                 android:id="@+id/med_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/medication_icon_desc"
@@ -45,14 +46,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="Medication Name"
-                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
                 <TextView
                     android:id="@+id/med_strength"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="500 mg"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
@@ -100,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     tools:text="Once a day"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
@@ -125,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     tools:text="3 pills before eating"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
@@ -149,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     tools:text="Scheduled at: 08:00, 20:00"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 

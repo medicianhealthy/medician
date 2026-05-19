@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_medications_list, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_medications_list, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
         // 1. Find the NavHostFragment
