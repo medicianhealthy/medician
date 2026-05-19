@@ -220,9 +220,10 @@ public class AdMobBanner extends AdMobAd {
         // 3. Convert pixels to density-independent pixels (dp)
         final int adWidthDp = (int) (adWidthPixels / Screen.getDensity(activity.getResources()));
 
-        // Replacement for the deprecated getCurrentOrientation... method
-        //mAdSize = AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
-        mAdSize = AdSize.getLargeAnchoredAdaptiveBannerAdSize(activity,adWidthDp);
+        // Standard Anchored Adaptive is now "Large" by default. 
+        // If that is too high, Inline Adaptive with a max height is the best modern way to control it.
+        // This keeps the adaptive width but caps the height to something sleeker (e.g., 60dp).
+        mAdSize = AdSize.getInlineAdaptiveBannerAdSize(adWidthDp, 60);
         return mAdSize;
     }
 

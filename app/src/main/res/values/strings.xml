@@ -86,7 +86,7 @@
     <string name="scheduled_at">Scheduled at: %1$s</string>
     <string name="no_instructions">No instructions</string>
     <string name="medication_icon_desc">Medication Icon</string>
-    <string name="empty_meds_title">Your list is looking a bit lonely!</string>
-    <string name="empty_meds_subtitle">It looks like you haven’t added any medications yet. Tap below to add your first and let’s keep you feeling great!</string>
-    <string name="empty_meds_action">Add my first medication</string>
+    <string name="empty_meds_title">The Wizard is waiting!</string>
+    <string name="empty_meds_subtitle">I’m ready to help you track your medications. Let’s add your first one and start the magic!</string>
+    <string name="empty_meds_action">Add my first med</string>
 </resources>

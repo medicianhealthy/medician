@@ -15,6 +15,17 @@ import java.util.ArrayList;
 
 public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.ViewHolder> {
     private final ArrayList<Medication> mLocalDataSet;
+    private OnMedicationActionListener mListener;
+
+    public interface OnMedicationActionListener {
+        void onTake(Medication medication, int position);
+        void onSkip(Medication medication, int position);
+        void onReschedule(Medication medication, int position);
+    }
+
+    public void setOnMedicationActionListener(OnMedicationActionListener listener) {
+        mListener = listener;
+    }
 
     /**
      * Initialize the dataset of the Adapter
@@ -39,7 +50,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         private final TextView mDirections;
         private final TextView mForm;
         private final AppCompatButton mSkip;
-        private final AppCompatButton mReschduele;
+        private final AppCompatButton mReschedule;
         private final AppCompatButton mTake;
         private final android.widget.ImageView mMedIcon;
 
@@ -53,7 +64,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             mDirections = view.findViewById(R.id.directions);
             mForm = view.findViewById(R.id.form);
             mSkip = view.findViewById(R.id.skip_btn);
-            mReschduele = view.findViewById(R.id.rescheduele);
+            mReschedule = view.findViewById(R.id.rescheduele);
             mTake = view.findViewById(R.id.take_btn);
             mMedIcon = view.findViewById(R.id.med_icon);
         }
@@ -90,8 +101,8 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             return mSkip;
         }
 
-        public AppCompatButton getReschduele() {
-            return mReschduele;
+        public AppCompatButton getReschedule() {
+            return mReschedule;
         }
 
         public AppCompatButton getTake() {
@@ -171,6 +182,57 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             viewHolder.getDirections().setVisibility(View.VISIBLE);
             viewHolder.getDirections().setText(medication.getInstruction().getDescription());
         }
+
+        // 5. Button Listeners with Animations
+        viewHolder.getTake().setOnClickListener(v -> {
+            if (mListener != null) {
+                // Play success sound
+                try {
+                    android.media.ToneGenerator tg = new android.media.ToneGenerator(android.media.AudioManager.STREAM_MUSIC, 100);
+                    tg.startTone(android.media.ToneGenerator.TONE_PROP_BEEP, 200);
+                } catch (Exception ignored) {}
+
+                // Modern success animation (Scale up and fade out)
+                viewHolder.itemView.animate()
+                        .scaleX(1.05f)
+                        .scaleY(1.05f)
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            mListener.onTake(medication, viewHolder.getBindingAdapterPosition());
+                            viewHolder.itemView.setScaleX(1f);
+                            viewHolder.itemView.setScaleY(1f);
+                            viewHolder.itemView.setAlpha(1f);
+                        }).start();
+            }
+        });
+
+        viewHolder.getSkip().setOnClickListener(v -> {
+            if (mListener != null) {
+                // Play dismiss sound
+                try {
+                    android.media.ToneGenerator tg = new android.media.ToneGenerator(android.media.AudioManager.STREAM_MUSIC, 100);
+                    tg.startTone(android.media.ToneGenerator.TONE_CDMA_PIP, 150);
+                } catch (Exception ignored) {}
+
+                // Modern dismiss animation (Slide left and fade)
+                viewHolder.itemView.animate()
+                        .translationX(-viewHolder.itemView.getWidth())
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            mListener.onSkip(medication, viewHolder.getBindingAdapterPosition());
+                            viewHolder.itemView.setTranslationX(0);
+                            viewHolder.itemView.setAlpha(1f);
+                        }).start();
+            }
+        });
+
+        viewHolder.getReschedule().setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onReschedule(medication, viewHolder.getBindingAdapterPosition());
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

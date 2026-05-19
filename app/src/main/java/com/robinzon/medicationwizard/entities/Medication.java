@@ -48,6 +48,8 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         }
     }
 
+
+
     public int getDailyFrequency() {
         return this.mFrequency;
     }
@@ -98,6 +100,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             existingMeds.put(json);
         }
         SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, existingMeds);
+
     }
 
     public static void deleteMedication(Context context, String id) {

@@ -11,6 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.databinding.FragmentHomeBinding;
@@ -24,6 +27,8 @@ import java.util.ArrayList;
 public class HomeFragment extends MedicationWizardFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private FragmentHomeBinding mBinding;
+    private MedicationsAdapter mAdapter;
+    private static final int ACTION_DELAY_MS = 5000;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -69,11 +74,51 @@ public class HomeFragment extends MedicationWizardFragment implements SharedPref
         final ArrayList<Medication> data = Medication.getSavedMedications(getContext());
 
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity().getApplicationContext()));
-        RecyclerView.Adapter<MedicationsAdapter.ViewHolder> customAdapter = new MedicationsAdapter(data);
-        mBinding.recyclerView.setAdapter(customAdapter);
+        mAdapter = new MedicationsAdapter(data);
+        mAdapter.setOnMedicationActionListener(new MedicationsAdapter.OnMedicationActionListener() {
+            @Override
+            public void onTake(Medication medication, int position) {
+                showActionSnackbar(medication, "taken");
+            }
+
+            @Override
+            public void onSkip(Medication medication, int position) {
+                showActionSnackbar(medication, "skipped");
+            }
+
+            @Override
+            public void onReschedule(Medication medication, int position) {
+                showReschedulePicker(medication);
+            }
+        });
+        mBinding.recyclerView.setAdapter(mAdapter);
 
         updateUiState(data.isEmpty());
         mBinding.swipeRefresh.setRefreshing(false);
+    }
+
+    private void showActionSnackbar(Medication medication, String action) {
+        String message = medication.getCommercialName() + " marked as " + action;
+        
+        // Refresh to show it's gone for now
+        refreshData();
+
+        Snackbar.make(mBinding.getRoot(), message, ACTION_DELAY_MS)
+                .setAction("Undo", v -> refreshData())
+                .show();
+    }
+
+    private void showReschedulePicker(Medication medication) {
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTitleText("Reschedule " + medication.getCommercialName())
+                .build();
+
+        picker.addOnPositiveButtonClickListener(v -> {
+            Snackbar.make(mBinding.getRoot(), "Rescheduled to " + picker.getHour() + ":" + picker.getMinute(), Snackbar.LENGTH_SHORT).show();
+        });
+
+        picker.show(getChildFragmentManager(), "reschedule");
     }
 
     @Override

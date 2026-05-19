@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- The Stick -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M18,3.5l2.5,2.5L5.5,21L3,18.5L18,3.5z" />
+    <!-- Glowing Tip -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:alpha="0.4"
+        android:pathData="M18,3.5l2.5,2.5l1.5-1.5L19.5,2L18,3.5z" />
+    <!-- Magic Stars -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M2,9l1.26,2.74L4.5,13l-1.24,1.26L2,17l-1.26-2.74L-0.5,13l1.24-1.26L2,9z" />
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M22,12l0.84,1.83L23.68,14.67l-0.83,0.84L22,17.33l-0.84-1.83L19.32,14.67l0.83-0.84L22,12z" />
+</vector>
