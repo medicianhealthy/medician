@@ -202,28 +202,13 @@ public class AdMobBanner extends AdMobAd {
 
 
     private static AdSize getAdSize(final Activity activity) {
-        if (null != mAdSize) {
-            return mAdSize;
-        }
-        // 1. Secure a single, non-null Activity reference
-        mAdContainerView = activity.findViewById(R.id.content_main);
-        if (null == mAdContainerView) {
-            return AdSize.BANNER;
-        }
-        int adWidthPixels = mAdContainerView.getWidth();
 
-        // 2. If the view hasn't been laid out yet, calculate the screen width
-        if (adWidthPixels == 0) {
-            adWidthPixels = Screen.getScreenWidthPX(activity);
-        }
-
-        // 3. Convert pixels to density-independent pixels (dp)
+        int adWidthPixels = Screen.getUsableScreenWidthPX(activity);
         final int adWidthDp = (int) (adWidthPixels / Screen.getDensity(activity.getResources()));
 
-        // Standard Anchored Adaptive is now "Large" by default. 
-        // If that is too high, Inline Adaptive with a max height is the best modern way to control it.
-        // This keeps the adaptive width but caps the height to something sleeker (e.g., 60dp).
-        mAdSize = AdSize.getInlineAdaptiveBannerAdSize(adWidthDp, 60);
+        // Use standard Anchored Adaptive (not the 'Large' version). 
+        // This provides the best balance of aesthetics and filling the width.
+        mAdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
         return mAdSize;
     }
 

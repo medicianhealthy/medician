@@ -52,10 +52,15 @@ android {
 dependencies {
     implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.3.21'))
     //Ads
-    implementation 'com.google.android.gms:play-services-ads:25.2.0'
+    implementation 'com.google.android.gms:play-services-ads:25.3.0'
     implementation 'com.google.firebase:firebase-ads:23.6.0'
     //Material
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
+    
+    // Room
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+
     //Android X
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.appcompat:appcompat:1.7.1'
@@ -75,11 +80,11 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
 
-    implementation 'com.google.android.gms:play-services-ads:25.2.0'
+    implementation 'com.google.android.gms:play-services-ads:25.3.0'
 
     implementation 'androidx.lifecycle:lifecycle-runtime:2.10.0'
     implementation 'androidx.lifecycle:lifecycle-process:2.10.0'
     annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.10.0'
 
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
 }

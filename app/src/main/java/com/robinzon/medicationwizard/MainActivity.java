@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_medications_list, R.id.nav_settings)
+                R.id.nav_home, R.id.nav_medications_list, R.id.nav_history, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
         // 1. Find the NavHostFragment
@@ -103,19 +103,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void setBottomMarginToFab() {
         final View fab = findViewById(R.id.fab);
-        // 1. Convert your target DP into Pixels (e.g., 76dp to clear the ad banner)
-        int marginBottomDp = (int) (AdMobBanner.getBannerHeightDP(this) * BANNER_HEIGHT_MULTIPLIER );
-        int marginBottomPx = (int) (marginBottomDp * Screen.getDensity(getResources()));
-        // 2. Get the current LayoutParams and cast to MarginLayoutParams
+        if (fab == null) return;
+
+        // 1. Get the real banner height
+        int bannerHeightDp = AdMobBanner.getBannerHeightDP(this);
+        
+        // 2. Add extra room for the FAB (M3 recommendation is 16dp margin)
+        int totalMarginDp = (int) (bannerHeightDp * BANNER_HEIGHT_MULTIPLIER) + 16;
+        
+        int marginBottomPx = (int) (totalMarginDp * Screen.getDensity(getResources()));
+        
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
-        // 3. Update the bottom margin (while safely preserving the left/top/right margins)
         layoutParams.setMargins(
                 layoutParams.leftMargin,
                 layoutParams.topMargin,
                 layoutParams.rightMargin,
                 marginBottomPx
         );
-        // 4. Apply the updated LayoutParams back to the FAB
         fab.setLayoutParams(layoutParams);
     }
 

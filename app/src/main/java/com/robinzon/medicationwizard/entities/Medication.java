@@ -6,7 +6,11 @@ import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 
+import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.MedicationWizardSuper;
+import com.robinzon.medicationwizard.database.AppDatabase;
+import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+import com.robinzon.medicationwizard.reminders.ReminderManager;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.SimpleDayTime;
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Medication extends MedicationWizardSuper implements Comparable<Medication> {
 
@@ -36,9 +41,11 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
     private int mAmountLeft;
     private EInstructions mInstruction;
     private EMeasurementUnit mMeasurementUnit;
+
     public Medication() {
         this.mId = UUID.randomUUID().toString();
     }
+
     public Medication(String commercialName) {
         this();
         if (!TextUtils.isEmpty(commercialName)) {
@@ -47,7 +54,6 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             mCommercialName = null;
         }
     }
-
 
 
     public int getDailyFrequency() {
@@ -82,8 +88,8 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         if (existingMeds == null) {
             existingMeds = new JSONArray();
         }
-        
-        // If it already exists (ID check), update it instead of adding
+
+        // 1. Update SharedPreferences (Small list of definitions)
         boolean found = false;
         for (int i = 0; i < existingMeds.length(); i++) {
             try {
@@ -95,12 +101,69 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
                 }
             } catch (JSONException ignored) {}
         }
-        
+
         if (!found) {
             existingMeds.put(json);
         }
         SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, existingMeds);
 
+        // 2. Room logic: Generate and save schedules
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            // Remove existing future schedules for this specific medication to avoid duplicates/overlap
+            AppDatabase.getDatabase(context).doseInstanceDao().deleteByMedicationId(mId);
+
+            List<DoseInstanceEntity> entities = new ArrayList<>();
+            for (int i = 0; i < AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE; i++) {
+                final SparseArray<SimpleDayTime> timesADay = getTimesADay();
+                if (timesADay == null) continue;
+                
+                for (int k = 0; k < timesADay.size(); k++) {
+                    SimpleDayTime time = timesADay.valueAt(k);
+                    MedicationInstance instance = getMedicationInstance(i, time);
+                    entities.add(DoseInstanceEntity.fromInstance(instance));
+                }
+            }
+
+            if (!entities.isEmpty()) {
+                // 1. Get IDs after insertion to schedule alarms correctly
+                AppDatabase db = AppDatabase.getDatabase(context);
+                db.doseInstanceDao().insertAll(entities);
+                
+                // 2. Fetch the newly inserted instances with their generated IDs
+                // (Room doesn't return IDs for insertAll easily, so we query or use a simpler approach)
+                // For now, let's schedule everything in range
+                long now = System.currentTimeMillis();
+                long end = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
+                
+                // We'll use a better approach in a real app, but for now we schedule 
+                // what we just created by querying the DB
+                List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getInstancesInRangeInternal(now, end);
+                for (DoseInstanceEntity e : scheduled) {
+                    if (mId.equals(e.getMedicationId())) {
+                        ReminderManager.scheduleReminder(context, e);
+                    }
+                }
+
+                Logger.log("Room", "Saved " + entities.size() + " scheduled doses for " + mCommercialName);
+            }
+        });
+    }
+
+    @NonNull
+    private MedicationInstance getMedicationInstance(int i, SimpleDayTime time) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.add(java.util.Calendar.DAY_OF_YEAR, i);
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, time.getHour());
+        calendar.set(java.util.Calendar.MINUTE, time.getMinute());
+        calendar.set(java.util.Calendar.SECOND, 0);
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+
+        long scheduledTime = calendar.getTimeInMillis();
+
+        final MedicationInstance medicationInstance = new MedicationInstance(this);
+        medicationInstance.setScheduledTime(scheduledTime);
+        medicationInstance.setStatus(MedicationInstance.Status.SCHEDULED);
+        return medicationInstance;
     }
 
     public static void deleteMedication(Context context, String id) {
@@ -117,10 +180,20 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             } catch (JSONException ignored) {}
         }
         SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, newList);
+        
+        // Also remove from Room
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            AppDatabase.getDatabase(context).doseInstanceDao().deleteByMedicationId(id);
+        });
     }
 
     public static void clearAllMedications(Context context) {
         SharedPreferencesManager.getInstance(context).removeKey(SPK_MEDICATION_LIST);
+        
+        // Also remove from Room
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            AppDatabase.getDatabase(context).doseInstanceDao().deleteAll();
+        });
     }
 
     public static ArrayList<Medication> getSavedMedications(Context context) {
@@ -190,7 +263,24 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             SimpleDayTime value = simpleDayTimeSparseArray.valueAt(i);
             mTimesADay.put(key, new SimpleDayTime(value));
         }
+        sortTimesADay();
+    }
 
+    public void sortTimesADay() {
+        if (mTimesADay == null || mTimesADay.size() <= 1) return;
+
+        List<SimpleDayTime> times = new ArrayList<>();
+        for (int i = 0; i < mTimesADay.size(); i++) {
+            times.add(mTimesADay.valueAt(i));
+        }
+
+        Collections.sort(times);
+
+        mTimesADay.clear();
+        for (int i = 0; i < times.size(); i++) {
+            // Re-index sequentially from 1 to maintain consistency with the UI keys
+            mTimesADay.put(i + 1, times.get(i));
+        }
     }
 
     public String getId() {
@@ -298,7 +388,6 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
                 '}';
     }
 
-   
 
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -312,8 +401,10 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             json.put(JsonKeys.MEDICAL_CONDITION, mMedicalCondition);
             json.put(JsonKeys.AMOUNT_LEFT, mAmountLeft);
             if (mInstruction != null) json.put(JsonKeys.INSTRUCTIONS, mInstruction.name());
-            if (mMeasurementUnit != null) json.put(JsonKeys.MEASUREMENT_UNIT, mMeasurementUnit.name());
-            if (mDailySchedule != null) json.put(JsonKeys.DAILY_SCHEDULE, getDailyScheduleAsJsonArray());
+            if (mMeasurementUnit != null)
+                json.put(JsonKeys.MEASUREMENT_UNIT, mMeasurementUnit.name());
+            if (mDailySchedule != null)
+                json.put(JsonKeys.DAILY_SCHEDULE, getDailyScheduleAsJsonArray());
             json.put(JsonKeys.TIMES_IN_DAY, getTimesADayAsJsonArray());
         } catch (JSONException e) {
             Logger.log(Me(), "Tried to convert myself to JSONObject but an exception happen");

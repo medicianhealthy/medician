@@ -1,0 +1,301 @@
+package com.robinzon.medicationwizard.ui.todaysmedications;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+
+import java.util.List;
+import java.util.Locale;
+
+public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.ViewHolder> {
+    private List<DoseInstanceEntity> mLocalDataSet;
+    private OnMedicationActionListener mListener;
+
+    public interface OnMedicationActionListener {
+        void onTake(DoseInstanceEntity instance, int position);
+        void onSkip(DoseInstanceEntity instance, int position);
+        void onReschedule(DoseInstanceEntity instance, int position);
+        void onUntake(DoseInstanceEntity instance, int position);
+    }
+
+    public void setOnMedicationActionListener(OnMedicationActionListener listener) {
+        mListener = listener;
+    }
+
+    public MedicationsAdapter(List<DoseInstanceEntity> dataSet) {
+        mLocalDataSet = dataSet;
+    }
+
+    public void setMedications(List<DoseInstanceEntity> medications) {
+        this.mLocalDataSet = medications;
+        notifyDataSetChanged();
+    }
+
+
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder)
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView mMedName;
+        private final TextView mStrength;
+        private final TextView mQuantity;
+        private final TextView mTime;
+        private final TextView mDirections;
+        private final TextView mForm;
+        private final TextView mTxtScheduledSummary;
+        private final TextView mTxtActualActionSummary;
+        private final View mGroupScheduledDetails;
+        private final AppCompatButton mSkip;
+        private final AppCompatButton mReschedule;
+        private final AppCompatButton mTakeBtn;
+        private final AppCompatButton mUntakeBtn;
+        private final android.widget.ImageView mMedIcon;
+        private final android.widget.ImageView mIconDone;
+
+        public ViewHolder(View view) {
+            super(view);
+            mMedName = view.findViewById(R.id.med_name);
+            mStrength = view.findViewById(R.id.med_strength);
+            mQuantity = view.findViewById(R.id.quantity);
+            mTime = view.findViewById(R.id.time);
+            mDirections = view.findViewById(R.id.directions);
+            mForm = view.findViewById(R.id.form);
+            mTxtScheduledSummary = view.findViewById(R.id.txt_scheduled_summary);
+            mTxtActualActionSummary = view.findViewById(R.id.txt_actual_action_summary);
+            mGroupScheduledDetails = view.findViewById(R.id.group_scheduled_details);
+            mSkip = view.findViewById(R.id.skip_btn);
+            mReschedule = view.findViewById(R.id.reschedule_btn);
+            mTakeBtn = view.findViewById(R.id.take_btn);
+            mUntakeBtn = view.findViewById(R.id.untake_btn);
+            mMedIcon = view.findViewById(R.id.med_icon);
+            mIconDone = view.findViewById(R.id.icon_done);
+        }
+
+        public TextView getTxtScheduledSummary() { return mTxtScheduledSummary; }
+        public TextView getTxtActualActionSummary() { return mTxtActualActionSummary; }
+        public View getGroupScheduledDetails() { return mGroupScheduledDetails; }
+        public AppCompatButton getTakeButton() { return mTakeBtn; }
+        public AppCompatButton getUntakeButton() { return mUntakeBtn; }
+
+        public android.widget.ImageView getIconDone() {
+            return mIconDone;
+        }
+
+        public TextView getForm() {
+            return mForm;
+        }
+
+        public android.widget.ImageView getMedIcon() {
+            return mMedIcon;
+        }
+
+        public TextView getMedName() {
+            return mMedName;
+        }
+
+        public TextView getStrength() {
+            return mStrength;
+        }
+
+        public TextView getQuantity() {
+            return mQuantity;
+        }
+
+        public TextView getTime() {
+            return mTime;
+        }
+
+        public TextView getDirections() {
+            return mDirections;
+        }
+
+        public AppCompatButton getSkip() {
+            return mSkip;
+        }
+
+        public AppCompatButton getReschedule() {
+            return mReschedule;
+        }
+    }
+
+
+    // Create new views (invoked by the layout manager)
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.medications_list_row, viewGroup, false);
+
+        return new ViewHolder(view);
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+
+        final DoseInstanceEntity instance = mLocalDataSet.get(position);
+        viewHolder.getMedName().setText(instance.getMedicationName());
+
+        // Set icon based on form
+        int formIconRes = R.drawable.ic_med_pill; // Default
+        if (instance.getForm() != null) {
+            try {
+                com.robinzon.medicationwizard.entities.EForm form = com.robinzon.medicationwizard.entities.EForm.valueOf(instance.getForm());
+                formIconRes = switch (form) {
+                    case Drops -> R.drawable.ic_med_drops;
+                    case Injection -> R.drawable.ic_med_injection;
+                    case Solution -> R.drawable.ic_med_solution;
+                    case Inhaler -> R.drawable.ic_med_inhaler;
+                    case Powder -> R.drawable.ic_med_powder;
+                    case Other -> R.drawable.ic_med_other;
+                    case Pill -> R.drawable.ic_med_pill;
+                };
+            } catch (IllegalArgumentException ignored) {}
+        }
+        viewHolder.getMedIcon().setImageResource(formIconRes);
+
+        // 1. Smart Strength Formatting
+        if (instance.getStrength() <= 0) {
+            viewHolder.getStrength().setVisibility(View.GONE);
+        } else {
+            viewHolder.getStrength().setVisibility(View.VISIBLE);
+            String strengthStr = instance.getStrength() == (long) instance.getStrength() ?
+                    String.valueOf((long) instance.getStrength()) :
+                    String.valueOf(instance.getStrength());
+            viewHolder.getStrength().setText(strengthStr.concat(" ").concat(instance.getUnit() != null ? instance.getUnit() : ""));
+        }
+
+        // 2. Populate Quantity and Form
+        String amountStr = instance.getAmount() == (long) instance.getAmount() ?
+                String.valueOf((long) instance.getAmount()) : String.valueOf(instance.getAmount());
+        viewHolder.getQuantity().setText(amountStr);
+
+        String formName = instance.getForm() != null ? instance.getForm() : "";
+        if (instance.getAmount() > 1 && !formName.isEmpty()) {
+            if (!formName.toLowerCase().endsWith("s")) formName += "s";
+        }
+        viewHolder.getForm().setText(formName);
+
+        // 3. Set Time
+        java.text.SimpleDateFormat timeFmt = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
+        viewHolder.getTime().setText(timeFmt.format(new java.util.Date(instance.getScheduledTime())));
+
+        // 4. Smart Directions/Instructions Formatting
+        if (instance.getInstruction() == null ||
+                instance.getInstruction().equals("DOES_NOT_MATTER")) {
+            viewHolder.getDirections().setVisibility(View.GONE);
+        } else {
+            viewHolder.getDirections().setVisibility(View.VISIBLE);
+            try {
+                com.robinzon.medicationwizard.entities.EInstructions instr = com.robinzon.medicationwizard.entities.EInstructions.valueOf(instance.getInstruction());
+                viewHolder.getDirections().setText(instr.getDescription());
+            } catch (IllegalArgumentException e) {
+                viewHolder.getDirections().setText(instance.getInstruction());
+            }
+        }
+
+        // 5. Handle Status UI
+        boolean isActionable = "SCHEDULED".equals(instance.getStatus());
+        viewHolder.getTakeButton().setVisibility(isActionable ? View.VISIBLE : View.GONE);
+        viewHolder.getSkip().setVisibility(isActionable ? View.VISIBLE : View.GONE);
+        viewHolder.getReschedule().setVisibility(isActionable ? View.VISIBLE : View.GONE);
+        viewHolder.getIconDone().setVisibility(!isActionable ? View.VISIBLE : View.GONE);
+        viewHolder.getUntakeButton().setVisibility("TAKEN".equals(instance.getStatus()) ? View.VISIBLE : View.GONE);
+        
+        viewHolder.getGroupScheduledDetails().setVisibility(isActionable ? View.VISIBLE : View.GONE);
+        
+        if (!isActionable) {
+            viewHolder.itemView.setAlpha(0.6f);
+            
+            String scheduledTimeStr = timeFmt.format(new java.util.Date(instance.getScheduledTime()));
+            String actionTimeStr = instance.getActionTime() > 0 ? 
+                    timeFmt.format(new java.util.Date(instance.getActionTime())) : scheduledTimeStr;
+
+            // Line 1: Scheduled for HH:mm
+            viewHolder.getTxtScheduledSummary().setText(viewHolder.itemView.getContext().getString(R.string.scheduled_for_format, scheduledTimeStr));
+            viewHolder.getTxtScheduledSummary().setVisibility(View.VISIBLE);
+
+            // Line 2: Action summary
+            if ("TAKEN".equals(instance.getStatus())) {
+                String pluralForm = instance.getForm() != null ? instance.getForm().toLowerCase() : "pill";
+                if (instance.getAmount() > 1 && !pluralForm.endsWith("s")) pluralForm += "s";
+                
+                viewHolder.getTxtActualActionSummary().setText(viewHolder.itemView.getContext().getString(R.string.took_format, amountStr, pluralForm, actionTimeStr));
+            } else {
+                viewHolder.getTxtActualActionSummary().setText(viewHolder.itemView.getContext().getString(R.string.skipped_at_format, actionTimeStr));
+            }
+            viewHolder.getTxtActualActionSummary().setVisibility(View.VISIBLE);
+            
+        } else {
+            viewHolder.itemView.setAlpha(1.0f);
+            viewHolder.getTxtScheduledSummary().setVisibility(View.GONE);
+            viewHolder.getTxtActualActionSummary().setVisibility(View.GONE);
+        }
+
+        // 6. Button Listeners with Animations
+        viewHolder.getTakeButton().setOnClickListener(v -> {
+            if (mListener != null) {
+                try {
+                    android.media.ToneGenerator tg = new android.media.ToneGenerator(android.media.AudioManager.STREAM_MUSIC, 100);
+                    tg.startTone(android.media.ToneGenerator.TONE_PROP_BEEP, 200);
+                } catch (Exception ignored) {}
+
+                viewHolder.itemView.animate()
+                        .scaleX(1.05f)
+                        .scaleY(1.05f)
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            mListener.onTake(instance, viewHolder.getBindingAdapterPosition());
+                            viewHolder.itemView.setScaleX(1f);
+                            viewHolder.itemView.setScaleY(1f);
+                            viewHolder.itemView.setAlpha(1f);
+                        }).start();
+            }
+        });
+
+        viewHolder.getSkip().setOnClickListener(v -> {
+            if (mListener != null) {
+                try {
+                    android.media.ToneGenerator tg = new android.media.ToneGenerator(android.media.AudioManager.STREAM_MUSIC, 100);
+                    tg.startTone(android.media.ToneGenerator.TONE_CDMA_PIP, 150);
+                } catch (Exception ignored) {}
+
+                viewHolder.itemView.animate()
+                        .translationX(-viewHolder.itemView.getWidth())
+                        .alpha(0f)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            mListener.onSkip(instance, viewHolder.getBindingAdapterPosition());
+                            viewHolder.itemView.setTranslationX(0);
+                            viewHolder.itemView.setAlpha(1f);
+                        }).start();
+            }
+        });
+
+        viewHolder.getReschedule().setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onReschedule(instance, viewHolder.getBindingAdapterPosition());
+            }
+        });
+
+        viewHolder.getUntakeButton().setOnClickListener(v -> {
+            if (mListener != null) {
+                mListener.onUntake(instance, viewHolder.getBindingAdapterPosition());
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return mLocalDataSet.size();
+    }
+}

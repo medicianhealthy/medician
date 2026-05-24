@@ -3,6 +3,7 @@ package com.robinzon.medicationwizard.notifications;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.provider.Settings;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -24,6 +26,10 @@ import java.lang.ref.WeakReference;
 
 public class NotificationManager implements DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
 
+    public static final String CHANNEL_ID = "medication_reminders";
+    private static final String CHANNEL_NAME = "Medication Reminders";
+    private static final String CHANNEL_DESC = "Reminders to take your scheduled medications";
+
     private static final String SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL = "do_not_show_rational";
     private static final String SHARED_PREF_KEY_REFUSE_COUNT = "refuse_count";
     public static final String SHARED_PREF_KEY_HAS_DENIED_NOTI_PERM = "has_denied_noti_perm";
@@ -35,41 +41,38 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         this.mActivity = activity;
     }
 
-    /**
-     * Determines whether the app should ask the user for notification permissions.
-     * This check is necessary as from Android Tiramisu (API level 33) and onwards,
-     * apps need explicit permission to send notifications. The method also checks
-     * if the user has previously refused the permission and the frequency at which
-     * the rational should be shown based on user refusals.
-     *
-     * @return true if the app should request notification permissions, false otherwise.
-     */
+    public static void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    android.app.NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription(CHANNEL_DESC);
+
+            android.app.NotificationManager manager = context.getSystemService(android.app.NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
+    }
+
     private boolean shouldAskForNotificationPermission() {
-        // Check if the Android version is Tiramisu (API level 33) or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Check if notifications are not enabled and if the user hasn't previously
-            // chosen not to show the rationale again (based on shared preferences).
-            // Also checks if the count of refusals has reached the specified delta to show the rationale.
             return notificationsAreDisabled() &&
                     !SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, false);
         }
-        // For Android versions below Tiramisu, notification permission is not required,
-        // so return false indicating that the app should not request permission.
         return false;
     }
 
-
-    @SuppressWarnings("SameReturnValue")
     private int getDeltaToShowRational() {
         return 5;
     }
-
 
     private boolean notificationsAreDisabled() {
         final NotificationManagerCompat notificationManager = getNotificationManager();
         return !notificationManager.areNotificationsEnabled();
     }
-
 
     @NonNull
     private NotificationManagerCompat getNotificationManager() {
@@ -87,11 +90,8 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return sInstance.get();
     }
 
-
     public void requestPermissionIfNeeded() {
         if (shouldAskForNotificationPermission()) {
-            //This method shouldShowRequestPermissionRationale will return true only if user denied once
-            //If he didn't deny it will return false, if he denied more than once it will return false;
             if (shouldShowRationalInnerDialog()) {
                 if (0 == (getCountRefusedSoFar() % getDeltaToShowRational())) {
                     showRationaleDialog();
@@ -218,29 +218,12 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_HAS_DENIED_NOTI_PERM, false);
     }
 
-    /**
-     * Opens the system settings screen for the application's notifications.
-     *
-     * <p>Since direct access to notification settings is not available before Android API level 26,
-     * this method will open the general settings screen for the application. The user may have
-     * to navigate to notification settings manually.</p>
-     *
-     * @param context The Context in which this method is called.
-     */
     private void openNotificationAppSettings(final Context context) {
-        // Create an Intent to open the application's general settings screen.
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-
-        // Use the package name to create a URI for the Intent.
         intent.setData(Uri.parse("package:" + context.getPackageName()));
-
-        // Add flags to the Intent to avoid creating a new task and to bring the existing settings
-        // task to the front if it already exists.
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-
-        // Start the settings activity.
         context.startActivity(intent);
     }
 }

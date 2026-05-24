@@ -11,39 +11,27 @@ import androidx.annotation.NonNull;
 public final class Screen {
 
     private static float mDensity;
-    private static ScreenSize mScreenSize;
-    public static int getScreenWidthPX(@NonNull final Activity activity){
-        if (null == mScreenSize){
-            mScreenSize = new ScreenSize();
+
+    public static int getUsableScreenWidthPX(@NonNull final Activity activity){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
+            return bounds.width();
+        } else {
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.widthPixels;
         }
-        if (mScreenSize.width == 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
-                mScreenSize.width = bounds.width();
-            } else {
-                final DisplayMetrics displayMetrics = new DisplayMetrics();
-                activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                mScreenSize.width = displayMetrics.widthPixels;
-            }
-        }
-        return mScreenSize.width;
     }
 
-    public static int getScreenHeightPX(@NonNull final Activity activity){
-        if (null == mScreenSize){
-            mScreenSize = new ScreenSize();
+    public static int getUsableScreenHeightPX(@NonNull final Activity activity){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
+            return bounds.height();
+        } else {
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.heightPixels;
         }
-        if (mScreenSize.height == 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
-                mScreenSize.height = bounds.height();
-            } else {
-                final DisplayMetrics displayMetrics = new DisplayMetrics();
-                activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                mScreenSize.height = displayMetrics.heightPixels;
-            }
-        }
-        return mScreenSize.height;
     }
 
     public static float getDensity(final Resources resources){

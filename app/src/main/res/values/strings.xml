@@ -9,7 +9,11 @@
 
     <string name="menu_home">Today\'s medications</string>
     <string name="menu_gallery">Medications list</string>
+    <string name="menu_history">History</string>
     <string name="menu_settings">Settings</string>
+
+    <string name="history_title">Medication History</string>
+    <string name="history_empty">No medications recorded for this day.</string>
 
     <!-- Settings Screen -->
     <string name="settings_category_reminders">Reminders</string>
@@ -77,6 +81,10 @@
     <string name="button_ok">Ok</string>
     <string name="button_select">Select</string>
     <string name="button_skip">Skip</string>
+    <string name="button_untake">Un-take</string>
+    <string name="sort_scheduled">Scheduled</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_action_time">Action Time</string>
     <string name="fragment_add_med_title">New Medication</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
@@ -84,6 +92,9 @@
     <string name="twice_a_day">Twice a day</string>
     <string name="times_a_day">%1$d times a day</string>
     <string name="scheduled_at">Scheduled at: %1$s</string>
+    <string name="scheduled_for_format">Scheduled for %1$s</string>
+    <string name="took_format">Took %1$s %2$s at %3$s</string>
+    <string name="skipped_at_format">Skipped at %1$s</string>
     <string name="no_instructions">No instructions</string>
     <string name="medication_icon_desc">Medication Icon</string>
     <string name="empty_meds_title">The Wizard is waiting!</string>

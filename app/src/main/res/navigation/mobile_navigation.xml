@@ -7,15 +7,21 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.robinzon.medicationwizard.ui.home.HomeFragment"
+        android:name="com.robinzon.medicationwizard.ui.todaysmedications.TodaysMedicationsFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_todays_medications" />
 
     <fragment
         android:id="@+id/nav_medications_list"
         android:name="com.robinzon.medicationwizard.ui.medicationslist.MedicationsListFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_medications_list" />
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.robinzon.medicationwizard.ui.history.HistoryFragment"
+        android:label="@string/menu_history"
+        tools:layout="@layout/fragment_history" />
 
     <fragment
         android:id="@+id/nav_settings"
