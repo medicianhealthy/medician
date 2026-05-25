@@ -42,6 +42,59 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Background Sparkles -->
+        <ImageView
+            android:id="@+id/sparkle_1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toTopOf="@+id/img_mascot"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"
+            app:tint="?attr/colorPrimary" />
+
+        <ImageView
+            android:id="@+id/sparkle_2"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2"
+            app:tint="?attr/colorPrimary" />
+
+        <ImageView
+            android:id="@+id/sparkle_3"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_mascot"
+            app:layout_constraintVertical_bias="0.1"
+            app:tint="?attr/colorPrimary" />
+
+        <ImageView
+            android:id="@+id/sparkle_4"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_mascot"
+            app:layout_constraintVertical_bias="0.5"
+            app:tint="?attr/colorPrimary" />
+
         <!-- Floating Accessory (Top Left) -->
         <ImageView
             android:id="@+id/img_accessory_1"
