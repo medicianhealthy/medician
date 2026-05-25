@@ -21,6 +21,15 @@ import com.robinzon.medicationwizard.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A custom Material 3 BottomSheet for selecting a system reminder sound.
+ * <p>
+ * This dialog queries the Android {@link RingtoneManager} to list all available 
+ * notification and alarm sounds on the device. It provides an interactive 
+ * list with radio-button selection and automatic audio previews when a 
+ * sound is tapped.
+ * </p>
+ */
 public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
 
     private OnSoundSelectedListener listener;
@@ -28,14 +37,27 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
     private String selectedSoundName;
     private Ringtone lastRingtone;
 
+    /**
+     * Listener interface to notify the caller when a sound selection is confirmed.
+     */
     public interface OnSoundSelectedListener {
+        /**
+         * @param name The human-readable name of the sound.
+         * @param uri  The system URI string of the sound file.
+         */
         void onSoundSelected(String name, String uri);
     }
 
+    /**
+     * Sets the selection listener.
+     */
     public void setOnSoundSelectedListener(OnSoundSelectedListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Pre-selects a sound in the list by its URI.
+     */
     public void setCurrentSoundUri(String uri) {
         this.selectedSoundUri = uri;
     }
@@ -46,6 +68,10 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
         return inflater.inflate(R.layout.bottom_sheet_sound_picker, container, false);
     }
 
+    /**
+     * Initializes the sound list and confirm button.
+     * Maps the initial URI to a name for better UI display.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -53,7 +79,7 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
         
         List<SoundItem> sounds = fetchAvailableSounds();
         
-        // Find current name if we only have URI
+        // Match the current sound URI to its title
         for (SoundItem s : sounds) {
             if (s.uri.equals(selectedSoundUri)) {
                 selectedSoundName = s.name;
@@ -71,6 +97,11 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
         });
     }
 
+    /**
+     * Low-level query to fetch all system-available notification and alarm sounds.
+     *
+     * @return A list of {@link SoundItem} objects.
+     */
     private List<SoundItem> fetchAvailableSounds() {
         List<SoundItem> list = new ArrayList<>();
         RingtoneManager manager = new RingtoneManager(requireContext());
@@ -85,6 +116,12 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
         return list;
     }
 
+    /**
+     * Plays a short audio sample of the selected sound.
+     * Automatically stops any previous sample to avoid overlapping audio.
+     *
+     * @param uriString The URI of the sound to preview.
+     */
     private void playPreview(String uriString) {
         if (lastRingtone != null && lastRingtone.isPlaying()) {
             lastRingtone.stop();
@@ -96,18 +133,25 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
         } catch (Exception ignored) {}
     }
 
+    /**
+     * Ensures audio preview stops if the user navigates away from the app.
+     */
     @Override
     public void onPause() {
         super.onPause();
         if (lastRingtone != null) lastRingtone.stop();
     }
 
+    /** Simple POJO for sound data. */
     private static class SoundItem {
         final String name;
         final String uri;
         SoundItem(String name, String uri) { this.name = name; this.uri = uri; }
     }
 
+    /**
+     * Inner RecyclerView Adapter for the sound list.
+     */
     private class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.ViewHolder> {
         private final List<SoundItem> data;
 
@@ -130,7 +174,7 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
                 selectedSoundUri = item.uri;
                 selectedSoundName = item.name;
                 playPreview(item.uri);
-                notifyDataSetChanged(); // Refresh radio buttons
+                notifyDataSetChanged(); // Updates all radio buttons to show the new selection
             });
         }
 

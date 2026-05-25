@@ -5,27 +5,64 @@ import androidx.room.PrimaryKey;
 
 import com.robinzon.medicationwizard.entities.MedicationInstance;
 
+/**
+ * Represents a single specific dose of medication as a table row in the Room database.
+ * <p>
+ * This entity captures a "point-in-time" snapshot of a medication reminder. It stores 
+ * both the planned schedule and the user's eventual action (taken, skipped, etc.).
+ * Storing a snapshot ensures that historical records remain accurate even if the 
+ * parent medication's definition is later modified or deleted.
+ * </p>
+ */
 @Entity(tableName = "dose_instances")
 public class DoseInstanceEntity {
 
+    /** Unique primary key for the database record. */
     @PrimaryKey(autoGenerate = true)
     private int id;
 
+    /** Unique ID of the parent medication (from SharedPreferences). */
     private String medicationId;
+    
+    /** Name of the medication at the time of scheduling. */
     private String medicationName;
+    
+    /** The dose amount to be taken (e.g., 2.0). */
     private float amount;
+    
+    /** The strength of the medication (e.g., 500.0). */
     private float strength;
+    
+    /** The measurement unit (e.g., "mg", "mL"). */
     private String unit;
+    
+    /** The physical form of the drug (e.g., "Pill", "Drops"). */
     private String form;
+    
+    /** The planned execution time (epoch milliseconds). */
     private long scheduledTime;
+    
+    /** The actual time the user interacted with this dose (epoch milliseconds). */
     private long actionTime;
+    
+    /** Current status: SCHEDULED, TAKEN, MISSED, or SKIPPED. */
     private String status;
+    
+    /** Casual instructions (e.g., "After eating"). */
     private String instruction;
 
+    /**
+     * Empty constructor required by Room.
+     */
     public DoseInstanceEntity() {
     }
 
-    // Converters / Helpers
+    /**
+     * Factory method to convert a domain-level {@link MedicationInstance} into a database-ready entity.
+     *
+     * @param instance The instance object containing domain logic and data.
+     * @return A populated entity object for storage.
+     */
     public static DoseInstanceEntity fromInstance(MedicationInstance instance) {
         DoseInstanceEntity entity = new DoseInstanceEntity();
         entity.medicationId = instance.getId();
@@ -40,7 +77,6 @@ public class DoseInstanceEntity {
         return entity;
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

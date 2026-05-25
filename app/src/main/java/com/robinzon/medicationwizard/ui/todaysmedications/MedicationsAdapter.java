@@ -15,25 +15,56 @@ import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A specialized RecyclerView Adapter for displaying medication dose instances.
+ * <p>
+ * This adapter is used by both the "Today's Medications" and "History" fragments. 
+ * It dynamically adjusts its UI based on the status of the medication (Scheduled vs. Completed) 
+ * and handles complex animations for user interactions.
+ * </p>
+ */
 public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.ViewHolder> {
+    
     private List<DoseInstanceEntity> mLocalDataSet;
     private OnMedicationActionListener mListener;
 
+    /**
+     * Interface for handling user interactions on a specific dose item.
+     */
     public interface OnMedicationActionListener {
+        /** Called when the user clicks 'Take'. */
         void onTake(DoseInstanceEntity instance, int position);
+        /** Called when the user clicks 'Skip'. */
         void onSkip(DoseInstanceEntity instance, int position);
+        /** Called when the user clicks 'Reschedule'. */
         void onReschedule(DoseInstanceEntity instance, int position);
+        /** Called when the user clicks 'Un-take' on a completed item. */
         void onUntake(DoseInstanceEntity instance, int position);
     }
 
+    /**
+     * Sets the listener for medication actions.
+     *
+     * @param listener The action listener.
+     */
     public void setOnMedicationActionListener(OnMedicationActionListener listener) {
         mListener = listener;
     }
 
+    /**
+     * Constructs the adapter with an initial dataset.
+     *
+     * @param dataSet The list of doses to display.
+     */
     public MedicationsAdapter(List<DoseInstanceEntity> dataSet) {
         mLocalDataSet = dataSet;
     }
 
+    /**
+     * Updates the dataset and refreshes the entire list.
+     *
+     * @param medications The new list of doses.
+     */
     public void setMedications(List<DoseInstanceEntity> medications) {
         this.mLocalDataSet = medications;
         notifyDataSetChanged();
@@ -41,8 +72,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
 
     /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder)
+     * ViewHolder pattern to hold references to individual item views for performance.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mMedName;
@@ -61,6 +91,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         private final android.widget.ImageView mMedIcon;
         private final android.widget.ImageView mIconDone;
 
+        /**
+         * Finds and caches all sub-views for the row layout.
+         */
         public ViewHolder(View view) {
             super(view);
             mMedName = view.findViewById(R.id.med_name);
@@ -128,7 +161,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     }
 
 
-    // Create new views (invoked by the layout manager)
+    /**
+     * Inflates the M3 card layout for each medication row.
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
@@ -137,14 +172,24 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         return new ViewHolder(view);
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * Binds data from a {@link DoseInstanceEntity} to the UI views.
+     * <p>
+     * Logic:
+     * 1. Smart Formatting: Truncates decimal zeros (e.g., 2.0 -> 2) for amount/strength.
+     * 2. Instruction Logic: Hides the directions field if "Does Not Matter" is selected.
+     * 3. State Management: Toggles between "Scheduled" views (buttons + quantity) and 
+     *    "Completed" views (Summaries + Done icon + Translucency).
+     * 4. Action Animations: Implements scale/fade for 'Take' and slide/fade for 'Skip'.
+     * </p>
+     */
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
         final DoseInstanceEntity instance = mLocalDataSet.get(position);
         viewHolder.getMedName().setText(instance.getMedicationName());
 
-        // Set icon based on form
+        // Set icon based on form definition
         int formIconRes = R.drawable.ic_med_pill; // Default
         if (instance.getForm() != null) {
             try {
@@ -173,7 +218,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             viewHolder.getStrength().setText(strengthStr.concat(" ").concat(instance.getUnit() != null ? instance.getUnit() : ""));
         }
 
-        // 2. Populate Quantity and Form
+        // 2. Populate Quantity and Form (with simple pluralization)
         String amountStr = instance.getAmount() == (long) instance.getAmount() ?
                 String.valueOf((long) instance.getAmount()) : String.valueOf(instance.getAmount());
         viewHolder.getQuantity().setText(amountStr);
@@ -184,7 +229,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         }
         viewHolder.getForm().setText(formName);
 
-        // 3. Set Time
+        // 3. Format Scheduled Time
         java.text.SimpleDateFormat timeFmt = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
         viewHolder.getTime().setText(timeFmt.format(new java.util.Date(instance.getScheduledTime())));
 
@@ -202,7 +247,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             }
         }
 
-        // 5. Handle Status UI
+        // 5. Handle Status UI (Scheduled vs. Completed)
         boolean isActionable = "SCHEDULED".equals(instance.getStatus());
         viewHolder.getTakeButton().setVisibility(isActionable ? View.VISIBLE : View.GONE);
         viewHolder.getSkip().setVisibility(isActionable ? View.VISIBLE : View.GONE);
@@ -210,20 +255,22 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         viewHolder.getIconDone().setVisibility(!isActionable ? View.VISIBLE : View.GONE);
         viewHolder.getUntakeButton().setVisibility("TAKEN".equals(instance.getStatus()) ? View.VISIBLE : View.GONE);
         
+        // Group visibility for "Take X At HH:MM" line
         viewHolder.getGroupScheduledDetails().setVisibility(isActionable ? View.VISIBLE : View.GONE);
         
         if (!isActionable) {
+            // Visual feedback for completed tasks
             viewHolder.itemView.setAlpha(0.6f);
             
             String scheduledTimeStr = timeFmt.format(new java.util.Date(instance.getScheduledTime()));
             String actionTimeStr = instance.getActionTime() > 0 ? 
                     timeFmt.format(new java.util.Date(instance.getActionTime())) : scheduledTimeStr;
 
-            // Line 1: Scheduled for HH:mm
+            // Line 1: Summary of planned time
             viewHolder.getTxtScheduledSummary().setText(viewHolder.itemView.getContext().getString(R.string.scheduled_for_format, scheduledTimeStr));
             viewHolder.getTxtScheduledSummary().setVisibility(View.VISIBLE);
 
-            // Line 2: Action summary
+            // Line 2: Detailed summary of actual user action
             if ("TAKEN".equals(instance.getStatus())) {
                 String pluralForm = instance.getForm() != null ? instance.getForm().toLowerCase() : "pill";
                 if (instance.getAmount() > 1 && !pluralForm.endsWith("s")) pluralForm += "s";
@@ -235,12 +282,13 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             viewHolder.getTxtActualActionSummary().setVisibility(View.VISIBLE);
             
         } else {
+            // Restore default state for scheduled items
             viewHolder.itemView.setAlpha(1.0f);
             viewHolder.getTxtScheduledSummary().setVisibility(View.GONE);
             viewHolder.getTxtActualActionSummary().setVisibility(View.GONE);
         }
 
-        // 6. Button Listeners with Animations
+        // 6. Interaction Listeners with M3-styled animations
         viewHolder.getTakeButton().setOnClickListener(v -> {
             if (mListener != null) {
                 try {
@@ -248,6 +296,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
                     tg.startTone(android.media.ToneGenerator.TONE_PROP_BEEP, 200);
                 } catch (Exception ignored) {}
 
+                // Scale success animation
                 viewHolder.itemView.animate()
                         .scaleX(1.05f)
                         .scaleY(1.05f)
@@ -269,6 +318,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
                     tg.startTone(android.media.ToneGenerator.TONE_CDMA_PIP, 150);
                 } catch (Exception ignored) {}
 
+                // Slide dismiss animation
                 viewHolder.itemView.animate()
                         .translationX(-viewHolder.itemView.getWidth())
                         .alpha(0f)
@@ -294,6 +344,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         });
     }
 
+    /**
+     * @return Number of items in the filtered list.
+     */
     @Override
     public int getItemCount() {
         return mLocalDataSet.size();

@@ -13,24 +13,48 @@ import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.List;
 
+/**
+ * ViewModel for the Medications List screen.
+ * <p>
+ * This class manages the state for the full medication library. It implements 
+ * {@link SharedPreferences.OnSharedPreferenceChangeListener} to provide 
+ * real-time UI updates whenever the underlying medication list is modified 
+ * from anywhere in the app (e.g., adding or deleting a med).
+ * </p>
+ */
 public class MedicationsListViewModel extends AndroidViewModel implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    /** Observable list of all defined medications. */
     private final MutableLiveData<List<Medication>> mMedications = new MutableLiveData<>();
 
+    /**
+     * Initializes the ViewModel, loads the initial list, and registers for 
+     * real-time data changes.
+     */
     public MedicationsListViewModel(@NonNull Application application) {
         super(application);
         refreshMedications();
         SharedPreferencesManager.getInstance(application).registerListener(this);
     }
 
+    /**
+     * @return Observable stream of the full medication list.
+     */
     public LiveData<List<Medication>> getMedications() {
         return mMedications;
     }
 
+    /**
+     * Forces a fresh reload of medications from SharedPreferences.
+     */
     public void refreshMedications() {
         mMedications.setValue(Medication.getSavedMedications(getApplication()));
     }
 
+    /**
+     * Listener callback triggered by SharedPreferences changes. 
+     * If the medication list key is modified, it automatically refreshes the UI.
+     */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (Medication.SPK_MEDICATION_LIST.equals(key)) {
@@ -38,6 +62,9 @@ public class MedicationsListViewModel extends AndroidViewModel implements Shared
         }
     }
 
+    /**
+     * Standard cleanup to prevent memory leaks by unregistering the data listener.
+     */
     @Override
     protected void onCleared() {
         super.onCleared();

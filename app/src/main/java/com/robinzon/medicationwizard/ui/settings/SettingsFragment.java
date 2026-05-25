@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -24,11 +21,26 @@ import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 
+/**
+ * Fragment that provides the user interface for all application settings.
+ * <p>
+ * This screen follows the Material 3 design guidelines and manages:
+ * - Application Theme (Light, Dark, System).
+ * - Notification Permissions and Alert Details.
+ * - Custom Reminder Sounds and Volume Control.
+ * - Quiet Hours scheduling to suppress alerts at night.
+ * - Data Management (Wiping medications and history).
+ * - System information like version numbers.
+ * </p>
+ */
 public class SettingsFragment extends MedicationWizardFragment {
 
     private FragmentSettingsBinding binding;
     private SettingsViewModel viewModel;
 
+    /**
+     * Initializes data binding and the {@link SettingsViewModel}.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,6 +49,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Entry point for UI configuration. 
+     * Hides the Main FAB to prevent UI clutter and calls the comprehensive 
+     * {@link #setupSettings()} method.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -44,13 +61,23 @@ public class SettingsFragment extends MedicationWizardFragment {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(false);
         }
+        // Apply dynamic padding to clear navigation and ad banners
         setPaddingForRecyclerView(binding.fragmentSettingsMainView, false);
 
         setupSettings();
     }
 
-
-
+    /**
+     * The main orchestrator for settings initialization.
+     * <p>
+     * Implementation details:
+     * - Observes theme changes and applies {@link androidx.appcompat.app.AppCompatDelegate} logic.
+     * - Configures notification permission flow including high-level explanation snacks.
+     * - Manages custom sound selection via {@link SoundPickerBottomSheet}.
+     * - Handles quiet hours range selection via sequential {@link MaterialTimePicker} dialogs.
+     * - Provides a destructive "Clear Data" flow with an explicit confirmation dialog.
+     * </p>
+     */
     private void setupSettings() {
         // 1. Version Info
         binding.txtVersion.setText(getString(R.string.settings_version_summary, BuildConfig.VERSION_NAME));
@@ -78,7 +105,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             picker.show(getChildFragmentManager(), "SoundPicker");
         });
 
-        // 2c. Bypass Volume
+        // 2c. Bypass Volume Logic
         viewModel.getBypassVolume().observe(getViewLifecycleOwner(), bypass -> {
             binding.switchBypass.setChecked(bypass);
             binding.layoutVolume.setVisibility(bypass ? View.VISIBLE : View.GONE);
@@ -87,7 +114,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnBypassVolume.setOnClickListener(v -> 
             viewModel.setBypassVolume(!Boolean.TRUE.equals(viewModel.getBypassVolume().getValue())));
 
-        // 2d. Volume Slider
+        // 2d. Volume Slider Configuration
         viewModel.getNotifVolume().observe(getViewLifecycleOwner(), volume -> 
             binding.sliderVolume.setValue(volume));
         
@@ -116,12 +143,12 @@ public class SettingsFragment extends MedicationWizardFragment {
             viewModel.setTheme(theme);
         });
 
-        // 4. Backup
+        // 4. Placeholder actions for future features
         binding.btnBackup.setOnClickListener(v -> {
             Snackbar.make(binding.getRoot(), "Backup feature is being prepared for you!", Snackbar.LENGTH_SHORT).show();
         });
 
-        // 5. Clear Data (Casual but careful)
+        // 5. Destructive Action: Clear Data
         binding.btnClearData.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Wipe everything?")
@@ -134,17 +161,18 @@ public class SettingsFragment extends MedicationWizardFragment {
                     .show();
         });
 
-        // 6. Support
+        // 6. Placeholder for support
         binding.btnSupport.setOnClickListener(v -> {
             Snackbar.make(binding.getRoot(), "Support portal is coming soon!", Snackbar.LENGTH_SHORT).show();
         });
         
-        // 7. Quiet Hours
+        // 7. Quiet Hours Scheduling
         viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> {
             binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range));
         });
 
         binding.btnQuietHours.setOnClickListener(v -> {
+            // Sequence of two time pickers to define a range
             MaterialTimePicker startPicker = new MaterialTimePicker.Builder()
                     .setTimeFormat(TimeFormat.CLOCK_24H)
                     .setHour(23)
@@ -170,22 +198,30 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
     }
 
+    /**
+     * Checks current system permission status and adjusts the settings UI accordingly.
+     */
     private void updateNotificationStatus() {
         boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
         binding.switchNotifications.setChecked(isGranted);
         binding.containerAlertDetails.setVisibility(isGranted ? View.VISIBLE : View.GONE);
     }
 
+    /**
+     * Ensures permission status is accurate if the user returns from system settings.
+     */
     @Override
     public void onResume() {
         super.onResume();
         updateNotificationStatus();
     }
 
+    /**
+     * Standard binding cleanup.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Restore FAB when leaving settings (if needed, but usually navigation handles this via onViewCreated of target)
         binding = null;
     }
 }

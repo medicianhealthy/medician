@@ -17,6 +17,15 @@ import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
+/**
+ * Background BroadcastReceiver that handles the "firing" of a medication reminder alarm.
+ * <p>
+ * This class is the "Action Engine" of the reminders. When a system alarm goes off, 
+ * it wakes up this receiver to perform two critical tasks:
+ * 1. Post a high-priority System Notification with medication details.
+ * 2. Play the user's selected alert sound, potentially bypassing system volume if configured.
+ * </p>
+ */
 public class ReminderReceiver extends BroadcastReceiver {
 
     public static final String ACTION_REMIND = "com.robinzon.medicationwizard.ACTION_REMIND";
@@ -25,6 +34,12 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final String EXTRA_AMOUNT = "extra_amount";
     public static final String EXTRA_FORM = "extra_form";
 
+    /**
+     * Entry point triggered by the Android System Alarm.
+     *
+     * @param context The application context.
+     * @param intent  The intent containing medication metadata (name, amount, form).
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ACTION_REMIND.equals(intent.getAction())) {
@@ -38,6 +53,15 @@ public class ReminderReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Constructs and displays a high-priority system notification.
+     * <p>
+     * Features:
+     * - Personalized message (e.g., "Time to take 2 Pills of Aspirin").
+     * - Tapping the notification opens the main app screen.
+     * - Uses the dedicated "Medication Reminders" notification channel.
+     * </p>
+     */
     private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
         String message = "Time to take " + amountStr + " " + (form != null ? form.toLowerCase() : "dose") + " of " + medName;
@@ -65,6 +89,16 @@ public class ReminderReceiver extends BroadcastReceiver {
         } catch (SecurityException ignored) {}
     }
 
+    /**
+     * Handles the audio playback for the reminder.
+     * <p>
+     * Advanced Logic:
+     * 1. Fetches the user's custom ringtone URI from settings.
+     * 2. If "Bypass System Volume" is enabled, it forces playback through the 
+     *    ALARM stream and ignores the device's ringer mode.
+     * 3. Scales the volume based on the user's preference (0-100%).
+     * </p>
+     */
     private void playAlertSound(Context context) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         String uriStr = sp.getString(SettingsViewModel.KEY_NOTIF_SOUND_URI, "");
@@ -79,7 +113,7 @@ public class ReminderReceiver extends BroadcastReceiver {
             player.setDataSource(context, uri);
 
             if (bypass) {
-                // Use ALARM stream to bypass DND/Silent if needed
+                // ALARM stream can be heard even when phone is in 'Priority Only' or 'Silent' mode
                 player.setAudioAttributes(new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -96,6 +130,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
             player.prepare();
             player.start();
+            // Critical: release resources once the sound finishes playing
             player.setOnCompletionListener(MediaPlayer::release);
         } catch (Exception ignored) {}
     }

@@ -34,59 +34,63 @@ import com.robinzon.medicationwizard.utils.Statisticator;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
+/**
+ * The main entry point and hosting activity for the Medication Wizard application.
+ * <p>
+ * This activity manages the primary application infrastructure, including:
+ * - The global Navigation Drawer and NavHostFragment.
+ * - The Floating Action Button (FAB) for adding new medications.
+ * - Ad management (AdMob integration and Adaptive Banner height calculation).
+ * - System-level permissions (e.g., Notifications).
+ * - Session tracking and AppOpen ads.
+ * </p>
+ */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnAdActionListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private AdsManager mAdsManager;
     private boolean mHasCreated;
+    
+    /** Multiplier to add safety padding around the adaptive ad banner. */
     public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
 
 
+    /**
+     * Initializes the activity, sets up navigation components, and starts ad services.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        com.robinzon.medicationwizard.databinding.ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        mBinding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 1. Create a new instance of our bottom sheet
-                AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
-
-                // 2. Show it! The string tag is just for Android's internal fragment manager.
-                bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
-            }
+        // Global FAB listener for adding medications
+        mBinding.appBarMain.fab.setOnClickListener(view -> {
+            AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
+            bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
         });
+        
         setSupportActionBar(mBinding.appBarMain.toolbar);
-//        mBinding.appBarMain.fab.setOnClickListener(view ->
-//                //NotificationManager.getInstance(this).requestPermissionIfNeeded()
-//                // 1. Create a new instance of our bottom sheet
-//                AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
-//
-//        // 2. Show it! The string tag is just for Android's internal fragment manager.
-//        bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
-//        );
+
         final DrawerLayout drawer = mBinding.drawerLayout;
         final NavigationView navigationView = mBinding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        
+        // Define top-level destinations (no back arrow, only hamburger menu)
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_medications_list, R.id.nav_history, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
-        // 1. Find the NavHostFragment
+                
         final NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.nav_host_fragment_content_main); // Make sure this ID matches your layout!
+                .findFragmentById(R.id.nav_host_fragment_content_main);
 
-        // 2. Get the NavController from the fragment
         if (navHostFragment != null) {
             final NavController navController = navHostFragment.getNavController();
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(navigationView, navController);
         }
 
+        // Adjust UI elements to avoid overlap with the bottom ad banner
         setBottomMarginToFab();
 
         mAdsManager = new AdsManager(this);
@@ -101,16 +105,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Statisticator.onSessionStarted(this);
     }
 
+    /**
+     * Dynamically calculates and applies a bottom margin to the FAB.
+     * This ensures the FAB is always visible above the anchored adaptive ad banner.
+     */
     private void setBottomMarginToFab() {
         final View fab = findViewById(R.id.fab);
         if (fab == null) return;
 
-        // 1. Get the real banner height
         int bannerHeightDp = AdMobBanner.getBannerHeightDP(this);
-        
-        // 2. Add extra room for the FAB (M3 recommendation is 16dp margin)
+        // Standard M3 padding is 16dp
         int totalMarginDp = (int) (bannerHeightDp * BANNER_HEIGHT_MULTIPLIER) + 16;
-        
         int marginBottomPx = (int) (totalMarginDp * Screen.getDensity(getResources()));
         
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
@@ -124,17 +129,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
+    /** @return The global ad manager instance. */
     public AdsManager getAdsManager() {
         return mAdsManager;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+    /** Handles the 'Up' button or Hamburger menu in the ActionBar. */
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -168,10 +174,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Statisticator.onMoveToBackground(this);
     }
 
-    public String getClassName() {
-        return MainActivity.class.getSimpleName();
-    }
-
+    /**
+     * Controls the visibility of the primary Floating Action Button.
+     * Often used by fragments to hide the FAB on read-only screens (like Settings).
+     *
+     * @param visible True to show the FAB.
+     */
     public void setFabVisible(boolean visible) {
         final View fab = findViewById(R.id.fab);
         if (fab != null) {
@@ -179,24 +187,27 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    /**
+     * Triggers the display of an AppOpen ad after a slight delay 
+     * when the application moves to the foreground.
+     */
     public void onMoveToForeground() {
         if (!mHasCreated) {
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getAdsManager().showAppOpenAd();
-                        }
-                    });
+                    runOnUiThread(() -> getAdsManager().showAppOpenAd());
                 }
             }, 300L);
         }
         mHasCreated = false;
     }
 
+    /**
+     * Handles system permission results, specifically updating the 
+     * Notification Manager if POST_NOTIFICATIONS is granted.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -210,8 +221,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public void onAdAction(@NonNull AdMobAd adMobAd, AdAction adAction) {
-
+        // Handle ad-related analytics or tracking here
     }
-
-
 }

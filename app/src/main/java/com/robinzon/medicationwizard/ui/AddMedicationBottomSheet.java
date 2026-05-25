@@ -44,17 +44,44 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * A highly interactive Material 3 BottomSheet for adding or editing medications.
+ * <p>
+ * This dialog handles the complex data entry flow for a {@link Medication} object, including:
+ * - Real-time validation of fields (Name, Amount, Frequency).
+ * - Dynamic generation of time picker buttons based on dose frequency.
+ * - Integration with modern Material components like AutoComplete dropdowns and Chips.
+ * - Dual-mode operation: "New Medication" and "Edit Medication".
+ * </p>
+ */
 public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
+    /** Map of dose index to the user-selected time. */
     private final SparseArray<SimpleDayTime> mTimesInDay = new SparseArray<>();
+    
+    /** Layout container where dynamic time picker buttons are added. */
     private LinearLayout timesContainer;
+    
+    /** The medication object being built or edited. */
     private Medication mMedication = new Medication();
+    
+    /** Flag to enable aggressive validation after the first save attempt. */
     private boolean mSaveWasHitAlready;
+    
+    /** True if the sheet is in 'Edit' mode (modifying an existing medication). */
     private boolean mIsEditMode = false;
 
+    /**
+     * Factory method to create a new instance of the sheet, optionally pre-filled with 
+     * medication data for editing.
+     *
+     * @param medication The medication to edit, or null for a new entry.
+     * @return A configured fragment instance.
+     */
     public static AddMedicationBottomSheet newInstance(@Nullable Medication medication) {
         AddMedicationBottomSheet fragment = new AddMedicationBottomSheet();
         if (medication != null) {
@@ -72,10 +99,15 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         return inflater.inflate(R.layout.fragment_add_medication, container, false);
     }
 
+    /**
+     * Initializes the UI. 
+     * Handles argument parsing for Edit mode and sets up all interactive listeners.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Check for Edit Mode data
         if (getArguments() != null && getArguments().containsKey("medication_json")) {
             try {
                 String json = getArguments().getString("medication_json");
@@ -99,10 +131,12 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             trySaveMedication(view);
             mSaveWasHitAlready = true;
         });
-
-
     }
 
+    /**
+     * Populates all UI fields with data from an existing medication. 
+     * Used exclusively in Edit mode.
+     */
     private void preFillData(View view) {
         TextView titleView = getTitleTextView(view);
         if (titleView != null) titleView.setText(mMedication.getCommercialName());
@@ -180,6 +214,9 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
     }
 
 
+    /**
+     * Attaches live validators to the text input fields.
+     */
     private void setTextChangeListeners(@NonNull final View mainView) {
         final TextInputEditText commercialNameInputEditText = getCommercialNameInputEditText(mainView);
         if (null != commercialNameInputEditText) {
@@ -200,17 +237,19 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         if (null != formEditText) {
             formEditText.addTextChangedListener(getTextWatcher(formEditText, mainView));
         }
-
     }
 
+    /**
+     * Factory for {@link TextWatcher} that handles both error highlighting and 
+     * live title updates.
+     */
     private TextWatcher getTextWatcher(@NonNull final EditText editText, @NonNull View mainView) {
         return new TextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
-                // 1. Get the trimmed string once
                 final String trimmedInput = editable.toString().trim();
 
-                // 2. Handle validation if the user already tried to save
+                // Aggressive validation logic after first failed save attempt
                 if (mSaveWasHitAlready) {
                     final int editTextId = editText.getId();
                     if (editTextId == R.id.med_name_fragment_add_med) {
@@ -224,7 +263,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                     }
                 }
 
-                // 3. Update the Title live (only if we are editing the Name field)
+                // Update the bottom sheet title live as the user types the name
                 TextView titleView = getTitleTextView(mainView);
                 if (titleView != null && editText.getId() == R.id.med_name_fragment_add_med) {
                     if (trimmedInput.isEmpty()){
@@ -235,18 +274,16 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                 }
             }
 
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
         };
     }
 
 
 
+    /**
+     * Configures the ChipGroup for consumption instructions.
+     */
     private void setupInstructions(View view) {
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_instructions);
         if (chipGroup == null) return;
@@ -273,18 +310,19 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
     }
 
 
+    /**
+     * Initializes all AutoComplete dropdown menus (Form, Unit, Frequency).
+     */
     private void setupDropdowns(View view) {
-        // 1. Form Dropdown
         setFormDropDown(view);
-        // 2. Unit Dropdown
         setUnitDropDown(view);
-        // 3. Frequency Dropdown
+        
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
         String[] frequencies = new String[]{"Once a day", "Twice a day", "3 times a day", "4 times a day", "5 times a day"};
         ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, frequencies);
         dropdownFrequency.setAdapter(freqAdapter);
 
-        // When Frequency changes, generate the Time Pickers!
+        // When Frequency changes, we must regenerate the specific time picker buttons
         dropdownFrequency.setOnItemClickListener((parent, view12, position, id) -> {
             int timesPerDay = position + 1;
             mMedication.setDailyFrequency(timesPerDay);
@@ -292,25 +330,31 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         });
     }
 
+    /**
+     * Final validation and save logic.
+     * <p>
+     * Checks:
+     * 1. Basic field validity via {@link Medication#isValid()}.
+     * 2. Matches frequency to picked times (e.g., if "Twice a day", must have 2 times).
+     * 3. Ensures no duplicate times are picked.
+     * 4. Persists the medication and dismisses the sheet.
+     * </p>
+     */
     private void trySaveMedication(@NonNull View mainView) {
 
         populateMedication(mainView);
 
-        if (mMedication.isValid()) {
-            Logger.log(getClass().getSimpleName(), "Medication is valid");
-        } else {
+        if (!mMedication.isValid()) {
             showInputErrorsOnViews(mainView);
-            Logger.log(getClass().getSimpleName(), "Medication is not valid");
             return;
         }
 
         if (mMedication.getDailyFrequency() != mTimesInDay.size()) {
             showErrorDialog("Pick a time", "Just hit the select time button and pick a time");
-            Logger.log(getClass().getSimpleName(), "Medication is not valid");
             return;
         }
 
-        // Check for duplicate times
+        // Logical validation: Doses must be at different times
         Set<SimpleDayTime> uniqueTimes = new HashSet<>();
         for (int i = 0; i < mTimesInDay.size(); i++) {
             if (!uniqueTimes.add(mTimesInDay.valueAt(i))) {
@@ -320,15 +364,13 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         }
 
         mMedication.addTimeStampsForDay(mTimesInDay);
-        if (mMedication.getDailyFrequency() != mMedication.getTimesADay().size()) {
-            Logger.log(getClass().getSimpleName(), "Medication is not valid");
-            return;
-        }
-        Logger.log(getClass().getSimpleName(), "Medication is valid");
         mMedication.addToMedicationList(getContext());
         dismiss();
     }
 
+    /**
+     * Highlights all invalid fields with a shake animation and error text.
+     */
     private void showInputErrorsOnViews(@NonNull View mainView) {
         if (TextUtils.isEmpty(mMedication.getCommercialName())) {
             highLightInValidFields(getCommercialNameInputEditText(mainView), true);
@@ -345,72 +387,31 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
     }
 
     /**
-     * Shows a robust Material Design 3 error dialog with an optional action button.
-     *
-     * @param title          The dialog title.
-     * @param message        The dialog message.
-     * @param actionText     (Optional) The text for the custom action button. Pass null to hide.
-     * @param actionCallback (Optional) The callback to execute when the action is clicked. Pass null to hide.
-     */
-    private void showErrorDialog(@NonNull String title, @NonNull String message,
-                                 @Nullable String actionText, @Nullable Runnable actionCallback) {
-
-        // 1. Robustness check: Ensure the fragment is attached and has a context
-        Context context = getContext();
-        if (context == null) {
-            Logger.log(getClass().getSimpleName(), "Cannot show dialog: Context is null");
-            return;
-        }
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context)
-                .setTitle(title)
-                .setMessage(message);
-
-        // 2. Configure buttons based on whether an action was provided
-        if (actionText != null && actionCallback != null) {
-            // M3 Standard: The primary action is the Positive Button, "OK/Cancel" is the Negative Button
-            builder.setPositiveButton(actionText, (dialog, which) -> {
-                actionCallback.run();
-                dialog.dismiss();
-            });
-            // Using Android's native localized "OK" string
-            builder.setNegativeButton(android.R.string.ok, (dialog, which) -> dialog.dismiss());
-        } else {
-            // If no action is provided, just show an "OK" button to dismiss
-            builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                dialog.dismiss();
-            });
-        }
-
-        // 3. Robustness check: Catch BadTokenExceptions (happens if the activity is closing)
-        try {
-            builder.show();
-        } catch (Exception e) {
-            Logger.log(getClass().getSimpleName(), "Failed to show error dialog: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Overloaded helper method for simple error dialogs that only need an "OK" dismiss button.
+     * Shows a robust Material Design 3 error dialog.
      */
     private void showErrorDialog(@NonNull String title, @NonNull String message) {
-        showErrorDialog(title, message, null, null);
+        Context context = getContext();
+        if (context == null) return;
+
+        new MaterialAlertDialogBuilder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
-
-// ... inside your AddMed class ...
 
     private void highLightInValidFields(@Nullable View view, boolean isInvalid) {
         highLightInValidFields(view, isInvalid, true);
     }
 
+    /**
+     * Applies Material 3 error styling to a specific input field.
+     * Uses {@link TextInputLayout#setError(CharSequence)} for standard Material feedback.
+     */
     private void highLightInValidFields(@Nullable View view, boolean isInvalid, boolean animate) {
-        if (null == view) {
-            return;
-        }
+        if (null == view) return;
 
-        // 1. Try to find the parent TextInputLayout
-        // Material components often wrap the EditText in a FrameLayout inside the TextInputLayout
         TextInputLayout layout = null;
         if (view instanceof TextInputLayout) {
             layout = (TextInputLayout) view;
@@ -422,7 +423,6 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
         if (isInvalid) {
             if (animate) {
-                // Shake the whole layout if it exists, otherwise just the view
                 View target = (layout != null) ? layout : view;
                 ObjectAnimator animator = ObjectAnimator.ofFloat(target, "translationX", 0f, 15f, -15f, 10f, -10f, 5f, -5f, 0f);
                 animator.setDuration(400);
@@ -430,65 +430,47 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             }
 
             if (layout != null) {
-                // 2. The Material Fix: Use setError.
-                // This turns the border red and STAYS red even when focused.
-                layout.setError("Required"); // Or pass a specific message
+                layout.setError("Required");
                 layout.setErrorEnabled(true);
-            } else {
-                // Fallback for views not wrapped in TextInputLayout
-                if (view.getTag() == null) {
-                    view.setTag(view.getBackground());
-                }
-                view.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.error_background));
             }
-
         } else {
-            // Reset state
             if (layout != null) {
                 layout.setError(null);
                 layout.setErrorEnabled(false);
-            } else {
-                if (view.getTag() instanceof Drawable) {
-                    view.setBackground((Drawable) view.getTag());
-                }
             }
         }
     }
 
+    /**
+     * Configures the drug form dropdown and updates the start icon dynamically 
+     * based on selection (e.g., show a pill icon for "Pill").
+     */
     private void setFormDropDown(View view) {
         final AutoCompleteTextView dropdownForm = view.findViewById(R.id.med_form_fragment_add_med);
-        if (null == dropdownForm) {
-            return;
-        }
+        if (null == dropdownForm) return;
+
         String[] forms = Arrays.stream(EForm.values())
                 .map(Enum::name)
                 .toArray(String[]::new);
 
-        ArrayAdapter<String> formAdapter = null;
-        try {
-            formAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, forms);
-        } catch (IllegalStateException e) {
-            return;
-        }
-        dropdownForm.setAdapter(formAdapter);
+        dropdownForm.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, forms));
 
-        // Optional UX trick: Change the start icon when they pick a form
         final TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
-        if (null == layoutForm) {
-            return;
-        }
+        if (null == layoutForm) return;
+
         dropdownForm.setOnItemClickListener((parent, view1, position, id) -> {
             final EForm form = EForm.values()[position];
             mMedication.setForm(form);
-            switch (form) {
-                case Pill -> layoutForm.setStartIconDrawable(R.drawable.ic_med_pill);
-                case Drops -> layoutForm.setStartIconDrawable(R.drawable.ic_med_drops);
-                case Injection -> layoutForm.setStartIconDrawable(R.drawable.ic_med_injection);
-                case Solution -> layoutForm.setStartIconDrawable(R.drawable.ic_med_solution);
-                case Inhaler -> layoutForm.setStartIconDrawable(R.drawable.ic_med_inhaler);
-                case Powder -> layoutForm.setStartIconDrawable(R.drawable.ic_med_powder);
-                case Other -> layoutForm.setStartIconDrawable(R.drawable.ic_med_other);
-            }
+            int icon = switch (form) {
+                case Pill -> R.drawable.ic_med_pill;
+                case Drops -> R.drawable.ic_med_drops;
+                case Injection -> R.drawable.ic_med_injection;
+                case Solution -> R.drawable.ic_med_solution;
+                case Inhaler -> R.drawable.ic_med_inhaler;
+                case Powder -> R.drawable.ic_med_powder;
+                case Other -> R.drawable.ic_med_other;
+            };
+            layoutForm.setStartIconDrawable(icon);
         });
     }
 
@@ -496,70 +478,51 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         final AutoCompleteTextView dropdownUnit = view.findViewById(R.id.dropdown_unit);
         final ArrayList<String> measurementUnits = new ArrayList<>();
         for (EMeasurementUnit unit : EMeasurementUnit.values()) {
-            final String unitShortName = unit.getName();
-            measurementUnits.add(unitShortName);
+            measurementUnits.add(unit.getName());
         }
-        ArrayAdapter<String> unitAdapter = null;
-        try {
-            unitAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, measurementUnits);
-        } catch (IllegalStateException e) {
-            return;
-        }
+        
         if (null != dropdownUnit) {
-            dropdownUnit.setAdapter(unitAdapter);
-            dropdownUnit.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    EMeasurementUnit measurementUnit = EMeasurementUnit.values()[i];
-                    mMedication.setMeasurementUnit(measurementUnit);
-                }
+            dropdownUnit.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, measurementUnits));
+            dropdownUnit.setOnItemClickListener((adapterView, view1, i, l) -> {
+                mMedication.setMeasurementUnit(EMeasurementUnit.values()[i]);
             });
         }
     }
 
+    /**
+     * Generates a list of buttons in the UI, one for each scheduled dose 
+     * defined by the 'Frequency' dropdown.
+     */
     private void generateTimePickers(final int amount) {
-        timesContainer.removeAllViews(); // Clear old buttons
+        timesContainer.removeAllViews(); 
 
         for (int i = 1; i <= amount; i++) {
-
-            // Inflate our beautiful custom M3 Tonal Button
             Button timeButton = (Button) LayoutInflater.from(requireContext())
                     .inflate(R.layout.item_time_picker, timesContainer, false);
 
             timeButton.setText("Select Time " + i);
-
-            // Open the Time Picker when clicked
             int finalIndex = i;
-            timeButton.setOnClickListener(v -> {
-                showTimePicker(finalIndex, timeButton);
-            });
-
+            timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
             timesContainer.addView(timeButton);
         }
     }
 
+    /**
+     * Scrapes all manual text entry fields and populates the medication object.
+     */
     private void populateMedication(@NonNull View view) {
-        //1. Get the input from the medication name input text
         final TextInputEditText nameInputEditText = getCommercialNameInputEditText(view);
-        try {
-            mMedication.setCommercialName(Objects.requireNonNull(nameInputEditText.getText()).toString());
-        } catch (NullPointerException ignored) {
+        if (nameInputEditText != null && nameInputEditText.getText() != null) {
+            mMedication.setCommercialName(nameInputEditText.getText().toString());
         }
 
-        //2. Get the input from the medication amount input text
         final TextInputEditText amountTextView = getAmountInputEditText(view);
-        try {
-            final float amount = Float.parseFloat(Objects.requireNonNull(amountTextView.getText()).toString());
-            mMedication.setAmount(amount > 0 ? amount : 0);
-        } catch (NullPointerException | NumberFormatException ignored) {
-
+        if (amountTextView != null && amountTextView.getText() != null) {
+            try {
+                mMedication.setAmount(Float.parseFloat(amountTextView.getText().toString()));
+            } catch (NumberFormatException ignored) {}
         }
 
-        // 3. No need to check the form here because the view has a listener to the form chosen.
-
-        // 4. No need to check the frequency here because the view has a listener to the form chosen.
-
-        // 5. Strength
         final TextInputEditText strengthEditText = view.findViewById(R.id.medication_strength);
         if (strengthEditText != null && strengthEditText.getText() != null) {
             try {
@@ -568,19 +531,20 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
+    /**
+     * Opens the standard Android Material Time Picker. 
+     * Upon confirmation, updates the medication's schedule and the button text.
+     */
     private void showTimePicker(final int finalIndex, final Button buttonToUpdate) {
-        // Build the modern Android Time Picker
-        // TODO time format like the system
         final MaterialTimePicker picker = new MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H) // Or CLOCK_12H
+                .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setHour(12)
                 .setMinute(0)
                 .setTitleText("Select Medication Time")
                 .build();
 
         picker.addOnPositiveButtonClickListener(v -> {
-            // Format the time nicely (e.g., 08:30)
-            String formattedTime = String.format("%02d:%02d", picker.getHour(), picker.getMinute());
+            String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", picker.getHour(), picker.getMinute());
             buttonToUpdate.setText("Time set: " + formattedTime);
             mTimesInDay.put(finalIndex, new SimpleDayTime((byte) picker.getHour(), (byte) picker.getMinute()));
         });
@@ -588,28 +552,9 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         picker.show(getParentFragmentManager(), "timePicker");
     }
 
-    @Nullable
-    private TextInputEditText getCommercialNameInputEditText(@NonNull View view) {
-        return view.findViewById(R.id.med_name_fragment_add_med);
-    }
-
-    @Nullable
-    private TextInputEditText getAmountInputEditText(@NonNull View view) {
-        return view.findViewById(R.id.med_amount);
-    }
-
-    @Nullable
-    private AutoCompleteTextView getFrequencyInputEditText(@NonNull View view) {
-        return view.findViewById(R.id.med_frequency_fragment_add_med);
-    }
-
-    @Nullable
-    private AutoCompleteTextView getFormInputEditText(@NonNull View view) {
-        return view.findViewById(R.id.med_form_fragment_add_med);
-    }
-
-    @Nullable
-    private TextView getTitleTextView(View mainView) {
-        return mainView.findViewById(R.id.title_fragment_add_med);
-    }
+    @Nullable private TextInputEditText getCommercialNameInputEditText(@NonNull View view) { return view.findViewById(R.id.med_name_fragment_add_med); }
+    @Nullable private TextInputEditText getAmountInputEditText(@NonNull View view) { return view.findViewById(R.id.med_amount); }
+    @Nullable private AutoCompleteTextView getFrequencyInputEditText(@NonNull View view) { return view.findViewById(R.id.med_frequency_fragment_add_med); }
+    @Nullable private AutoCompleteTextView getFormInputEditText(@NonNull View view) { return view.findViewById(R.id.med_form_fragment_add_med); }
+    @Nullable private TextView getTitleTextView(View mainView) { return mainView.findViewById(R.id.title_fragment_add_med); }
 }

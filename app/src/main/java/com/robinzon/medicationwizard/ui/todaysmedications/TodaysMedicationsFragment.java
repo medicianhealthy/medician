@@ -23,18 +23,40 @@ import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 
 import java.util.ArrayList;
 
+/**
+ * The primary dashboard fragment of the application. 
+ * <p>
+ * This fragment displays all medication doses scheduled for the current calendar day. 
+ * It provides the core user interface for daily health management, allowing users to:
+ * - Mark doses as taken or skipped.
+ * - Reschedule future doses using a Material Time Picker.
+ * - Sort the daily list by name, scheduled time, or actual action time.
+ * - Undo accidental actions via a snackbar.
+ * </p>
+ * <p>
+ * It uses {@link TodaysMedicationsViewModel} for reactive data fetching from the Room database.
+ * </p>
+ */
 public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     private FragmentTodaysMedicationsBinding mBinding;
     private TodaysMedicationsViewModel mViewModel;
     private MedicationsAdapter mAdapter;
 
+    /**
+     * Initializes the binding and ViewModel for the fragment.
+     */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(TodaysMedicationsViewModel.class);
         mBinding = FragmentTodaysMedicationsBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
     }
 
+    /**
+     * Sets up the UI components after the view has been created.
+     * Logic includes RecyclerView initialization, ChipGroup sorting listeners, 
+     * and observing the LiveData from the ViewModel.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -44,6 +66,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         setupRecyclerView();
         setupSortChips();
 
+        // Reactive observation: UI updates automatically when DB changes
         mViewModel.getTodaysMedications().observe(getViewLifecycleOwner(), instances -> {
             mAdapter.setMedications(instances);
             updateUiState(instances.isEmpty());
@@ -51,6 +74,10 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         });
     }
 
+    /**
+     * Configures the M3 ChipGroup to handle list sorting.
+     * Tapping a chip triggers a ViewModel re-query with a different SortOrder.
+     */
     private void setupSortChips() {
         mBinding.chipGroupSort.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
@@ -66,6 +93,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         });
     }
 
+    /**
+     * Initializes the RecyclerView with a custom Adapter and action listeners.
+     */
     private void setupRecyclerView() {
         mAdapter = new MedicationsAdapter(new ArrayList<>());
         mAdapter.setOnMedicationActionListener(new MedicationsAdapter.OnMedicationActionListener() {
@@ -93,15 +123,26 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         mBinding.recyclerView.setAdapter(mAdapter);
     }
 
+    /**
+     * Updates the status of a specific dose in the database.
+     * It also records the timestamp of the action for history tracking and 
+     * displays an "Undo" snackbar.
+     *
+     * @param instance The dose record to update.
+     * @param status   The new status (TAKEN, SKIPPED, or SCHEDULED).
+     */
     private void updateInstanceStatus(DoseInstanceEntity instance, String status) {
         instance.setStatus(status);
+        // Record the time of the action for the "Took at HH:mm" summary
         instance.setActionTime(System.currentTimeMillis());
+        
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
         });
         
         Snackbar.make(mBinding.getRoot(), instance.getMedicationName() + " marked as " + status.toLowerCase(), Snackbar.LENGTH_LONG)
                 .setAction("Undo", v -> {
+                    // Revert status and clear action time
                     instance.setStatus("SCHEDULED");
                     instance.setActionTime(0);
                     AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -110,6 +151,12 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                 }).show();
     }
 
+    /**
+     * Displays a Material Time Picker to allow the user to change the 
+     * scheduled time for a single dose.
+     *
+     * @param instance The dose record to reschedule.
+     */
     private void showReschedulePicker(DoseInstanceEntity instance) {
         MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
@@ -131,21 +178,34 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         picker.show(getChildFragmentManager(), "reschedule");
     }
 
+    /**
+     * Toggles between the list view and the empty state view (Wizard mascot).
+     *
+     * @param isEmpty True if there are no medications for today.
+     */
     private void updateUiState(boolean isEmpty) {
         mBinding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         mBinding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        // Hide/Show FAB based on empty state for cleaner M3 aesthetics
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(!isEmpty);
         }
     }
 
+    /**
+     * Configures the pull-to-refresh behavior.
+     */
     private void setupSwipeRefresh() {
         mBinding.swipeRefresh.setOnRefreshListener(() -> {
-            // LiveData handles refresh automatically when DB changes
+            // LiveData handles refresh automatically when DB changes, 
+            // so we just stop the animation immediately.
             mBinding.swipeRefresh.setRefreshing(false);
         });
     }
 
+    /**
+     * Binds the action button in the empty state view to open the add medication flow.
+     */
     private void setupEmptyView() {
         mBinding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
             AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
@@ -153,6 +213,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         });
     }
 
+    /**
+     * Cleans up the binding to avoid memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

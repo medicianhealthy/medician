@@ -23,12 +23,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+/**
+ * The core domain model representing a medication definition.
+ * <p>
+ * This class stores the persistent configuration for a medication, including its name, 
+ * dosage details (amount, strength, form), and scheduling rules (frequency, times of day).
+ * It handles the synchronization between the high-level list (stored in {@link SharedPreferencesManager})
+ * and the specific scheduled instances (stored in the Room database).
+ * </p>
+ * <p>
+ * Implements {@link Comparable} for alphabetical sorting by commercial name.
+ * </p>
+ */
 public class Medication extends MedicationWizardSuper implements Comparable<Medication> {
 
-
+    /** SharedPreferences key used to store the list of medication definitions as a JSON array. */
     public static final String SPK_MEDICATION_LIST = "shared_pref_medications_list";
+    
     private String mId;
     private SparseArray<SimpleDayTime> mTimesADay;
     private float mAmount;
@@ -42,10 +54,18 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
     private EInstructions mInstruction;
     private EMeasurementUnit mMeasurementUnit;
 
+    /**
+     * Constructs a new medication with a unique random UUID.
+     */
     public Medication() {
         this.mId = UUID.randomUUID().toString();
     }
 
+    /**
+     * Constructs a medication with a specific commercial name.
+     *
+     * @param commercialName The brand or generic name of the drug.
+     */
     public Medication(String commercialName) {
         this();
         if (!TextUtils.isEmpty(commercialName)) {
@@ -55,11 +75,16 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         }
     }
 
-
+    /**
+     * @return Number of doses to be taken per day.
+     */
     public int getDailyFrequency() {
         return this.mFrequency;
     }
 
+    /**
+     * @param frequency Number of doses per day.
+     */
     public void setDailyFrequency(final int frequency) {
         this.mFrequency = frequency;
     }
@@ -81,21 +106,34 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return !TextUtils.isEmpty(mCommercialName) && mAmount > 0 && mForm != null && mFrequency > 0;
     }
 
+    /**
+     * Saves this medication to persistent storage and schedules future doses.
+     * <p>
+     * Operation:
+     * 1. Updates the global medication list in SharedPreferences.
+     * 2. Clears any existing future schedules for this ID in the Room database.
+     * 3. Generates a fresh set of {@link DoseInstanceEntity} records for the coming week.
+     * 4. Triggers {@link ReminderManager} to set Android system alarms for the new doses.
+     * </p>
+     *
+     * @param context The application context.
+     */
     public void addToMedicationList(final Context context) {
         final JSONObject json = toJson();
         if (json == null) return;
-        JSONArray existingMeds = SharedPreferencesManager.getInstance(context).getJsonArray(SPK_MEDICATION_LIST, null);
-        if (existingMeds == null) {
-            existingMeds = new JSONArray();
+        
+        JSONArray medsArray = SharedPreferencesManager.getInstance(context).getJsonArray(SPK_MEDICATION_LIST, null);
+        if (medsArray == null) {
+            medsArray = new JSONArray();
         }
 
         // 1. Update SharedPreferences (Small list of definitions)
         boolean found = false;
-        for (int i = 0; i < existingMeds.length(); i++) {
+        for (int i = 0; i < medsArray.length(); i++) {
             try {
-                JSONObject obj = existingMeds.getJSONObject(i);
+                JSONObject obj = medsArray.getJSONObject(i);
                 if (mId.equals(obj.optString(JsonKeys.ID))) {
-                    existingMeds.put(i, json);
+                    medsArray.put(i, json);
                     found = true;
                     break;
                 }
@@ -103,9 +141,9 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         }
 
         if (!found) {
-            existingMeds.put(json);
+            medsArray.put(json);
         }
-        SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, existingMeds);
+        SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, medsArray);
 
         // 2. Room logic: Generate and save schedules
         AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -125,18 +163,13 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             }
 
             if (!entities.isEmpty()) {
-                // 1. Get IDs after insertion to schedule alarms correctly
                 AppDatabase db = AppDatabase.getDatabase(context);
                 db.doseInstanceDao().insertAll(entities);
                 
-                // 2. Fetch the newly inserted instances with their generated IDs
-                // (Room doesn't return IDs for insertAll easily, so we query or use a simpler approach)
-                // For now, let's schedule everything in range
+                // Re-fetch with generated IDs to schedule alarms
                 long now = System.currentTimeMillis();
                 long end = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
                 
-                // We'll use a better approach in a real app, but for now we schedule 
-                // what we just created by querying the DB
                 List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getInstancesInRangeInternal(now, end);
                 for (DoseInstanceEntity e : scheduled) {
                     if (mId.equals(e.getMedicationId())) {
@@ -149,10 +182,17 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         });
     }
 
+    /**
+     * Internal helper to create a specific time-stamped instance of this medication.
+     *
+     * @param dayOffset Number of days from today.
+     * @param time      The specific time of day.
+     * @return A self-contained MedicationInstance.
+     */
     @NonNull
-    private MedicationInstance getMedicationInstance(int i, SimpleDayTime time) {
+    private MedicationInstance getMedicationInstance(int dayOffset, SimpleDayTime time) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
-        calendar.add(java.util.Calendar.DAY_OF_YEAR, i);
+        calendar.add(java.util.Calendar.DAY_OF_YEAR, dayOffset);
         calendar.set(java.util.Calendar.HOUR_OF_DAY, time.getHour());
         calendar.set(java.util.Calendar.MINUTE, time.getMinute());
         calendar.set(java.util.Calendar.SECOND, 0);
@@ -166,6 +206,12 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return medicationInstance;
     }
 
+    /**
+     * Permanently deletes a medication and all its associated scheduled doses.
+     *
+     * @param context The application context.
+     * @param id      The UUID of the medication to remove.
+     */
     public static void deleteMedication(Context context, String id) {
         JSONArray existingMeds = SharedPreferencesManager.getInstance(context).getJsonArray(SPK_MEDICATION_LIST, null);
         if (existingMeds == null) return;
@@ -181,21 +227,32 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         }
         SharedPreferencesManager.getInstance(context).setJsonArray(SPK_MEDICATION_LIST, newList);
         
-        // Also remove from Room
+        // Purge records from database
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(context).doseInstanceDao().deleteByMedicationId(id);
         });
     }
 
+    /**
+     * Wipes all application data, including definitions and history.
+     *
+     * @param context The application context.
+     */
     public static void clearAllMedications(Context context) {
         SharedPreferencesManager.getInstance(context).removeKey(SPK_MEDICATION_LIST);
         
-        // Also remove from Room
+        // Wipe database
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(context).doseInstanceDao().deleteAll();
         });
     }
 
+    /**
+     * Retrieves the list of all defined medications from SharedPreferences.
+     *
+     * @param context The application context.
+     * @return A sorted ArrayList of medication objects.
+     */
     public static ArrayList<Medication> getSavedMedications(Context context) {
         ArrayList<Medication> medications = new ArrayList<>();
         JSONArray jsonArray = SharedPreferencesManager.getInstance(context).getJsonArray(SPK_MEDICATION_LIST, null);
@@ -214,6 +271,13 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return medications;
     }
 
+    /**
+     * Deserializes a Medication object from JSON.
+     * Handles recursive parsing of Nested SparseArrays (TimesADay).
+     *
+     * @param json The input JSONObject.
+     * @return A populated Medication instance, or {@code null} if parsing fails.
+     */
     public static Medication fromJson(JSONObject json) {
         if (json == null) return null;
         Medication med = new Medication();
@@ -252,6 +316,12 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return med;
     }
 
+    /**
+     * Updates the daily schedule with a new set of timestamps.
+     * Automatically triggers {@link #sortTimesADay()} to ensure chronological order.
+     *
+     * @param simpleDayTimeSparseArray A map of index-to-time for the doses.
+     */
     public void addTimeStampsForDay(@NonNull final SparseArray<SimpleDayTime> simpleDayTimeSparseArray) {
         if (simpleDayTimeSparseArray.size() == 0) {
             mTimesADay = null;
@@ -266,6 +336,11 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         sortTimesADay();
     }
 
+    /**
+     * Sorts the medication's daily doses chronologically.
+     * Re-indexes the internal SparseArray sequentially starting from 1 to 
+     * maintain consistency with the UI.
+     */
     public void sortTimesADay() {
         if (mTimesADay == null || mTimesADay.size() <= 1) return;
 
@@ -283,86 +358,30 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         }
     }
 
-    public String getId() {
-        return mId;
-    }
+    public String getId() { return mId; }
+    public String getCommercialName() { return mCommercialName; }
+    public void setCommercialName(@NonNull final String commercialName) { this.mCommercialName = commercialName; }
+    public float getAmount() { return mAmount; }
+    public void setAmount(final float amount) { this.mAmount = amount; }
+    public EForm getForm() { return mForm; }
+    public void setForm(EForm mForm) { this.mForm = mForm; }
+    public float getStrength() { return mStrength; }
+    public void setStrength(float mStrength) { this.mStrength = mStrength; }
+    public String getMedicalCondition() { return mMedicalCondition; }
+    public void setMedicalCondition(String mMedicalCondition) { this.mMedicalCondition = mMedicalCondition; }
+    public List<Long> getDailySchedule() { return mDailySchedule; }
+    public void setDailySchedule(List<Long> mDailySchedule) { this.mDailySchedule = mDailySchedule; }
+    public EMeasurementUnit getMeasurementUnit() { return mMeasurementUnit; }
+    public void setMeasurementUnit(EMeasurementUnit mMeasurementUnit) { this.mMeasurementUnit = mMeasurementUnit; }
+    public int getAmountLeft() { return mAmountLeft; }
+    public void setAmountLeft(int mAmountLeft) { this.mAmountLeft = mAmountLeft; }
+    public SparseArray<SimpleDayTime> getTimesADay() { return mTimesADay; }
+    public EInstructions getInstruction() { return mInstruction; }
+    public void setInstruction(EInstructions mInstruction) { this.mInstruction = mInstruction; }
 
-    public String getCommercialName() {
-        return mCommercialName;
-    }
-
-    public void setCommercialName(@NonNull final String commercialName) {
-        this.mCommercialName = commercialName;
-    }
-
-    public float getAmount() {
-        return mAmount;
-    }
-
-    public void setAmount(final float amount) {
-        this.mAmount = amount;
-    }
-
-    public EForm getForm() {
-        return mForm;
-    }
-
-    public void setForm(EForm mForm) {
-        this.mForm = mForm;
-    }
-
-    public float getStrength() {
-        return mStrength;
-    }
-
-    public void setStrength(float mStrength) {
-        this.mStrength = mStrength;
-    }
-
-    public String getMedicalCondition() {
-        return mMedicalCondition;
-    }
-
-    public void setMedicalCondition(String mMedicalCondition) {
-        this.mMedicalCondition = mMedicalCondition;
-    }
-
-    public List<Long> getDailySchedule() {
-        return mDailySchedule;
-    }
-
-    public void setDailySchedule(List<Long> mDailySchedule) {
-        this.mDailySchedule = mDailySchedule;
-    }
-
-    public EMeasurementUnit getMeasurementUnit() {
-        return mMeasurementUnit;
-    }
-
-    public void setMeasurementUnit(EMeasurementUnit mMeasurementUnit) {
-        this.mMeasurementUnit = mMeasurementUnit;
-    }
-
-    public int getAmountLeft() {
-        return mAmountLeft;
-    }
-
-    public void setAmountLeft(int mAmountLeft) {
-        this.mAmountLeft = mAmountLeft;
-    }
-
-    public SparseArray<SimpleDayTime> getTimesADay() {
-        return mTimesADay;
-    }
-
-    public EInstructions getInstruction() {
-        return mInstruction;
-    }
-
-    public void setInstruction(EInstructions mInstruction) {
-        this.mInstruction = mInstruction;
-    }
-
+    /**
+     * Case-insensitive alphabetical comparison by name.
+     */
     @Override
     public int compareTo(@NonNull Medication other) {
         if (this.mCommercialName == null && other.mCommercialName == null) return 0;
@@ -389,6 +408,11 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
     }
 
 
+    /**
+     * Serializes this medication into a JSONObject for storage in SharedPreferences.
+     *
+     * @return The resulting JSONObject.
+     */
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
@@ -413,6 +437,9 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return json;
     }
 
+    /**
+     * Helper to serialize the SparseArray of times into a JSON-compatible format.
+     */
     private JSONArray getTimesADayAsJsonArray() {
         final JSONArray jsonArray = new JSONArray();
         if (mTimesADay == null) return jsonArray;
@@ -429,6 +456,9 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return jsonArray;
     }
 
+    /**
+     * Helper to serialize the daily schedule list into a JSON-compatible format.
+     */
     private JSONArray getDailyScheduleAsJsonArray() {
         final JSONArray jsonArray = new JSONArray();
         if (mDailySchedule == null) return jsonArray;
@@ -446,12 +476,8 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return jsonArray;
     }
 
-    private void invalidate() {
-
-    }
-
+    /** Constants for JSON keys to prevent typos during serialization. */
     public static final class JsonKeys {
-        //TODO add json keys to fields added
         public static final String ID = "mId";
         public static String TIMES_IN_DAY = "mTimesADay";
         public static final String AMOUNT = "mAmount";
@@ -464,7 +490,5 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         public static final String AMOUNT_LEFT = "mAmountLeft";
         public static final String INSTRUCTIONS = "mInstruction";
         public static final String MEASUREMENT_UNIT = "mMeasurementUnit";
-
-
     }
 }
