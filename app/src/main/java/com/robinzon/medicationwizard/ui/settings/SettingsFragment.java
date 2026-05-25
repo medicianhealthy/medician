@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -20,6 +22,8 @@ import com.robinzon.medicationwizard.databinding.FragmentSettingsBinding;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
+import com.robinzon.medicationwizard.utils.BackupManager;
+import com.robinzon.medicationwizard.utils.Logger;
 
 /**
  * Fragment that provides the user interface for all application settings.
@@ -37,6 +41,37 @@ public class SettingsFragment extends MedicationWizardFragment {
 
     private FragmentSettingsBinding binding;
     private SettingsViewModel viewModel;
+
+    private final ActivityResultLauncher<String> exportLauncher = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("application/json"),
+            uri -> {
+                if (uri != null) {
+                    BackupManager.createBackup(requireContext(), uri, (success, message) -> {
+                        requireActivity().runOnUiThread(() -> 
+                            Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show());
+                    });
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<String[]> importLauncher = registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(),
+            uri -> {
+                if (uri != null) {
+                    new MaterialAlertDialogBuilder(requireContext())
+                            .setTitle("Restore Backup")
+                            .setMessage(R.string.backup_restore_warning)
+                            .setPositiveButton("Restore", (dialog, which) -> {
+                                BackupManager.restoreBackup(requireContext(), uri, (success, message) -> {
+                                    requireActivity().runOnUiThread(() -> 
+                                        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show());
+                                });
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+            }
+    );
 
     /**
      * Initializes data binding and the {@link SettingsViewModel}.
@@ -143,9 +178,20 @@ public class SettingsFragment extends MedicationWizardFragment {
             viewModel.setTheme(theme);
         });
 
-        // 4. Placeholder actions for future features
+        // 4. Data Management: Backup & Restore
         binding.btnBackup.setOnClickListener(v -> {
-            Snackbar.make(binding.getRoot(), "Backup feature is being prepared for you!", Snackbar.LENGTH_SHORT).show();
+            String[] options = {getString(R.string.backup_export), getString(R.string.backup_import)};
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.settings_backup_title)
+                    .setItems(options, (dialog, which) -> {
+                        if (which == 0) {
+                            String fileName = "medication_wizard_backup_" + System.currentTimeMillis() + ".json";
+                            exportLauncher.launch(fileName);
+                        } else {
+                            importLauncher.launch(new String[]{"application/json"});
+                        }
+                    })
+                    .show();
         });
 
         // 5. Destructive Action: Clear Data
@@ -195,6 +241,67 @@ public class SettingsFragment extends MedicationWizardFragment {
                 endPicker.show(getChildFragmentManager(), "end_picker");
             });
             startPicker.show(getChildFragmentManager(), "start_picker");
+        });
+
+        // 8. Snooze Duration
+        viewModel.getSnoozeDuration().observe(getViewLifecycleOwner(), mins -> 
+            binding.txtSnoozeDurationDesc.setText(getString(R.string.settings_snooze_duration_summary, mins)));
+        
+        binding.btnSnoozeDuration.setOnClickListener(v -> {
+            String[] options = {"5 minutes", "10 minutes", "15 minutes", "20 minutes", "30 minutes"};
+            int[] values = {5, 10, 15, 20, 30};
+            
+            Integer currentVal = viewModel.getSnoozeDuration().getValue();
+            int currentSelection = 0;
+            if (currentVal != null) {
+                for (int i = 0; i < values.length; i++) {
+                    if (values[i] == currentVal) {
+                        currentSelection = i;
+                        break;
+                    }
+                }
+            }
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.settings_snooze_duration_title)
+                    .setSingleChoiceItems(options, currentSelection, (dialog, which) -> {
+                        viewModel.setSnoozeDuration(values[which]);
+                        dialog.dismiss();
+                    })
+                    .show();
+        });
+
+        // 9. Max Snoozes
+        viewModel.getMaxSnoozes().observe(getViewLifecycleOwner(), max -> {
+            if (max != null && max == -1) {
+                binding.txtMaxSnoozesDesc.setText(R.string.settings_max_snoozes_unlimited_summary);
+            } else {
+                binding.txtMaxSnoozesDesc.setText(getString(R.string.settings_max_snoozes_summary, String.valueOf(max)));
+            }
+        });
+
+        binding.btnMaxSnoozes.setOnClickListener(v -> {
+            String[] options = {"1 time", "2 times", "3 times", "5 times", "Unlimited"};
+            int[] values = {1, 2, 3, 5, -1};
+            
+            Integer currentVal = viewModel.getMaxSnoozes().getValue();
+            int currentSelection = 0;
+            if (currentVal != null) {
+                for (int i = 0; i < values.length; i++) {
+                    if (values[i] == currentVal) {
+                        currentSelection = i;
+                        break;
+                    }
+                }
+            }
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.settings_max_snoozes_title)
+                    .setSingleChoiceItems(options, currentSelection, (dialog, which) -> {
+                        viewModel.setMaxSnoozes(values[which]);
+                        dialog.dismiss();
+                    })
+                    .show();
         });
     }
 

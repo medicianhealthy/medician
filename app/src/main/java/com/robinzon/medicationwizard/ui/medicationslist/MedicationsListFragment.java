@@ -62,6 +62,9 @@ public class MedicationsListFragment extends MedicationWizardFragment {
         setupRecyclerView();
         setupSwipeRefresh();
         setupEmptyView();
+        
+        // Ensure empty state is not hidden by ad banner
+        setPaddingForRecyclerView(binding.emptyLayout.emptyStateContainer);
 
         viewModel.getMedications().observe(getViewLifecycleOwner(), medications -> {
             boolean isEmpty = medications == null || medications.isEmpty();
@@ -95,6 +98,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
      */
     private void setupEmptyView() {
         binding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
+            com.robinzon.medicationwizard.utils.Logger.log("MedicationsListFragment", "Empty state action clicked");
             AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
             bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
         });

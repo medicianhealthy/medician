@@ -29,6 +29,8 @@ public class SettingsViewModel extends AndroidViewModel {
     public static final String KEY_NOTIF_VOLUME = "notif_volume";
     public static final String KEY_NOTIF_SOUND_NAME = "notif_sound_name";
     public static final String KEY_NOTIF_SOUND_URI = "notif_sound_uri";
+    public static final String KEY_SNOOZE_DURATION_MINS = "snooze_duration_mins";
+    public static final String KEY_MAX_SNOOZES = "max_snoozes";
 
     // Theme Constants
     public static final int THEME_SYSTEM = 0;
@@ -42,6 +44,8 @@ public class SettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mNotifVolume = new MutableLiveData<>();
     private final MutableLiveData<String> mSoundName = new MutableLiveData<>();
     private final MutableLiveData<String> mSoundUri = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mSnoozeDuration = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mMaxSnoozes = new MutableLiveData<>();
 
     /**
      * Constructs the ViewModel and loads current preferences from disk.
@@ -60,6 +64,9 @@ public class SettingsViewModel extends AndroidViewModel {
         mNotifVolume.setValue(sp.getInt(KEY_NOTIF_VOLUME, 70));
         mSoundName.setValue(sp.getString(KEY_NOTIF_SOUND_NAME, "Default"));
         mSoundUri.setValue(sp.getString(KEY_NOTIF_SOUND_URI, ""));
+        
+        mSnoozeDuration.setValue(sp.getInt(KEY_SNOOZE_DURATION_MINS, 10));
+        mMaxSnoozes.setValue(sp.getInt(KEY_MAX_SNOOZES, 3));
     }
 
     public LiveData<Integer> getTheme() { return mTheme; }
@@ -68,6 +75,18 @@ public class SettingsViewModel extends AndroidViewModel {
     public LiveData<Integer> getNotifVolume() { return mNotifVolume; }
     public LiveData<String> getSoundName() { return mSoundName; }
     public LiveData<String> getSoundUri() { return mSoundUri; }
+    public LiveData<Integer> getSnoozeDuration() { return mSnoozeDuration; }
+    public LiveData<Integer> getMaxSnoozes() { return mMaxSnoozes; }
+
+    public void setSnoozeDuration(int mins) {
+        mSnoozeDuration.setValue(mins);
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_SNOOZE_DURATION_MINS, mins);
+    }
+
+    public void setMaxSnoozes(int max) {
+        mMaxSnoozes.setValue(max);
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_MAX_SNOOZES, max);
+    }
 
     /**
      * Toggles whether reminder alerts should bypass the device's ringer mode.

@@ -3,8 +3,10 @@ package com.robinzon.medicationwizard.reminders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.app.PendingIntent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
@@ -13,9 +15,12 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
+
+import java.util.Calendar;
 
 /**
  * Background BroadcastReceiver that handles the "firing" of a medication reminder alarm.
@@ -48,8 +53,57 @@ public class ReminderReceiver extends BroadcastReceiver {
             String form = intent.getStringExtra(EXTRA_FORM);
             int instanceId = intent.getIntExtra(EXTRA_INSTANCE_ID, 0);
 
+            com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Alarm fired for: " + medName);
+            
+            SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+            boolean quietHoursEnabled = sp.getBoolean(SettingsViewModel.KEY_QUIET_HOURS_ENABLED, false);
+            boolean inQuietHours = quietHoursEnabled && isInQuietHours(sp);
+
             showNotification(context, medName, amount, form, instanceId);
-            playAlertSound(context);
+            
+            if (!inQuietHours) {
+                playAlertSound(context);
+            } else {
+                com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Quiet Hours active. Skipping alert sound.");
+            }
+        } else {
+            com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Received unknown intent: " + intent.getAction());
+        }
+    }
+
+    /**
+     * Checks if the current time falls within the user-defined Quiet Hours.
+     */
+    private boolean isInQuietHours(SharedPreferencesManager sp) {
+        String startStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_START, "23:00");
+        String endStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_END, "07:00");
+
+        try {
+            String[] startParts = startStr.split(":");
+            String[] endParts = endStr.split(":");
+
+            int startHour = Integer.parseInt(startParts[0]);
+            int startMin = Integer.parseInt(startParts[1]);
+            int endHour = Integer.parseInt(endParts[0]);
+            int endMin = Integer.parseInt(endParts[1]);
+
+            Calendar now = Calendar.getInstance();
+            int nowHour = now.get(Calendar.HOUR_OF_DAY);
+            int nowMin = now.get(Calendar.MINUTE);
+
+            int nowTotalMinutes = nowHour * 60 + nowMin;
+            int startTotalMinutes = startHour * 60 + startMin;
+            int endTotalMinutes = endHour * 60 + endMin;
+
+            if (startTotalMinutes < endTotalMinutes) {
+                // Same day range (e.g., 09:00 - 17:00)
+                return nowTotalMinutes >= startTotalMinutes && nowTotalMinutes < endTotalMinutes;
+            } else {
+                // Overnight range (e.g., 22:00 - 07:00)
+                return nowTotalMinutes >= startTotalMinutes || nowTotalMinutes < endTotalMinutes;
+            }
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -66,22 +120,63 @@ public class ReminderReceiver extends BroadcastReceiver {
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
         String message = "Time to take " + amountStr + " " + (form != null ? form.toLowerCase() : "dose") + " of " + medName;
 
+        // 1. Content Intent (Open App)
         Intent contentIntent = new Intent(context, MainActivity.class);
-        android.app.PendingIntent pendingIntent = android.app.PendingIntent.getActivity(
+        PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
                 instanceId,
                 contentIntent,
-                android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
+
+        // 2. Action: Take
+        Intent takeIntent = new Intent(context, NotificationActionReceiver.class);
+        takeIntent.setAction(NotificationActionReceiver.ACTION_TAKE);
+        takeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
+        PendingIntent takePendingIntent = PendingIntent.getBroadcast(context, instanceId + 1000, takeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // 3. Action: Snooze
+        Intent snoozeIntent = new Intent(context, NotificationActionReceiver.class);
+        snoozeIntent.setAction(NotificationActionReceiver.ACTION_SNOOZE);
+        snoozeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
+        PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context, instanceId + 2000, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // 4. Action: Skip
+        Intent skipIntent = new Intent(context, NotificationActionReceiver.class);
+        skipIntent.setAction(NotificationActionReceiver.ACTION_SKIP);
+        skipIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
+        PendingIntent skipPendingIntent = PendingIntent.getBroadcast(context, instanceId + 3000, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // 5. Form-specific Large Icon
+        int iconRes = R.drawable.ic_med_pill;
+        if (form != null) {
+            try {
+                EForm eForm = EForm.valueOf(form);
+                iconRes = switch (eForm) {
+                    case Drops -> R.drawable.ic_med_drops;
+                    case Injection -> R.drawable.ic_med_injection;
+                    case Solution -> R.drawable.ic_med_solution;
+                    case Inhaler -> R.drawable.ic_med_inhaler;
+                    case Powder -> R.drawable.ic_med_powder;
+                    case Other -> R.drawable.ic_med_other;
+                    default -> R.drawable.ic_med_pill;
+                };
+            } catch (Exception ignored) {}
+        }
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), iconRes);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationManager.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_med_pill)
+                .setLargeIcon(largeIcon)
                 .setContentTitle("Medication Reminder")
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .addAction(R.drawable.ic_list, context.getString(R.string.take), takePendingIntent)
+                .addAction(android.R.drawable.ic_menu_recent_history, context.getString(R.string.button_snooze), snoozePendingIntent)
+                .addAction(android.R.drawable.ic_menu_close_clear_cancel, context.getString(R.string.button_skip), skipPendingIntent);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         try {
@@ -105,10 +200,17 @@ public class ReminderReceiver extends BroadcastReceiver {
         boolean bypass = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
         int volumePercent = sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
 
-        if (uriStr.isEmpty()) return;
+        Uri uri;
+        if (uriStr.isEmpty()) {
+            // Fallback to system default notification sound
+            uri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION);
+        } else {
+            uri = Uri.parse(uriStr);
+        }
+
+        if (uri == null) return;
 
         try {
-            Uri uri = Uri.parse(uriStr);
             MediaPlayer player = new MediaPlayer();
             player.setDataSource(context, uri);
 

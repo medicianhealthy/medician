@@ -51,8 +51,8 @@ public class ReminderManager {
         if (instance == null || !"SCHEDULED".equals(instance.getStatus())) return;
         
         long time = instance.getScheduledTime();
-        // Don't schedule for times that have already passed
-        if (time < System.currentTimeMillis()) return;
+        // Allow a 1-minute grace period for "now" reminders to account for processing time
+        if (time < System.currentTimeMillis() - 60000) return;
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, ReminderReceiver.class);
@@ -71,6 +71,7 @@ public class ReminderManager {
         );
 
         if (alarmManager != null) {
+            com.robinzon.medicationwizard.utils.Logger.log("ReminderManager", "Scheduling alarm for " + instance.getMedicationName() + " at " + time);
             // Android 12 (API 31) introduced strict exact alarm permissions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (alarmManager.canScheduleExactAlarms()) {

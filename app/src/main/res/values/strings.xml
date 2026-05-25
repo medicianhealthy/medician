@@ -24,6 +24,13 @@
     <string name="settings_quiet_hours_summary">Don\'t notify me while I\'m sleeping.</string>
     <string name="settings_quiet_hours_format">Don\'t notify me while I\'m sleeping (%1$s).</string>
 
+    <string name="settings_snooze_duration_title">Snooze Duration</string>
+    <string name="settings_snooze_duration_summary">Wait %1$d minutes before reminding me again.</string>
+    <string name="settings_max_snoozes_title">Max Snoozes</string>
+    <string name="settings_max_snoozes_summary">Stop reminding me after %1$s snoozes.</string>
+    <string name="settings_max_snoozes_unlimited_summary">Never stop reminding me until I take action.</string>
+    <string name="max_snoozes_unlimited">Unlimited</string>
+
     <string name="settings_sound_title">Alert Sound</string>
     <string name="settings_sound_summary">Current sound: %1$s</string>
 
@@ -42,6 +49,9 @@
     <string name="settings_category_data">Data &amp; Privacy</string>
     <string name="settings_backup_title">Backup &amp; Restore</string>
     <string name="settings_backup_summary">Safe-keep your data or move it to a new device.</string>
+    <string name="backup_export">Export Data</string>
+    <string name="backup_import">Import Data</string>
+    <string name="backup_restore_warning">Restoring a backup will delete all your current medications and history. This cannot be undone. Are you sure?</string>
 
     <string name="settings_clear_data_title">Start Fresh</string>
     <string name="settings_clear_data_summary">Wipe all medications and history. Careful, this can\'t be undone!</string>
@@ -69,9 +79,8 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="take">Take</string>
-    <string name="permission_rational_notification_title">Need you permission</string>
-    <string name="permission_rational_notification_message">I don\'t want you to forget your meds,
-        so please let me have permission to show you notifications.</string>
+    <string name="permission_rational_notification_title">Stay on Track!</string>
+    <string name="permission_rational_notification_message">To help you remember your doses, I\'d love to send you a friendly nudge when it\'s time. Sound good?</string>
     <string name="button_sure">Sure</string>
     <string name="buttoh_not_now">Not now</string>
     <string name="buttoh_never">Never</string>
@@ -81,6 +90,7 @@
     <string name="button_ok">Ok</string>
     <string name="button_select">Select</string>
     <string name="button_skip">Skip</string>
+    <string name="button_snooze">Snooze</string>
     <string name="button_untake">Un-take</string>
     <string name="sort_scheduled">Scheduled</string>
     <string name="sort_name">Name</string>

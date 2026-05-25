@@ -1,6 +1,9 @@
 package com.robinzon.medicationwizard;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -103,6 +106,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         mHasCreated = true;
         Statisticator.onSessionStarted(this);
+        checkExactAlarmPermission();
+    }
+
+    /**
+     * Checks if the app has permission to schedule exact alarms (Android 12+).
+     * If not, redirects the user to the system settings page.
+     */
+    private void checkExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            android.app.AlarmManager alarmManager = getSystemService(android.app.AlarmManager.class);
+            if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                        .setTitle("Exact Alarms Required")
+                        .setMessage("To ensure your medication reminders fire at the exact minute, please allow the app to schedule exact alarms.")
+                        .setPositiveButton("Settings", (dialog, which) -> {
+                            Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                            startActivity(intent);
+                        })
+                        .setNegativeButton("Not Now", null)
+                        .show();
+            }
+        }
     }
 
     /**
@@ -212,9 +237,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionManager.REQUEST_PERMISSION_CODE_POST_NOTIFICATIONS) {
-            final boolean permissionsArrayValid = permissions.length > 0;
-            final boolean permissionHasGranted = (grantResults[0] == PackageManager.PERMISSION_GRANTED);
-            final boolean granted = permissionsArrayValid && permissionHasGranted;
+            final boolean hasResults = grantResults.length > 0;
+            final boolean granted = hasResults && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
             NotificationManager.getInstance(this).setHasGrantedPermission(granted);
         }
     }

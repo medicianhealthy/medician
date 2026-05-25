@@ -15,6 +15,7 @@ import com.robinzon.medicationwizard.databinding.FragmentHistoryBinding;
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
+import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.ui.todaysmedications.MedicationsAdapter;
 
 import java.util.ArrayList;
@@ -55,6 +56,10 @@ public class HistoryFragment extends MedicationWizardFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
+        // Ensure content is not hidden by the ad banner
+        setPaddingForRecyclerView(binding.recyclerHistory, false);
+        setPaddingForRecyclerView(binding.emptyLayout.emptyStateContainer, false);
+
         // Hide FAB on History screen for a focused reading experience
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(false);
@@ -62,6 +67,7 @@ public class HistoryFragment extends MedicationWizardFragment {
 
         setupRecyclerView();
         setupCalendar();
+        setupEmptyView();
 
         // Observe history for the selected date
         viewModel.getHistory().observe(getViewLifecycleOwner(), instances -> {
@@ -132,6 +138,17 @@ public class HistoryFragment extends MedicationWizardFragment {
             Calendar cal = Calendar.getInstance();
             cal.set(year, month, dayOfMonth);
             viewModel.selectDate(cal.getTimeInMillis());
+        });
+    }
+
+    /**
+     * Binds the action button in the empty state view to open the add medication flow.
+     */
+    private void setupEmptyView() {
+        binding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
+            com.robinzon.medicationwizard.utils.Logger.log("HistoryFragment", "Empty state action clicked");
+            AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
+            bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
         });
     }
 

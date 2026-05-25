@@ -365,6 +365,12 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
         mMedication.addTimeStampsForDay(mTimesInDay);
         mMedication.addToMedicationList(getContext());
+
+        // Proactively ask for notification permissions on Android 13+ with a friendly rationale
+        if (getActivity() != null) {
+            com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(getActivity()).requestWithRationale();
+        }
+
         dismiss();
     }
 

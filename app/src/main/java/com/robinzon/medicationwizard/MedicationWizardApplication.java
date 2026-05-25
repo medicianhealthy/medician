@@ -11,10 +11,16 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
+import com.robinzon.medicationwizard.workers.HistoryCleanupWorker;
+
+import java.util.concurrent.TimeUnit;
 
 public class MedicationWizardApplication extends Application
         implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
@@ -28,6 +34,19 @@ public class MedicationWizardApplication extends Application
         
         NotificationManager.createNotificationChannel(this);
         applyTheme();
+        scheduleHistoryCleanup();
+    }
+
+    private void scheduleHistoryCleanup() {
+        PeriodicWorkRequest cleanupRequest = new PeriodicWorkRequest.Builder(
+                HistoryCleanupWorker.class,
+                24, TimeUnit.HOURS)
+                .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "HistoryCleanup",
+                ExistingPeriodicWorkPolicy.KEEP,
+                cleanupRequest);
     }
 
     private void applyTheme() {

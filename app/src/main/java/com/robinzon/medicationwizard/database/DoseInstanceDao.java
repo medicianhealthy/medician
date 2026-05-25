@@ -49,8 +49,14 @@ public interface DoseInstanceDao {
      *
      * @return Observable list of all historical and future dose instances.
      */
+    @Query("SELECT * FROM dose_instances WHERE id = :instanceId")
+    DoseInstanceEntity getInstanceById(int instanceId);
+
     @Query("SELECT * FROM dose_instances ORDER BY scheduledTime ASC")
     LiveData<List<DoseInstanceEntity>> getAllInstances();
+
+    @Query("SELECT * FROM dose_instances ORDER BY scheduledTime ASC")
+    List<DoseInstanceEntity> getAllInstancesInternal();
 
     /**
      * Returns medications scheduled for a specific time window, sorted by schedule time.
@@ -109,4 +115,13 @@ public interface DoseInstanceDao {
      */
     @Query("DELETE FROM dose_instances")
     void deleteAll();
+
+    /**
+     * Deletes dose instances that were scheduled before the given timestamp.
+     * Used for periodic database maintenance.
+     *
+     * @param thresholdTime Cut-off time (epoch millis).
+     */
+    @Query("DELETE FROM dose_instances WHERE scheduledTime < :thresholdTime")
+    void deleteOldInstances(long thresholdTime);
 }

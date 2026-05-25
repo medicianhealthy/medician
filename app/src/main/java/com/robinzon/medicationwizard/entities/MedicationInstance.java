@@ -48,6 +48,7 @@ public class MedicationInstance extends Medication {
     public MedicationInstance(Medication medication) {
         super();
         if (medication != null) {
+            this.setId(medication.getId());
             this.setCommercialName(medication.getCommercialName());
             this.setAmount(medication.getAmount());
             this.setForm(medication.getForm());

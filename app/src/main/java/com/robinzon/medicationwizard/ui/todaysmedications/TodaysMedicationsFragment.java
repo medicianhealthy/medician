@@ -61,6 +61,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setPaddingForRecyclerView(mBinding.recyclerView);
+        setPaddingForRecyclerView(mBinding.emptyLayout.emptyStateContainer);
         setupSwipeRefresh();
         setupEmptyView();
         setupRecyclerView();
@@ -208,6 +209,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
      */
     private void setupEmptyView() {
         mBinding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
+            com.robinzon.medicationwizard.utils.Logger.log("TodaysMedicationsFragment", "Empty state action clicked");
             AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
             bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
         });

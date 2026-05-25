@@ -5,6 +5,9 @@ import androidx.room.PrimaryKey;
 
 import com.robinzon.medicationwizard.entities.MedicationInstance;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Represents a single specific dose of medication as a table row in the Room database.
  * <p>
@@ -50,6 +53,9 @@ public class DoseInstanceEntity {
     
     /** Casual instructions (e.g., "After eating"). */
     private String instruction;
+    
+    /** Number of times this specific dose has been snoozed. */
+    private int snoozeCount;
 
     /**
      * Empty constructor required by Room.
@@ -109,4 +115,50 @@ public class DoseInstanceEntity {
 
     public String getInstruction() { return instruction; }
     public void setInstruction(String instruction) { this.instruction = instruction; }
+
+    public int getSnoozeCount() { return snoozeCount; }
+    public void setSnoozeCount(int snoozeCount) { this.snoozeCount = snoozeCount; }
+
+    /**
+     * Serializes this entity into a JSONObject for backup purposes.
+     */
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("medicationId", medicationId);
+            json.put("medicationName", medicationName);
+            json.put("amount", (double) amount);
+            json.put("strength", (double) strength);
+            json.put("unit", unit);
+            json.put("form", form);
+            json.put("scheduledTime", scheduledTime);
+            json.put("actionTime", actionTime);
+            json.put("status", status);
+            json.put("instruction", instruction);
+            json.put("snoozeCount", snoozeCount);
+        } catch (JSONException e) {
+            return null;
+        }
+        return json;
+    }
+
+    /**
+     * Creates a DoseInstanceEntity from a JSONObject.
+     */
+    public static DoseInstanceEntity fromJson(JSONObject json) {
+        if (json == null) return null;
+        DoseInstanceEntity entity = new DoseInstanceEntity();
+        entity.medicationId = json.optString("medicationId");
+        entity.medicationName = json.optString("medicationName");
+        entity.amount = (float) json.optDouble("amount");
+        entity.strength = (float) json.optDouble("strength");
+        entity.unit = json.isNull("unit") ? null : json.optString("unit");
+        entity.form = json.isNull("form") ? null : json.optString("form");
+        entity.scheduledTime = json.optLong("scheduledTime");
+        entity.actionTime = json.optLong("actionTime");
+        entity.status = json.optString("status");
+        entity.instruction = json.isNull("instruction") ? null : json.optString("instruction");
+        entity.snoozeCount = json.optInt("snoozeCount");
+        return entity;
+    }
 }

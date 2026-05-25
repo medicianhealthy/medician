@@ -359,6 +359,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
     }
 
     public String getId() { return mId; }
+    public void setId(String id) { this.mId = id; }
     public String getCommercialName() { return mCommercialName; }
     public void setCommercialName(@NonNull final String commercialName) { this.mCommercialName = commercialName; }
     public float getAmount() { return mAmount; }

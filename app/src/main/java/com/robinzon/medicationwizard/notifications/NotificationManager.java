@@ -115,6 +115,20 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         }
     }
 
+    /**
+     * Shows a rationale dialog first, then requests permission.
+     * Ideal for the first time a user takes an action that requires notifications.
+     */
+    public void requestWithRationale() {
+        if (notificationsAreDisabled()) {
+            if (!SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, false)) {
+                showRationaleDialog();
+            } else {
+                requestPermission();
+            }
+        }
+    }
+
     private boolean shouldShowRationalInnerDialog() {
         return PermissionManager.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.POST_NOTIFICATIONS);
     }
