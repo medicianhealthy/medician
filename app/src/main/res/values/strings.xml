@@ -124,4 +124,10 @@
 
     <string name="onboarding_title_3">Track Your Progress</string>
     <string name="onboarding_desc_3">Keep a detailed history of your health journey. It’s perfect for sharing with your healthcare provider.</string>
+
+    <!-- Premium -->
+    <string name="premium_title">Unlock Full Magic!</string>
+    <string name="premium_description">Upgrade to Premium and enjoy advanced features like Cloud Backup, Quiet Hours, and an Ad-free experience.</string>
+    <string name="premium_upgrade_button">Upgrade Now</string>
+    <string name="premium_maybe_later">Maybe Later</string>
 </resources>

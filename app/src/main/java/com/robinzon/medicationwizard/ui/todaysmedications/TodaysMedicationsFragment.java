@@ -150,6 +150,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                         AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
                     });
                 }).show();
+        
+        // Monetization: Show interstitial ad after completing a task (Take/Skip)
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).getAdsManager().showInterstitialAd();
+        }
     }
 
     /**

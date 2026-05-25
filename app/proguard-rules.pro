@@ -12,10 +12,28 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
+# Keep Line Numbers for Crashlytics
 -keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
 -renamesourcefileattribute SourceFile
+
+# --- Room Persistence Library ---
+-keep class * extends androidx.room.RoomDatabase
+-keep class com.robinzon.medicationwizard.database.** { *; }
+
+# --- Project Entities & Models ---
+# Keeping these ensures that SharedPreferences/JSON serialization doesn't break
+-keep class com.robinzon.medicationwizard.entities.** { *; }
+-keep class com.robinzon.medicationwizard.database.** { *; }
+
+# --- Google Play Services / AdMob ---
+-keep class com.google.android.gms.ads.** { *; }
+-keep class com.google.ads.** { *; }
+
+# --- Firebase ---
+-keep class com.google.firebase.** { *; }
+
+# --- WorkManager ---
+-keep class androidx.work.** { *; }
+
+# General safety for View Binding
+-keep class com.robinzon.medicationwizard.databinding.** { *; }

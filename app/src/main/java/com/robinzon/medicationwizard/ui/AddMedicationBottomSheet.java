@@ -369,6 +369,11 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         // Proactively ask for notification permissions on Android 13+ with a friendly rationale
         if (getActivity() != null) {
             com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(getActivity()).requestWithRationale();
+            
+            // Trigger interstitial ad after a slight delay so it doesn't overlap with the permission logic
+            if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity) {
+                ((com.robinzon.medicationwizard.MainActivity) getActivity()).getAdsManager().showInterstitialAd();
+            }
         }
 
         dismiss();

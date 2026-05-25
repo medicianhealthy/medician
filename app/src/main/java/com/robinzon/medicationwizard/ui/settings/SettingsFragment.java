@@ -146,8 +146,13 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.layoutVolume.setVisibility(bypass ? View.VISIBLE : View.GONE);
         });
         
-        binding.btnBypassVolume.setOnClickListener(v -> 
-            viewModel.setBypassVolume(!Boolean.TRUE.equals(viewModel.getBypassVolume().getValue())));
+        binding.btnBypassVolume.setOnClickListener(v -> {
+            if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+                viewModel.setBypassVolume(!Boolean.TRUE.equals(viewModel.getBypassVolume().getValue()));
+            } else {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+            }
+        });
 
         // 2d. Volume Slider Configuration
         viewModel.getNotifVolume().observe(getViewLifecycleOwner(), volume -> 
@@ -218,6 +223,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnQuietHours.setOnClickListener(v -> {
+            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+
             // Sequence of two time pickers to define a range
             MaterialTimePicker startPicker = new MaterialTimePicker.Builder()
                     .setTimeFormat(TimeFormat.CLOCK_24H)

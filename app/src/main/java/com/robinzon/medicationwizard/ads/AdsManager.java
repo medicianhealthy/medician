@@ -139,9 +139,22 @@ public class AdsManager implements OnAdActionListener{
 
     /** @noinspection unused*/
     public void showInterstitialAd() {
+        if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) return;
+
         if (null != mMainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
-            mMainInterstitial.show();
+            if (shouldShowInterstitialBasedOnUsage()) {
+                mMainInterstitial.show();
+            }
         }
+    }
+
+    private boolean shouldShowInterstitialBasedOnUsage() {
+        final int sessions = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(mActivity);
+        final float minutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(mActivity);
+        
+        // Thresholds: User must have either opened the app at least twice 
+        // OR spent more than 2 minutes of active time in the app.
+        return sessions >= 2 || minutes >= 2.0f;
     }
     /** @noinspection unused*/
     public void showRewarded() {
@@ -209,6 +222,6 @@ public class AdsManager implements OnAdActionListener{
 
     @SuppressWarnings("SameReturnValue")
     private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
-        return 30L;
+        return 180L; // 3 minutes
     }
 }

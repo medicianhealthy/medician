@@ -181,11 +181,22 @@
                             android:layout_toEndOf="@id/icon_bypass"
                             android:orientation="vertical">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/settings_bypass_title"
-                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_bypass_title"
+                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:layout_marginStart="8dp"
+                                    app:srcCompat="@drawable/ic_crown" />
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -264,11 +275,22 @@
                         android:layout_toEndOf="@id/icon_quiet"
                         android:orientation="vertical">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/settings_quiet_hours_title"
-                            android:textAppearance="?attr/textAppearanceTitleMedium" />
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_quiet_hours_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginStart="8dp"
+                                app:srcCompat="@drawable/ic_crown" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/txt_quiet_hours_desc"

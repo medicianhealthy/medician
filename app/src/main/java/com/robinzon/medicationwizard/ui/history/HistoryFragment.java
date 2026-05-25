@@ -63,6 +63,9 @@ public class HistoryFragment extends MedicationWizardFragment {
         // Hide FAB on History screen for a focused reading experience
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(false);
+            
+            // Monetization: Show interstitial ad when entering History
+            ((MainActivity) getActivity()).getAdsManager().showInterstitialAd();
         }
 
         setupRecyclerView();

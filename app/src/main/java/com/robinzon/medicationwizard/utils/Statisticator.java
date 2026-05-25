@@ -22,6 +22,10 @@ public class Statisticator {
         return SharedPreferencesManager.getInstance(context).getInt(SPK_SESSION_COUNT, 0);
     }
 
+    public static float getTotalUsageMinutes(final Context context) {
+        return SharedPreferencesManager.getInstance(context).getFloat(SPK_SESSION_TIME_MINUTES, 0F);
+    }
+
     private static float getLastSavedSessionTimeMinutes(Context context) {
         return SharedPreferencesManager.getInstance(context).getFloat(SPK_SESSION_TIME_MINUTES, 0F);
     }
