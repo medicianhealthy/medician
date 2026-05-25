@@ -30,8 +30,10 @@ import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
+import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
 import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.Screen;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.Statisticator;
 
 import java.util.Timer;
@@ -64,6 +66,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Check if onboarding needs to be shown
+        if (!SharedPreferencesManager.getInstance(this).getBoolean(OnboardingActivity.KEY_HAS_SEEN_ONBOARDING, false)) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+            finish();
+            return;
+        }
+
         ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 

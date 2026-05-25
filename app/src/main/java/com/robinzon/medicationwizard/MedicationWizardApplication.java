@@ -100,10 +100,8 @@ public class MedicationWizardApplication extends Application
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     protected void onMoveToForeground() {
         // Show the ad (if available) when the app moves to foreground.
-        if (null != mCurrentActivity) {
-            ((MainActivity)mCurrentActivity).onMoveToForeground();
+        if (mCurrentActivity instanceof MainActivity) {
+            ((MainActivity) mCurrentActivity).onMoveToForeground();
         }
-
-
     }
 }

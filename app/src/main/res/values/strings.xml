@@ -110,4 +110,18 @@
     <string name="empty_meds_title">The Wizard is waiting!</string>
     <string name="empty_meds_subtitle">I’m ready to help you track your medications. Let’s add your first one and start the magic!</string>
     <string name="empty_meds_action">Add my first med</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_skip">Skip</string>
+    <string name="onboarding_btn_finish">Get Started</string>
+
+    <string name="onboarding_title_1">Meet the Wizard</string>
+    <string name="onboarding_desc_1">Your personal health companion is here to help you manage your medications with a touch of magic.</string>
+
+    <string name="onboarding_title_2">Smart Reminders</string>
+    <string name="onboarding_desc_2">Never miss a dose again. We\'ll send you timely reminders that respect your sleep schedule.</string>
+
+    <string name="onboarding_title_3">Track Your Progress</string>
+    <string name="onboarding_desc_3">Keep a detailed history of your health journey. It’s perfect for sharing with your healthcare provider.</string>
 </resources>

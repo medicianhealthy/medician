@@ -25,6 +25,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:theme="@style/Theme.MedicationWizard.NoActionBar"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_application_id_test"/>

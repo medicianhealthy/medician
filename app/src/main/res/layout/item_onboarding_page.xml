@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:padding="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_illustration"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Softer Background Glow (No more green grid) -->
+        <View
+            android:id="@+id/glow"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
+            android:background="@drawable/soft_glow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- The Owl Mascot (Center) -->
+        <ImageView
+            android:id="@+id/img_mascot"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:elevation="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_wizard_high_def"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Floating Accessory (Top Left) -->
+        <ImageView
+            android:id="@+id/img_accessory_1"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:alpha="0.8"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toTopOf="@+id/img_mascot"
+            app:layout_constraintEnd_toStartOf="@+id/img_mascot"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8"
+            app:tint="?attr/colorPrimary"
+            tools:src="@drawable/ic_magic_wand" />
+
+        <!-- Floating Accessory (Bottom Right) -->
+        <ImageView
+            android:id="@+id/img_accessory_2"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:rotation="15"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toEndOf="@+id/img_mascot"
+            app:layout_constraintTop_toBottomOf="@+id/img_mascot"
+            app:layout_constraintVertical_bias="0.2"
+            app:tint="?attr/colorPrimary"
+            tools:src="@drawable/ic_med_pill" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/txt_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceHeadlineLarge"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_illustration"
+        tools:text="Meet the Wizard" />
+
+    <TextView
+        android:id="@+id/txt_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:lineSpacingExtra="4sp"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_title"
+        tools:text="Your personal health companion is here to help you manage your medications with a touch of magic." />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
