@@ -41,6 +41,11 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
     /**
      * Initializes data binding and the {@link MedicationsListViewModel}.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
      */
     @Nullable
     @Override
@@ -82,12 +87,25 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
     /**
      * Toggles visibility between the empty state Wizard mascot and the medication cards.
+     * <p>
+     * Performance: This method only updates visibility and starts/stops animations 
+     * when the state changes, avoiding redundant UI work.
+     * </p>
      *
      * @param isEmpty True if there are no medications defined.
      */
     private void updateUiState(boolean isEmpty) {
+        if (binding == null) return;
+
         binding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         binding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        
+        if (isEmpty) {
+            startEmptyStateAnimations(binding.getRoot());
+        } else {
+            stopEmptyStateAnimations();
+        }
+
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(!isEmpty);
         }
@@ -95,6 +113,9 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
     /**
      * Connects the empty state action button to the "Add Medication" flow.
+     * <p>
+     * Performance: The listener is set once during view creation.
+     * </p>
      */
     private void setupEmptyView() {
         binding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
@@ -107,6 +128,10 @@ public class MedicationsListFragment extends MedicationWizardFragment {
     /**
      * Configures the RecyclerView with the {@link MedicationsListAdapter} and 
      * sets up Edit/Delete listeners.
+     * <p>
+     * Performance: RecyclerView uses fixed size optimization if applicable, 
+     * and the adapter is initialized once.
+     * </p>
      */
     private void setupRecyclerView() {
         adapter = new MedicationsListAdapter();
@@ -160,11 +185,20 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
     /**
      * Configures the pull-to-refresh behavior.
+     * <p>
+     * Performance: Triggers a filtered query in the ViewModel to refresh the active list.
+     * </p>
      */
     private void setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener(() -> viewModel.refreshMedications());
     }
 
+    /**
+     * Standard cleanup of view binding to prevent memory leaks.
+     * <p>
+     * Performance: Automatically stops any running animations via the base class.
+     * </p>
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

@@ -130,4 +130,8 @@
     <string name="premium_description">Upgrade to Premium and enjoy advanced features like Cloud Backup, Quiet Hours, and an Ad-free experience.</string>
     <string name="premium_upgrade_button">Upgrade Now</string>
     <string name="premium_maybe_later">Maybe Later</string>
+    <string name="menu_go_premium">Go Premium</string>
+    <string name="streak_format">%1$d Day Magic Streak!</string>
+    <string name="history_percent_format">%1$d%% Completed</string>
+    <string name="history_doses_format">%1$d of %2$d doses taken</string>
 </resources>

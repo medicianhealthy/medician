@@ -1,6 +1,11 @@
 package com.robinzon.medicationwizard.ui.todaysmedications;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -42,9 +48,18 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private FragmentTodaysMedicationsBinding mBinding;
     private TodaysMedicationsViewModel mViewModel;
     private MedicationsAdapter mAdapter;
+    
+    private final Handler mInactivityHandler = new Handler(Looper.getMainLooper());
+    private Runnable mInactivityRunnable;
+    private ValueAnimator mLightningAnimator;
 
     /**
      * Initializes the binding and ViewModel for the fragment.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
      */
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(TodaysMedicationsViewModel.class);
@@ -72,6 +87,30 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             mAdapter.setMedications(instances);
             updateUiState(instances.isEmpty());
             mBinding.swipeRefresh.setRefreshing(false);
+            
+            // Engagement: Recalculate health streak on data changes
+            updateStreakBadge();
+        });
+    }
+
+    /**
+     * Calculates the current health streak and updates the UI badge.
+     * <p>
+     * Performance: Uses StreakManager's background calculation to ensure 
+     * no UI stutter during database queries.
+     * </p>
+     */
+    private void updateStreakBadge() {
+        com.robinzon.medicationwizard.utils.StreakManager.calculateCurrentStreak(requireContext(), streakCount -> {
+            if (getActivity() == null) return;
+            getActivity().runOnUiThread(() -> {
+                if (streakCount >= 2) {
+                    mBinding.cardStreak.setVisibility(View.VISIBLE);
+                    mBinding.txtStreak.setText(getString(R.string.streak_format, streakCount));
+                } else {
+                    mBinding.cardStreak.setVisibility(View.GONE);
+                }
+            });
         });
     }
 
@@ -140,6 +179,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
         });
+
+        // Track achievements for In-App Review eligibility
+        com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(requireContext());
         
         Snackbar.make(mBinding.getRoot(), instance.getMedicationName() + " marked as " + status.toLowerCase(), Snackbar.LENGTH_LONG)
                 .setAction("Undo", v -> {
@@ -154,6 +196,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         // Monetization: Show interstitial ad after completing a task (Take/Skip)
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).getAdsManager().showInterstitialAd();
+            
+            // Engagement: Potentially trigger Google Play Review flow for power users
+            com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(getActivity());
         }
     }
 
@@ -184,18 +229,52 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         picker.show(getChildFragmentManager(), "reschedule");
     }
 
-    /**
-     * Toggles between the list view and the empty state view (Wizard mascot).
-     *
-     * @param isEmpty True if there are no medications for today.
-     */
     private void updateUiState(boolean isEmpty) {
         mBinding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         mBinding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        
+        if (isEmpty) {
+            startEmptyStateAnimations(mBinding.getRoot());
+            startLightningLogic();
+        } else {
+            stopEmptyStateAnimations();
+            stopLightningLogic();
+        }
+
         // Hide/Show FAB based on empty state for cleaner M3 aesthetics
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(!isEmpty);
         }
+    }
+
+    private void startLightningLogic() {
+        MaterialButton actionButton = mBinding.emptyLayout.btnEmptyAction;
+        
+        mInactivityRunnable = () -> {
+            if (mLightningAnimator == null) {
+                mLightningAnimator = ValueAnimator.ofInt(0, 10, 0);
+                mLightningAnimator.setDuration(1500);
+                mLightningAnimator.setRepeatCount(3);
+                mLightningAnimator.addUpdateListener(animation -> 
+                    actionButton.setStrokeWidth((int) animation.getAnimatedValue()));
+
+                ObjectAnimator mascotAnim = ObjectAnimator.ofFloat(mBinding.emptyLayout.emptyMascot, "rotation", 0f, 10f, -10f, 0f);
+                mascotAnim.setDuration(1000);
+
+                AnimatorSet set = new AnimatorSet();
+                set.playTogether(mLightningAnimator, mascotAnim);
+                set.start();
+                
+                mInactivityHandler.postDelayed(mInactivityRunnable, 15000);
+            }
+        };
+        mInactivityHandler.postDelayed(mInactivityRunnable, 10000);
+    }
+
+    private void stopLightningLogic() {
+        mInactivityHandler.removeCallbacksAndMessages(null);
+        if (mLightningAnimator != null) mLightningAnimator.cancel();
+        mLightningAnimator = null;
     }
 
     /**
@@ -211,6 +290,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     /**
      * Binds the action button in the empty state view to open the add medication flow.
+     * <p>
+     * Performance: Starts breathing animation for UI engagement when empty.
+     * </p>
      */
     private void setupEmptyView() {
         mBinding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
@@ -221,10 +303,12 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     /**
-     * Cleans up the binding to avoid memory leaks.
+     * Cleans up the binding and stops animations to avoid memory leaks.
      */
     @Override
     public void onDestroyView() {
+        stopEmptyStateAnimations();
+        stopLightningLogic();
         super.onDestroyView();
         mBinding = null;
     }

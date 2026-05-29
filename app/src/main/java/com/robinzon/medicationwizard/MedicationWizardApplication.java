@@ -19,6 +19,7 @@ import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.workers.HistoryCleanupWorker;
+import com.robinzon.medicationwizard.billing.BillingManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,7 @@ public class MedicationWizardApplication extends Application
         NotificationManager.createNotificationChannel(this);
         applyTheme();
         scheduleHistoryCleanup();
+        BillingManager.getInstance(this); // Initialize billing and check entitlements
     }
 
     private void scheduleHistoryCleanup() {

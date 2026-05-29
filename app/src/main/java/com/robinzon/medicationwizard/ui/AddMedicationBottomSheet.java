@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.ui;
 
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -36,6 +39,7 @@ import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.utils.Logger;
+import com.robinzon.medicationwizard.utils.Screen;
 import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
 import org.json.JSONException;
@@ -57,8 +61,41 @@ import java.util.Set;
  * - Integration with modern Material components like AutoComplete dropdowns and Chips.
  * - Dual-mode operation: "New Medication" and "Edit Medication".
  * </p>
+ * <p>
+ * Performance: Uses customized window attributes to ensure a sharp, centered 
+ * card look that opens fully on all devices.
+ * </p>
  */
 public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
+
+    /**
+     * Standard lifecycle method to define the dialog's visual style.
+     */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialog);
+    }
+
+    /**
+     * Configures the behavior and constraints of the bottom sheet once it starts.
+     * <p>
+     * Performance: Forces full expansion and adheres to Material 3 standard anchoring.
+     * </p>
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                behavior.setSkipCollapsed(true);
+            }
+        }
+    }
 
     /** Map of dose index to the user-selected time. */
     private final SparseArray<SimpleDayTime> mTimesInDay = new SparseArray<>();

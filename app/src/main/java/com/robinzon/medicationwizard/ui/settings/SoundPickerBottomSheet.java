@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.ui.settings;
 
+import android.app.Dialog;
 import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.robinzon.medicationwizard.R;
 
@@ -29,8 +31,40 @@ import java.util.List;
  * list with radio-button selection and automatic audio previews when a 
  * sound is tapped.
  * </p>
+ * <p>
+ * Performance: Optimized for quick expansion and centered display on larger screens.
+ * </p>
  */
 public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
+
+    /**
+     * Standard lifecycle method to define the dialog's visual style.
+     */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialog);
+    }
+
+    /**
+     * Standard lifecycle method to configure the dialog window.
+     * <p>
+     * Performance: Forces immediate full expansion and adheres to Material 3 standard anchoring.
+     * </p>
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                behavior.setSkipCollapsed(true);
+            }
+        }
+    }
 
     private OnSoundSelectedListener listener;
     private String selectedSoundUri;

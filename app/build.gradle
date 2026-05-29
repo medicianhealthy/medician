@@ -58,7 +58,16 @@ dependencies {
     implementation 'com.google.android.material:material:1.14.0'
     
     // WorkManager
-    implementation 'androidx.work:work-runtime:2.11.0'
+    implementation 'androidx.work:work-runtime:2.11.2'
+
+    // Play Review
+    implementation 'com.google.android.play:review:2.0.2'
+    
+    // Play Billing
+    implementation 'com.android.billingclient:billing:7.1.1'
+
+    // Google User Messaging Platform (Consent)
+    implementation 'com.google.android.ump:user-messaging-platform:3.1.0'
 
     // Room
     implementation 'androidx.room:room-runtime:2.6.1'

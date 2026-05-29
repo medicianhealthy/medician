@@ -101,6 +101,17 @@ public interface DoseInstanceDao {
     List<DoseInstanceEntity> getInstancesInRangeInternal(long startTime, long endTime);
 
     /**
+     * Returns the count of doses that were NOT taken for a specific day.
+     * Used by the StreakManager to determine if a day was "Perfect".
+     *
+     * @param startTime Start of day (epoch millis).
+     * @param endTime   End of day (epoch millis).
+     * @return Count of doses with status other than 'TAKEN'.
+     */
+    @Query("SELECT COUNT(*) FROM dose_instances WHERE scheduledTime >= :startTime AND scheduledTime <= :endTime AND status != 'TAKEN'")
+    int getUnfinishedDosesCount(long startTime, long endTime);
+
+    /**
      * Deletes all future and past instances for a specific medication.
      * Called when a user deletes a medication definition from the main list.
      *

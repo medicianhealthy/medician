@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.robinzon.medicationwizard.MainActivity;
+import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.databinding.FragmentHistoryBinding;
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
@@ -20,6 +22,7 @@ import com.robinzon.medicationwizard.ui.todaysmedications.MedicationsAdapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * A fragment providing a historical log of medication doses.
@@ -38,6 +41,11 @@ public class HistoryFragment extends MedicationWizardFragment {
 
     /**
      * Initializes the data binding and the {@link HistoryViewModel}.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
      */
     @Nullable
     @Override
@@ -71,6 +79,9 @@ public class HistoryFragment extends MedicationWizardFragment {
         setupRecyclerView();
         setupCalendar();
         setupEmptyView();
+        
+        // Performance: Adjust empty state layout for screen density and calendar overlap
+        applyCompactEmptyState(binding.getRoot());
 
         // Observe history for the selected date
         viewModel.getHistory().observe(getViewLifecycleOwner(), instances -> {
@@ -78,12 +89,55 @@ public class HistoryFragment extends MedicationWizardFragment {
             boolean isEmpty = instances == null || instances.isEmpty();
             binding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
             binding.recyclerHistory.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+            
+            if (isEmpty) {
+                // Performance: Start animations only when the UI is in empty state
+                startEmptyStateAnimations(binding.getRoot());
+                binding.cardSummary.setVisibility(View.GONE);
+            } else {
+                stopEmptyStateAnimations();
+                updateSummaryCard(instances);
+            }
         });
+    }
+
+    /**
+     * Calculates the daily performance metrics and updates the summary header.
+     * <p>
+     * Performance: Performs simple list iteration to calculate percentages 
+     * without creating heavy intermediate objects.
+     * </p>
+     *
+     * @param instances The list of medication instances for the day.
+     */
+    private void updateSummaryCard(List<DoseInstanceEntity> instances) {
+        int total = instances.size();
+        int taken = 0;
+        for (DoseInstanceEntity e : instances) {
+            if ("TAKEN".equals(e.getStatus())) taken++;
+        }
+
+        int percent = (int) (((float) taken / total) * 100);
+        
+        binding.cardSummary.setVisibility(View.VISIBLE);
+        binding.progressCompletion.setProgress(percent, true);
+        binding.txtCompletionTitle.setText(getString(R.string.history_percent_format, percent));
+        binding.txtCompletionSubtitle.setText(getString(R.string.history_doses_format, taken, total));
+
+        // Visual reward: Change progress color if 100% complete
+        if (percent == 100) {
+            binding.progressCompletion.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.md_theme_light_primary));
+        } else {
+            binding.progressCompletion.setIndicatorColor(ContextCompat.getColor(requireContext(), R.color.md_theme_light_secondary));
+        }
     }
 
     /**
      * Initializes the RecyclerView with the standard {@link MedicationsAdapter}.
      * Reuses the same action logic as the Today's Medications screen.
+     * <p>
+     * Performance: Reuses the existing Adapter class to minimize binary size.
+     * </p>
      */
     private void setupRecyclerView() {
         adapter = new MedicationsAdapter(new ArrayList<>());
@@ -146,6 +200,9 @@ public class HistoryFragment extends MedicationWizardFragment {
 
     /**
      * Binds the action button in the empty state view to open the add medication flow.
+     * <p>
+     * Performance: Starts breathing animation for UI engagement when empty.
+     * </p>
      */
     private void setupEmptyView() {
         binding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
