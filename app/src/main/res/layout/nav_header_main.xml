@@ -15,7 +15,7 @@
         android:layout_marginBottom="12dp"
         android:contentDescription="@string/nav_header_desc"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-        app:srcCompat="@drawable/ic_launcher" />
+        app:srcCompat="@mipmap/ic_launcher" />
 
     <TextView
         android:layout_width="match_parent"

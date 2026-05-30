@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- THE OWL DOCTOR (Centered & Symmetrical) -->
+    <group android:translateX="54" android:translateY="54" android:scaleX="0.8" android:scaleY="0.8">
+        <!-- Body (Round & Wise) -->
+        <path
+            android:fillColor="#FFF59D"
+            android:pathData="M0,-35c-22,0 -35,13 -35,35c0,25 13,40 35,40s35,-15 35,-40c0,-22 -13,-35 -35,-35z" />
+        <!-- Face (Bright White area for eyes) -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M0,-22c-15,0 -28,10 -28,25c0,12 10,20 28,20s28,-8 28,-20c0,-15 -13,-25 -28,-25z" />
+        <!-- Friendly Large Eyes -->
+        <path
+            android:fillColor="#263238"
+            android:pathData="M-14,-5m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+        <path
+            android:fillColor="#263238"
+            android:pathData="M14,-5m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+        <!-- Eye Sparkles (Gives life to the character) -->
+        <path android:fillColor="#FFFFFF" android:pathData="M-12,-8m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-2 0" />
+        <path android:fillColor="#FFFFFF" android:pathData="M16,-8m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-2 0" />
+        <!-- Gold Beak -->
+        <path
+            android:fillColor="#FFB300"
+            android:pathData="M0,5l-6,8l12,0z" />
+        <!-- Friendly Smile -->
+        <path
+            android:strokeColor="#263238"
+            android:strokeWidth="1.2"
+            android:strokeLineCap="round"
+            android:pathData="M-8,18c4,3 12,3 16,0" />
+        <!-- Stethoscope (Professional Detail) -->
+        <path
+            android:strokeColor="#546E7A"
+            android:strokeWidth="2.5"
+            android:strokeLineCap="round"
+            android:pathData="M-25,25c0,10 50,10 50,0" />
+        <path
+            android:fillColor="#546E7A"
+            android:pathData="M0,45m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+        <!-- Medical Heart Badge (Pink and Proud) -->
+        <path
+            android:fillColor="#E91E63"
+            android:pathData="M28,32c0,-3 -6,-3 -6,0c0,3 6,7 6,7s6,-4 6,-7c0,-3 -6,-3 -6,0" />
+    </group>
+
+</vector>
