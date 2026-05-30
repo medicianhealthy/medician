@@ -5,100 +5,86 @@
     android:viewportWidth="300"
     android:viewportHeight="300">
 
-    <!-- Ambient Magical Glow -->
-    <path
-        android:pathData="M150,150m-140,0a140,140 0,1 1,280 0a140,140 0,1 1,-280 0">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:centerX="150"
-                android:centerY="150"
-                android:gradientRadius="140"
-                android:type="radial">
-                <item android:color="#1A009688" android:offset="0.0" />
-                <item android:color="#00000000" android:offset="1.0" />
-            </gradient>
-        </aapt:attr>
-    </path>
+    <!-- THE OWL DOCTOR (High Definition UI Asset) -->
+    <group android:translateX="150" android:translateY="150" android:scaleX="0.9" android:scaleY="0.9">
 
-    <!-- Main Circular Backdrop (Clean Teal Gradient) -->
-    <path
-        android:pathData="M150,150m-100,0a100,100 0,1 1,200 0a100,100 0,1 1,-200 0">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:centerX="150"
-                android:centerY="150"
-                android:gradientRadius="100"
-                android:type="radial">
-                <item android:color="#FF4DB6AC" android:offset="0.0" />
-                <item android:color="#FF00796B" android:offset="1.0" />
-            </gradient>
-        </aapt:attr>
-    </path>
+        <!-- Outer Head/Body (Original Bright Yellow) -->
+        <path
+            android:fillColor="#FFFFCA28"
+            android:pathData="M0,-120c-75,0 -120,60 -120,130c0,100 60,160 120,160s120,-60 120,-160c0,-70 -45,-130 -120,-130z" />
 
-    <!-- Owl Body (Soft Yellow) -->
-    <path
-        android:fillColor="#FFF59D"
-        android:pathData="M150,80c-45,0 -70,30 -70,70c0,50 30,80 70,80s70,-30 70,-80c0,-40 -25,-70 -70,-70z" />
+        <!-- Ear Tufts -->
+        <path
+            android:fillColor="#FFFFCA28"
+            android:pathData="M-120,-10c-10,-60 20,-110 50,-125c10,20 20,25 40,25h60c20,0 30,-5 40,-25c30,15 60,65 50,125z" />
 
-    <!-- Owl Face (White Area) -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M150,105c-35,0 -55,20 -55,45c0,20 25,35 55,35s55,-15 55,-35c0,-25 -20,-45 -55,-45z" />
+        <!-- Facial Disk / Body Front (Original White) -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M0,-85c-60,0 -95,45 -95,95c0,40 45,70 95,70s95,-30 95,-70c0,-50 -35,-95 -95,-95z" />
 
-    <!-- Eyes (Friendly Large Circles) -->
-    <path
-        android:fillColor="#263238"
-        android:pathData="M120,140m-14,0a14,14 0,1 1,28 0a14,14 0,1 1,-28 0" />
-    <path
-        android:fillColor="#263238"
-        android:pathData="M180,140m-14,0a14,14 0,1 1,28 0a14,14 0,1 1,-28 0" />
+        <!-- Inner Facial Heart Shape (Original Pure White) -->
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M0,-75c-50,0 -85,35 -85,75c0,35 35,55 85,55s85,-20 85,-55c0,-40 -35,-75 -85,-75z" />
 
-    <!-- Eye Highlights -->
-    <path android:fillColor="#FFFFFF" android:pathData="M124,134m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
-    <path android:fillColor="#FFFFFF" android:pathData="M184,134m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+        <!-- Wing Detail -->
+        <path
+            android:fillColor="#FFF9A825"
+            android:pathData="M-120,10c0,0 -20,60 20,120c15,-10 30,-30 30,-60M120,10c0,0 20,60 -20,120c-15,-10 -30,-30 -30,-60" />
 
-    <!-- The Smile (Friendly curve) -->
-    <path
-        android:strokeColor="#263238"
-        android:strokeWidth="3.5"
-        android:strokeLineCap="round"
-        android:pathData="M135,175c10,8 20,8 30,0" />
+        <!-- Chest Feathers -->
+        <path
+            android:strokeColor="#FFE0E0E0"
+            android:strokeWidth="2.5"
+            android:strokeLineCap="round"
+            android:pathData="M-30,40 l8,8 l8,-8 M-10,40 l8,8 l8,-8 M10,40 l8,8 l8,-8 M-20,65 l8,8 l8,-8 M0,65 l8,8 l8,-8 M-10,90 l8,8 l8,-8" />
 
-    <!-- Beak (Small and Cute) -->
-    <path
-        android:fillColor="#FFB300"
-        android:pathData="M150,155l-7,10l14,0z" />
+        <!-- Friendly Large Eyes -->
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M-50,15m-28,0a28,28 0,1 1,56 0a28,28 0,1 1,-56 0" />
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M50,15m-28,0a28,28 0,1 1,56 0a28,28 0,1 1,-56 0" />
 
-    <!-- Doctor's Head Mirror -->
-    <path
-        android:fillColor="#B0BEC5"
-        android:pathData="M150,95m-15,0a15,15 0,1 1,30 0a15,15 0,1 1,-30 0" />
-    <path
-        android:fillColor="#E1F5FE"
-        android:pathData="M150,95m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+        <!-- Eye Highlights -->
+        <path android:fillColor="#FFFFFFFF" android:pathData="M-40,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M60,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
 
-    <!-- Stethoscope (Draped around neck) -->
-    <path
-        android:strokeColor="#546E7A"
-        android:strokeWidth="4"
-        android:strokeLineCap="round"
-        android:pathData="M100,185c0,20 100,20 100,0" />
-    <path
-        android:fillColor="#546E7A"
-        android:pathData="M150,210m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+        <!-- Beak -->
+        <path
+            android:fillColor="#FFFF9800"
+            android:pathData="M0,40 l-18,25 l18,10 l18,-10 z" />
 
-    <!-- Medical Heart (The "Medician" Brand Mark) -->
-    <path
-        android:fillColor="#E91E63"
-        android:pathData="M205,190c0,-6 -10,-6 -10,0c0,6 10,12 10,12s10,-6 10,-12c0,-6 -10,-6 -10,0" />
-    <!-- White cross inside heart -->
-    <path
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.5"
-        android:pathData="M200,190l10,0M205,185l0,10" />
+        <!-- DOCTOR ELEMENTS -->
 
-    <!-- Magic Sparkles -->
-    <path android:fillColor="#FFFFFF" android:pathData="M245,120l2,6l6,2l-6,2l-2,6l-2,-6l-6,-2l6,-2z" />
-    <path android:fillColor="#FFFFFF" android:pathData="M55,130l1,4l4,1l-4,1l-1,4l-1,-4l-4,-1l4,-1z" />
+        <!-- Head Mirror -->
+        <path
+            android:fillColor="#FFB0BEC5"
+            android:pathData="M0,-85m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0" />
+        <path
+            android:fillColor="#FF03A9F4"
+            android:pathData="M0,-85m-15,0a15,15 0,1 1,30 0a15,15 0,1 1,-30 0" />
+
+        <!-- Stethoscope -->
+        <path
+            android:strokeColor="#FF1976D2"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:pathData="M-90,60 Q0,140 90,60" />
+        <path
+            android:fillColor="#FF1976D2"
+            android:pathData="M0,135m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0" />
+
+        <!-- Red Heart Badge -->
+        <path
+            android:fillColor="#FFE91E63"
+            android:pathData="M75,120c0,-8 -16,-8 -16,0c0,8 16,16 16,16s16,-8 16,-16c0,-8 -16,-8 -16,0" />
+
+        <!-- Feet -->
+        <path android:fillColor="#FFFF9800" android:pathData="M-45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
+        <path android:fillColor="#FFFF9800" android:pathData="M45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
+    </group>
 
 </vector>

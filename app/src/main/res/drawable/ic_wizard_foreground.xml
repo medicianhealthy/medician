@@ -5,49 +5,85 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- THE OWL DOCTOR (Centered & Symmetrical) -->
-    <group android:translateX="54" android:translateY="54" android:scaleX="0.8" android:scaleY="0.8">
-        <!-- Body (Round & Wise) -->
+    <!-- THE OWL DOCTOR (Adaptive Foreground) -->
+    <!-- PERFORMANCE: Reduced scale to 0.18 to ensure full visibility within the 66dp "Safe Zone" -->
+    <group android:translateX="54" android:translateY="54" android:scaleX="0.18" android:scaleY="0.18">
+
+        <!-- Outer Head/Body (Bright Yellow) -->
         <path
-            android:fillColor="#FFF59D"
-            android:pathData="M0,-35c-22,0 -35,13 -35,35c0,25 13,40 35,40s35,-15 35,-40c0,-22 -13,-35 -35,-35z" />
-        <!-- Face (Bright White area for eyes) -->
+            android:fillColor="#FFFFCA28"
+            android:pathData="M0,-120c-75,0 -120,60 -120,130c0,100 60,160 120,160s120,-60 120,-160c0,-70 -45,-130 -120,-130z" />
+
+        <!-- Ear Tufts -->
         <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M0,-22c-15,0 -28,10 -28,25c0,12 10,20 28,20s28,-8 28,-20c0,-15 -13,-25 -28,-25z" />
-        <!-- Friendly Large Eyes -->
+            android:fillColor="#FFFFCA28"
+            android:pathData="M-120,-10c-10,-60 20,-110 50,-125c10,20 20,25 40,25h60c20,0 30,-5 40,-25c30,15 60,65 50,125z" />
+
+        <!-- Facial Disk / Body Front (White) -->
         <path
-            android:fillColor="#263238"
-            android:pathData="M-14,-5m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M0,-85c-60,0 -95,45 -95,95c0,40 45,70 95,70s95,-30 95,-70c0,-50 -35,-95 -95,-95z" />
+
+        <!-- Inner Facial Heart Shape -->
         <path
-            android:fillColor="#263238"
-            android:pathData="M14,-5m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
-        <!-- Eye Sparkles (Gives life to the character) -->
-        <path android:fillColor="#FFFFFF" android:pathData="M-12,-8m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-2 0" />
-        <path android:fillColor="#FFFFFF" android:pathData="M16,-8m-2,0a2,2 0,1 1,4 0a2,2 0,1 1,-2 0" />
-        <!-- Gold Beak -->
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M0,-75c-50,0 -85,35 -85,75c0,35 35,55 85,55s85,-20 85,-55c0,-40 -35,-75 -85,-75z" />
+
+        <!-- Wing Detail -->
         <path
-            android:fillColor="#FFB300"
-            android:pathData="M0,5l-6,8l12,0z" />
-        <!-- Friendly Smile -->
+            android:fillColor="#FFF9A825"
+            android:pathData="M-120,10c0,0 -20,60 20,120c15,-10 30,-30 30,-60M120,10c0,0 20,60 -20,120c-15,-10 -30,-30 -30,-60" />
+
+        <!-- Chest Feathers -->
         <path
-            android:strokeColor="#263238"
-            android:strokeWidth="1.2"
-            android:strokeLineCap="round"
-            android:pathData="M-8,18c4,3 12,3 16,0" />
-        <!-- Stethoscope (Professional Detail) -->
-        <path
-            android:strokeColor="#546E7A"
+            android:strokeColor="#FFE0E0E0"
             android:strokeWidth="2.5"
             android:strokeLineCap="round"
-            android:pathData="M-25,25c0,10 50,10 50,0" />
+            android:pathData="M-30,40 l8,8 l8,-8 M-10,40 l8,8 l8,-8 M10,40 l8,8 l8,-8 M-20,65 l8,8 l8,-8 M0,65 l8,8 l8,-8 M-10,90 l8,8 l8,-8" />
+
+        <!-- Eyes -->
         <path
-            android:fillColor="#546E7A"
-            android:pathData="M0,45m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
-        <!-- Medical Heart Badge (Pink and Proud) -->
+            android:fillColor="#FF000000"
+            android:pathData="M-50,15m-28,0a28,28 0,1 1,56 0a28,28 0,1 1,-56 0" />
         <path
-            android:fillColor="#E91E63"
-            android:pathData="M28,32c0,-3 -6,-3 -6,0c0,3 6,7 6,7s6,-4 6,-7c0,-3 -6,-3 -6,0" />
+            android:fillColor="#FF000000"
+            android:pathData="M50,15m-28,0a28,28 0,1 1,56 0a28,28 0,1 1,-56 0" />
+
+        <!-- Eye Highlights -->
+        <path android:fillColor="#FFFFFFFF" android:pathData="M-40,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+        <path android:fillColor="#FFFFFFFF" android:pathData="M60,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+
+        <!-- Beak -->
+        <path
+            android:fillColor="#FFFF9800"
+            android:pathData="M0,40 l-18,25 l18,10 l18,-10 z" />
+
+        <!-- Head Mirror -->
+        <path
+            android:fillColor="#FFB0BEC5"
+            android:pathData="M0,-85m-30,0a30,30 0,1 1,60 0a30,30 0,1 1,-60 0" />
+        <path
+            android:fillColor="#FF03A9F4"
+            android:pathData="M0,-85m-15,0a15,15 0,1 1,30 0a15,15 0,1 1,-30 0" />
+
+        <!-- Stethoscope -->
+        <path
+            android:strokeColor="#FF1976D2"
+            android:strokeWidth="12"
+            android:strokeLineCap="round"
+            android:pathData="M-90,60 Q0,140 90,60" />
+        <path
+            android:fillColor="#FF1976D2"
+            android:pathData="M0,135m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0" />
+
+        <!-- Red Heart Badge -->
+        <path
+            android:fillColor="#FFE91E63"
+            android:pathData="M75,120c0,-8 -16,-8 -16,0c0,8 16,16 16,16s16,-8 16,-16c0,-8 -16,-8 -16,0" />
+
+        <!-- Feet -->
+        <path android:fillColor="#FFFF9800" android:pathData="M-45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
+        <path android:fillColor="#FFFF9800" android:pathData="M45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
     </group>
 
 </vector>

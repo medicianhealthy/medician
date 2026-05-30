@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
     android:width="512dp"
@@ -6,7 +5,7 @@
     android:viewportWidth="512"
     android:viewportHeight="512">
 
-    <!-- Background Rainbow Circle -->
+    <!-- Background Rainbow Circle (User Loves this) -->
     <path android:pathData="M256,256m-240,0a240,240 0,1 1,480 0a240,240 0,1 1,-480 0">
         <aapt:attr name="android:fillColor">
             <gradient
