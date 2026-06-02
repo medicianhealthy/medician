@@ -80,7 +80,7 @@
                 app:tint="?attr/colorOnPrimaryContainer" />
 
             <TextView
-                android:id="@+id/txt_streak"
+                android:id="@+id/txtStreak"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

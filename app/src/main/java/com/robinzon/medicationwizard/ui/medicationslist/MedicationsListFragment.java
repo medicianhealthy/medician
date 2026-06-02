@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.MainActivity;
+import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.databinding.FragmentMedicationsListBinding;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
@@ -129,8 +132,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
      * Configures the RecyclerView with the {@link MedicationsListAdapter} and 
      * sets up Edit/Delete listeners.
      * <p>
-     * Performance: RecyclerView uses fixed size optimization if applicable, 
-     * and the adapter is initialized once.
+     * Performance: Uses a GridLayoutManager on tablets to utilize screen space effectively.
      * </p>
      */
     private void setupRecyclerView() {
@@ -148,7 +150,14 @@ public class MedicationsListFragment extends MedicationWizardFragment {
                 bottomSheet.show(getChildFragmentManager(), "EditMedBottomSheet");
             }
         });
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        
+        int columns = getResources().getInteger(R.integer.medication_grid_columns);
+        if (columns > 1) {
+            binding.recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columns));
+        } else {
+            binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+
         binding.recyclerView.setAdapter(adapter);
         
         // Ensure the list doesn't get hidden behind the ad banner
