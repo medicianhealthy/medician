@@ -64,10 +64,6 @@ public class HistoryFragment extends MedicationWizardFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
-        // Ensure content is not hidden by the ad banner
-        setPaddingForRecyclerView(binding.recyclerHistory, false);
-        setPaddingForRecyclerView(binding.emptyLayout.emptyStateContainer, false);
-
         // Hide FAB on History screen for a focused reading experience
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(false);

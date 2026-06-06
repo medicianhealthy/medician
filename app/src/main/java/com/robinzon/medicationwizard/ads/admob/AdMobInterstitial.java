@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.ads.admob;
 
+import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.ads.AdError;
@@ -41,7 +42,7 @@ public class AdMobInterstitial extends AdMobAd {
         log("%s Requesting load.\n%s",getLogTag() , thisToString());
         if (Boolean.TRUE.equals(shouldBeLoaded())) {
             log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
-            setIsLoaded(true);
+            setIsLoading(true);
             log("%s Loading.\n%s",getLogTag() , thisToString());
             InterstitialAd.load(getActivity(), getAdUnitId() , getAdRequest() , getAdLoadCallBack());
         } else {

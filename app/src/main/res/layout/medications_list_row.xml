@@ -3,32 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    style="@style/Widget.Material3.CardView.Filled"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="6dp"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="?attr/colorSurface"
-    style="@style/Widget.Material3.CardView.Filled">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/medication_list_row_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
-
-        <ImageView
-            android:id="@+id/icon_done"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="16dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_done_pill"
-            app:tint="?attr/colorPrimary"
-            android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/med_icon"
@@ -40,203 +27,183 @@
             app:tint="?attr/colorPrimary"
             android:contentDescription="@string/medication_icon_desc" />
 
-        <TextView
-            android:id="@+id/med_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Cymbalta"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@+id/med_strength"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toTopOf="@id/med_icon" />
-
-        <TextView
-            android:id="@+id/med_strength"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="60.0 mg"
-            android:textAppearance="?attr/textAppearanceTitleSmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="@id/med_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/med_name"
-            app:layout_constraintTop_toTopOf="@id/med_name" />
-
-        <!-- Line 1 of Details: Status Summary (Visible when taken/skipped) -->
-        <TextView
-            android:id="@+id/txt_scheduled_summary"
+        <!-- Vertical stack for all textual content to prevent overlap -->
+        <LinearLayout
+            android:id="@+id/text_content_stack"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_marginStart="16dp"
-            android:visibility="gone"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/icon_done"
             app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toBottomOf="@id/med_name"
-            tools:text="Scheduled for 08:00"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/med_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                    android:textColor="?attr/colorOnSurface"
+                    tools:text="Advil" />
+
+                <TextView
+                    android:id="@+id/med_strength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="200 mL" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/detail_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_scheduled_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="Scheduled for 08:00"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txt_actual_action_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:visibility="gone"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorPrimary"
+                    tools:text="Took 2 pills at 14:52"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/group_scheduled_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    tools:visibility="visible">
+                    <TextView
+                        android:id="@+id/take"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/take"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+                    <TextView
+                        android:id="@+id/quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:textStyle="bold"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        tools:text="2" />
+                    <TextView
+                        android:id="@+id/form"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        tools:text="Pills" />
+                    <TextView
+                        android:id="@+id/at"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="at"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:textStyle="bold"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        tools:text="20:40" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/directions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="After eating" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/icon_done"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_done_pill"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null"
             tools:visibility="visible" />
 
-        <!-- Line 2 of Details: Actual Action (Visible when taken/skipped) -->
-        <TextView
-            android:id="@+id/txt_actual_action_summary"
+        <LinearLayout
+            android:id="@+id/action_buttons_container"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginStart="16dp"
-            android:visibility="gone"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toBottomOf="@id/txt_scheduled_summary"
-            tools:text="Took 1 Pill at 08:15"
-            tools:visibility="visible" />
-
-        <!-- Group for Actionable items (Take X At HH:MM) -->
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_scheduled_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:constraint_referenced_ids="take,quantity,form,at,time" />
-
-        <TextView
-            android:id="@+id/take"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="16dp"
-            android:text="@string/take"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toBottomOf="@id/med_name" />
-
-        <TextView
-            android:id="@+id/quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="3"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="@id/take"
-            app:layout_constraintStart_toEndOf="@id/take"
-            app:layout_constraintTop_toTopOf="@id/take" />
-
-        <TextView
-            android:id="@+id/form"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="Pills"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="@id/quantity"
-            app:layout_constraintStart_toEndOf="@id/quantity"
-            app:layout_constraintTop_toTopOf="@id/quantity" />
-
-        <TextView
-            android:id="@+id/at"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="At"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="@id/form"
-            app:layout_constraintStart_toEndOf="@id/form"
-            app:layout_constraintTop_toTopOf="@id/form" />
-
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="13:30"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant"
-
-            app:drawableStartCompat="@drawable/ic_clock"
-            android:drawablePadding="4dp"
-            app:drawableTint="?attr/colorOnSurfaceVariant"
-            app:layout_constraintBottom_toBottomOf="@id/at"
-            app:layout_constraintStart_toEndOf="@id/at"
-            app:layout_constraintTop_toTopOf="@id/at" />
-
-        <TextView
-            android:id="@+id/directions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginStart="16dp"
-            android:text="After a meal with a glass of water"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toBottomOf="@id/take" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/untake_btn"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_untake"
-            android:visibility="gone"
-            android:textColor="?attr/colorError"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toBottomOf="@id/txt_actual_action_summary"
-            tools:visibility="visible" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/skip_btn"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/button_skip"
-            android:insetLeft="0dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:minWidth="0dp"
-            android:gravity="start|center_vertical"
-            app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toBottomOf="@id/directions" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/take_btn"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Take"
-            android:insetRight="0dp"
-            app:layout_constraintBottom_toBottomOf="@id/skip_btn"
+            android:gravity="end|center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/skip_btn" />
+            app:layout_constraintStart_toEndOf="@id/med_icon"
+            app:layout_constraintTop_toBottomOf="@id/text_content_stack">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/reschedule_btn"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Reschedule"
-            app:layout_constraintBottom_toBottomOf="@id/take_btn"
-            app:layout_constraintEnd_toStartOf="@id/take_btn"
-            app:layout_constraintTop_toTopOf="@id/take_btn" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/untake_btn"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_untake"
+                android:textColor="?attr/colorError"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/skip_btn"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_skip" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/reschedule_btn"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reschedule" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/take_btn"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

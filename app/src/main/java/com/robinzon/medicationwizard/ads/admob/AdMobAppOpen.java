@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.ads.admob;
 
+import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.ads.AdError;

@@ -38,11 +38,13 @@
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.4</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 
     <style name="CustomBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
         <item name="backgroundTint">?attr/colorSurface</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.BottomSheet</item>
+        <item name="android:maxWidth">10000dp</item>
     </style>
 
     <style name="ShapeAppearance.App.BottomSheet" parent="ShapeAppearance.Material3.LargeComponent">

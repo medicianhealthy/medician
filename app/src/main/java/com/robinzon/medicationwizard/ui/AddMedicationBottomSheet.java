@@ -93,6 +93,9 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 behavior.setSkipCollapsed(true);
+                // Ensure it spans full width on tablets/landscape to prevent "floating"
+                behavior.setMaxWidth(Integer.MAX_VALUE);
+                bottomSheet.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             }
         }
     }

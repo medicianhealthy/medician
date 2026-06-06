@@ -14,5 +14,6 @@
         android:orderInCategory="110"
         android:title="@string/menu_go_premium"
         android:icon="@drawable/ic_crown"
+        app:iconTint="#FFD700"
         app:showAsAction="ifRoom" />
 </menu>

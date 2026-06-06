@@ -36,9 +36,6 @@ public class MedicationWizardFragment extends Fragment {
 
     private final List<AnimatorSet> mActiveAnimators = new ArrayList<>();
     
-    /** Standard padding to clear the FAB and its surrounding margins. */
-    private static final int ADDITIONAL_FAB_PADDING_DP = 88; // 56dp (FAB) + 16dp (margin) + 16dp (breathing room)
-
     /**
      * Triggers the synchronized animations for empty states (Breathing button + Twinkling stars).
      * <p>
@@ -138,24 +135,24 @@ public class MedicationWizardFragment extends Fragment {
         if (container != null) {
             container.setPadding(
                     container.getPaddingLeft(),
-                    (int) (8 * density),
+                    (int) (4 * density),
                     container.getPaddingRight(),
-                    (int) (8 * density)
+                    (int) (100 * density) // Even more bottom padding for the button
             );
         }
 
         if (mascotContainer != null) {
-            mascotContainer.getLayoutParams().height = (int) (120 * density);
+            mascotContainer.getLayoutParams().height = (int) (80 * density); // reduced from 100
         }
 
         if (mascot != null) {
-            mascot.getLayoutParams().width = (int) (100 * density);
-            mascot.getLayoutParams().height = (int) (100 * density);
+            mascot.getLayoutParams().width = (int) (60 * density); // reduced from 80
+            mascot.getLayoutParams().height = (int) (60 * density);
         }
 
         if (glow != null) {
-            glow.getLayoutParams().width = (int) (100 * density);
-            glow.getLayoutParams().height = (int) (100 * density);
+            glow.getLayoutParams().width = (int) (60 * density);
+            glow.getLayoutParams().height = (int) (60 * density);
         }
     }
 
@@ -182,11 +179,10 @@ public class MedicationWizardFragment extends Fragment {
      * Applies dynamic bottom padding to a view, with an option to exclude FAB clearance.
      * <p>
      * Implementation:
-     * 1. Fetches the real-time banner height from {@link AdMobBanner}.
-     * 2. Calculates total DP clearance needed based on the 'withFab' flag.
-     * 3. Converts DP to Pixels based on device density.
-     * 4. Updates the view's bottom padding while preserving existing horizontal/top padding.
-     * 5. If the view is a {@link RecyclerView}, it automatically disables 'clipToPadding'.
+     * 1. Add FAB clearance if requested.
+     * 2. Converts DP to Pixels based on device density.
+     * 3. Updates the view's bottom padding while preserving existing horizontal/top padding.
+     * 4. If the view is a {@link RecyclerView}, it automatically disables 'clipToPadding'.
      * </p>
      *
      * @param rootView The view to apply padding to.
@@ -194,13 +190,10 @@ public class MedicationWizardFragment extends Fragment {
      */
     protected void setPaddingForRecyclerView(@NonNull final View rootView, final boolean withFab) {
 
-        // 1. Calculate Banner height clearance
-        int bannerHeightDp = (int) (AdMobBanner.getBannerHeightDP((Activity) rootView.getContext()) * BANNER_HEIGHT_MULTIPLIER);
-        
-        // 2. Add FAB clearance if requested
-        int totalPaddingBottomDp = bannerHeightDp + (withFab ? ADDITIONAL_FAB_PADDING_DP : 0);
-        
-        int paddingBottomPx = (int) (totalPaddingBottomDp * Screen.getDensity(getResources()));
+        int paddingBottomPx = 0;
+        if (withFab) {
+            paddingBottomPx = getResources().getDimensionPixelSize(R.dimen.fab_clearance_padding);
+        }
 
         // Update padding safely without overwriting other sides
         rootView.setPadding(
@@ -211,7 +204,7 @@ public class MedicationWizardFragment extends Fragment {
         );
 
         if (rootView instanceof RecyclerView) {
-            // 4. Critically important: allows items to scroll 'under' the banner/fab and reach the bottom
+            // 2. Critically important: allows items to scroll 'under' the fab and reach the bottom
             ((RecyclerView)rootView).setClipToPadding(false);
         }
     }

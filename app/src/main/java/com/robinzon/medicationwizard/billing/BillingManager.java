@@ -9,6 +9,7 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -44,12 +45,14 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     private BillingManager(Context context) {
         this.mContext = context.getApplicationContext();
+        
+        PendingPurchasesParams pendingPurchasesParams = PendingPurchasesParams.newBuilder()
+                .enableOneTimeProducts()
+                .build();
+                
         this.mBillingClient = BillingClient.newBuilder(mContext)
                 .setListener(this)
-                .enablePendingPurchases(com.android.billingclient.api.PendingPurchasesParams.newBuilder()
-                        .enableOneTimeProducts() // Required to avoid crash in Billing 6.0+
-                        .enablePrepaidPlans()
-                        .build())
+                .enablePendingPurchases(pendingPurchasesParams)
                 .build();
         
         loadPremiumFallback();
@@ -124,9 +127,9 @@ public class BillingManager implements PurchasesUpdatedListener {
                 .setProductList(productList)
                 .build();
 
-        mBillingClient.queryProductDetailsAsync(params, (billingResult, productDetailsList) -> {
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                for (ProductDetails details : productDetailsList) {
+        mBillingClient.queryProductDetailsAsync(params, (billingResult, productDetailsResult) -> {
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsResult.getProductDetailsList() != null) {
+                for (ProductDetails details : productDetailsResult.getProductDetailsList()) {
                     if (PRODUCT_ID_PREMIUM.equals(details.getProductId())) {
                         mPremiumProductDetails = details;
                     }

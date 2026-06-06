@@ -9,121 +9,134 @@
     android:visibility="gone"
     tools:visibility="visible">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/empty_state_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
         android:paddingHorizontal="32dp"
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp">
+        android:paddingTop="32dp"
+        android:paddingBottom="48dp">
 
-        <!-- Large Mascot with Ambient Glow -->
-        <FrameLayout
-            android:id="@+id/mascot_container"
-            android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:clipChildren="false"
-            android:clipToPadding="false">
+        <!-- Mascot Glow Background -->
+        <View
+            android:id="@+id/mascot_glow"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.15"
+            android:background="@drawable/ic_wizard_background"
+            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+            app:layout_constraintTop_toTopOf="@+id/empty_mascot"
+            app:layout_constraintWidth_percent="0.6"
+            android:scaleX="1.8"
+            android:scaleY="1.8" />
 
-            <View
-                android:id="@+id/mascot_glow"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                android:alpha="0.1"
-                android:background="@drawable/ic_wizard_background"
-                android:scaleX="1.3"
-                android:scaleY="1.3" />
+        <!-- High Def Mascot -->
+        <ImageView
+            android:id="@+id/empty_mascot"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_wizard_high_def"
+            android:contentDescription="@null" />
 
-            <ImageView
-                android:id="@+id/empty_mascot"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_wizard_high_def"
-                android:contentDescription="@null" />
+        <!-- Animated Sparkles -->
+        <ImageView
+            android:id="@+id/empty_sparkle_1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toTopOf="@+id/empty_mascot"
+            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+            app:layout_constraintTop_toTopOf="@+id/empty_mascot"
+            app:tint="?attr/colorPrimary" />
 
-            <!-- Decorative Sparkles around Mascot -->
-            <ImageView
-                android:id="@+id/empty_sparkle_1"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="60dp"
-                android:layout_marginEnd="70dp"
-                android:src="@drawable/ic_sparkle"
-                app:tint="?attr/colorPrimary" />
+        <ImageView
+            android:id="@+id/empty_sparkle_2"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+            app:layout_constraintHorizontal_bias="0.85"
+            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+            app:layout_constraintTop_toBottomOf="@+id/empty_mascot"
+            app:tint="?attr/colorPrimary" />
 
-            <ImageView
-                android:id="@+id/empty_sparkle_2"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="50dp"
-                android:layout_marginStart="80dp"
-                android:src="@drawable/ic_sparkle"
-                app:tint="?attr/colorPrimary" />
+        <ImageView
+            android:id="@+id/empty_sparkle_3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+            app:layout_constraintTop_toTopOf="@+id/empty_mascot"
+            app:tint="?attr/colorPrimary" />
 
-            <ImageView
-                android:id="@+id/empty_sparkle_3"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="40dp"
-                android:layout_marginStart="90dp"
-                android:src="@drawable/ic_sparkle"
-                app:tint="?attr/colorPrimary" />
-
-            <ImageView
-                android:id="@+id/empty_sparkle_4"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="60dp"
-                android:layout_marginEnd="60dp"
-                android:src="@drawable/ic_sparkle"
-                app:tint="?attr/colorPrimary" />
-
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/empty_sparkle_4"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_sparkle"
+            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+            app:layout_constraintTop_toBottomOf="@+id/empty_mascot"
+            app:tint="?attr/colorPrimary" />
 
         <TextView
             android:id="@+id/empty_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:gravity="center"
             android:text="@string/empty_meds_title"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
             android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/empty_mascot" />
 
         <TextView
             android:id="@+id/empty_subtitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:lineSpacingExtra="2sp"
+            android:lineSpacingExtra="4sp"
             android:text="@string/empty_meds_subtitle"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/empty_title" />
 
-        <!-- Prominent Call to Action Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_empty_action"
             style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:minWidth="200dp"
-            android:paddingVertical="12dp"
+            android:layout_marginTop="40dp"
+            android:minWidth="240dp"
+            android:paddingVertical="16dp"
             android:text="@string/empty_meds_action"
-            android:textSize="16sp"
-            app:cornerRadius="20dp"
+            android:textSize="18sp"
+            app:cornerRadius="24dp"
             app:icon="@android:drawable/ic_menu_add"
-            app:iconSize="20dp" />
+            app:iconSize="24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/empty_subtitle" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,13 +1,12 @@
 package com.robinzon.medicationwizard.ads.admob;
 
 import android.app.Activity;
-import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -27,9 +26,8 @@ public class AdMobBanner extends AdMobAd {
 
     private final AdView mAdView;
     private AdListener mAdListener;
-    private boolean mInitialLayoutComplete;
-    private static ConstraintLayout mAdContainerView;
-    private static AdSize mAdSize;
+    private FrameLayout mAdContainerView;
+    private boolean mIsViewAdded = false;
 
     public AdMobBanner(final @NonNull String adUnitId,
                        final @NonNull AdsManager adsManager,
@@ -37,14 +35,25 @@ public class AdMobBanner extends AdMobAd {
         super(adUnitId, adsManager, placement);
         log("%s Creating object.\n%s", getLogTag(), thisToString());
         this.mAdView = new AdView(getActivity());
-        getAdType();
         mAdView.setId(R.id.adView);
         mAdView.setAdUnitId(adUnitId);
         createAdListener();
         mAdView.setAdListener(getAdListener());
         addBannerHeightListener();
         mAdView.setAdSize(getAdSize(getActivity()));
+        
         getAdsManager().onAdAction(this, AdAction.Created);
+    }
+
+    private void attachToContainer() {
+        final FrameLayout adContainerView = getAdContainerView();
+        if (null != adContainerView && !mIsViewAdded) {
+            if (mAdView.getParent() != null) {
+                ((ViewGroup) mAdView.getParent()).removeView(mAdView);
+            }
+            adContainerView.addView(mAdView);
+            mIsViewAdded = true;
+        }
     }
 
     private void addBannerHeightListener() {
@@ -52,22 +61,6 @@ public class AdMobBanner extends AdMobAd {
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        // Get the current height of the AdView
-//                        int newBannerHeight = mAdView.getHeight();
-                        // Check if the banner height has changed and is not zero
-//                        if (newBannerHeight != mBannerHeight && newBannerHeight != 0) {
-                        // Update mBannerHeight with the new value
-//                            mBannerHeight = newBannerHeight;
-                        // Find the RecyclerView in the current activity
-//                            RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView);
-//                            // Get the current layout parameters of the RecyclerView
-//                            ViewGroup.MarginLayoutParams layoutParams =
-//                                    (ViewGroup.MarginLayoutParams) recyclerView.getLayoutParams();
-//                            // Retrieve the top margin dimension from resources
-//                            int marginInPixels = getActivity().getResources().getDimensionPixelSize(R.dimen.bannerTopMargin);
-//                            layoutParams.bottomMargin = mBannerHeight + marginInPixels;
-//                            // Apply the new layout parameters to the RecyclerView.setLayoutParams(layoutParams);
-//                        }
                     }
                 });
     }
@@ -148,9 +141,9 @@ public class AdMobBanner extends AdMobAd {
         return AdType.AdaptiveBanner;
     }
 
-    public @Nullable ConstraintLayout getAdContainerView() {
+    public @Nullable FrameLayout getAdContainerView() {
         if(null == mAdContainerView){
-            mAdContainerView = getActivity().findViewById(R.id.content_main);
+            mAdContainerView = getActivity().findViewById(R.id.ad_container);
         }
         return mAdContainerView;
     }
@@ -162,28 +155,11 @@ public class AdMobBanner extends AdMobAd {
             getAdsManager().onAdAction(AdMobBanner.this, AdAction.StartingToLoad);
             log("%s Preparing for loading.\n%s", getLogTag(), thisToString());
 
-            final View adView = getAdView();
-            final int adViewId = adView.getId();
-
-            final ConstraintLayout adContainerView = getAdContainerView();
-            if (null != adContainerView) {
-                adContainerView.addView(adView);
-            } else {
-                //TODO log;
-                log("Couldn't hold reference to the main view.\nAborting load");
-                return;
-            }
-
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(mAdContainerView);
-
-            constraintSet.connect(adViewId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-            constraintSet.connect(adViewId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            constraintSet.connect(adViewId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-            constraintSet.applyTo(mAdContainerView);
-
-            mAdView.loadAd(getAdRequest());
-            setIsLoading(true);
+            getActivity().runOnUiThread(() -> {
+                attachToContainer();
+                mAdView.loadAd(getAdRequest());
+                setIsLoading(true);
+            });
         } else {
             log("%s Refusing load. Has network %b. \n%s",
                     getLogTag(),
@@ -208,8 +184,7 @@ public class AdMobBanner extends AdMobAd {
 
         // Use standard Anchored Adaptive (not the 'Large' version). 
         // This provides the best balance of aesthetics and filling the width.
-        mAdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
-        return mAdSize;
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
     }
 
     @Override
@@ -249,6 +224,11 @@ public class AdMobBanner extends AdMobAd {
 
     @Override
     public void onDestroy() {
-
+        if (mAdView != null) {
+            if (mAdView.getParent() != null) {
+                ((ViewGroup) mAdView.getParent()).removeView(mAdView);
+            }
+            mAdView.destroy();
+        }
     }
 }

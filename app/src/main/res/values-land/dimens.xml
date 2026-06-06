@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_clearance_padding">72dp</dimen>
+    <dimen name="ad_banner_min_height">32dp</dimen>
+</resources>

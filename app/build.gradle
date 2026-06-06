@@ -50,12 +50,25 @@ android {
 }
 
 dependencies {
-    implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.3.21'))
+    implementation(platform('org.jetbrains.kotlin:kotlin-bom:2.4.0'))
     //Ads
     implementation 'com.google.android.gms:play-services-ads:25.3.0'
     implementation 'com.google.firebase:firebase-ads:23.6.0'
     //Material
     implementation 'com.google.android.material:material:1.14.0'
+    
+    // Google Drive Backup Dependencies
+    implementation 'com.google.android.gms:play-services-auth:21.6.0'
+    implementation('com.google.apis:google-api-services-drive:v3-rev20230822-2.0.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation('com.google.api-client:google-api-client-android:2.9.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    
+    // Image Loading
+    implementation 'com.github.bumptech.glide:glide:5.0.7'
+    annotationProcessor 'com.github.bumptech.glide:compiler:5.0.7'
     
     // WorkManager
     implementation 'androidx.work:work-runtime:2.11.2'
@@ -64,14 +77,14 @@ dependencies {
     implementation 'com.google.android.play:review:2.0.2'
     
     // Play Billing
-    implementation 'com.android.billingclient:billing:7.1.1'
+    implementation 'com.android.billingclient:billing:9.0.0'
 
     // Google User Messaging Platform (Consent)
-    implementation 'com.google.android.ump:user-messaging-platform:3.1.0'
+    implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
 
     // Room
-    implementation 'androidx.room:room-runtime:2.6.1'
-    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+    implementation 'androidx.room:room-runtime:2.8.4'
+    annotationProcessor 'androidx.room:room-compiler:2.8.4'
 
     //Android X
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
@@ -81,7 +94,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
     //Firebase
     // https://firebase.google.com/docs/android/learn-more#compare-bom-versions
-    implementation platform('com.google.firebase:firebase-bom:34.13.0')
+    implementation platform('com.google.firebase:firebase-bom:34.14.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-config'
     implementation 'com.google.firebase:firebase-messaging'
@@ -89,14 +102,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-inappmessaging'
     implementation 'com.google.firebase:firebase-inappmessaging-display'
 
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
-
-    implementation 'com.google.android.gms:play-services-ads:25.3.0'
+    // Explicit gRPC for Firebase compatibility
+    implementation 'io.grpc:grpc-okhttp:1.81.0'
+    implementation 'io.grpc:grpc-protobuf-lite:1.81.0'
+    implementation 'io.grpc:grpc-stub:1.81.0'
+    implementation 'io.grpc:grpc-android:1.81.0'
 
     implementation 'androidx.lifecycle:lifecycle-runtime:2.10.0'
     implementation 'androidx.lifecycle:lifecycle-process:2.10.0'
     annotationProcessor 'androidx.lifecycle:lifecycle-common-java8:2.10.0'
-
-    implementation 'com.google.android.material:material:1.14.0'
 }

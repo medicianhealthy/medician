@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
@@ -75,6 +76,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        com.robinzon.medicationwizard.utils.Logger.log("TodaysMedicationsFragment", "onViewCreated");
         setPaddingForRecyclerView(mBinding.recyclerView);
         setPaddingForRecyclerView(mBinding.emptyLayout.emptyStateContainer);
         setupSwipeRefresh();
@@ -159,7 +161,14 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                 updateInstanceStatus(instance, "SCHEDULED");
             }
         });
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        
+        int columns = getResources().getInteger(R.integer.medication_grid_columns);
+        if (columns > 1) {
+            mBinding.recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), columns));
+        } else {
+            mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        }
+
         mBinding.recyclerView.setAdapter(mAdapter);
     }
 
@@ -197,8 +206,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).getAdsManager().showInterstitialAd();
             
-            // Engagement: Potentially trigger Google Play Review flow for power users
-            com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(getActivity());
+            // Satisfaction Check: Ask for review after logging a dose if user is happy
+            final android.app.Activity activity = getActivity();
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(activity);
+            }, 1000L);
         }
     }
 

@@ -18,29 +18,59 @@ import com.google.android.material.timepicker.TimeFormat;
 import com.robinzon.medicationwizard.BuildConfig;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.backup.CloudBackupSettings;
+import com.robinzon.medicationwizard.backup.GoogleAccountManager;
 import com.robinzon.medicationwizard.databinding.FragmentSettingsBinding;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.utils.BackupManager;
+import android.content.Intent;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.robinzon.medicationwizard.backup.CloudBackupManager;
+import com.robinzon.medicationwizard.backup.DriveServiceHelper;
 import com.robinzon.medicationwizard.utils.Logger;
+
+import java.util.Collections;
 
 /**
  * Fragment that provides the user interface for all application settings.
- * <p>
- * This screen follows the Material 3 design guidelines and manages:
- * - Application Theme (Light, Dark, System).
- * - Notification Permissions and Alert Details.
- * - Custom Reminder Sounds and Volume Control.
- * - Quiet Hours scheduling to suppress alerts at night.
- * - Data Management (Wiping medications and history).
- * - System information like version numbers.
- * </p>
  */
 public class SettingsFragment extends MedicationWizardFragment {
 
     private FragmentSettingsBinding binding;
     private SettingsViewModel viewModel;
+    private GoogleSignInClient mGoogleSignInClient;
+
+    private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
+                    GoogleSignIn.getSignedInAccountFromIntent(result.getData())
+                            .addOnSuccessListener(this::handleSignInSuccess)
+                            .addOnFailureListener(e -> Logger.log("SettingsFragment", "Sign-in failed: " + e.getMessage()));
+                }
+            }
+    );
+
+    private void handleSignInSuccess(GoogleSignInAccount account) {
+        GoogleAccountManager.getInstance(requireContext()).saveAccountInfo(
+                account.getEmail(), account.getDisplayName(), account.getPhotoUrl());
+        updateCloudUi(GoogleAccountManager.getInstance(requireContext()), 
+                      CloudBackupSettings.getInstance(requireContext()));
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).refreshNavHeader();
+        }
+    }
 
     private final ActivityResultLauncher<String> exportLauncher = registerForActivityResult(
             new ActivityResultContracts.CreateDocument("application/json"),
@@ -73,22 +103,21 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
     );
 
-    /**
-     * Initializes data binding and the {@link SettingsViewModel}.
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        
         return binding.getRoot();
     }
 
-    /**
-     * Entry point for UI configuration. 
-     * Hides the Main FAB to prevent UI clutter and calls the comprehensive 
-     * {@link #setupSettings()} method.
-     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -96,40 +125,25 @@ public class SettingsFragment extends MedicationWizardFragment {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(false);
         }
-        // Apply dynamic padding to clear navigation and ad banners
         setPaddingForRecyclerView(binding.fragmentSettingsMainView, false);
 
         setupSettings();
+        setupCloudBackup();
     }
 
-    /**
-     * The main orchestrator for settings initialization.
-     * <p>
-     * Implementation details:
-     * - Observes theme changes and applies {@link androidx.appcompat.app.AppCompatDelegate} logic.
-     * - Configures notification permission flow including high-level explanation snacks.
-     * - Manages custom sound selection via {@link SoundPickerBottomSheet}.
-     * - Handles quiet hours range selection via sequential {@link MaterialTimePicker} dialogs.
-     * - Provides a destructive "Clear Data" flow with an explicit confirmation dialog.
-     * </p>
-     */
     private void setupSettings() {
-        // 1. Version Info
         binding.txtVersion.setText(getString(R.string.settings_version_summary, BuildConfig.VERSION_NAME));
 
-        // 2. Notifications Logic
         updateNotificationStatus();
         binding.btnNotifications.setOnClickListener(v -> {
             boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
             if (!isGranted) {
                 NotificationManager.getInstance(requireActivity()).requestPermissionIfNeeded();
             } else {
-                Snackbar.make(binding.getRoot(), "Notifications are already active! To disable, please use system settings.", Snackbar.LENGTH_LONG).show();
-                binding.switchNotifications.setChecked(true);
+                Snackbar.make(binding.getRoot(), "Notifications are already active!", Snackbar.LENGTH_LONG).show();
             }
         });
 
-        // 2b. Sound Setting
         viewModel.getSoundName().observe(getViewLifecycleOwner(), name -> 
             binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name)));
         
@@ -140,7 +154,6 @@ public class SettingsFragment extends MedicationWizardFragment {
             picker.show(getChildFragmentManager(), "SoundPicker");
         });
 
-        // 2c. Bypass Volume Logic
         viewModel.getBypassVolume().observe(getViewLifecycleOwner(), bypass -> {
             binding.switchBypass.setChecked(bypass);
             binding.layoutVolume.setVisibility(bypass ? View.VISIBLE : View.GONE);
@@ -154,7 +167,6 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
         });
 
-        // 2d. Volume Slider Configuration
         viewModel.getNotifVolume().observe(getViewLifecycleOwner(), volume -> 
             binding.sliderVolume.setValue(volume));
         
@@ -162,180 +174,260 @@ public class SettingsFragment extends MedicationWizardFragment {
             if (fromUser) viewModel.setNotifVolume((int) value);
         });
 
-        // 3. Theme Setting (Segmented Toggle Group)
         viewModel.getTheme().observe(getViewLifecycleOwner(), theme -> {
             int buttonId;
             if (theme == SettingsViewModel.THEME_LIGHT) buttonId = R.id.btn_theme_light;
             else if (theme == SettingsViewModel.THEME_DARK) buttonId = R.id.btn_theme_dark;
             else buttonId = R.id.btn_theme_system;
-            
             binding.toggleGroupTheme.check(buttonId);
         });
 
         binding.toggleGroupTheme.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (!isChecked) return;
-            
-            int theme;
-            if (checkedId == R.id.btn_theme_light) theme = SettingsViewModel.THEME_LIGHT;
-            else if (checkedId == R.id.btn_theme_dark) theme = SettingsViewModel.THEME_DARK;
-            else theme = SettingsViewModel.THEME_SYSTEM;
-            
+            int theme = (checkedId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : 
+                        (checkedId == R.id.btn_theme_dark) ? SettingsViewModel.THEME_DARK : SettingsViewModel.THEME_SYSTEM;
             viewModel.setTheme(theme);
         });
 
-        // 4. Data Management: Backup & Restore
         binding.btnBackup.setOnClickListener(v -> {
             String[] options = {getString(R.string.backup_export), getString(R.string.backup_import)};
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.settings_backup_title)
                     .setItems(options, (dialog, which) -> {
-                        if (which == 0) {
-                            String fileName = "medication_wizard_backup_" + System.currentTimeMillis() + ".json";
-                            exportLauncher.launch(fileName);
-                        } else {
-                            importLauncher.launch(new String[]{"application/json"});
-                        }
+                        if (which == 0) exportLauncher.launch("medication_wizard_backup_" + System.currentTimeMillis() + ".json");
+                        else importLauncher.launch(new String[]{"application/json"});
                     })
                     .show();
         });
 
-        // 5. Destructive Action: Clear Data
         binding.btnClearData.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Wipe everything?")
-                    .setMessage("This will delete all your medications and history. We can't get them back once they're gone!")
-                    .setPositiveButton("Yes, start fresh", (dialog, which) -> {
+                    .setMessage("This will delete all your medications and history.")
+                    .setPositiveButton("Yes", (dialog, which) -> {
                         Medication.clearAllMedications(requireContext());
-                        Snackbar.make(binding.getRoot(), "All data cleared. A fresh start!", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(binding.getRoot(), "Data cleared.", Snackbar.LENGTH_SHORT).show();
                     })
-                    .setNegativeButton("No, keep them", null)
+                    .setNegativeButton("No", null)
                     .show();
         });
 
-        // 6. Placeholder for support
-        binding.btnSupport.setOnClickListener(v -> {
-            Snackbar.make(binding.getRoot(), "Support portal is coming soon!", Snackbar.LENGTH_SHORT).show();
-        });
+        binding.btnSupport.setOnClickListener(v -> Snackbar.make(binding.getRoot(), "Support coming soon!", Snackbar.LENGTH_SHORT).show());
         
-        // 7. Quiet Hours Scheduling
-        viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> {
-            binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range));
-        });
+        viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> 
+            binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range)));
 
         binding.btnQuietHours.setOnClickListener(v -> {
             if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
-
-            // Sequence of two time pickers to define a range
-            MaterialTimePicker startPicker = new MaterialTimePicker.Builder()
-                    .setTimeFormat(TimeFormat.CLOCK_24H)
-                    .setHour(23)
-                    .setMinute(0)
-                    .setTitleText("When should quiet hours start?")
-                    .build();
-
-            startPicker.addOnPositiveButtonClickListener(v1 -> {
-                MaterialTimePicker endPicker = new MaterialTimePicker.Builder()
-                        .setTimeFormat(TimeFormat.CLOCK_24H)
-                        .setHour(7)
-                        .setMinute(0)
-                        .setTitleText("When should quiet hours end?")
-                        .build();
-
-                endPicker.addOnPositiveButtonClickListener(v2 -> {
-                    viewModel.setQuietHours(startPicker.getHour(), startPicker.getMinute(), endPicker.getHour(), endPicker.getMinute());
-                    Snackbar.make(binding.getRoot(), "Quiet hours updated!", Snackbar.LENGTH_SHORT).show();
-                });
-                endPicker.show(getChildFragmentManager(), "end_picker");
-            });
-            startPicker.show(getChildFragmentManager(), "start_picker");
+            showQuietHoursPickers();
         });
 
-        // 8. Snooze Duration
         viewModel.getSnoozeDuration().observe(getViewLifecycleOwner(), mins -> 
             binding.txtSnoozeDurationDesc.setText(getString(R.string.settings_snooze_duration_summary, mins)));
         
-        binding.btnSnoozeDuration.setOnClickListener(v -> {
-            String[] options = {"5 minutes", "10 minutes", "15 minutes", "20 minutes", "30 minutes"};
-            int[] values = {5, 10, 15, 20, 30};
-            
-            Integer currentVal = viewModel.getSnoozeDuration().getValue();
-            int currentSelection = 0;
-            if (currentVal != null) {
-                for (int i = 0; i < values.length; i++) {
-                    if (values[i] == currentVal) {
-                        currentSelection = i;
-                        break;
-                    }
-                }
-            }
+        binding.btnSnoozeDuration.setOnClickListener(v -> showSnoozeDurationPicker());
 
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.settings_snooze_duration_title)
-                    .setSingleChoiceItems(options, currentSelection, (dialog, which) -> {
-                        viewModel.setSnoozeDuration(values[which]);
-                        dialog.dismiss();
-                    })
-                    .show();
-        });
-
-        // 9. Max Snoozes
         viewModel.getMaxSnoozes().observe(getViewLifecycleOwner(), max -> {
-            if (max != null && max == -1) {
-                binding.txtMaxSnoozesDesc.setText(R.string.settings_max_snoozes_unlimited_summary);
-            } else {
-                binding.txtMaxSnoozesDesc.setText(getString(R.string.settings_max_snoozes_summary, String.valueOf(max)));
-            }
+            if (max != null && max == -1) binding.txtMaxSnoozesDesc.setText(R.string.settings_max_snoozes_unlimited_summary);
+            else binding.txtMaxSnoozesDesc.setText(getString(R.string.settings_max_snoozes_summary, String.valueOf(max)));
         });
 
-        binding.btnMaxSnoozes.setOnClickListener(v -> {
-            String[] options = {"1 time", "2 times", "3 times", "5 times", "Unlimited"};
-            int[] values = {1, 2, 3, 5, -1};
-            
-            Integer currentVal = viewModel.getMaxSnoozes().getValue();
-            int currentSelection = 0;
-            if (currentVal != null) {
-                for (int i = 0; i < values.length; i++) {
-                    if (values[i] == currentVal) {
-                        currentSelection = i;
-                        break;
-                    }
-                }
-            }
+        binding.btnMaxSnoozes.setOnClickListener(v -> showMaxSnoozesPicker());
+    }
 
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.settings_max_snoozes_title)
-                    .setSingleChoiceItems(options, currentSelection, (dialog, which) -> {
-                        viewModel.setMaxSnoozes(values[which]);
-                        dialog.dismiss();
-                    })
-                    .show();
+    private void setupCloudBackup() {
+        GoogleAccountManager accountManager = GoogleAccountManager.getInstance(requireContext());
+        CloudBackupSettings cloudSettings = CloudBackupSettings.getInstance(requireContext());
+
+        updateCloudUi(accountManager, cloudSettings);
+
+        View.OnClickListener signInListener = v -> {
+            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            if (!accountManager.isSignedIn()) {
+                googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+            }
+        };
+        binding.btnGoogleSignin.setOnClickListener(signInListener);
+        binding.btnGoogleSigninAction.setOnClickListener(signInListener);
+
+        binding.btnSignOut.setOnClickListener(v -> {
+            mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+                accountManager.clearAccountInfo();
+                updateCloudUi(accountManager, cloudSettings);
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).refreshNavHeader();
+                }
+            });
+        });
+
+        binding.btnAutoBackup.setOnClickListener(v -> {
+            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            boolean current = cloudSettings.isAutoBackupEnabled();
+            cloudSettings.setAutoBackupEnabled(!current);
+            binding.switchAutoBackup.setChecked(!current);
+        });
+
+        binding.btnWifiOnly.setOnClickListener(v -> {
+            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            boolean current = cloudSettings.isWifiOnlyEnabled();
+            cloudSettings.setWifiOnlyEnabled(!current);
+            binding.switchWifiOnly.setChecked(!current);
+        });
+
+        binding.btnBackupNow.setOnClickListener(v -> {
+            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            performCloudAction(true);
+        });
+        
+        binding.btnRestoreCloud.setOnClickListener(v -> {
+            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            performCloudAction(false);
         });
     }
 
-    /**
-     * Checks current system permission status and adjusts the settings UI accordingly.
-     */
+    private void performCloudAction(boolean isBackup) {
+        if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+            return;
+        }
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
+        if (account == null) {
+            Snackbar.make(binding.getRoot(), "Please sign in first", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
+                requireContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+        credential.setSelectedAccount(account.getAccount());
+
+        Drive googleDriveService = new Drive.Builder(
+                new NetHttpTransport(),
+                new GsonFactory(),
+                credential)
+                .setApplicationName("Medication Wizard")
+                .build();
+
+        DriveServiceHelper driveHelper = new DriveServiceHelper(googleDriveService);
+        CloudBackupManager manager = new CloudBackupManager(requireContext(), driveHelper);
+
+        if (isBackup) {
+            Snackbar.make(binding.getRoot(), "Backing up to Google Drive...", Snackbar.LENGTH_SHORT).show();
+            manager.backupToCloud().addOnSuccessListener(aVoid -> 
+                Snackbar.make(binding.getRoot(), R.string.cloud_backup_success, Snackbar.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> 
+                Snackbar.make(binding.getRoot(), R.string.cloud_backup_failed, Snackbar.LENGTH_SHORT).show());
+        } else {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Restore from Cloud")
+                    .setMessage("This will replace all your local medications and history with the cloud version. Continue?")
+                    .setPositiveButton("Restore", (dialog, which) -> {
+                        Snackbar.make(binding.getRoot(), "Restoring from cloud...", Snackbar.LENGTH_SHORT).show();
+                        manager.restoreFromCloud().addOnSuccessListener(success -> {
+                            if (success) {
+                                Snackbar.make(binding.getRoot(), "Restore successful!", Snackbar.LENGTH_LONG).show();
+                                if (getActivity() instanceof MainActivity) {
+                                    ((MainActivity) getActivity()).recreate();
+                                }
+                            } else {
+                                Snackbar.make(binding.getRoot(), "No cloud backup found.", Snackbar.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(e -> 
+                            Snackbar.make(binding.getRoot(), "Restore failed: " + e.getMessage(), Snackbar.LENGTH_SHORT).show());
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        }
+    }
+
+    private void updateCloudUi(GoogleAccountManager accountManager, CloudBackupSettings cloudSettings) {
+        if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            binding.containerCloudSettings.setVisibility(View.GONE);
+            binding.btnSignOut.setVisibility(View.GONE);
+            binding.btnGoogleSigninAction.setVisibility(View.VISIBLE);
+            binding.txtAccountName.setText("Cloud Backup");
+            binding.txtAccountEmail.setText("Premium only feature");
+            binding.imgUserProfile.setImageResource(R.drawable.ic_magic_wand);
+            return;
+        }
+
+        boolean signedIn = accountManager.isSignedIn();
+        binding.containerCloudSettings.setVisibility(signedIn ? View.VISIBLE : View.GONE);
+        binding.btnSignOut.setVisibility(signedIn ? View.VISIBLE : View.GONE);
+        binding.btnGoogleSigninAction.setVisibility(signedIn ? View.GONE : View.VISIBLE);
+
+        if (signedIn) {
+            binding.txtAccountName.setText(accountManager.getAccountName());
+            binding.txtAccountEmail.setText(accountManager.getAccountEmail());
+            binding.switchAutoBackup.setChecked(cloudSettings.isAutoBackupEnabled());
+            binding.switchWifiOnly.setChecked(cloudSettings.isWifiOnlyEnabled());
+            
+            String photoUrl = accountManager.getAccountPhotoUrl();
+            if (photoUrl != null) {
+                com.bumptech.glide.Glide.with(this)
+                        .load(photoUrl)
+                        .circleCrop()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .into(binding.imgUserProfile);
+            }
+        } else {
+            binding.txtAccountName.setText("Cloud Backup");
+            binding.txtAccountEmail.setText(R.string.cloud_backup_sign_in_hint);
+            binding.imgUserProfile.setImageResource(R.mipmap.ic_launcher);
+        }
+    }
+
+    private void showQuietHoursPickers() {
+        MaterialTimePicker startPicker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).setHour(23).setTitleText("Start?").build();
+        startPicker.addOnPositiveButtonClickListener(v -> {
+            MaterialTimePicker endPicker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).setHour(7).setTitleText("End?").build();
+            endPicker.addOnPositiveButtonClickListener(v2 -> viewModel.setQuietHours(startPicker.getHour(), startPicker.getMinute(), endPicker.getHour(), endPicker.getMinute()));
+            endPicker.show(getChildFragmentManager(), "end_picker");
+        });
+        startPicker.show(getChildFragmentManager(), "start_picker");
+    }
+
+    private void showSnoozeDurationPicker() {
+        String[] options = {"5 min", "10 min", "15 min", "20 min", "30 min"};
+        int[] values = {5, 10, 15, 20, 30};
+        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.settings_snooze_duration_title).setItems(options, (dialog, which) -> viewModel.setSnoozeDuration(values[which])).show();
+    }
+
+    private void showMaxSnoozesPicker() {
+        String[] options = {"1 time", "2 times", "3 times", "5 times", "Unlimited"};
+        int[] values = {1, 2, 3, 5, -1};
+        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.settings_max_snoozes_title).setItems(options, (dialog, which) -> viewModel.setMaxSnoozes(values[which])).show();
+    }
+
     private void updateNotificationStatus() {
         boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
         binding.switchNotifications.setChecked(isGranted);
         binding.containerAlertDetails.setVisibility(isGranted ? View.VISIBLE : View.GONE);
     }
 
-    /**
-     * Ensures permission status is accurate if the user returns from system settings.
-     */
     @Override
     public void onResume() {
         super.onResume();
         updateNotificationStatus();
     }
 
-    /**
-     * Standard binding cleanup.
-     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

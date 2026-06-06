@@ -5,13 +5,13 @@
     android:id="@+id/fragment_settings_main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/android:colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="48dp">
+        android:paddingBottom="24dp">
 
         <!-- Category: Reminders -->
         <TextView
@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            app:cardBackgroundColor="?attr/colorSurface"
             app:cardCornerRadius="24dp">
 
             <LinearLayout
@@ -34,28 +35,27 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/btn_notifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:padding="20dp">
                     <ImageView
-                        android:id="@+id/icon_notif"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:contentDescription="@null"
                         app:srcCompat="@drawable/ic_clock"
-                        app:tint="?attr/colorOnSurface" />
+                        app:tint="?attr/colorOnSurface"
+                        android:contentDescription="@null" />
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_marginStart="16dp"
-                        android:layout_toEndOf="@id/icon_notif"
-                        android:layout_toStartOf="@+id/switch_notifications"
                         android:orientation="vertical">
                         <TextView
                             android:layout_width="wrap_content"
@@ -66,17 +66,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/settings_notifications_summary"
-                            android:textAppearance="?attr/textAppearanceBodySmall" />
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
                     <com.google.android.material.materialswitch.MaterialSwitch
                         android:id="@+id/switch_notifications"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
+                        android:layout_marginStart="8dp"
                         android:clickable="false"
                         android:focusable="false" />
-                </RelativeLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/container_alert_details"
@@ -85,10 +85,7 @@
                     android:orientation="vertical"
                     android:visibility="gone"
                     tools:visibility="visible">
-
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
-
-                    <!-- Sound Picker -->
                     <LinearLayout
                         android:id="@+id/btn_notif_sound"
                         android:layout_width="match_parent"
@@ -111,39 +108,60 @@
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
-
-                    <!-- Bypass Volume -->
-                    <RelativeLayout
+                    <LinearLayout
                         android:id="@+id/btn_bypass_volume"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:padding="20dp">
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_toStartOf="@+id/switch_bypass">
-                            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_bypass_title" android:textAppearance="?attr/textAppearanceTitleMedium" />
-                                <ImageView android:layout_width="14dp" android:layout_height="14dp" android:layout_marginStart="6dp" app:srcCompat="@drawable/ic_crown" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_bypass_title"
+                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                <ImageView
+                                    android:layout_width="14dp"
+                                    android:layout_height="14dp"
+                                    android:layout_marginStart="8dp"
+                                    app:srcCompat="@drawable/ic_crown"
+                                    app:tint="#FFD700"
+                                    android:contentDescription="@null" />
                             </LinearLayout>
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_bypass_summary" android:textAppearance="?attr/textAppearanceBodySmall" android:textColor="?attr/colorOnSurfaceVariant" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_bypass_summary"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
                         <com.google.android.material.materialswitch.MaterialSwitch
                             android:id="@+id/switch_bypass"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:clickable="false" />
-                    </RelativeLayout>
-
-                    <!-- Volume Slider -->
+                            android:layout_marginStart="8dp"
+                            android:clickable="false"
+                            android:focusable="false" />
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/layout_volume"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical"
                         android:paddingHorizontal="20dp"
                         android:paddingBottom="12dp"
-                        android:orientation="vertical"
                         android:visibility="gone"
                         tools:visibility="visible">
                         <com.google.android.material.slider.Slider
@@ -153,8 +171,6 @@
                             android:valueFrom="0"
                             android:valueTo="100" />
                     </LinearLayout>
-
-                    <!-- Quiet Hours -->
                     <LinearLayout
                         android:id="@+id/btn_quiet_hours"
                         android:layout_width="match_parent"
@@ -163,9 +179,23 @@
                         android:clickable="true"
                         android:orientation="vertical"
                         android:padding="20dp">
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_quiet_hours_title" android:textAppearance="?attr/textAppearanceTitleMedium" />
-                            <ImageView android:layout_width="14dp" android:layout_height="14dp" android:layout_marginStart="6dp" app:srcCompat="@drawable/ic_crown" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_quiet_hours_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_marginStart="8dp"
+                                app:srcCompat="@drawable/ic_crown"
+                                app:tint="#FFD700"
+                                android:contentDescription="@null" />
                         </LinearLayout>
                         <TextView
                             android:id="@+id/txt_quiet_hours_desc"
@@ -176,8 +206,6 @@
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
-
-                    <!-- Snooze Duration -->
                     <LinearLayout
                         android:id="@+id/btn_snooze_duration"
                         android:layout_width="match_parent"
@@ -186,7 +214,11 @@
                         android:clickable="true"
                         android:orientation="vertical"
                         android:padding="20dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_snooze_duration_title" android:textAppearance="?attr/textAppearanceTitleMedium" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_snooze_duration_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium" />
                         <TextView
                             android:id="@+id/txt_snooze_duration_desc"
                             android:layout_width="wrap_content"
@@ -196,8 +228,6 @@
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
-
-                    <!-- Max Snoozes -->
                     <LinearLayout
                         android:id="@+id/btn_max_snoozes"
                         android:layout_width="match_parent"
@@ -206,7 +236,11 @@
                         android:clickable="true"
                         android:orientation="vertical"
                         android:padding="20dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_max_snoozes_title" android:textAppearance="?attr/textAppearanceTitleMedium" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_max_snoozes_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium" />
                         <TextView
                             android:id="@+id/txt_max_snoozes_desc"
                             android:layout_width="wrap_content"
@@ -216,7 +250,190 @@
                             android:textAppearance="?attr/textAppearanceBodySmall"
                             android:textColor="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
+        <!-- Category: Cloud Backup -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/cloud_backup_title"
+            android:textAppearance="?attr/textAppearanceTitleSmall"
+            android:textColor="?attr/colorPrimary" />
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Material3.CardView.Elevated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Account / Sign In -->
+                <LinearLayout
+                    android:id="@+id/btn_google_signin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/img_user_profile"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                        app:srcCompat="@mipmap/ic_launcher" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/txt_account_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cloud_backup_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_marginStart="8dp"
+                                app:srcCompat="@drawable/ic_crown"
+                                app:tint="#FFD700"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txt_account_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cloud_backup_sign_in_hint"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/btn_google_signin_action"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign In" />
+                    <Button
+                        android:id="@+id/btn_sign_out"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cloud_backup_sign_out"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_cloud_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+                    <LinearLayout
+                        android:id="@+id/btn_auto_backup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="20dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cloud_backup_auto_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cloud_backup_auto_summary"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_auto_backup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:clickable="false"
+                            android:focusable="false" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/btn_wifi_only"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="20dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cloud_backup_wifi_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cloud_backup_wifi_summary"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_wifi_only"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:clickable="false"
+                            android:focusable="false" />
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/btn_backup_now"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/cloud_backup_now" />
+                    <Button
+                        android:id="@+id/btn_restore_cloud"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="Restore from Cloud" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -227,7 +444,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:layout_marginTop="16dp"
-            android:text="Appearance"
+            android:text="@string/settings_category_appearance"
             android:textAppearance="?attr/textAppearanceTitleSmall"
             android:textColor="?attr/colorPrimary" />
 
@@ -236,10 +453,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            app:cardBackgroundColor="?attr/colorSurface"
             app:cardCornerRadius="24dp">
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="App Theme" android:textAppearance="?attr/textAppearanceTitleMedium" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_theme_title" android:textAppearance="?attr/textAppearanceTitleMedium" />
                 <com.google.android.material.button.MaterialButtonToggleGroup
                     android:id="@+id/toggle_group_theme"
                     android:layout_width="match_parent"
@@ -247,9 +465,9 @@
                     android:layout_marginTop="16dp"
                     app:singleSelection="true"
                     app:selectionRequired="true">
-                    <Button android:id="@+id/btn_theme_light" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Light" />
-                    <Button android:id="@+id/btn_theme_dark" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Dark" />
-                    <Button android:id="@+id/btn_theme_system" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="System" />
+                    <Button android:id="@+id/btn_theme_light" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_light" />
+                    <Button android:id="@+id/btn_theme_dark" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_dark" />
+                    <Button android:id="@+id/btn_theme_system" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_system" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -260,7 +478,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:layout_marginTop="16dp"
-            android:text="Data &amp; Privacy"
+            android:text="@string/settings_category_data"
             android:textAppearance="?attr/textAppearanceTitleSmall"
             android:textColor="?attr/colorPrimary" />
 
@@ -269,12 +487,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            app:cardBackgroundColor="?attr/colorSurface"
             app:cardCornerRadius="24dp">
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Backup &amp; Restore" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
-                <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Clear All Data" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
-                <Button android:id="@+id/btn_support" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Contact Support" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_backup_title" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_clear_data_title" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                <Button android:id="@+id/btn_support" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_support_title" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -283,7 +502,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="32dp"
+            android:paddingVertical="24dp"
             tools:text="Version 1.0"
             android:textAppearance="?attr/textAppearanceBodySmall" />
 

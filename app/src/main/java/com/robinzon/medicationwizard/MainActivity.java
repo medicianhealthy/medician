@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -32,6 +33,7 @@ import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
+import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.Screen;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
@@ -40,16 +42,10 @@ import com.robinzon.medicationwizard.utils.Statisticator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.robinzon.medicationwizard.backup.GoogleAccountManager;
+
 /**
  * The main entry point and hosting activity for the Medication Wizard application.
- * <p>
- * This activity manages the primary application infrastructure, including:
- * - The global Navigation Drawer and NavHostFragment.
- * - The Floating Action Button (FAB) for adding new medications.
- * - Ad management (AdMob integration and Adaptive Banner height calculation).
- * - System-level permissions (e.g., Notifications).
- * - Session tracking and AppOpen ads.
- * </p>
  */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnAdActionListener {
 
@@ -58,22 +54,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private NavController mNavController;
     private boolean mHasCreated;
     
-    /** Multiplier to add safety padding around the adaptive ad banner. */
     public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
 
-
-    /**
-     * Initializes the activity, sets up navigation components, and starts ad services.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *                           previously being shut down then this Bundle contains the data it most
-     *                           recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Check if onboarding needs to be shown
         if (!SharedPreferencesManager.getInstance(this).getBoolean(OnboardingActivity.KEY_HAS_SEEN_ONBOARDING, false)) {
             startActivity(new Intent(this, OnboardingActivity.class));
             finish();
@@ -83,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        // Global FAB listener for adding medications
         mBinding.appBarMain.fab.setOnClickListener(view -> {
             AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
             bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
@@ -94,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         final DrawerLayout drawer = mBinding.drawerLayout;
         final NavigationView navigationView = mBinding.navView;
         
-        // Define top-level destinations (no back arrow, only hamburger menu)
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_medications_list, R.id.nav_history, R.id.nav_settings)
                 .setOpenableLayout(drawer)
@@ -105,21 +89,29 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         if (navHostFragment != null) {
             mNavController = navHostFragment.getNavController();
+            // Bind Toolbar to NavController with drawer support (for hamburger icon)
             NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
+            // Bind NavigationView to NavController
             NavigationUI.setupWithNavController(navigationView, mNavController);
-
-            // Performance: Single listener to handle UI state changes across all fragments
-            mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-                invalidateOptionsMenu(); // Force refresh of toolbar menu icons
+            
+            navigationView.setNavigationItemSelectedListener(item -> {
+                boolean handled = NavigationUI.onNavDestinationSelected(item, mNavController);
+                if (!handled && item.getItemId() == R.id.nav_home) {
+                    // If we're already on home, just close the drawer
+                    drawer.closeDrawer(GravityCompat.START);
+                    return true;
+                }
+                if (handled) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+                return handled;
             });
-        }
 
-        // Adjust UI elements to avoid overlap with the bottom ad banner
-        setBottomMarginToFab();
+            refreshNavHeader();
+        }
 
         mAdsManager = new AdsManager(this);
         
-        // Compliance: Gather GDPR/CCPA consent before initializing ads
         ConsentManager.gatherConsent(this, () -> RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
             @Override
             public void onFetchCompleted(boolean isSuccessFull) {
@@ -132,10 +124,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         checkExactAlarmPermission();
     }
 
-    /**
-     * Checks if the app has permission to schedule exact alarms (Android 12+).
-     * If not, redirects the user to the system settings page.
-     */
+    public void refreshNavHeader() {
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            updateNavHeader(navigationView);
+        }
+    }
+
     private void checkExactAlarmPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             android.app.AlarmManager alarmManager = getSystemService(android.app.AlarmManager.class);
@@ -153,96 +148,73 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    /**
-     * Dynamically calculates and applies a bottom margin to the FAB.
-     * This ensures the FAB is always visible above the anchored adaptive ad banner.
-     */
-    private void setBottomMarginToFab() {
-        final View fab = findViewById(R.id.fab);
-        if (fab == null) return;
+    private void updateNavHeader(NavigationView navigationView) {
+        View headerView = navigationView.getHeaderView(0);
+        if (headerView == null) return;
 
-        int bannerHeightDp = AdMobBanner.getBannerHeightDP(this);
-        // Standard M3 padding is 16dp
-        int totalMarginDp = (int) (bannerHeightDp * BANNER_HEIGHT_MULTIPLIER) + 16;
-        int marginBottomPx = (int) (totalMarginDp * Screen.getDensity(getResources()));
-        
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) fab.getLayoutParams();
-        layoutParams.setMargins(
-                layoutParams.leftMargin,
-                layoutParams.topMargin,
-                layoutParams.rightMargin,
-                marginBottomPx
-        );
-        fab.setLayoutParams(layoutParams);
+        android.widget.ImageView profileImage = headerView.findViewById(R.id.imageView);
+        android.widget.TextView profileName = headerView.findViewById(R.id.textView);
+
+        if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            profileName.setText(R.string.nav_header_subtitle);
+            profileImage.setImageResource(R.mipmap.ic_launcher);
+            return;
+        }
+
+        GoogleAccountManager accountManager = GoogleAccountManager.getInstance(this);
+        if (accountManager.isSignedIn()) {
+            String name = accountManager.getAccountName();
+            if (name != null) profileName.setText(name);
+
+            String photoUrl = accountManager.getAccountPhotoUrl();
+            if (photoUrl != null) {
+                com.bumptech.glide.Glide.with(this)
+                        .load(photoUrl)
+                        .circleCrop()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .into(profileImage);
+            }
+        } else {
+            profileName.setText(R.string.nav_header_subtitle);
+            profileImage.setImageResource(R.mipmap.ic_launcher);
+        }
     }
 
-
-    /** @return The global ad manager instance. */
     public AdsManager getAdsManager() {
         return mAdsManager;
     }
 
-    /**
-     * Initializes the standard options menu for the activity.
-     *
-     * @param menu The options menu in which you place your items.
-     * @return You must return true for the menu to be displayed.
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
-    /**
-     * Dynamically adjusts the visibility of menu items before the menu is displayed.
-     * <p>
-     * Performance: Checks the current navigation destination to hide redundant icons 
-     * (like the Settings gear when already on the Settings screen).
-     * </p>
-     *
-     * @param menu The options menu as last shown or first created by onCreateOptionsMenu().
-     * @return You must return true for the menu to be displayed.
-     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (mNavController != null) {
             int currentId = mNavController.getCurrentDestination() != null ? mNavController.getCurrentDestination().getId() : -1;
-
-            // Hide the settings gear if we are already in the Settings fragment
+            
+            // Hide the settings icon if we're already on the settings screen
             android.view.MenuItem settingsItem = menu.findItem(R.id.nav_settings);
             if (settingsItem != null) {
                 settingsItem.setVisible(currentId != R.id.nav_settings);
             }
         }
-        
         return super.onPrepareOptionsMenu(menu);
     }
 
-    /**
-     * Handles the 'Up' button or Hamburger menu in the ActionBar.
-     *
-     * @return boolean True if navigation was handled.
-     */
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+        return NavigationUI.navigateUp(mNavController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
 
-    /**
-     * Handles selection of items from the options menu.
-     *
-     * @param item The menu item that was selected.
-     * @return boolean Return false to allow normal menu processing to proceed, true to consume it here.
-     */
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_settings) {
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.nav_settings);
+            mNavController.navigate(R.id.nav_settings);
             return true;
         } else if (id == R.id.action_premium) {
             new com.robinzon.medicationwizard.ui.settings.PremiumBottomSheet().show(getSupportFragmentManager(), "PremiumMain");
@@ -251,12 +223,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Standard lifecycle method called when the activity is becoming visible to the user.
-     * <p>
-     * Performance: Notifies the Ad Manager and tracking utilities.
-     * </p>
-     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -266,12 +232,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Statisticator.onMoveToForeground(this);
     }
 
-    /**
-     * Standard lifecycle method called when the activity is no longer visible.
-     * <p>
-     * Performance: Cleans up ad-related resources.
-     * </p>
-     */
     @Override
     protected void onDestroy() {
         if (null != getAdsManager()) {
@@ -280,9 +240,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         super.onDestroy();
     }
 
-    /**
-     * Standard lifecycle method called when the activity is losing focus.
-     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -292,12 +249,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Statisticator.onMoveToBackground(this);
     }
 
-    /**
-     * Controls the visibility of the primary Floating Action Button.
-     * Often used by fragments to hide the FAB on read-only screens (like Settings).
-     *
-     * @param visible True to show the FAB.
-     */
     public void setFabVisible(boolean visible) {
         final View fab = findViewById(R.id.fab);
         if (fab != null) {
@@ -305,10 +256,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    /**
-     * Triggers the display of an AppOpen ad after a slight delay 
-     * when the application moves to the foreground.
-     */
     public void onMoveToForeground() {
         if (!mHasCreated) {
             final Timer timer = new Timer();
@@ -322,14 +269,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mHasCreated = false;
     }
 
-    /**
-     * Handles system permission results, specifically updating the 
-     * Notification Manager if POST_NOTIFICATIONS is granted.
-     *
-     * @param requestCode  The request code passed in requestPermissions(String[], int).
-     * @param permissions  The requested permissions. Never null.
-     * @param grantResults The grant results for the corresponding permissions. Never null.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -340,14 +279,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    /**
-     * Listener callback for Ad-related actions (clicks, closes, etc.).
-     *
-     * @param adMobAd  The ad object that triggered the action.
-     * @param adAction The type of action performed.
-     */
     @Override
     public void onAdAction(@NonNull AdMobAd adMobAd, AdAction adAction) {
-        // Handle ad-related analytics or tracking here
     }
 }

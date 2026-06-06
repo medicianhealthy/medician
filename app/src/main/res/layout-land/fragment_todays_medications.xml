@@ -5,22 +5,25 @@
     android:id="@+id/adViewParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/android:colorBackground"
-    tools:context=".ui.todaysmedications.TodaysMedicationsFragment">
+    android:background="?attr/colorSurface">
 
+    <!-- Top bar for sorting -->
     <HorizontalScrollView
         android:id="@+id/scroll_chips"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
         android:scrollbars="none"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingHorizontal="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/card_streak"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
             app:singleSelection="true"
             app:selectionRequired="true">
 
@@ -50,42 +53,41 @@
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- Streak Badge -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_streak"
         style="@style/Widget.Material3.CardView.Filled"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:visibility="gone"
+        tools:visibility="visible"
         app:cardBackgroundColor="?attr/colorPrimaryContainer"
-        app:cardCornerRadius="16dp"
+        app:cardCornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scroll_chips">
+        app:layout_constraintTop_toTopOf="@id/scroll_chips"
+        app:layout_constraintBottom_toBottomOf="@id/scroll_chips">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp">
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp">
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/ic_magic_wand"
-                android:contentDescription="@null"
                 app:tint="?attr/colorOnPrimaryContainer" />
 
             <TextView
                 android:id="@+id/txtStreak"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                tools:text="3 Day Magic Streak!"
-                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:layout_marginStart="6dp"
+                tools:text="3 Day Streak"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
                 android:textColor="?attr/colorOnPrimaryContainer"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -106,7 +108,9 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/medications_list_row" />
 
             <include
                 android:id="@+id/empty_layout"
