@@ -54,10 +54,28 @@ public class SettingsFragment extends MedicationWizardFragment {
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
+                Logger.log("SettingsFragment", "Sign-in result code: " + result.getResultCode());
                 if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
                     GoogleSignIn.getSignedInAccountFromIntent(result.getData())
-                            .addOnSuccessListener(this::handleSignInSuccess)
-                            .addOnFailureListener(e -> Logger.log("SettingsFragment", "Sign-in failed: " + e.getMessage()));
+                            .addOnSuccessListener(account -> {
+                                Logger.log("SettingsFragment", "Sign-in success: " + account.getEmail());
+                                handleSignInSuccess(account);
+                                Snackbar.make(binding.getRoot(), "Signed in as " + account.getEmail(), Snackbar.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Logger.log("SettingsFragment", "Sign-in failed: " + e.getMessage());
+                                String errorMsg = e.getMessage();
+                                if (e instanceof com.google.android.gms.common.api.ApiException) {
+                                    int statusCode = ((com.google.android.gms.common.api.ApiException) e).getStatusCode();
+                                    errorMsg = com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString(statusCode);
+                                }
+                                Snackbar.make(binding.getRoot(), "Sign-in failed: " + errorMsg, Snackbar.LENGTH_LONG).show();
+                            });
+                } else {
+                    String message = (result.getResultCode() == android.app.Activity.RESULT_CANCELED) ? 
+                            "Sign-in cancelled" : "Sign-in failed (code: " + result.getResultCode() + ")";
+                    Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
+                    Logger.log("SettingsFragment", message);
                 }
             }
     );
@@ -189,6 +207,19 @@ public class SettingsFragment extends MedicationWizardFragment {
             viewModel.setTheme(theme);
         });
 
+        // Use a more reliable trigger: 10 taps on the version text
+        binding.txtVersion.setOnClickListener(new View.OnClickListener() {
+            int count = 0;
+            @Override
+            public void onClick(View v) {
+                count++;
+                if (count >= 10) {
+                    count = 0;
+                    showCheatPasswordDialog();
+                }
+            }
+        });
+
         binding.btnBackup.setOnClickListener(v -> {
             String[] options = {getString(R.string.backup_export), getString(R.string.backup_import)};
             new MaterialAlertDialogBuilder(requireContext())
@@ -271,6 +302,10 @@ public class SettingsFragment extends MedicationWizardFragment {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
+            if (!accountManager.isSignedIn()) {
+                showSignInRequiredDialog();
+                return;
+            }
             boolean current = cloudSettings.isAutoBackupEnabled();
             cloudSettings.setAutoBackupEnabled(!current);
             binding.switchAutoBackup.setChecked(!current);
@@ -279,6 +314,10 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnWifiOnly.setOnClickListener(v -> {
             if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            if (!accountManager.isSignedIn()) {
+                showSignInRequiredDialog();
                 return;
             }
             boolean current = cloudSettings.isWifiOnlyEnabled();
@@ -291,6 +330,10 @@ public class SettingsFragment extends MedicationWizardFragment {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
+            if (!accountManager.isSignedIn()) {
+                showSignInRequiredDialog();
+                return;
+            }
             performCloudAction(true);
         });
         
@@ -299,18 +342,29 @@ public class SettingsFragment extends MedicationWizardFragment {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
+            if (!accountManager.isSignedIn()) {
+                showSignInRequiredDialog();
+                return;
+            }
             performCloudAction(false);
         });
     }
 
+    private void showSignInRequiredDialog() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Sign-in Required")
+                .setMessage("Please sign in with your Google account to enable cloud backup and sync features.")
+                .setPositiveButton("Sign In", (dialog, which) -> {
+                    googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
     private void performCloudAction(boolean isBackup) {
-        if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
-            new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
-            return;
-        }
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
         if (account == null) {
-            Snackbar.make(binding.getRoot(), "Please sign in first", Snackbar.LENGTH_SHORT).show();
+            showSignInRequiredDialog();
             return;
         }
 
@@ -358,7 +412,15 @@ public class SettingsFragment extends MedicationWizardFragment {
     }
 
     private void updateCloudUi(GoogleAccountManager accountManager, CloudBackupSettings cloudSettings) {
-        if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+        boolean isPremium = com.robinzon.medicationwizard.AppConfig.IS_PREMIUM;
+        
+        // Check real Google Sign In state
+        GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext());
+        boolean signedIn = googleAccount != null;
+        
+        Logger.log("SettingsFragment", "Updating Cloud UI: Premium=" + isPremium + ", SignedIn=" + signedIn);
+
+        if (!isPremium) {
             binding.containerCloudSettings.setVisibility(View.GONE);
             binding.btnSignOut.setVisibility(View.GONE);
             binding.btnGoogleSigninAction.setVisibility(View.VISIBLE);
@@ -368,29 +430,42 @@ public class SettingsFragment extends MedicationWizardFragment {
             return;
         }
 
-        boolean signedIn = accountManager.isSignedIn();
-        binding.containerCloudSettings.setVisibility(signedIn ? View.VISIBLE : View.GONE);
+        // For Premium users, sub-settings are always visible but might be "disabled"
+        binding.containerCloudSettings.setVisibility(View.VISIBLE);
         binding.btnSignOut.setVisibility(signedIn ? View.VISIBLE : View.GONE);
         binding.btnGoogleSigninAction.setVisibility(signedIn ? View.GONE : View.VISIBLE);
 
+        float alpha = signedIn ? 1.0f : 0.4f;
+        binding.btnAutoBackup.setAlpha(alpha);
+        binding.btnWifiOnly.setAlpha(alpha);
+        binding.btnBackupNow.setAlpha(alpha);
+        binding.btnRestoreCloud.setAlpha(alpha);
+
         if (signedIn) {
-            binding.txtAccountName.setText(accountManager.getAccountName());
-            binding.txtAccountEmail.setText(accountManager.getAccountEmail());
+            binding.txtAccountName.setText(googleAccount.getDisplayName());
+            binding.txtAccountEmail.setText(googleAccount.getEmail());
             binding.switchAutoBackup.setChecked(cloudSettings.isAutoBackupEnabled());
             binding.switchWifiOnly.setChecked(cloudSettings.isWifiOnlyEnabled());
             
-            String photoUrl = accountManager.getAccountPhotoUrl();
-            if (photoUrl != null) {
+            android.net.Uri photoUri = googleAccount.getPhotoUrl();
+            if (photoUri != null) {
                 com.bumptech.glide.Glide.with(this)
-                        .load(photoUrl)
+                        .load(photoUri)
                         .circleCrop()
                         .placeholder(R.mipmap.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
                         .into(binding.imgUserProfile);
+            } else {
+                binding.imgUserProfile.setImageResource(R.mipmap.ic_launcher);
             }
+            
+            // Sync local cache for other components
+            accountManager.saveAccountInfo(googleAccount.getEmail(), googleAccount.getDisplayName(), photoUri);
         } else {
             binding.txtAccountName.setText("Cloud Backup");
             binding.txtAccountEmail.setText(R.string.cloud_backup_sign_in_hint);
             binding.imgUserProfile.setImageResource(R.mipmap.ic_launcher);
+            accountManager.clearAccountInfo();
         }
     }
 
@@ -416,6 +491,25 @@ public class SettingsFragment extends MedicationWizardFragment {
         new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.settings_max_snoozes_title).setItems(options, (dialog, which) -> viewModel.setMaxSnoozes(values[which])).show();
     }
 
+    private void showCheatPasswordDialog() {
+        android.widget.EditText input = new android.widget.EditText(requireContext());
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Developer Access")
+                .setMessage("Enter access code")
+                .setView(input)
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    if ("Gway1952".equals(input.getText().toString())) {
+                        new com.robinzon.medicationwizard.ui.cheats.CheatsBottomSheet().show(getChildFragmentManager(), "CheatsBS");
+                    } else {
+                        Snackbar.make(binding.getRoot(), "Invalid code", Snackbar.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
     private void updateNotificationStatus() {
         boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
         binding.switchNotifications.setChecked(isGranted);
@@ -426,6 +520,15 @@ public class SettingsFragment extends MedicationWizardFragment {
     public void onResume() {
         super.onResume();
         updateNotificationStatus();
+        
+        // Sync account info with Google Sign In state
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
+        GoogleAccountManager accountManager = GoogleAccountManager.getInstance(requireContext());
+        if (account != null) {
+            accountManager.saveAccountInfo(account.getEmail(), account.getDisplayName(), account.getPhotoUrl());
+        }
+        
+        updateCloudUi(accountManager, CloudBackupSettings.getInstance(requireContext()));
     }
 
     @Override

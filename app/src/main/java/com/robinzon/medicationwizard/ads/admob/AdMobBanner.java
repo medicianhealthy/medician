@@ -72,7 +72,7 @@ public class AdMobBanner extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        return true;
+        return !com.robinzon.medicationwizard.AppConfig.IS_PREMIUM || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
     }
 
     private void createAdListener() {
@@ -151,7 +151,7 @@ public class AdMobBanner extends AdMobAd {
     @Override
     public void load() {
         log("%s Requesting load.\n%s", getLogTag(), thisToString());
-        if (Boolean.TRUE.equals(shouldBeLoaded())) {
+        if (Boolean.TRUE.equals(shouldBeLoaded()) && shouldShow()) {
             getAdsManager().onAdAction(AdMobBanner.this, AdAction.StartingToLoad);
             log("%s Preparing for loading.\n%s", getLogTag(), thisToString());
 

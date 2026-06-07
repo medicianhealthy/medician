@@ -158,14 +158,18 @@ public class BillingManager implements PurchasesUpdatedListener {
                                 break;
                             }
                         }
-                        AppConfig.IS_PREMIUM = owned;
                         
                         // Performance: Cache the verified status and reset offline counter
                         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(mContext);
                         sp.setBoolean(KEY_CACHED_PREMIUM, owned);
                         sp.setInt(KEY_OFFLINE_COUNT, 0);
+
+                        // Only update global flag if a developer cheat is not active
+                        if (!sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, false)) {
+                            AppConfig.IS_PREMIUM = owned;
+                        }
                         
-                        Logger.log("Billing", "Premium status refreshed: " + owned);
+                        Logger.log("Billing", "Premium status refreshed: " + owned + (sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, false) ? " (Ignored due to cheat)" : ""));
                     }
                 }
         );

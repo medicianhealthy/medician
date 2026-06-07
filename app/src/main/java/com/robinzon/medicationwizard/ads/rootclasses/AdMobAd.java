@@ -105,6 +105,9 @@ public abstract class AdMobAd {
 
     @Nullable
     protected Boolean shouldBeLoaded() {
+        if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
+            return false;
+        }
         final Context applicationContext = getContext().getApplicationContext();
         if (null != applicationContext) {
             final boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable(applicationContext);

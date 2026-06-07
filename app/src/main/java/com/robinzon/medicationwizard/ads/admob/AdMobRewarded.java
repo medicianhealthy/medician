@@ -153,8 +153,7 @@ public class AdMobRewarded extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        //TODO
-        return true;
+        return !com.robinzon.medicationwizard.AppConfig.IS_PREMIUM || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
     }
 
     @Override

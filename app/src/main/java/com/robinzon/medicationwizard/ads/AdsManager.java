@@ -139,7 +139,7 @@ public class AdsManager implements OnAdActionListener{
 
     /** @noinspection unused*/
     public void showInterstitialAd() {
-        if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) return;
+        if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
 
         if (null != mMainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             if (shouldShowInterstitialBasedOnUsage()) {
