@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">קוסם התרופות</string>
     <string name="navigation_drawer_open">פתח תפריט ניווט</string>
@@ -148,6 +148,19 @@
     <string name="notif_already_active">ההתראות כבר פעילות!</string>
     <string name="data_cleared">הנתונים נמחקו.</string>
     <string name="support_coming_soon">התמיכה תהיה זמינה בקרוב!</string>
+    <string name="support_dialog_title">תמיכה קסומה</string>
+    <string name="support_dialog_message">האם יש תקלה בקסם (דיווח על באג) או שיש לך רעיון ללחש חדש (בקשת פיצ\'ר)?</string>
+    <string name="support_option_bug">תקלה (באג)</string>
+    <string name="support_option_feature">לחש חדש (פיצ\'ר)</string>
+    <string name="support_subject_bug">דיווח על תקלה: [%1$s]</string>
+    <string name="support_subject_feature">רעיון ללחש חדש: [%1$s]</string>
+    <string name="support_no_email_client">לא נמצאה אפליקציית אימייל. אנא צור קשר בכתובת support@medicationwizard.com</string>
+    <string name="support_body_header">--- פרטי המגילה הקסומה ---</string>
+    <string name="support_body_version">גרסת אפליקציה: %1$s</string>
+    <string name="support_body_device">מכשיר: %1$s</string>
+    <string name="support_body_os">גרסת אנדרואי드: %1$s</string>
+    <string name="support_body_locale">שפה: %1$s</string>
+    <string name="support_body_message_hint">--- תאר את הקסם כאן ---</string>
     <string name="sign_in_first">בבקשה התחבר קודם</string>
     <string name="backing_up_drive">מגבה ל-Google Drive&#8230;</string>
     <string name="restoring_cloud">משחזר מהענן&#8230;</string>

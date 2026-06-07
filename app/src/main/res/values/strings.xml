@@ -162,6 +162,20 @@
     <string name="notif_already_active">Notifications are already active!</string>
     <string name="data_cleared">Data cleared.</string>
     <string name="support_coming_soon">Support coming soon!</string>
+    <string name="support_email_address" translatable="false">support@medicationwizard.com</string>
+    <string name="support_dialog_title">Magic Support</string>
+    <string name="support_dialog_message">Is there a glitch in the magic (Bug) or do you have a grand idea for a new spell (Feature Request)?</string>
+    <string name="support_option_bug">A Glitch (Bug)</string>
+    <string name="support_option_feature">New Spell (Feature)</string>
+    <string name="support_subject_bug">Glitch Report: [%1$s]</string>
+    <string name="support_subject_feature">New Spell Idea: [%1$s]</string>
+    <string name="support_no_email_client">No email application found. Please contact us at support@medicationwizard.com</string>
+    <string name="support_body_header">--- Magic Scroll Details ---</string>
+    <string name="support_body_version">App Version: %1$s</string>
+    <string name="support_body_device">Device: %1$s</string>
+    <string name="support_body_os">Android Version: %1$s</string>
+    <string name="support_body_locale">Language: %1$s</string>
+    <string name="support_body_message_hint">--- Describe the magic here ---</string>
     <string name="sign_in_first">Please sign in first</string>
     <string name="backing_up_drive">Backing up to Google Drive...</string>
     <string name="restoring_cloud">Restoring from cloud...</string>

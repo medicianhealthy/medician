@@ -295,7 +295,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                     .show();
         });
 
-        binding.btnSupport.setOnClickListener(v -> Snackbar.make(binding.getRoot(), R.string.support_coming_soon, Snackbar.LENGTH_SHORT).show());
+        binding.btnSupport.setOnClickListener(v -> showSupportOptionsDialog());
         
         viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> 
             binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range)));
@@ -541,6 +541,46 @@ public class SettingsFragment extends MedicationWizardFragment {
         String[] options = {"1 time", "2 times", "3 times", "5 times", "Unlimited"};
         int[] values = {1, 2, 3, 5, -1};
         new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.settings_max_snoozes_title).setItems(options, (dialog, which) -> viewModel.setMaxSnoozes(values[which])).show();
+    }
+
+    private void showSupportOptionsDialog() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.support_dialog_title)
+                .setMessage(R.string.support_dialog_message)
+                .setPositiveButton(R.string.support_option_bug, (dialog, which) -> openEmailClient(true))
+                .setNegativeButton(R.string.support_option_feature, (dialog, which) -> openEmailClient(false))
+                .setNeutralButton(R.string.buttoh_not_now, null)
+                .show();
+    }
+
+    private void openEmailClient(boolean isBug) {
+        String appVersion = BuildConfig.VERSION_NAME;
+        String deviceName = android.os.Build.MODEL + " (" + android.os.Build.MANUFACTURER + ")";
+        String osVersion = android.os.Build.VERSION.RELEASE;
+        String locale = java.util.Locale.getDefault().toString();
+
+        String subjectTemplate = isBug ? getString(R.string.support_subject_bug) : getString(R.string.support_subject_feature);
+        String subject = String.format(subjectTemplate, appVersion);
+
+        StringBuilder body = new java.lang.StringBuilder();
+        body.append(getString(R.string.support_body_message_hint)).append("\n\n\n");
+        body.append(getString(R.string.support_body_header)).append("\n");
+        body.append(String.format(getString(R.string.support_body_version), appVersion)).append("\n");
+        body.append(String.format(getString(R.string.support_body_device), deviceName)).append("\n");
+        body.append(String.format(getString(R.string.support_body_os), osVersion)).append("\n");
+        body.append(String.format(getString(R.string.support_body_locale), locale)).append("\n");
+
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(android.net.Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{getString(R.string.support_email_address)});
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, body.toString());
+
+        try {
+            startActivity(intent);
+        } catch (android.content.ActivityNotFoundException e) {
+            Snackbar.make(binding.getRoot(), R.string.support_no_email_client, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void showCheatPasswordDialog() {
