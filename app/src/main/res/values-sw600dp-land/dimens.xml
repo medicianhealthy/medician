@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tablet Spacing (Landscape) -->
+    <dimen name="screen_edge_margin">48dp</dimen>
+    <dimen name="grid_spacing">24dp</dimen>
+    <dimen name="max_content_width">800dp</dimen>
+
+    <!-- Mascot Sizes -->
+    <dimen name="empty_state_mascot_size">240dp</dimen>
+    <dimen name="dashboard_mascot_size">200dp</dimen>
+</resources>

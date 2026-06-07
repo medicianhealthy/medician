@@ -146,8 +146,8 @@
                                             android:text="@string/settings_bypass_title"
                                             android:textAppearance="?attr/textAppearanceTitleMedium" />
                                         <ImageView
-                                            android:layout_width="14dp"
-                                            android:layout_height="14dp"
+                                            android:layout_width="20dp"
+                                            android:layout_height="20dp"
                                             android:layout_marginStart="8dp"
                                             app:srcCompat="@drawable/ic_crown"
                                             app:tint="#FFD700"
@@ -203,8 +203,8 @@
                                         android:text="@string/settings_quiet_hours_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
                                     <ImageView
-                                        android:layout_width="14dp"
-                                        android:layout_height="14dp"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
                                         android:layout_marginStart="8dp"
                                         app:srcCompat="@drawable/ic_crown"
                                         app:tint="#FFD700"
@@ -329,8 +329,8 @@
                                         android:text="@string/cloud_backup_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
                                     <ImageView
-                                        android:layout_width="14dp"
-                                        android:layout_height="14dp"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
                                         android:layout_marginStart="8dp"
                                         app:srcCompat="@drawable/ic_crown"
                                         app:tint="#FFD700"

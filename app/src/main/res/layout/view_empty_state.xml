@@ -9,89 +9,98 @@
     android:visibility="gone"
     tools:visibility="visible">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/empty_state_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
         android:paddingHorizontal="32dp"
         android:paddingTop="32dp"
         android:paddingBottom="48dp">
 
-        <!-- Mascot Glow Background -->
-        <View
-            android:id="@+id/mascot_glow"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:alpha="0.15"
-            android:background="@drawable/ic_wizard_background"
-            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
-            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
-            app:layout_constraintTop_toTopOf="@+id/empty_mascot"
-            app:layout_constraintWidth_percent="0.6"
-            android:scaleX="1.8"
-            android:scaleY="1.8" />
+        <!-- Mascot Area -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mascot_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <!-- High Def Mascot -->
-        <ImageView
-            android:id="@+id/empty_mascot"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_wizard_high_def"
-            android:contentDescription="@null" />
+            <!-- Mascot Glow Background -->
+            <View
+                android:id="@+id/mascot_glow"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:alpha="0.15"
+                android:background="@drawable/ic_wizard_background"
+                app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+                app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+                app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+                app:layout_constraintTop_toTopOf="@+id/empty_mascot"
+                android:scaleX="1.6"
+                android:scaleY="1.6" />
 
-        <!-- Animated Sparkles -->
-        <ImageView
-            android:id="@+id/empty_sparkle_1"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_sparkle"
-            app:layout_constraintBottom_toTopOf="@+id/empty_mascot"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
-            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
-            app:layout_constraintTop_toTopOf="@+id/empty_mascot"
-            app:tint="?attr/colorPrimary" />
+            <!-- High Def Mascot -->
+            <ImageView
+                android:id="@+id/empty_mascot"
+                android:layout_width="@dimen/empty_state_mascot_size"
+                android:layout_height="@dimen/empty_state_mascot_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_wizard_high_def"
+                android:contentDescription="@null" />
 
-        <ImageView
-            android:id="@+id/empty_sparkle_2"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/ic_sparkle"
-            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
-            app:layout_constraintHorizontal_bias="0.85"
-            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
-            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
-            app:layout_constraintTop_toBottomOf="@+id/empty_mascot"
-            app:tint="?attr/colorPrimary" />
+            <!-- Animated Sparkles -->
+            <ImageView
+                android:id="@+id/empty_sparkle_1"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_sparkle"
+                app:layout_constraintBottom_toTopOf="@+id/empty_mascot"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+                app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+                app:layout_constraintTop_toTopOf="@+id/empty_mascot"
+                app:tint="?attr/colorPrimary" />
 
-        <ImageView
-            android:id="@+id/empty_sparkle_3"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_sparkle"
-            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
-            app:layout_constraintHorizontal_bias="0.95"
-            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
-            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
-            app:layout_constraintTop_toTopOf="@+id/empty_mascot"
-            app:tint="?attr/colorPrimary" />
+            <ImageView
+                android:id="@+id/empty_sparkle_2"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_sparkle"
+                app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+                app:layout_constraintHorizontal_bias="0.85"
+                app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+                app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+                app:layout_constraintTop_toBottomOf="@+id/empty_mascot"
+                app:tint="?attr/colorPrimary" />
 
-        <ImageView
-            android:id="@+id/empty_sparkle_4"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_sparkle"
-            app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
-            app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
-            app:layout_constraintRight_toRightOf="@+id/empty_mascot"
-            app:layout_constraintTop_toBottomOf="@+id/empty_mascot"
-            app:tint="?attr/colorPrimary" />
+            <ImageView
+                android:id="@+id/empty_sparkle_3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_sparkle"
+                app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+                app:layout_constraintHorizontal_bias="0.95"
+                app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+                app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+                app:layout_constraintTop_toTopOf="@+id/empty_mascot"
+                app:tint="?attr/colorPrimary" />
+
+            <ImageView
+                android:id="@+id/empty_sparkle_4"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_sparkle"
+                app:layout_constraintBottom_toBottomOf="@+id/empty_mascot"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintLeft_toLeftOf="@+id/empty_mascot"
+                app:layout_constraintRight_toRightOf="@+id/empty_mascot"
+                app:layout_constraintTop_toBottomOf="@+id/empty_mascot"
+                app:tint="?attr/colorPrimary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/empty_title"
@@ -102,24 +111,18 @@
             android:text="@string/empty_meds_title"
             android:textAppearance="?attr/textAppearanceHeadlineMedium"
             android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/empty_mascot" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/empty_subtitle"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:lineSpacingExtra="4sp"
             android:text="@string/empty_meds_subtitle"
             android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/empty_title" />
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_empty_action"
@@ -133,10 +136,7 @@
             android:textSize="18sp"
             app:cornerRadius="24dp"
             app:icon="@android:drawable/ic_menu_add"
-            app:iconSize="24dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/empty_subtitle" />
+            app:iconSize="24dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

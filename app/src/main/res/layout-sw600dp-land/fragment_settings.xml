@@ -45,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!-- Notifications Toggle -->
                     <LinearLayout
                         android:id="@+id/btn_notifications"
                         android:layout_width="match_parent"
@@ -95,7 +96,10 @@
                         android:orientation="vertical"
                         android:visibility="gone"
                         tools:visibility="visible">
+
                         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+
+                        <!-- Sound Picker -->
                         <LinearLayout
                             android:id="@+id/btn_notif_sound"
                             android:layout_width="match_parent"
@@ -118,6 +122,8 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
+
+                        <!-- Bypass Volume -->
                         <LinearLayout
                             android:id="@+id/btn_bypass_volume"
                             android:layout_width="match_parent"
@@ -143,8 +149,8 @@
                                         android:text="@string/settings_bypass_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
                                     <ImageView
-                                        android:layout_width="14dp"
-                                        android:layout_height="14dp"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
                                         android:layout_marginStart="8dp"
                                         app:srcCompat="@drawable/ic_crown"
                                         app:tint="#FFD700"
@@ -165,6 +171,8 @@
                                 android:clickable="false"
                                 android:focusable="false" />
                         </LinearLayout>
+
+                        <!-- Volume Slider -->
                         <LinearLayout
                             android:id="@+id/layout_volume"
                             android:layout_width="match_parent"
@@ -181,6 +189,8 @@
                                 android:valueFrom="0"
                                 android:valueTo="100" />
                         </LinearLayout>
+
+                        <!-- Quiet Hours -->
                         <LinearLayout
                             android:id="@+id/btn_quiet_hours"
                             android:layout_width="match_parent"
@@ -200,8 +210,8 @@
                                     android:text="@string/settings_quiet_hours_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
                                 <ImageView
-                                    android:layout_width="14dp"
-                                    android:layout_height="14dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
                                     android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
                                     app:tint="#FFD700"
@@ -216,6 +226,8 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
+
+                        <!-- Snooze Duration -->
                         <LinearLayout
                             android:id="@+id/btn_snooze_duration"
                             android:layout_width="match_parent"
@@ -238,6 +250,8 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
+
+                        <!-- Max Snoozes -->
                         <LinearLayout
                             android:id="@+id/btn_max_snoozes"
                             android:layout_width="match_parent"
@@ -260,6 +274,7 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
+
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -322,8 +337,8 @@
                                     android:text="@string/cloud_backup_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
                                 <ImageView
-                                    android:layout_width="14dp"
-                                    android:layout_height="14dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
                                     android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
                                     app:tint="#FFD700"
@@ -454,7 +469,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/settings_category_appearance"
+                android:text="Appearance"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
 
@@ -467,7 +482,7 @@
                 app:cardCornerRadius="24dp">
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_theme_title" android:textAppearance="?attr/textAppearanceTitleMedium" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="App Theme" android:textAppearance="?attr/textAppearanceTitleMedium" />
                     <com.google.android.material.button.MaterialButtonToggleGroup
                         android:id="@+id/toggle_group_theme"
                         android:layout_width="match_parent"
@@ -475,9 +490,9 @@
                         android:layout_marginTop="16dp"
                         app:singleSelection="true"
                         app:selectionRequired="true">
-                        <Button android:id="@+id/btn_theme_light" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_light" />
-                        <Button android:id="@+id/btn_theme_dark" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_dark" />
-                        <Button android:id="@+id/btn_theme_system" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_system" />
+                        <Button android:id="@+id/btn_theme_light" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Light" />
+                        <Button android:id="@+id/btn_theme_dark" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Dark" />
+                        <Button android:id="@+id/btn_theme_system" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="System" />
                     </com.google.android.material.button.MaterialButtonToggleGroup>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -488,7 +503,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/settings_category_data"
+                android:text="Data &amp; Privacy"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
 
@@ -501,9 +516,9 @@
                 app:cardCornerRadius="24dp">
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_backup_title" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
-                    <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_clear_data_title" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
-                    <Button android:id="@+id/btn_support" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_support_title" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                    <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Backup &amp; Restore" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                    <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Clear All Data" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                    <Button android:id="@+id/btn_support" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Contact Support" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

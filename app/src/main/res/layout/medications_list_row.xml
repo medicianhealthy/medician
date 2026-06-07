@@ -161,49 +161,52 @@
             android:contentDescription="@null"
             tools:visibility="visible" />
 
-        <LinearLayout
-            android:id="@+id/action_buttons_container"
+        <!-- Action Buttons using Flow for wrapping -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/untake_btn"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_untake"
+            android:textColor="?attr/colorError"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/skip_btn"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_skip" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/reschedule_btn"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reschedule" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/take_btn"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/action_buttons_flow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:gravity="end|center_vertical"
-            android:orientation="horizontal"
+            app:constraint_referenced_ids="untake_btn,skip_btn,reschedule_btn,take_btn"
+            app:flow_wrapMode="aligned"
+            app:flow_horizontalStyle="packed"
+            app:flow_horizontalGap="8dp"
+            app:flow_horizontalBias="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/med_icon"
-            app:layout_constraintTop_toBottomOf="@id/text_content_stack">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/untake_btn"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/button_untake"
-                android:textColor="?attr/colorError"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/skip_btn"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/button_skip" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/reschedule_btn"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reschedule" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/take_btn"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Take" />
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@id/text_content_stack" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

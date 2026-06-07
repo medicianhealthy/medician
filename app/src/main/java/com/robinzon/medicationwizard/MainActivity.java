@@ -95,16 +95,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             NavigationUI.setupWithNavController(navigationView, mNavController);
             
             navigationView.setNavigationItemSelectedListener(item -> {
-                boolean handled = NavigationUI.onNavDestinationSelected(item, mNavController);
-                if (!handled && item.getItemId() == R.id.nav_home) {
-                    // If we're already on home, just close the drawer
-                    drawer.closeDrawer(GravityCompat.START);
-                    return true;
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    // Start destination needs careful handling if we're already there or not
+                    if (mNavController.getCurrentDestination() != null && mNavController.getCurrentDestination().getId() == R.id.nav_home) {
+                        drawer.closeDrawer(GravityCompat.START);
+                        return true;
+                    }
+                    mNavController.popBackStack(R.id.nav_home, false);
+                } else {
+                    NavigationUI.onNavDestinationSelected(item, mNavController);
                 }
-                if (handled) {
-                    drawer.closeDrawer(GravityCompat.START);
-                }
-                return handled;
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
             });
 
             refreshNavHeader();
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             int currentId = mNavController.getCurrentDestination() != null ? mNavController.getCurrentDestination().getId() : -1;
             
             // Hide the settings icon if we're already on the settings screen
-            android.view.MenuItem settingsItem = menu.findItem(R.id.nav_settings);
+            android.view.MenuItem settingsItem = menu.findItem(R.id.action_settings);
             if (settingsItem != null) {
                 settingsItem.setVisible(currentId != R.id.nav_settings);
             }
@@ -213,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_settings) {
+        if (id == R.id.action_settings) {
             mNavController.navigate(R.id.nav_settings);
             return true;
         } else if (id == R.id.action_premium) {

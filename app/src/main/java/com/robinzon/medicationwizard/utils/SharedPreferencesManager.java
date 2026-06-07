@@ -10,9 +10,6 @@ import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-
 /**
  * A robust singleton manager for handling all Android SharedPreferences operations.
  * <p>
@@ -20,16 +17,11 @@ import java.util.ArrayList;
  * the complexities of the {@link SharedPreferences.Editor} and handling data 
  * types such as JSON Arrays, Booleans, and Strings. 
  * </p>
- * <p>
- * It uses {@link WeakReference} for the context and internal instances to avoid 
- * memory leaks and ensures that operations are safely performed on the 
- * correct preference file.
- * </p>
  */
 public class SharedPreferencesManager {
 
-    private WeakReference<SharedPreferences> mAndroidSharedPreferencesInstance;
-    private static WeakReference<SharedPreferencesManager> sManagerInstance;
+    private SharedPreferences mAndroidSharedPreferences;
+    private static SharedPreferencesManager sManagerInstance;
 
     /**
      * Retrieves the singleton instance of the manager.
@@ -37,24 +29,17 @@ public class SharedPreferencesManager {
      * @param context The application context.
      * @return The active SharedPreferencesManager instance.
      */
-    public static SharedPreferencesManager getInstance(@NonNull final Context context) {
-        if (null == sManagerInstance || null == sManagerInstance.get()) {
-            sManagerInstance = new WeakReference<>(new SharedPreferencesManager(context));
-        } else if (null == sManagerInstance.get().getAndroidSharedPreferencesInstance()) {
-            final String fileName = getFileName(context);
-            if (!TextUtils.isEmpty(fileName)) {
-                final SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-                sManagerInstance.get().mAndroidSharedPreferencesInstance = new WeakReference<>(sharedPreferences);
-            }
+    public static synchronized SharedPreferencesManager getInstance(@NonNull final Context context) {
+        if (null == sManagerInstance) {
+            sManagerInstance = new SharedPreferencesManager(context.getApplicationContext());
         }
-        return sManagerInstance.get();
+        return sManagerInstance;
     }
 
     private SharedPreferencesManager(@NonNull final Context context) {
         final String fileName = getFileName(context);
         if (!TextUtils.isEmpty(fileName)) {
-            final SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-            mAndroidSharedPreferencesInstance = new WeakReference<>(sharedPreferences);
+            mAndroidSharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         } else {
             if (Logger.IS_LOGGING_ENABLED) {
                 Logger.log(Logger.SHARED_PREFS,
@@ -68,12 +53,9 @@ public class SharedPreferencesManager {
      */
     @Nullable private static String getFileName(final Context context) {
         if (null != context) {
-            final Context applicationContext = context.getApplicationContext();
-            if (null != applicationContext) {
-                final String packageName = applicationContext.getPackageName();
-                if (!TextUtils.isEmpty(packageName)) {
-                    return packageName.concat(".sharedpreferences");
-                }
+            final String packageName = context.getPackageName();
+            if (!TextUtils.isEmpty(packageName)) {
+                return packageName.concat(".sharedpreferences");
             }
         }
         return null;
@@ -93,8 +75,8 @@ public class SharedPreferencesManager {
     }
 
     @Nullable private SharedPreferences.Editor getEditor() {
-        if (null != getAndroidSharedPreferencesInstance()) {
-            return getAndroidSharedPreferencesInstance().edit();
+        if (null != mAndroidSharedPreferences) {
+            return mAndroidSharedPreferences.edit();
         }
         return null;
     }
@@ -106,8 +88,8 @@ public class SharedPreferencesManager {
      * @return True if the key exists.
      */
     public boolean containsKey(String key) {
-        if (null != getAndroidSharedPreferencesInstance() && !TextUtils.isEmpty(key)) {
-            return getAndroidSharedPreferencesInstance().contains(key);
+        if (null != mAndroidSharedPreferences && !TextUtils.isEmpty(key)) {
+            return mAndroidSharedPreferences.contains(key);
         }
         return false;
     }
@@ -133,9 +115,9 @@ public class SharedPreferencesManager {
      * @return The parsed JSONArray or the default value.
      */
     @Nullable public JSONArray getJsonArray(@Nullable final String key, @Nullable final JSONArray defaultValue) {
-        if (null != getAndroidSharedPreferencesInstance()) {
+        if (null != mAndroidSharedPreferences) {
             try {
-                String jsonString = getAndroidSharedPreferencesInstance().getString(key, null);
+                String jsonString = mAndroidSharedPreferences.getString(key, null);
                 return jsonString == null ? defaultValue : new JSONArray(jsonString);
             } catch (JSONException e) {
                 return defaultValue;
@@ -145,8 +127,8 @@ public class SharedPreferencesManager {
     }
 
     public int getInt(@NonNull final String key, final int defaultValue) {
-        if (null != getAndroidSharedPreferencesInstance()) {
-            return getAndroidSharedPreferencesInstance().getInt(key, defaultValue);
+        if (null != mAndroidSharedPreferences) {
+            return mAndroidSharedPreferences.getInt(key, defaultValue);
         }
         return defaultValue;
     }
@@ -158,8 +140,8 @@ public class SharedPreferencesManager {
     }
 
     public long getLong(final String key, final long defaultValue) {
-        if (null != getAndroidSharedPreferencesInstance()) {
-            return getAndroidSharedPreferencesInstance().getLong(key, defaultValue);
+        if (null != mAndroidSharedPreferences) {
+            return mAndroidSharedPreferences.getLong(key, defaultValue);
         }
         return defaultValue;
     }
@@ -171,8 +153,8 @@ public class SharedPreferencesManager {
     }
 
     public float getFloat(final String key, final float defaultValue) {
-        if (null != getAndroidSharedPreferencesInstance()) {
-            return getAndroidSharedPreferencesInstance().getFloat(key, defaultValue);
+        if (null != mAndroidSharedPreferences) {
+            return mAndroidSharedPreferences.getFloat(key, defaultValue);
         }
         return defaultValue;
     }
@@ -184,8 +166,8 @@ public class SharedPreferencesManager {
     }
 
     public String getString(final String key, final String defaultValue) {
-        if (null != getAndroidSharedPreferencesInstance()) {
-            return getAndroidSharedPreferencesInstance().getString(key, defaultValue);
+        if (null != mAndroidSharedPreferences) {
+            return mAndroidSharedPreferences.getString(key, defaultValue);
         }
         return defaultValue;
     }
@@ -197,8 +179,8 @@ public class SharedPreferencesManager {
     }
 
     public boolean getBoolean(String key, Boolean defaultValue) {
-        if (null != getAndroidSharedPreferencesInstance()) {
-            return getAndroidSharedPreferencesInstance().getBoolean(key, defaultValue);
+        if (null != mAndroidSharedPreferences) {
+            return mAndroidSharedPreferences.getBoolean(key, defaultValue);
         }
         return defaultValue;
     }
@@ -216,8 +198,8 @@ public class SharedPreferencesManager {
      * @param listener The listener to register.
      */
     public void registerListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        if (getAndroidSharedPreferencesInstance() != null) {
-            getAndroidSharedPreferencesInstance().registerOnSharedPreferenceChangeListener(listener);
+        if (mAndroidSharedPreferences != null) {
+            mAndroidSharedPreferences.registerOnSharedPreferenceChangeListener(listener);
         }
     }
 
@@ -227,8 +209,8 @@ public class SharedPreferencesManager {
      * @param listener The listener to remove.
      */
     public void unregisterListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        if (getAndroidSharedPreferencesInstance() != null) {
-            getAndroidSharedPreferencesInstance().unregisterOnSharedPreferenceChangeListener(listener);
+        if (mAndroidSharedPreferences != null) {
+            mAndroidSharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
         }
     }
 
@@ -236,6 +218,6 @@ public class SharedPreferencesManager {
      * @return The low-level Android SharedPreferences instance.
      */
     @Nullable public SharedPreferences getAndroidSharedPreferencesInstance() {
-        return mAndroidSharedPreferencesInstance != null ? mAndroidSharedPreferencesInstance.get() : null;
+        return mAndroidSharedPreferences;
     }
 }
