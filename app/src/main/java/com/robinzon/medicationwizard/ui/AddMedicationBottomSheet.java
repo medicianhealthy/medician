@@ -210,7 +210,13 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
 
         AutoCompleteTextView freqEdit = getFrequencyInputEditText(view);
         if (freqEdit != null && mMedication.getDailyFrequency() > 0) {
-            String[] frequencies = new String[]{"Once a day", "Twice a day", "3 times a day", "4 times a day", "5 times a day"};
+            String[] frequencies = new String[]{
+                    getString(R.string.frequency_once),
+                    getString(R.string.frequency_twice),
+                    getString(R.string.frequency_3_times),
+                    getString(R.string.frequency_4_times),
+                    getString(R.string.frequency_5_times)
+            };
             if (mMedication.getDailyFrequency() <= frequencies.length) {
                 freqEdit.setText(frequencies[mMedication.getDailyFrequency() - 1], false);
             }
@@ -222,7 +228,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                     mTimesInDay.put(key, time);
                     if (i < timesContainer.getChildCount()) {
                         Button btn = (Button) timesContainer.getChildAt(i);
-                        btn.setText("Time set: " + time.toString());
+                        btn.setText(getString(R.string.time_set_format, time.toString()));
                     }
                 }
             }
@@ -358,7 +364,13 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         setUnitDropDown(view);
         
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
-        String[] frequencies = new String[]{"Once a day", "Twice a day", "3 times a day", "4 times a day", "5 times a day"};
+        String[] frequencies = new String[]{
+                getString(R.string.frequency_once),
+                getString(R.string.frequency_twice),
+                getString(R.string.frequency_3_times),
+                getString(R.string.frequency_4_times),
+                getString(R.string.frequency_5_times)
+        };
         ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, frequencies);
         dropdownFrequency.setAdapter(freqAdapter);
 
@@ -390,7 +402,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         }
 
         if (mMedication.getDailyFrequency() != mTimesInDay.size()) {
-            showErrorDialog("Pick a time", "Just hit the select time button and pick a time");
+            showErrorDialog(getString(R.string.error_pick_time_title), getString(R.string.error_pick_time_message));
             return;
         }
 
@@ -398,7 +410,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         Set<SimpleDayTime> uniqueTimes = new HashSet<>();
         for (int i = 0; i < mTimesInDay.size(); i++) {
             if (!uniqueTimes.add(mTimesInDay.valueAt(i))) {
-                showErrorDialog("Duplicate Times", "You have selected the same time more than once. Please choose different times.");
+                showErrorDialog(getString(R.string.error_duplicate_times_title), getString(R.string.error_duplicate_times_message));
                 return;
             }
         }
@@ -481,7 +493,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             }
 
             if (layout != null) {
-                layout.setError("Required");
+                layout.setError(getString(R.string.error_required));
                 layout.setErrorEnabled(true);
             }
         } else {
@@ -500,9 +512,15 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         final AutoCompleteTextView dropdownForm = view.findViewById(R.id.med_form_fragment_add_med);
         if (null == dropdownForm) return;
 
-        String[] forms = Arrays.stream(EForm.values())
-                .map(Enum::name)
-                .toArray(String[]::new);
+        String[] forms = new String[]{
+                getString(R.string.form_pill),
+                getString(R.string.form_solution),
+                getString(R.string.form_injection),
+                getString(R.string.form_powder),
+                getString(R.string.form_drops),
+                getString(R.string.form_inhaler),
+                getString(R.string.form_other)
+        };
 
         dropdownForm.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, forms));
 
@@ -551,7 +569,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             Button timeButton = (Button) LayoutInflater.from(requireContext())
                     .inflate(R.layout.item_time_picker, timesContainer, false);
 
-            timeButton.setText("Select Time " + i);
+            timeButton.setText(getString(R.string.select_time_index_format, i));
             int finalIndex = i;
             timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
             timesContainer.addView(timeButton);
@@ -591,12 +609,12 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setHour(12)
                 .setMinute(0)
-                .setTitleText("Select Medication Time")
+                .setTitleText(R.string.time_picker_med_title)
                 .build();
 
         picker.addOnPositiveButtonClickListener(v -> {
             String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", picker.getHour(), picker.getMinute());
-            buttonToUpdate.setText("Time set: " + formattedTime);
+            buttonToUpdate.setText(getString(R.string.time_set_format, formattedTime));
             mTimesInDay.put(finalIndex, new SimpleDayTime((byte) picker.getHour(), (byte) picker.getMinute()));
         });
 

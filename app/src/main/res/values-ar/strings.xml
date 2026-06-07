@@ -1,5 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Medication Wizard</string>
-    <string name="button_skip">skip</string>
+    <string name="app_name">ساحر الأدوية</string>
+    <string name="navigation_drawer_open">فتح درج التنقل</string>
+    <string name="navigation_drawer_close">إغلاق درج التنقل</string>
+    <string name="nav_header_title">ساحر الأدوية</string>
+    <string name="nav_header_subtitle">رفيقك الصحي الذكي</string>
+    <string name="nav_header_desc">رأس التنقل</string>
+    <string name="action_settings">الإعدادات</string>
+
+    <string name="menu_home">أدوية اليوم</string>
+    <string name="menu_gallery">قائمة الأدوية</string>
+    <string name="menu_history">السجل</string>
+    <string name="menu_settings">الإعدادات</string>
+
+    <string name="history_title">سجل الأدوية</string>
+    <string name="history_empty">لا توجد أدوية مسجلة لهذا اليوم.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">التذكيرات</string>
+    <string name="settings_notifications_title">تنبيهات الصحة</string>
+    <string name="settings_notifications_summary">حافظ على نشاط التذكيرات لضمان عدم تفويت أي جرعة. ابقَ بصحة جيدة!</string>
+
+    <string name="settings_quiet_hours_title">ساعات الهدوء</string>
+    <string name="settings_quiet_hours_summary">لا تنبهني أثناء نومي.</string>
+    <string name="settings_quiet_hours_format">لا تنبهني أثناء نومي (%1$s).</string>
+
+    <string name="settings_snooze_duration_title">مدة الغفوة</string>
+    <string name="settings_snooze_duration_summary">انتظر %1$d دقائق قبل تذكيري مرة أخرى.</string>
+    <string name="settings_max_snoozes_title">الحد الأقصى للغفوات</string>
+    <string name="settings_max_snoozes_summary">توقف عن تذكيري بعد %1$s غفوات.</string>
+    <string name="settings_max_snoozes_unlimited_summary">لا تتوقف عن تذكيري أبداً حتى أتخذ إجراءً.</string>
+    <string name="max_snoozes_unlimited">بلا حدود</string>
+
+    <string name="settings_sound_title">صوت التنبيه</string>
+    <string name="settings_sound_summary">الصوت الحالي: %1$s</string>
+
+    <string name="settings_bypass_title">تخطي مستوى الصوت</string>
+    <string name="settings_bypass_summary">ستعمل التذكيرات حتى لو كان هاتفك في وضع الصامت.</string>
+
+    <string name="settings_volume_title">مستوى صوت التنبيه</string>
+
+    <string name="settings_category_appearance">المظهر</string>
+    <string name="settings_theme_title">ثيم التطبيق</string>
+    <string name="settings_theme_summary">التبديل بين الوضع الفاتح، الداكن، أو ترك الأمر للنظام.</string>
+    <string name="theme_light">فاتح</string>
+    <string name="theme_dark">داكن</string>
+    <string name="theme_system">تلقائي</string>
+
+    <string name="settings_language_title">لغة التطبيق</string>
+    <string name="settings_language_summary">اختر اللغة التي سيظهر بها السحر.</string>
+    <string name="settings_language_restart_warning">سيتم إعادة تشغيل التطبيق لتطبيق اللغة الجديدة.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hebrew">עברית</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_portuguese">Português (Brasil)</string>
+    <string name="lang_korean">한국어</string>
+
+    <string name="settings_category_data">البيانات والخصوصية</string>
+    <string name="settings_backup_title">النسخ الاحتياطي والاستعادة</string>
+    <string name="settings_backup_summary">حافظ على بياناتك بأمان أو انقلها إلى جهاز جديد.</string>
+    <string name="backup_export">تصدير البيانات</string>
+    <string name="backup_import">استيراد البيانات</string>
+    <string name="backup_restore_warning">سيؤدي استعادة نسخة احتياطية إلى حذف جميع أدويتك وسجلك الحالي. لا يمكن التراجع عن هذه الخطوة. هل أنت متأكد؟</string>
+
+    <string name="settings_clear_data_title">بداية جديدة</string>
+    <string name="settings_clear_data_summary">مسح جميع الأدوية والسجل. كن حذراً، لا يمكن التراجع عن هذا!</string>
+
+    <string name="settings_category_about">حول</string>
+    <string name="settings_version_title">إصدار التطبيق</string>
+    <string name="settings_version_summary">أنت تشغل حالياً الإصدار %1$s</string>
+
+    <string name="settings_support_title">هل تحتاج مساعدة؟</string>
+    <string name="settings_support_summary">هل لديك أسئلة أو وجدت خطأً؟ نود السماع منك!</string>
+
+    <string name="take">تناول الجرعة</string>
+    <string name="permission_rational_notification_title">ابقَ على المسار الصحيح!</string>
+    <string name="permission_rational_notification_message">لمساعدتك في تذكر جرعاتك، أود إرسال تنبيه ودي لك عندما يحين الوقت. هل توافق؟</string>
+    <string name="button_sure">بالتأكيد</string>
+    <string name="buttoh_not_now">ليس الآن</string>
+    <string name="buttoh_never">أبداً</string>
+    <string name="notification_missing">لا يوجد إذن للتنبيهات</string>
+    <string name="button_allow">سماح</string>
+    <string name="button_grant">منح</string>
+    <string name="button_ok">حسناً</string>
+    <string name="button_select">اختيار</string>
+    <string name="button_skip">تخطي</string>
+    <string name="button_snooze">غفوة</string>
+    <string name="button_untake">إلغاء التناول</string>
+    <string name="sort_scheduled">حسب الوقت</string>
+    <string name="sort_name">حسب الاسم</string>
+    <string name="sort_action_time">حسب وقت الإجراء</string>
+    <string name="fragment_add_med_title">دواء جديد</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">حذف</string>
+    <string name="once_a_day">مرة يومياً</string>
+    <string name="twice_a_day">مرتين يومياً</string>
+    <string name="times_a_day">%1$d مرات يومياً</string>
+    <string name="scheduled_at">موعد الجرعة: %1$s</string>
+    <string name="scheduled_for_format">مقرر لـ %1$s</string>
+    <string name="took_format">تم تناول %1$s %2$s الساعة %3$s</string>
+    <string name="skipped_at_format">تم التخطي الساعة %1$s</string>
+    <string name="no_instructions">لا توجد تعليمات</string>
+    <string name="medication_icon_desc">أيقونة الدواء</string>
+    <string name="empty_meds_title">الساحر في انتظارك!</string>
+    <string name="empty_meds_subtitle">أنا مستعد لمساعدتك في تتبع أدويتك. لنضف دواءك الأول ونبدأ السحر!</string>
+    <string name="empty_meds_action">أضف دواءك الأول</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">التالي</string>
+    <string name="onboarding_btn_skip">تخطي</string>
+    <string name="onboarding_btn_finish">ابدأ الآن</string>
+
+    <string name="onboarding_title_1">قابل الساحر</string>
+    <string name="onboarding_desc_1">رفيقك الصحي الشخصي هنا لمساعدتك في إدارة أدويتك بلمسة سحرية.</string>
+
+    <string name="onboarding_title_2">تذكيرات ذكية</string>
+    <string name="onboarding_desc_2">لا تفوت أي جرعة مرة أخرى. سنرسل لك تذكيرات في الوقت المناسب تحترم مواعيد نومك.</string>
+
+    <string name="onboarding_title_3">تتبع تقدمك</string>
+    <string name="onboarding_desc_3">احتفظ بسجل مفصل لرحلتك الصحية. إنه مثالي لمشاركته مع مقدم الرعاية الصحية الخاص بك.</string>
+
+    <!-- Premium -->
+    <string name="premium_title">افتح القوة السحرية الكاملة!</string>
+    <string name="premium_description">قم بالترقية إلى بريميوم واستمتع بميزات متقدمة مثل النسخ الاحتياطي السحابي، ساعات الهدوء، وتجربة خالية من الإعلانات.</string>
+    <string name="premium_upgrade_button">رَقِّ الآن</string>
+    <string name="premium_maybe_later">ربما لاحقاً</string>
+    <string name="menu_go_premium">احصل على بريميوم</string>
+    <string name="streak_format">سلسلة نجاح سحرية لمدة %1$d أيام!</string>
+    <string name="history_percent_format">تم إكمال %1$d%%</string>
+    <string name="history_doses_format">تم تناول %1$d من أصل %2$d جرعات</string>
+    <string name="history_select_date_title">اختر التاريخ</string>
+    <string name="history_stats_title">إحصائيات الصحة</string>
+    <string name="history_tip_title">نصيحة اليوم</string>
+    <string name="history_tip_content">الاستمرارية هي مفتاح الصحة السحرية. حافظ على رصيدك!</string>
+    <string name="settings_title">الإعدادات</string>
+
+    <!-- Developer Cheats -->
+    <string name="cheats_title">خيارات المطورين</string>
+    <string name="cheats_is_premium">تفعيل بريميوم</string>
+    <string name="cheats_show_ads">إظهار الإعلانات (إجباري)</string>
+    <string name="cheats_apply_restart">تطبيق وإعادة تشغيل</string>
+
+    <string name="notif_already_active">التنبيهات نشطة بالفعل!</string>
+    <string name="data_cleared">تم مسح البيانات.</string>
+    <string name="support_coming_soon">الدعم سيتوفر قريباً!</string>
+    <string name="sign_in_first">يرجى تسجيل الدخول أولاً</string>
+    <string name="backing_up_drive">جاري النسخ الاحتياطي إلى Google Drive&#8230;</string>
+    <string name="restoring_cloud">جاري الاستعادة من السحابة&#8230;</string>
+    <string name="restore_success">تم الاستعادة بنجاح!</string>
+    <string name="no_backup_found">لم يتم العثور على نسخة احتياطية سحابية.</string>
+    <string name="restore_failed_format">فشل الاستعادة: %1$s</string>
+    <string name="invalid_code">رمز غير صالح</string>
+    <string name="signed_in_as_format">تم تسجيل الدخول باسم %1$s</string>
+    <string name="sign_in_failed_format">فشل تسجيل الدخول: %1$s</string>
+
+    <string name="sign_in_required_title">تسجيل الدخول مطلوب</string>
+    <string name="sign_in_required_message">يرجى تسجيل الدخول بحساب Google الخاص بك لتفعيل ميزات النسخ الاحتياطي السحابي والمزامنة.</string>
+    <string name="cloud_restore_title">استعادة من السحابة</string>
+    <string name="cloud_restore_message">سيؤدي هذا إلى استبدال جميع أدويتك وسجلك المحلي بالنسخة السحابية. هل تريد الاستمرار؟</string>
+    <string name="button_restore">استعادة</string>
+    <string name="medication_status_format">تم تحديد %1$s كـ %2$s</string>
+    <string name="button_undo">تراجع</string>
+
+    <string name="sound_picker_title">اختر صوت التنبيه</string>
+    <string name="instructions_label">التعليمات</string>
+    <string name="instruction_before_eating">قبل الأكل</string>
+    <string name="instruction_after_eating">بعد الأكل</string>
+    <string name="instruction_while_eating">أثناء الأكل</string>
+    <string name="instruction_before_sleep">قبل النوم</string>
+    <string name="instruction_no_preference">لا يهم</string>
+    <string name="button_save_medication">حفظ الدواء</string>
+    <string name="time_picker_title">اختر الوقت</string>
+    <string name="at_label">في تمام الساعة</string>
+    <string name="button_reschedule">إعادة جدولة</string>
+    <string name="button_take">تناول</string>
+    <string name="button_sign_in">تسجيل الدخول</string>
+
+    <string name="hint_med_name">اسم الدواء</string>
+    <string name="hint_amount">الكمية</string>
+    <string name="hint_form">الشكل الدوائي</string>
+    <string name="hint_frequency">كم مرة؟</string>
+    <string name="hint_strength">القوة</string>
+    <string name="hint_unit">الوحدة</string>
+
+    <string name="frequency_once">مرة واحدة يومياً</string>
+    <string name="frequency_twice">مرتين يومياً</string>
+    <string name="frequency_3_times">٣ مرات يومياً</string>
+    <string name="frequency_4_times">٤ مرات يومياً</string>
+    <string name="frequency_5_times">٥ مرات يومياً</string>
+    <string name="time_set_format">تم ضبط الوقت: %1$s</string>
+    <string name="select_time_index_format">اختر الوقت %1$d</string>
+    <string name="error_pick_time_title">اختر الوقت</string>
+    <string name="error_pick_time_message">فقط اضغط على زر اختيار الوقت وحدد موعداً</string>
+    <string name="error_duplicate_times_title">أوقات مكررة</string>
+    <string name="error_duplicate_times_message">لقد اخترت نفس الوقت أكثر من مرة. يرجى اختيار أوقات مختلفة.</string>
+    <string name="error_required">مطلوب</string>
+    <string name="time_picker_med_title">اختر وقت تناول الدواء</string>
+
+    <string name="form_pill">حبة/قرص</string>
+    <string name="form_solution">محلول</string>
+    <string name="form_injection">حقنة</string>
+    <string name="form_powder">مسحوق</string>
+    <string name="form_drops">قطرات</string>
+    <string name="form_inhaler">مشاّق</string>
+    <string name="form_other">آخر</string>
+
+    <string name="notification_channel_name">تذكيرات الأدوية</string>
+    <string name="notification_channel_desc">تذكيرات لتناول أدويتك المجدولة</string>
+    <string name="premium_only_feature">ميزة متاحة لمشتركي بريميوم فقط</string>
+
+    <string name="cloud_backup_title">النسخ الاحتياطي السحابي</string>
+    <string name="cloud_backup_summary">احمِ بياناتك باستخدام Google Drive</string>
+    <string name="cloud_backup_sign_in_hint">سجل الدخول لحماية بياناتك</string>
+    <string name="cloud_backup_sign_out">تسجيل الخروج</string>
+    <string name="cloud_backup_auto_title">نسخ احتياطي تلقائي</string>
+    <string name="cloud_backup_auto_summary">مزامنة البيانات تلقائياً مع Google Drive</string>
+    <string name="cloud_backup_wifi_title">النسخ الاحتياطي عبر Wi-Fi فقط</string>
+    <string name="cloud_backup_wifi_summary">توفير بيانات الهاتف</string>
+    <string name="cloud_backup_now">نسخ احتياطي الآن</string>
+    <string name="cloud_backup_success">تم النسخ الاحتياطي السحابي بنجاح!</string>
+    <string name="cloud_backup_failed">فشل النسخ الاحتياطي السحابي.</string>
+
+    <string name="alarm_permission_title">مطلوب إذن التنبيهات الدقيقة</string>
+    <string name="alarm_permission_message">لضمان عمل تذكيرات الأدوية في الدقيقة المحددة، يرجى السماح للتطبيق بجدولة التنبيهات الدقيقة.</string>
 </resources>

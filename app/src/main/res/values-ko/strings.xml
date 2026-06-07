@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">투약 마법사</string>
+    <string name="navigation_drawer_open">메뉴 열기</string>
+    <string name="navigation_drawer_close">메뉴 닫기</string>
+    <string name="nav_header_title">투약 마법사</string>
+    <string name="nav_header_subtitle">당신의 스마트 건강 파트너</string>
+    <string name="nav_header_desc">내비게이션 헤더</string>
+    <string name="action_settings">설정</string>
+
+    <string name="menu_home">오늘의 복용</string>
+    <string name="menu_gallery">의약품 목록</string>
+    <string name="menu_history">기록</string>
+    <string name="menu_settings">설정</string>
+
+    <string name="history_title">복용 기록</string>
+    <string name="history_empty">오늘 기록된 정보가 없습니다.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">알림</string>
+    <string name="settings_notifications_title">건강 알림</string>
+    <string name="settings_notifications_summary">약을 거르지 않도록 알림을 켜두세요. 건강이 최고예요!</string>
+
+    <string name="settings_quiet_hours_title">방해 금지 시간</string>
+    <string name="settings_quiet_hours_summary">수면 중에는 알림을 받지 않습니다.</string>
+    <string name="settings_quiet_hours_format">수면 중에는 알림을 받지 않습니다 (%1$s).</string>
+
+    <string name="settings_snooze_duration_title">다시 알림 간격</string>
+    <string name="settings_snooze_duration_summary">%1$d분 후에 다시 알려드릴게요.</string>
+    <string name="settings_max_snoozes_title">다시 알림 최대 횟수</string>
+    <string name="settings_max_snoozes_summary">%1$s번 알림 후에는 중단합니다.</string>
+    <string name="settings_max_snoozes_unlimited_summary">직접 확인하기 전까지 계속 알려드려요.</string>
+    <string name="max_snoozes_unlimited">제한 없음</string>
+
+    <string name="settings_sound_title">알림 소리</string>
+    <string name="settings_sound_summary">현재 설정된 소리: %1$s</string>
+
+    <string name="settings_bypass_title">무음 모드 무시</string>
+    <string name="settings_bypass_summary">휴대폰이 무음이어도 알림이 울립니다.</string>
+
+    <string name="settings_volume_title">알림 볼륨</string>
+
+    <string name="settings_category_appearance">화면 설정</string>
+    <string name="settings_theme_title">테마</string>
+    <string name="settings_theme_summary">밝은 모드, 어두운 모드 또는 시스템 설정에 맞춥니다.</string>
+    <string name="theme_light">밝게</string>
+    <string name="theme_dark">어둡게</string>
+    <string name="theme_system">시스템 기본값</string>
+
+    <string name="settings_language_title">앱 언어</string>
+    <string name="settings_language_summary">마법이 나타날 언어를 선택하세요.</string>
+    <string name="settings_language_restart_warning">새로운 언어를 적용하기 위해 앱을 재시작합니다.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hebrew">עברית</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_portuguese">Português (Brasil)</string>
+    <string name="lang_korean">한국어</string>
+
+    <string name="settings_category_data">데이터 및 개인정보</string>
+    <string name="settings_backup_title">백업 및 복원</string>
+    <string name="settings_backup_summary">데이터를 안전하게 보관하거나 새 기기로 옮기세요.</string>
+    <string name="backup_export">데이터 내보내기</string>
+    <string name="backup_import">데이터 가져오기</string>
+    <string name="backup_restore_warning">백업을 복원하면 현재 등록된 모든 약과 기록이 삭제됩니다. 이 작업은 되돌릴 수 없습니다. 계속하시겠습니까?</string>
+
+    <string name="settings_clear_data_title">초기화</string>
+    <string name="settings_clear_data_summary">모든 약과 기록을 삭제합니다. 주의하세요, 되돌릴 수 없습니다!</string>
+
+    <string name="settings_category_about">정보</string>
+    <string name="settings_version_title">앱 버전</string>
+    <string name="settings_version_summary">현재 %1$s 버전을 사용 중입니다.</string>
+
+    <string name="settings_support_title">도움이 필요하신가요?</string>
+    <string name="settings_support_summary">질문이 있거나 버그를 발견하셨나요? 언제든 문의해 주세요!</string>
+
+    <string name="take">복용</string>
+    <string name="permission_rational_notification_title">일정 관리!</string>
+    <string name="permission_rational_notification_message">복용 시간을 잊지 않도록 알림을 보내드려도 될까요?</string>
+    <string name="button_sure">네</string>
+    <string name="buttoh_not_now">나중에요</string>
+    <string name="buttoh_never">안 함</string>
+    <string name="notification_missing">알림 권한 없음</string>
+    <string name="button_allow">허용</string>
+    <string name="button_grant">권한 부여</string>
+    <string name="button_ok">확인</string>
+    <string name="button_select">선택</string>
+    <string name="button_skip">건너뛰기</string>
+    <string name="button_snooze">다시 알림</string>
+    <string name="button_untake">취소</string>
+    <string name="sort_scheduled">시간순</string>
+    <string name="sort_name">이름순</string>
+    <string name="sort_action_time">실행 시간순</string>
+    <string name="fragment_add_med_title">새 의약품 등록</string>
+    <string name="edit">편집</string>
+    <string name="delete">삭제</string>
+    <string name="once_a_day">하루 한 번</string>
+    <string name="twice_a_day">하루 두 번</string>
+    <string name="times_a_day">하루 %1$d번</string>
+    <string name="scheduled_at">예약 시간: %1$s</string>
+    <string name="scheduled_for_format">%1$s 예약됨</string>
+    <string name="took_format">%3$s에 %1$s %2$s 복용 완료</string>
+    <string name="skipped_at_format">%1$s에 건너뜀</string>
+    <string name="no_instructions">지침 없음</string>
+    <string name="medication_icon_desc">의약품 아이콘</string>
+    <string name="empty_meds_title">마법사가 기다리고 있어요!</string>
+    <string name="empty_meds_subtitle">당신의 약 관리를 도와드릴 준비가 됐어요. 첫 번째 약을 등록하고 마법을 시작해 보세요!</string>
+    <string name="empty_meds_action">첫 번째 약 등록하기</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">다음</string>
+    <string name="onboarding_btn_skip">건너뛰기</string>
+    <string name="onboarding_btn_finish">시작하기</string>
+
+    <string name="onboarding_title_1">마법사를 만나보세요</string>
+    <string name="onboarding_desc_1">당신만의 건강 마법사가 신비롭고 스마트하게 약 관리를 도와드립니다.</string>
+
+    <string name="onboarding_title_2">똑똑한 알림</string>
+    <string name="onboarding_desc_2">다시는 약 시간을 놓치지 마세요. 수면 패턴을 고려한 맞춤형 알림을 보내드려요.</string>
+
+    <string name="onboarding_title_3">진행 상황 확인</string>
+    <string name="onboarding_desc_3">당신의 건강 여정을 꼼꼼하게 기록하세요. 의료진과 상담할 때 보여드리기 좋아요.</string>
+
+    <!-- Premium -->
+    <string name="premium_title">마법의 힘을 모두 열어보세요!</string>
+    <string name="premium_description">프리미엄으로 업그레이드하고 클라우드 백업, 방해 금지 시간, 광고 없는 경험을 즐겨보세요.</string>
+    <string name="premium_upgrade_button">지금 업그레이드</string>
+    <string name="premium_maybe_later">나중에</string>
+    <string name="menu_go_premium">프리미엄 가입</string>
+    <string name="streak_format">%1$d일 연속 복용 마법!</string>
+    <string name="history_percent_format">%1$d%% 완료</string>
+    <string name="history_doses_format">%2$d회 중 %1$d회 복용함</string>
+    <string name="history_select_date_title">날짜 선택</string>
+    <string name="history_stats_title">건강 통계</string>
+    <string name="history_tip_title">오늘의 팁</string>
+    <string name="history_tip_content">꾸준함이 건강의 마법입니다. 기록을 이어가세요!</string>
+    <string name="settings_title">설정</string>
+
+    <!-- Developer Cheats -->
+    <string name="cheats_title">개발자 메뉴</string>
+    <string name="cheats_is_premium">프리미엄 활성화</string>
+    <string name="cheats_show_ads">광고 강제 표시</string>
+    <string name="cheats_apply_restart">적용 및 재시작</string>
+
+    <string name="notif_already_active">알림이 이미 활성화되어 있습니다!</string>
+    <string name="data_cleared">데이터가 삭제되었습니다.</string>
+    <string name="support_coming_soon">지원 서비스가 곧 준비됩니다!</string>
+    <string name="sign_in_first">먼저 로그인해 주세요</string>
+    <string name="backing_up_drive">Google 드라이브에 백업 중&#8230;</string>
+    <string name="restoring_cloud">클라우드에서 복원 중&#8230;</string>
+    <string name="restore_success">복원 완료!</string>
+    <string name="no_backup_found">클라우드 백업을 찾을 수 없습니다.</string>
+    <string name="restore_failed_format">복원 실패: %1$s</string>
+    <string name="invalid_code">잘못된 코드입니다</string>
+    <string name="signed_in_as_format">%1$s 계정으로 로그인됨</string>
+    <string name="sign_in_failed_format">로그인 실패: %1$s</string>
+
+    <string name="sign_in_required_title">로그인 필요</string>
+    <string name="sign_in_required_message">클라우드 백업 및 동기화 기능을 사용하려면 Google 계정으로 로그인해 주세요.</string>
+    <string name="cloud_restore_title">클라우드에서 복원</string>
+    <string name="cloud_restore_message">현재 등록된 모든 약과 기록을 클라우드 버전으로 교체합니다. 계속하시겠습니까?</string>
+    <string name="button_restore">복원하기</string>
+    <string name="medication_status_format">%1$s 항목이 %2$s 상태로 표시됨</string>
+    <string name="button_undo">실행 취소</string>
+
+    <string name="sound_picker_title">알림 소리 선택</string>
+    <string name="instructions_label">복용 지침</string>
+    <string name="instruction_before_eating">식전</string>
+    <string name="instruction_after_eating">식후</string>
+    <string name="instruction_while_eating">식사 도중</string>
+    <string name="instruction_before_sleep">취침 전</string>
+    <string name="instruction_no_preference">상관없음</string>
+    <string name="button_save_medication">의약품 저장</string>
+    <string name="time_picker_title">시간 선택</string>
+    <string name="at_label"> </string>
+    <string name="button_reschedule">시간 변경</string>
+    <string name="button_take">복용</string>
+    <string name="button_sign_in">로그인</string>
+
+    <string name="hint_med_name">약 이름</string>
+    <string name="hint_amount">수량</string>
+    <string name="hint_form">형태</string>
+    <string name="hint_frequency">복용 횟수</string>
+    <string name="hint_strength">용량</string>
+    <string name="hint_unit">단위</string>
+
+    <string name="frequency_once">하루 한 번</string>
+    <string name="frequency_twice">하루 두 번</string>
+    <string name="frequency_3_times">하루 세 번</string>
+    <string name="frequency_4_times">하루 네 번</string>
+    <string name="frequency_5_times">하루 다섯 번</string>
+    <string name="time_set_format">설정 시간: %1$s</string>
+    <string name="select_time_index_format">%1$d번째 시간 선택</string>
+    <string name="error_pick_time_title">시간을 선택하세요</string>
+    <string name="error_pick_time_message">버튼을 눌러 복용 시간을 지정해 주세요</string>
+    <string name="error_duplicate_times_title">시간 중복</string>
+    <string name="error_duplicate_times_message">동일한 시간을 여러 번 선택하셨습니다. 다른 시간을 선택해 주세요.</string>
+    <string name="error_required">필수 항목입니다</string>
+    <string name="time_picker_med_title">복용 시간 선택</string>
+
+    <string name="form_pill">알약</string>
+    <string name="form_solution">액체</string>
+    <string name="form_injection">주사</string>
+    <string name="form_powder">가루약</string>
+    <string name="form_drops">안약/물약</string>
+    <string name="form_inhaler">흡입기</string>
+    <string name="form_other">기타</string>
+    <string name="premium_only_feature">프리미엄 전용 기능</string>
+
+    <string name="cloud_backup_title">클라우드 백업</string>
+    <string name="cloud_backup_summary">Google 드라이브로 데이터를 보호하세요</string>
+    <string name="cloud_backup_sign_in_hint">데이터를 보호하려면 로그인하세요</string>
+    <string name="cloud_backup_sign_out">로그아웃</string>
+    <string name="cloud_backup_auto_title">자동 백업</string>
+    <string name="cloud_backup_auto_summary">Google 드라이브에 자동으로 데이터를 동기화합니다</string>
+    <string name="cloud_backup_wifi_title">Wi-Fi 전용</string>
+    <string name="cloud_backup_wifi_summary">모바일 데이터 절약</string>
+    <string name="cloud_backup_now">지금 백업</string>
+    <string name="cloud_backup_success">클라우드 백업 성공!</string>
+    <string name="cloud_backup_failed">클라우드 백업 실패.</string>
+
+    <string name="alarm_permission_title">정확한 알람 권한 필요</string>
+    <string name="alarm_permission_message">약 시간을 정확한 분 단위로 알려드리기 위해, 앱이 정확한 알람을 예약할 수 있도록 허용해 주세요.</string>
+</resources>

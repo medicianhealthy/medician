@@ -192,8 +192,8 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         // Track achievements for In-App Review eligibility
         com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(requireContext());
         
-        Snackbar.make(mBinding.getRoot(), instance.getMedicationName() + " marked as " + status.toLowerCase(), Snackbar.LENGTH_LONG)
-                .setAction("Undo", v -> {
+        Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), status.toLowerCase()), Snackbar.LENGTH_LONG)
+                .setAction(R.string.button_undo, v -> {
                     // Revert status and clear action time
                     instance.setStatus("SCHEDULED");
                     instance.setActionTime(0);

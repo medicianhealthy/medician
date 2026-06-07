@@ -27,8 +27,6 @@ import java.lang.ref.WeakReference;
 public class NotificationManager implements DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
 
     public static final String CHANNEL_ID = "medication_reminders";
-    private static final String CHANNEL_NAME = "Medication Reminders";
-    private static final String CHANNEL_DESC = "Reminders to take your scheduled medications";
 
     private static final String SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL = "do_not_show_rational";
     private static final String SHARED_PREF_KEY_REFUSE_COUNT = "refuse_count";
@@ -45,10 +43,10 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    CHANNEL_NAME,
+                    context.getString(R.string.notification_channel_name),
                     android.app.NotificationManager.IMPORTANCE_HIGH
             );
-            channel.setDescription(CHANNEL_DESC);
+            channel.setDescription(context.getString(R.string.notification_channel_desc));
 
             android.app.NotificationManager manager = context.getSystemService(android.app.NotificationManager.class);
             if (manager != null) {

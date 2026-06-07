@@ -35,8 +35,15 @@ public class MedicationWizardApplication extends Application
         
         NotificationManager.createNotificationChannel(this);
         applyTheme();
+        applyLanguage();
         scheduleHistoryCleanup();
         BillingManager.getInstance(this); // Initialize billing and check entitlements
+    }
+
+    private void applyLanguage() {
+        String langCode = SharedPreferencesManager.getInstance(this).getString(SettingsViewModel.KEY_APP_LANGUAGE, "en");
+        androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
+        AppCompatDelegate.setApplicationLocales(locales);
     }
 
     private void scheduleHistoryCleanup() {

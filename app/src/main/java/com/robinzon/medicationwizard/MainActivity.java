@@ -141,13 +141,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             android.app.AlarmManager alarmManager = getSystemService(android.app.AlarmManager.class);
             if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
                 new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-                        .setTitle("Exact Alarms Required")
-                        .setMessage("To ensure your medication reminders fire at the exact minute, please allow the app to schedule exact alarms.")
-                        .setPositiveButton("Settings", (dialog, which) -> {
+                        .setTitle(R.string.alarm_permission_title)
+                        .setMessage(R.string.alarm_permission_message)
+                        .setPositiveButton(R.string.action_settings, (dialog, which) -> {
                             Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
                             startActivity(intent);
                         })
-                        .setNegativeButton("Not Now", null)
+                        .setNegativeButton(R.string.buttoh_not_now, null)
                         .show();
             }
         }

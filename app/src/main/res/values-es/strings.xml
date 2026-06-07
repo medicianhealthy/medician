@@ -1,5 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Medication Wizard</string>
-    <string name="button_skip">skip</string>
+    <string name="app_name">Mago de las Medicinas</string>
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
+    <string name="nav_header_title">Mago de las Medicinas</string>
+    <string name="nav_header_subtitle">Tu compañero de salud inteligente</string>
+    <string name="nav_header_desc">Cabecera de navegación</string>
+    <string name="action_settings">Ajustes</string>
+
+    <string name="menu_home">Medicinas de hoy</string>
+    <string name="menu_gallery">Lista de medicinas</string>
+    <string name="menu_history">Historial</string>
+    <string name="menu_settings">Ajustes</string>
+
+    <string name="history_title">Historial de Medicación</string>
+    <string name="history_empty">No hay medicinas registradas para este día.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">Recordatorios</string>
+    <string name="settings_notifications_title">Alertas de Salud</string>
+    <string name="settings_notifications_summary">Mantén tus recordatorios activos para no perder ninguna dosis. ¡Mantente saludable!</string>
+
+    <string name="settings_quiet_hours_title">Horas de Silencio</string>
+    <string name="settings_quiet_hours_summary">No me notifiques mientras duermo.</string>
+    <string name="settings_quiet_hours_format">No me notifiques mientras duermo (%1$s).</string>
+
+    <string name="settings_snooze_duration_title">Duración de la Posposición</string>
+    <string name="settings_snooze_duration_summary">Esperar %1$d minutos antes de recordarme de nuevo.</string>
+    <string name="settings_max_snoozes_title">Máximo de Posposiciones</string>
+    <string name="settings_max_snoozes_summary">Dejar de recordarme después de %1$s posposiciones.</string>
+    <string name="settings_max_snoozes_unlimited_summary">No dejar de recordarme hasta que tome una acción.</string>
+    <string name="max_snoozes_unlimited">Ilimitado</string>
+
+    <string name="settings_sound_title">Sonido de Alerta</string>
+    <string name="settings_sound_summary">Sonido actual: %1$s</string>
+
+    <string name="settings_bypass_title">Omitir Volumen Silencioso</string>
+    <string name="settings_bypass_summary">Los recordatorios sonarán incluso si tu teléfono está en silencio.</string>
+
+    <string name="settings_volume_title">Volumen de Alerta</string>
+
+    <string name="settings_category_appearance">Apariencia</string>
+    <string name="settings_theme_title">Tema de la App</string>
+    <string name="settings_theme_summary">Cambia entre claro, oscuro, o deja que el sistema decida.</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="theme_system">Predeterminado del sistema</string>
+
+    <string name="settings_language_title">Idioma de la App</string>
+    <string name="settings_language_summary">Selecciona el idioma para que ocurra la magia.</string>
+    <string name="settings_language_restart_warning">La aplicación se reiniciará para aplicar el nuevo idioma.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hebrew">עברית</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_portuguese">Português (Brasil)</string>
+    <string name="lang_korean">한국어</string>
+
+    <string name="settings_category_data">Datos y Privacidad</string>
+    <string name="settings_backup_title">Copia de Seguridad y Restauración</string>
+    <string name="settings_backup_summary">Protege tus datos o muévelos a un nuevo dispositivo.</string>
+    <string name="backup_export">Exportar Datos</string>
+    <string name="backup_import">Importar Datos</string>
+    <string name="backup_restore_warning">Restaurar una copia de seguridad borrará todas tus medicinas e historial actuales. Esto no se puede deshacer. ¿Estás seguro?</string>
+
+    <string name="settings_clear_data_title">Empezar de Cero</string>
+    <string name="settings_clear_data_summary">Borrar todas las medicinas e historial. ¡Cuidado, esto no se puede deshacer!</string>
+
+    <string name="settings_category_about">Acerca de</string>
+    <string name="settings_version_title">Versión de la App</string>
+    <string name="settings_version_summary">Estás ejecutando la versión %1$s</string>
+
+    <string name="settings_support_title">¿Necesitas ayuda?</string>
+    <string name="settings_support_summary">¿Tienes preguntas o encontraste un error? ¡Nos encantaría saber de ti!</string>
+
+    <string name="take">Tomar</string>
+    <string name="permission_rational_notification_title">¡Mantente al día!</string>
+    <string name="permission_rational_notification_message">Para ayudarte a recordar tus dosis, me encantaría enviarte un aviso amistoso cuando sea el momento. ¿Te parece bien?</string>
+    <string name="button_sure">Claro</string>
+    <string name="buttoh_not_now">Ahora no</string>
+    <string name="buttoh_never">Nunca</string>
+    <string name="notification_missing">Sin permiso de notificaciones</string>
+    <string name="button_allow">Permitir</string>
+    <string name="button_grant">Conceder</string>
+    <string name="button_ok">Aceptar</string>
+    <string name="button_select">Seleccionar</string>
+    <string name="button_skip">Saltar</string>
+    <string name="button_snooze">Posponer</string>
+    <string name="button_untake">Desmarcar</string>
+    <string name="sort_scheduled">Programado</string>
+    <string name="sort_name">Nombre</string>
+    <string name="sort_action_time">Hora de acción</string>
+    <string name="fragment_add_med_title">Nueva Medicina</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Eliminar</string>
+    <string name="once_a_day">Una vez al día</string>
+    <string name="twice_a_day">Dos veces al día</string>
+    <string name="times_a_day">%1$d veces al día</string>
+    <string name="scheduled_at">Programado a las: %1$s</string>
+    <string name="scheduled_for_format">Programado para %1$s</string>
+    <string name="took_format">Tomó %1$s %2$s a las %3$s</string>
+    <string name="skipped_at_format">Omitido a las %1$s</string>
+    <string name="no_instructions">Sin instrucciones</string>
+    <string name="medication_icon_desc">Icono de Medicina</string>
+    <string name="empty_meds_title">¡El Mago te espera!</string>
+    <string name="empty_meds_subtitle">Estoy listo para ayudarte a seguir tus medicinas. ¡Añadamos la primera y que empiece la magia!</string>
+    <string name="empty_meds_action">Añadir mi primera medicina</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">Siguiente</string>
+    <string name="onboarding_btn_skip">Saltar</string>
+    <string name="onboarding_btn_finish">Empezar</string>
+
+    <string name="onboarding_title_1">Conoce al Mago</string>
+    <string name="onboarding_desc_1">Tu compañero de salud personal está aquí para ayudarte a gestionar tus medicinas con un toque de magia.</string>
+
+    <string name="onboarding_title_2">Recordatorios Inteligentes</string>
+    <string name="onboarding_desc_2">No vuelvas a perder una dosis. Te enviaremos recordatorios oportunos que respetan tu horario de sueño.</string>
+
+    <string name="onboarding_title_3">Sigue tu Progreso</string>
+    <string name="onboarding_desc_3">Mantén un historial detallado de tu viaje de salud. Es perfecto para compartirlo con tu médico.</string>
+
+    <!-- Premium -->
+    <string name="premium_title">¡Desbloquea toda la Magia!</string>
+    <string name="premium_description">Mejora a Premium y disfruta de funciones avanzadas como Copia en la Nube, Horas de Silencio y una experiencia sin anuncios.</string>
+    <string name="premium_upgrade_button">Actualizar Ahora</string>
+    <string name="premium_maybe_later">Quizás más tarde</string>
+    <string name="menu_go_premium">Hazte Premium</string>
+    <string name="streak_format">¡Racha mágica de %1$d días!</string>
+    <string name="history_percent_format">%1$d%% Completado</string>
+    <string name="history_doses_format">%1$d de %2$d dosis tomadas</string>
+    <string name="history_select_date_title">Seleccionar Fecha</string>
+    <string name="history_stats_title">Estadísticas de Salud</string>
+    <string name="history_tip_title">Consejo Diario</string>
+    <string name="history_tip_content">La constancia es la clave para una salud mágica. ¡Mantén viva tu racha!</string>
+    <string name="settings_title">Ajustes</string>
+
+    <!-- Developer Cheats -->
+    <string name="cheats_title">Trucos de Desarrollador</string>
+    <string name="cheats_is_premium">Es Premium</string>
+    <string name="cheats_show_ads">Mostrar Anuncios (Forzado)</string>
+    <string name="cheats_apply_restart">Aplicar y Reiniciar</string>
+
+    <string name="notif_already_active">¡Las notificaciones ya están activas!</string>
+    <string name="data_cleared">Datos borrados.</string>
+    <string name="support_coming_soon">¡Soporte próximamente!</string>
+    <string name="sign_in_first">Por favor, inicia sesión primero</string>
+    <string name="backing_up_drive">Guardando copia en Google Drive&#8230;</string>
+    <string name="restoring_cloud">Restaurando desde la nube&#8230;</string>
+    <string name="restore_success">¡Restauración exitosa!</string>
+    <string name="no_backup_found">No se encontró copia en la nube.</string>
+    <string name="restore_failed_format">Fallo al restaurar: %1$s</string>
+    <string name="invalid_code">Código inválido</string>
+    <string name="signed_in_as_format">Sesión iniciada como %1$s</string>
+    <string name="sign_in_failed_format">Fallo al iniciar sesión: %1$s</string>
+
+    <string name="sign_in_required_title">Inicio de sesión requerido</string>
+    <string name="sign_in_required_message">Inicia sesión con tu cuenta de Google para habilitar las funciones de copia en la nube y sincronización.</string>
+    <string name="cloud_restore_title">Restaurar desde la Nube</string>
+    <string name="cloud_restore_message">Esto reemplazará todas tus medicinas e historial locales con la versión de la nube. ¿Continuar?</string>
+    <string name="button_restore">Restaurar</string>
+    <string name="medication_status_format">%1$s marcado como %2$s</string>
+    <string name="button_undo">Deshacer</string>
+
+    <string name="sound_picker_title">Elegir Sonido de Alerta</string>
+    <string name="instructions_label">Instrucciones</string>
+    <string name="instruction_before_eating">Antes de comer</string>
+    <string name="instruction_after_eating">Después de comer</string>
+    <string name="instruction_while_eating">Durante la comida</string>
+    <string name="instruction_before_sleep">Antes de dormir</string>
+    <string name="instruction_no_preference">No importa</string>
+    <string name="button_save_medication">Guardar Medicina</string>
+    <string name="time_picker_title">Seleccionar Hora</string>
+    <string name="at_label">a las</string>
+    <string name="button_reschedule">Reprogramar</string>
+    <string name="button_take">Tomar</string>
+    <string name="button_sign_in">Iniciar Sesión</string>
+
+    <string name="hint_med_name">Nombre de la Medicina</string>
+    <string name="hint_amount">Cantidad</string>
+    <string name="hint_form">Forma</string>
+    <string name="hint_frequency">¿Cada cuánto?</string>
+    <string name="hint_strength">Concentración</string>
+    <string name="hint_unit">Unidad</string>
+
+    <string name="frequency_once">Una vez al día</string>
+    <string name="frequency_twice">Dos veces al día</string>
+    <string name="frequency_3_times">3 veces al día</string>
+    <string name="frequency_4_times">4 veces al día</string>
+    <string name="frequency_5_times">5 veces al día</string>
+    <string name="time_set_format">Hora establecida: %1$s</string>
+    <string name="select_time_index_format">Seleccionar Hora %1$d</string>
+    <string name="error_pick_time_title">Elige una hora</string>
+    <string name="error_pick_time_message">Simplemente toca el botón de seleccionar hora y elige una</string>
+    <string name="error_duplicate_times_title">Horas Duplicadas</string>
+    <string name="error_duplicate_times_message">Has seleccionado la misma hora más de una vez. Por favor, elige horas diferentes.</string>
+    <string name="error_required">Requerido</string>
+    <string name="time_picker_med_title">Seleccionar Hora de Medicación</string>
+
+    <string name="form_pill">Pastilla</string>
+    <string name="form_solution">Solución</string>
+    <string name="form_injection">Inyección</string>
+    <string name="form_powder">Polvo</string>
+    <string name="form_drops">Gotas</string>
+    <string name="form_inhaler">Inhalador</string>
+    <string name="form_other">Otro</string>
+
+    <string name="notification_channel_name">Recordatorios de Medicación</string>
+    <string name="notification_channel_desc">Recordatorios para tomar tus medicinas programadas</string>
+    <string name="premium_only_feature">Función solo para usuarios Premium</string>
+
+    <string name="cloud_backup_title">Copia en la Nube</string>
+    <string name="cloud_backup_summary">Protege tus datos con Google Drive</string>
+    <string name="cloud_backup_sign_in_hint">Inicia sesión para proteger tus datos</string>
+    <string name="cloud_backup_sign_out">Cerrar Sesión</string>
+    <string name="cloud_backup_auto_title">Copia Automática en la Nube</string>
+    <string name="cloud_backup_auto_summary">Sincroniza datos automáticamente con Google Drive</string>
+    <string name="cloud_backup_wifi_title">Copia solo por Wi-Fi</string>
+    <string name="cloud_backup_wifi_summary">Ahorra datos móviles</string>
+    <string name="cloud_backup_now">Hacer Copia Ahora</string>
+    <string name="cloud_backup_success">¡Copia en la nube exitosa!</string>
+    <string name="cloud_backup_failed">Copia en la nube fallida.</string>
+
+    <string name="alarm_permission_title">Alarmas Exactas Requeridas</string>
+    <string name="alarm_permission_message">Para asegurar que tus recordatorios suenen al minuto exacto, por favor permite que la app programe alarmas exactas.</string>
 </resources>

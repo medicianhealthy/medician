@@ -60,7 +60,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                             .addOnSuccessListener(account -> {
                                 Logger.log("SettingsFragment", "Sign-in success: " + account.getEmail());
                                 handleSignInSuccess(account);
-                                Snackbar.make(binding.getRoot(), "Signed in as " + account.getEmail(), Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(binding.getRoot(), getString(R.string.signed_in_as_format, account.getEmail()), Snackbar.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> {
                                 Logger.log("SettingsFragment", "Sign-in failed: " + e.getMessage());
@@ -69,11 +69,11 @@ public class SettingsFragment extends MedicationWizardFragment {
                                     int statusCode = ((com.google.android.gms.common.api.ApiException) e).getStatusCode();
                                     errorMsg = com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString(statusCode);
                                 }
-                                Snackbar.make(binding.getRoot(), "Sign-in failed: " + errorMsg, Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(binding.getRoot(), getString(R.string.sign_in_failed_format, errorMsg), Snackbar.LENGTH_LONG).show();
                             });
                 } else {
                     String message = (result.getResultCode() == android.app.Activity.RESULT_CANCELED) ? 
-                            "Sign-in cancelled" : "Sign-in failed (code: " + result.getResultCode() + ")";
+                            getString(R.string.button_skip) : "Sign-in failed (code: " + result.getResultCode() + ")";
                     Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
                     Logger.log("SettingsFragment", message);
                 }
@@ -158,7 +158,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             if (!isGranted) {
                 NotificationManager.getInstance(requireActivity()).requestPermissionIfNeeded();
             } else {
-                Snackbar.make(binding.getRoot(), "Notifications are already active!", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.getRoot(), R.string.notif_already_active, Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -207,6 +207,58 @@ public class SettingsFragment extends MedicationWizardFragment {
             viewModel.setTheme(theme);
         });
 
+        viewModel.getLanguageCode().observe(getViewLifecycleOwner(), langCode -> {
+            String langName = switch (langCode) {
+                case "iw" -> getString(R.string.lang_hebrew);
+                case "ar" -> getString(R.string.lang_arabic);
+                case "es" -> getString(R.string.lang_spanish);
+                case "fr" -> getString(R.string.lang_french);
+                case "de" -> getString(R.string.lang_german);
+                case "ja" -> getString(R.string.lang_japanese);
+                case "pt-BR" -> getString(R.string.lang_portuguese);
+                case "ko" -> getString(R.string.lang_korean);
+                default -> getString(R.string.lang_english);
+            };
+            binding.txtLanguageDesc.setText(langName);
+        });
+
+        binding.btnLanguage.setOnClickListener(v -> {
+            String[] langs = {
+                    getString(R.string.lang_english),
+                    getString(R.string.lang_hebrew),
+                    getString(R.string.lang_arabic),
+                    getString(R.string.lang_spanish),
+                    getString(R.string.lang_french),
+                    getString(R.string.lang_german),
+                    getString(R.string.lang_japanese),
+                    getString(R.string.lang_portuguese),
+                    getString(R.string.lang_korean)
+            };
+            String[] codes = {"en", "iw", "ar", "es", "fr", "de", "ja", "pt-BR", "ko"};
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.settings_language_title)
+                    .setItems(langs, (dialog, which) -> {
+                        String selectedCode = codes[which];
+                        if (!selectedCode.equals(viewModel.getLanguageCode().getValue())) {
+                            new MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle(R.string.settings_language_title)
+                                    .setMessage(R.string.settings_language_restart_warning)
+                                    .setPositiveButton(R.string.button_ok, (d, w) -> {
+                                        viewModel.setLanguage(selectedCode);
+                                        if (getActivity() != null) {
+                                            android.content.Intent intent = getActivity().getIntent();
+                                            getActivity().finish();
+                                            getActivity().startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.buttoh_not_now, null)
+                                    .show();
+                        }
+                    })
+                    .show();
+        });
+
         // Use a more reliable trigger: 10 taps on the version text
         binding.txtVersion.setOnClickListener(new View.OnClickListener() {
             int count = 0;
@@ -237,13 +289,13 @@ public class SettingsFragment extends MedicationWizardFragment {
                     .setMessage("This will delete all your medications and history.")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         Medication.clearAllMedications(requireContext());
-                        Snackbar.make(binding.getRoot(), "Data cleared.", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(binding.getRoot(), R.string.data_cleared, Snackbar.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("No", null)
                     .show();
         });
 
-        binding.btnSupport.setOnClickListener(v -> Snackbar.make(binding.getRoot(), "Support coming soon!", Snackbar.LENGTH_SHORT).show());
+        binding.btnSupport.setOnClickListener(v -> Snackbar.make(binding.getRoot(), R.string.support_coming_soon, Snackbar.LENGTH_SHORT).show());
         
         viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> 
             binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range)));
@@ -352,12 +404,12 @@ public class SettingsFragment extends MedicationWizardFragment {
 
     private void showSignInRequiredDialog() {
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Sign-in Required")
-                .setMessage("Please sign in with your Google account to enable cloud backup and sync features.")
-                .setPositiveButton("Sign In", (dialog, which) -> {
+                .setTitle(R.string.sign_in_required_title)
+                .setMessage(R.string.sign_in_required_message)
+                .setPositiveButton(R.string.cloud_backup_title, (dialog, which) -> {
                     googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(R.string.buttoh_not_now, null)
                 .show();
     }
 
@@ -383,28 +435,28 @@ public class SettingsFragment extends MedicationWizardFragment {
         CloudBackupManager manager = new CloudBackupManager(requireContext(), driveHelper);
 
         if (isBackup) {
-            Snackbar.make(binding.getRoot(), "Backing up to Google Drive...", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.backing_up_drive, Snackbar.LENGTH_SHORT).show();
             manager.backupToCloud().addOnSuccessListener(aVoid -> 
                 Snackbar.make(binding.getRoot(), R.string.cloud_backup_success, Snackbar.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> 
                 Snackbar.make(binding.getRoot(), R.string.cloud_backup_failed, Snackbar.LENGTH_SHORT).show());
         } else {
             new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Restore from Cloud")
-                    .setMessage("This will replace all your local medications and history with the cloud version. Continue?")
-                    .setPositiveButton("Restore", (dialog, which) -> {
-                        Snackbar.make(binding.getRoot(), "Restoring from cloud...", Snackbar.LENGTH_SHORT).show();
+                    .setTitle(R.string.cloud_restore_title)
+                    .setMessage(R.string.cloud_restore_message)
+                    .setPositiveButton(R.string.button_restore, (dialog, which) -> {
+                        Snackbar.make(binding.getRoot(), R.string.restoring_cloud, Snackbar.LENGTH_SHORT).show();
                         manager.restoreFromCloud().addOnSuccessListener(success -> {
                             if (success) {
-                                Snackbar.make(binding.getRoot(), "Restore successful!", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(binding.getRoot(), R.string.restore_success, Snackbar.LENGTH_LONG).show();
                                 if (getActivity() instanceof MainActivity) {
                                     ((MainActivity) getActivity()).recreate();
                                 }
                             } else {
-                                Snackbar.make(binding.getRoot(), "No cloud backup found.", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(binding.getRoot(), R.string.no_backup_found, Snackbar.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(e -> 
-                            Snackbar.make(binding.getRoot(), "Restore failed: " + e.getMessage(), Snackbar.LENGTH_SHORT).show());
+                            Snackbar.make(binding.getRoot(), getString(R.string.restore_failed_format, e.getMessage()), Snackbar.LENGTH_SHORT).show());
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
@@ -424,8 +476,8 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.containerCloudSettings.setVisibility(View.GONE);
             binding.btnSignOut.setVisibility(View.GONE);
             binding.btnGoogleSigninAction.setVisibility(View.VISIBLE);
-            binding.txtAccountName.setText("Cloud Backup");
-            binding.txtAccountEmail.setText("Premium only feature");
+            binding.txtAccountName.setText(R.string.cloud_backup_title);
+            binding.txtAccountEmail.setText(R.string.premium_only_feature);
             binding.imgUserProfile.setImageResource(R.drawable.ic_magic_wand);
             return;
         }
@@ -462,7 +514,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             // Sync local cache for other components
             accountManager.saveAccountInfo(googleAccount.getEmail(), googleAccount.getDisplayName(), photoUri);
         } else {
-            binding.txtAccountName.setText("Cloud Backup");
+            binding.txtAccountName.setText(R.string.cloud_backup_title);
             binding.txtAccountEmail.setText(R.string.cloud_backup_sign_in_hint);
             binding.imgUserProfile.setImageResource(R.mipmap.ic_launcher);
             accountManager.clearAccountInfo();
@@ -503,7 +555,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                     if ("Gway1952".equals(input.getText().toString())) {
                         new com.robinzon.medicationwizard.ui.cheats.CheatsBottomSheet().show(getChildFragmentManager(), "CheatsBS");
                     } else {
-                        Snackbar.make(binding.getRoot(), "Invalid code", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(binding.getRoot(), R.string.invalid_code, Snackbar.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)

@@ -126,7 +126,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="at"
+                        android:text="@string/at_label"
                         android:textAppearance="?attr/textAppearanceBodyMedium" />
                     <TextView
                         android:id="@+id/time"
@@ -184,14 +184,14 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reschedule" />
+            android:text="@string/button_reschedule" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/take_btn"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Take" />
+            android:text="@string/button_take" />
 
         <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/action_buttons_flow"

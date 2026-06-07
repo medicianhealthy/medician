@@ -31,6 +31,7 @@ public class SettingsViewModel extends AndroidViewModel {
     public static final String KEY_NOTIF_SOUND_URI = "notif_sound_uri";
     public static final String KEY_SNOOZE_DURATION_MINS = "snooze_duration_mins";
     public static final String KEY_MAX_SNOOZES = "max_snoozes";
+    public static final String KEY_APP_LANGUAGE = "app_language";
 
     // Theme Constants
     public static final int THEME_SYSTEM = 0;
@@ -46,6 +47,7 @@ public class SettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<String> mSoundUri = new MutableLiveData<>();
     private final MutableLiveData<Integer> mSnoozeDuration = new MutableLiveData<>();
     private final MutableLiveData<Integer> mMaxSnoozes = new MutableLiveData<>();
+    private final MutableLiveData<String> mLanguageCode = new MutableLiveData<>();
 
     /**
      * Constructs the ViewModel and loads current preferences from disk.
@@ -67,6 +69,8 @@ public class SettingsViewModel extends AndroidViewModel {
         
         mSnoozeDuration.setValue(sp.getInt(KEY_SNOOZE_DURATION_MINS, 10));
         mMaxSnoozes.setValue(sp.getInt(KEY_MAX_SNOOZES, 3));
+        
+        mLanguageCode.setValue(sp.getString(KEY_APP_LANGUAGE, "en"));
     }
 
     public LiveData<Integer> getTheme() { return mTheme; }
@@ -77,6 +81,18 @@ public class SettingsViewModel extends AndroidViewModel {
     public LiveData<String> getSoundUri() { return mSoundUri; }
     public LiveData<Integer> getSnoozeDuration() { return mSnoozeDuration; }
     public LiveData<Integer> getMaxSnoozes() { return mMaxSnoozes; }
+    public LiveData<String> getLanguageCode() { return mLanguageCode; }
+
+    public void setLanguage(String langCode) {
+        if (langCode.equals(mLanguageCode.getValue())) return;
+        
+        mLanguageCode.setValue(langCode);
+        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_APP_LANGUAGE, langCode);
+        
+        // Apply the language change
+        androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
+        AppCompatDelegate.setApplicationLocales(locales);
+    }
 
     public void setSnoozeDuration(int mins) {
         mSnoozeDuration.setValue(mins);

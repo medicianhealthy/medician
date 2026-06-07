@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     android:paddingVertical="12dp"
-    android:text="Select Time"
+    android:text="@string/time_picker_title"
     android:textColor="?attr/colorPrimary"
     app:icon="@android:drawable/ic_menu_recent_history"
     app:iconTint="?attr/colorPrimary"
