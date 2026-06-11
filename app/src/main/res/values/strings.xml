@@ -137,6 +137,12 @@
 
     <string name="onboarding_title_3">Track Your Progress</string>
     <string name="onboarding_desc_3">Keep a detailed history of your health journey. It’s perfect for sharing with your healthcare provider.</string>
+    <string name="onboarding_terms_agree"><![CDATA[I agree to the <a href="%1$s">Terms of Use</a> and <a href="%2$s">Privacy Policy</a>]]></string>
+    <string name="onboarding_error_terms">Please agree to the Terms and Privacy Policy to continue the magic.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">Terms of Use</string>
+    <string name="legal_privacy_title">Privacy Policy</string>
 
     <!-- Premium -->
     <string name="premium_title">Unlock Full Magic!</string>
@@ -162,14 +168,14 @@
     <string name="notif_already_active">Notifications are already active!</string>
     <string name="data_cleared">Data cleared.</string>
     <string name="support_coming_soon">Support coming soon!</string>
-    <string name="support_email_address" translatable="false">support@medicationwizard.com</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
     <string name="support_dialog_title">Magic Support</string>
     <string name="support_dialog_message">Is there a glitch in the magic (Bug) or do you have a grand idea for a new spell (Feature Request)?</string>
     <string name="support_option_bug">A Glitch (Bug)</string>
     <string name="support_option_feature">New Spell (Feature)</string>
     <string name="support_subject_bug">Glitch Report: [%1$s]</string>
     <string name="support_subject_feature">New Spell Idea: [%1$s]</string>
-    <string name="support_no_email_client">No email application found. Please contact us at support@medicationwizard.com</string>
+    <string name="support_no_email_client">No email application found. Please contact us at medicationwizard@gmail.com</string>
     <string name="support_body_header">--- Magic Scroll Details ---</string>
     <string name="support_body_version">App Version: %1$s</string>
     <string name="support_body_device">Device: %1$s</string>

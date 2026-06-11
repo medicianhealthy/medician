@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">Verfolge deinen Fortschritt</string>
     <string name="onboarding_desc_3">Führe einen detaillierten Verlauf deiner Gesundheitsreise. Perfekt, um ihn mit deinem Arzt zu teilen.</string>
+    <string name="onboarding_terms_agree"><![CDATA[Ich stimme den <a href="%1$s">Nutzungsbedingungen</a> und der <a href="%2$s">Datenschutzerklärung</a> zu]]></string>
+    <string name="onboarding_error_terms">Bitte stimme den Bedingungen und der Datenschutzerklärung zu, um den Zauber fortzusetzen.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">Nutzungsbedingungen</string>
+    <string name="legal_privacy_title">Datenschutzerklärung</string>
 
     <!-- Premium -->
     <string name="premium_title">Entfessle die ganze Magie!</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">Neuer Zauberspruch (Funktion)</string>
     <string name="support_subject_bug">Störungsmeldung: [%1$s]</string>
     <string name="support_subject_feature">Neue Zauber-Idee: [%1$s]</string>
-    <string name="support_no_email_client">Keine E-Mail-App gefunden. Bitte kontaktiere uns unter support@medicationwizard.com</string>
+    <string name="support_no_email_client">Keine E-Mail-App gefunden. Bitte kontaktiere uns unter medicationwizard@gmail.com</string>
     <string name="support_body_header">--- Details zur Zauberrolle ---</string>
     <string name="support_body_version">App-Version: %1$s</string>
     <string name="support_body_device">Gerät: %1$s</string>

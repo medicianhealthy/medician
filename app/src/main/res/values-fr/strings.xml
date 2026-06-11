@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">Suivez vos Progrès</string>
     <string name="onboarding_desc_3">Gardez un historique détaillé de votre parcours de santé. C\'est parfait pour partager avec votre médecin.</string>
+    <string name="onboarding_terms_agree"><![CDATA[J\'accepte les <a href="%1$s">Conditions d\'Utilisation</a> et la <a href="%2$s">Politique de Confidentialité</a>]]></string>
+    <string name="onboarding_error_terms">Veuillez accepter les Conditions et la Politique de Confidentialité pour continuer la magie.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">Conditions d\'Utilisation</string>
+    <string name="legal_privacy_title">Politique de Confidentialité</string>
 
     <!-- Premium -->
     <string name="premium_title">Débloquez toute la Magie !</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">Nouveau Sort (Fonctionnalité)</string>
     <string name="support_subject_bug">Rapport de Problème : [%1$s]</string>
     <string name="support_subject_feature">Idée de Nouveau Sort : [%1$s]</string>
-    <string name="support_no_email_client">Aucune application de messagerie trouvée. Veuillez nous contacter à support@medicationwizard.com</string>
+    <string name="support_no_email_client">Aucune application de messagerie trouvée. Veuillez nous contacter à medicationwizard@gmail.com</string>
     <string name="support_body_header">--- Détails du Parchemin Magique ---</string>
     <string name="support_body_version">Version de l\'App : %1$s</string>
     <string name="support_body_device">Appareil : %1$s</string>

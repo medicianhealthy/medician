@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">עקוב אחר ההתקדמות שלך</string>
     <string name="onboarding_desc_3">נהל היסטוריה מפורטת של המסע הבריאותי שלך. זה מושלם לשיתוף עם הצוות הרפואי שלך.</string>
+    <string name="onboarding_terms_agree"><![CDATA[אני מסכים ל<a href="%1$s">תנאי השימוש</a> ול<a href="%2$s">מדיניות הפרטיות</a>]]></string>
+    <string name="onboarding_error_terms">אנא אשר את תנאי השימוש ומדיניות הפרטיות כדי להמשיך בקסם.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">תנאי שימוש</string>
+    <string name="legal_privacy_title">מדיניות פרטיות</string>
 
     <!-- Premium -->
     <string name="premium_title">שחרר את כל הקסם!</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">לחש חדש (פיצ\'ר)</string>
     <string name="support_subject_bug">דיווח על תקלה: [%1$s]</string>
     <string name="support_subject_feature">רעיון ללחש חדש: [%1$s]</string>
-    <string name="support_no_email_client">לא נמצאה אפליקציית אימייל. אנא צור קשר בכתובת support@medicationwizard.com</string>
+    <string name="support_no_email_client">לא נמצאה אפליקציית אימייל. אנא צור קשר בכתובת medicationwizard@gmail.com</string>
     <string name="support_body_header">--- פרטי המגילה הקסומה ---</string>
     <string name="support_body_version">גרסת אפליקציה: %1$s</string>
     <string name="support_body_device">מכשיר: %1$s</string>

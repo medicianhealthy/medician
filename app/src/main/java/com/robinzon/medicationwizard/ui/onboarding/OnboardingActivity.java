@@ -4,6 +4,12 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.databinding.ActivityOnboardingBinding;
@@ -57,6 +64,7 @@ public class OnboardingActivity extends AppCompatActivity {
                 getString(R.string.onboarding_desc_3)));
 
         setupDots(pages.size());
+        setupTerms();
         
         OnboardingAdapter adapter = new OnboardingAdapter(pages);
         binding.viewPager.setAdapter(adapter);
@@ -65,11 +73,12 @@ public class OnboardingActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 updateDots(position);
-                if (position == pages.size() - 1) {
-                    binding.btnNext.setText(R.string.onboarding_btn_finish);
-                } else {
-                    binding.btnNext.setText(R.string.onboarding_btn_next);
-                }
+                boolean isLastPage = position == pages.size() - 1;
+                binding.btnNext.setText(isLastPage ? R.string.onboarding_btn_finish : R.string.onboarding_btn_next);
+                binding.containerTerms.setVisibility(isLastPage ? View.VISIBLE : View.GONE);
+                
+                // Hide Skip button on the last page to ensure agreement
+                binding.btnSkip.setVisibility(isLastPage ? View.GONE : View.VISIBLE);
             }
         });
 
@@ -77,11 +86,66 @@ public class OnboardingActivity extends AppCompatActivity {
             if (binding.viewPager.getCurrentItem() < pages.size() - 1) {
                 binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem() + 1);
             } else {
-                finishOnboarding();
+                if (binding.checkTerms.isChecked()) {
+                    finishOnboarding();
+                } else {
+                    shakeTermsContainer();
+                    Snackbar.make(binding.getRoot(), R.string.onboarding_error_terms, Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
         binding.btnSkip.setOnClickListener(v -> finishOnboarding());
+    }
+
+    private void shakeTermsContainer() {
+        ObjectAnimator shake = ObjectAnimator.ofFloat(binding.containerTerms, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0);
+        shake.setDuration(500);
+        shake.start();
+        
+        // Optional: provide haptic feedback
+        binding.containerTerms.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
+    }
+
+    private void setupTerms() {
+        String termsUrl = getString(R.string.url_terms).trim();
+        String privacyUrl = getString(R.string.url_privacy).trim();
+        String textTemplate = getString(R.string.onboarding_terms_agree, termsUrl, privacyUrl);
+        
+        Spanned html = Html.fromHtml(textTemplate, Html.FROM_HTML_MODE_COMPACT);
+        SpannableStringBuilder spannable = new SpannableStringBuilder(html);
+        URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);
+        
+        for (URLSpan span : spans) {
+            int start = spannable.getSpanStart(span);
+            int end = spannable.getSpanEnd(span);
+            String url = span.getURL();
+            
+            spannable.removeSpan(span);
+            spannable.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View widget) {
+                    openInternalUrl(url);
+                }
+            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        
+        binding.txtTerms.setText(spannable);
+        binding.txtTerms.setMovementMethod(LinkMovementMethod.getInstance());
+        
+        // Fix: Added click listener to the TextView itself to catch taps outside links
+        View.OnClickListener toggleListener = v -> binding.checkTerms.toggle();
+        binding.containerTerms.setOnClickListener(toggleListener);
+        binding.txtTerms.setOnClickListener(toggleListener);
+    }
+
+    private void openInternalUrl(String url) {
+        Intent intent = new Intent(this, WebViewerActivity.class);
+        intent.putExtra(WebViewerActivity.EXTRA_URL, url);
+        
+        int titleResId = url.contains("terms") ? R.string.legal_terms_title : R.string.legal_privacy_title;
+        intent.putExtra(WebViewerActivity.EXTRA_TITLE, getString(titleResId));
+        startActivity(intent);
     }
 
     private void setupDots(int count) {

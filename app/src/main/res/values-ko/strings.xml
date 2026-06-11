@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">진행 상황 확인</string>
     <string name="onboarding_desc_3">당신의 건강 여정을 꼼꼼하게 기록하세요. 의료진과 상담할 때 보여드리기 좋아요.</string>
+    <string name="onboarding_terms_agree"><![CDATA[<a href="%1$s">이용약관</a> 및 <a href="%2$s">개인정보 처리방침</a>에 동의합니다]]></string>
+    <string name="onboarding_error_terms">마법을 계속하려면 이용약관과 개인정보 처리방침에 동의해 주세요.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">이용약관</string>
+    <string name="legal_privacy_title">개인정보 처리방침</string>
 
     <!-- Premium -->
     <string name="premium_title">마법의 힘을 모두 열어보세요!</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">새로운 주문 (기능 제안)</string>
     <string name="support_subject_bug">마법 오류 보고: [%1$s]</string>
     <string name="support_subject_feature">새로운 주문 아이디어: [%1$s]</string>
-    <string name="support_no_email_client">이메일 앱을 찾을 수 없습니다. support@medicationwizard.com으로 문의해 주세요.</string>
+    <string name="support_no_email_client">이메일 앱을 찾을 수 없습니다. medicationwizard@gmail.com으로 문의해 주세요.</string>
     <string name="support_body_header">--- 마법 두루마리 상세 정보 ---</string>
     <string name="support_body_version">앱 버전: %1$s</string>
     <string name="support_body_device">기기: %1$s</string>

@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">経過を確認</string>
     <string name="onboarding_desc_3">健康の歩みを詳しく記録します。医師との相談時にも役立ちます。</string>
+    <string name="onboarding_terms_agree"><![CDATA[<a href="%1$s">利用規約</a>と<a href="%2$s">プライバシーポリシー</a>に同意します]]></string>
+    <string name="onboarding_error_terms">魔法を続けるには、利用規約とプライバシーポリシーへの同意が必要です。</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">利用規約</string>
+    <string name="legal_privacy_title">プライバシーポリシー</string>
 
     <!-- Premium -->
     <string name="premium_title">魔法を最大限に！</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">新しい呪文（新機能）</string>
     <string name="support_subject_bug">不具合報告: [%1$s]</string>
     <string name="support_subject_feature">新しい呪文のアイデア: [%1$s]</string>
-    <string name="support_no_email_client">メールアプリが見つかりません。support@medicationwizard.com まで直接ご連絡ください。</string>
+    <string name="support_no_email_client">メールアプリが見つかりません。medicationwizard@gmail.com まで直接ご連絡ください。</string>
     <string name="support_body_header">--- 魔法の巻物の詳細 ---</string>
     <string name="support_body_version">アプリバージョン: %1$s</string>
     <string name="support_body_device">デバイス: %1$s</string>

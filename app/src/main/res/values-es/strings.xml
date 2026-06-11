@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">Sigue tu Progreso</string>
     <string name="onboarding_desc_3">Mantén un historial detallado de tu viaje de salud. Es perfecto para compartirlo con tu médico.</string>
+    <string name="onboarding_terms_agree"><![CDATA[Acepto los <a href="%1$s">Términos de Uso</a> y la <a href="%2$s">Política de Privacidad</a>]]></string>
+    <string name="onboarding_error_terms">Por favor, acepta los Términos y la Política de Privacidad para continuar con la magia.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">Términos de Uso</string>
+    <string name="legal_privacy_title">Política de Privacidad</string>
 
     <!-- Premium -->
     <string name="premium_title">¡Desbloquea toda la Magia!</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">Nuevo Hechizo (Función)</string>
     <string name="support_subject_bug">Informe de Fallo: [%1$s]</string>
     <string name="support_subject_feature">Idea de Nuevo Hechizo: [%1$s]</string>
-    <string name="support_no_email_client">No se encontró ninguna aplicación de correo electrónico. Por favor, contáctanos en support@medicationwizard.com</string>
+    <string name="support_no_email_client">No se encontró ninguna aplicación de correo electrónico. Por favor, contáctanos en medicationwizard@gmail.com</string>
     <string name="support_body_header">--- Detalles del Pergamino Mágico ---</string>
     <string name="support_body_version">Versión de la App: %1$s</string>
     <string name="support_body_device">Dispositivo: %1$s</string>

@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">Acompanhe seu Progresso</string>
     <string name="onboarding_desc_3">Tenha um histórico detalhado da sua jornada de saúde. É ótimo para mostrar ao seu médico.</string>
+    <string name="onboarding_terms_agree"><![CDATA[Eu concordo com os <a href="%1$s">Termos de Uso</a> e a <a href="%2$s">Política de Privacidade</a>]]></string>
+    <string name="onboarding_error_terms">Por favor, concorde com os Termos e a Política de Privacidade para continuar a mágica.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">Termos de Uso</string>
+    <string name="legal_privacy_title">Política de Privacidade</string>
 
     <!-- Premium -->
     <string name="premium_title">Libere toda a Mágica!</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">Novo Feitiço (Sugestão)</string>
     <string name="support_subject_bug">Relato de Falha: [%1$s]</string>
     <string name="support_subject_feature">Ideia de Feitiço: [%1$s]</string>
-    <string name="support_no_email_client">Nenhum aplicativo de e-mail encontrado. Por favor, entre em contato em support@medicationwizard.com</string>
+    <string name="support_no_email_client">Nenhum aplicativo de e-mail encontrado. Por favor, entre em contato em medicationwizard@gmail.com</string>
     <string name="support_body_header">--- Detalhes do Pergaminho Mágico ---</string>
     <string name="support_body_version">Versão do App: %1$s</string>
     <string name="support_body_device">Dispositivo: %1$s</string>

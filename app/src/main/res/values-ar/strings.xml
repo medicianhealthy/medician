@@ -123,6 +123,12 @@
 
     <string name="onboarding_title_3">تتبع تقدمك</string>
     <string name="onboarding_desc_3">احتفظ بسجل مفصل لرحلتك الصحية. إنه مثالي لمشاركته مع مقدم الرعاية الصحية الخاص بك.</string>
+    <string name="onboarding_terms_agree"><![CDATA[أنا أوافق على <a href="%1$s">شروط الاستخدام</a> و <a href="%2$s">سياسة الخصوصية</a>]]></string>
+    <string name="onboarding_error_terms">يرجى الموافقة على الشروط وسياسة الخصوصية لمتابعة السحر.</string>
+    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
+    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="legal_terms_title">شروط الاستخدام</string>
+    <string name="legal_privacy_title">سياسة الخصوصية</string>
 
     <!-- Premium -->
     <string name="premium_title">افتح القوة السحرية الكاملة!</string>
@@ -154,7 +160,7 @@
     <string name="support_option_feature">تعويذة جديدة (ميزة)</string>
     <string name="support_subject_bug">تقرير عن خلل: [%1$s]</string>
     <string name="support_subject_feature">فكرة لتعويذة جديدة: [%1$s]</string>
-    <string name="support_no_email_client">لم يتم العثور على تطبيق بريد إلكتروني. يرجى الاتصال بنا على support@medicationwizard.com</string>
+    <string name="support_no_email_client">لم يتم العثور على تطبيق بريد إلكتروني. يرجى الاتصال بنا على medicationwizard@gmail.com</string>
     <string name="support_body_header">--- تفاصيل المخطوطة السحرية ---</string>
     <string name="support_body_version">إصدار التطبيق: %1$s</string>
     <string name="support_body_device">الجهاز: %1$s</string>

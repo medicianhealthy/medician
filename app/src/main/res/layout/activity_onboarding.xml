@@ -50,4 +50,40 @@
         app:layout_constraintStart_toEndOf="@+id/btn_skip"
         app:layout_constraintTop_toTopOf="@+id/btn_next" />
 
+    <LinearLayout
+        android:id="@+id/container_terms"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:background="@drawable/bg_bottom_sheet_card"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/check_terms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/txt_terms"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            tools:text="I agree to the Terms of Use and Privacy Policy" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
