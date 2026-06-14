@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,6 +97,22 @@ public class OnboardingActivity extends AppCompatActivity {
         });
 
         binding.btnSkip.setOnClickListener(v -> finishOnboarding());
+
+        // Handle Back Button: Navigate to previous slide instead of closing the app
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                int currentItem = binding.viewPager.getCurrentItem();
+                if (currentItem > 0) {
+                    // Go back one slide
+                    binding.viewPager.setCurrentItem(currentItem - 1, true);
+                } else {
+                    // First slide: Close the app (standard behavior)
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 
     private void shakeTermsContainer() {
