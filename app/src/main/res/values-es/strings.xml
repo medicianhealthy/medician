@@ -233,7 +233,9 @@
     <string name="premium_only_feature">Función solo para usuarios Premium</string>
     <string name="premium_pass_title">Pase Mágico de 12h</string>
     <string name="premium_pass_summary">¡Mira un video corto para desbloquear toda la magia Premium por 12 horas!</string>
-    <string name="premium_pass_active">Pase Mágico Activo: quedan %1$s</string>
+    <string name="premium_pass_active">Pase Mágico Activo</string>
+    <string name="premium_pass_remaining_format">quedan %1$02dh %2$02dm</string>
+    <string name="loading_magic">Cargando magia... por favor espera.</string>
     <string name="reward_ad_not_ready">La magia aún no está lista. Inténtalo de nuevo en unos segundos.</string>
     <string name="theme_unlock_prompt">¡Mira un video para desbloquear este tema para esta sesión!</string>
 

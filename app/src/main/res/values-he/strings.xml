@@ -230,7 +230,9 @@
     <string name="premium_only_feature">פיצ\'ר למנויי פרימיום בלבד</string>
     <string name="premium_pass_title">מנוי קסם ל-12 שעות</string>
     <string name="premium_pass_summary">צפה בסרטון קצר כדי לפתוח את כל קסמי הפרימיום ל-12 שעות!</string>
-    <string name="premium_pass_active">מנוי קסם פעיל: נותרו %1$s</string>
+    <string name="premium_pass_active">מנוי קסם פעיל</string>
+    <string name="premium_pass_remaining_format">נותרו %1$02d ש\' ו-%2$02d ד\'</string>
+    <string name="loading_magic">טוען קסם... נא להמתין.</string>
     <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
     <string name="theme_unlock_prompt">צפה בסרטון כדי לפתוח את ערכת הנושא הזו לסשן הנוכחי!</string>
 

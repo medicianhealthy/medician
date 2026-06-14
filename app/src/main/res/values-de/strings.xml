@@ -233,7 +233,9 @@
     <string name="premium_only_feature">Nur für Premium-Mitglieder</string>
     <string name="premium_pass_title">12h Zauber-Pass</string>
     <string name="premium_pass_summary">Schau dir ein kurzes Video an, um die gesamte Premium-Magie für 12 Stunden freizuschalten!</string>
-    <string name="premium_pass_active">Zauber-Pass Aktiv: %1$s verbleibend</string>
+    <string name="premium_pass_active">Zauber-Pass Aktiv</string>
+    <string name="premium_pass_remaining_format">%1$02dh %2$02dm verbleibend</string>
+    <string name="loading_magic">Magie wird geladen... bitte warten.</string>
     <string name="reward_ad_not_ready">Die Magie ist noch nicht bereit. Bitte versuche es in ein paar Sekunden erneut.</string>
     <string name="theme_unlock_prompt">Schau dir ein Video an, um dieses Design für diese Sitzung freizuschalten!</string>
 

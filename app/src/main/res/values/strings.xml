@@ -248,7 +248,9 @@
     <string name="premium_only_feature">Premium only feature</string>
     <string name="premium_pass_title">12h Magic Pass</string>
     <string name="premium_pass_summary">Watch a short video to unlock all Premium magic for 12 hours!</string>
-    <string name="premium_pass_active">Magic Pass Active: %1$s left</string>
+    <string name="premium_pass_active">Magic Pass Active</string>
+    <string name="premium_pass_remaining_format">%1$02dh %2$02dm remaining</string>
+    <string name="loading_magic">Loading magic... please wait.</string>
     <string name="reward_ad_not_ready">The Magic isn\'t ready yet. Please try again in a few seconds.</string>
     <string name="theme_unlock_prompt">Watch a video to unlock this theme for this session!</string>
 

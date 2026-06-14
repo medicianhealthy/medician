@@ -233,7 +233,9 @@
     <string name="premium_only_feature">プレミアム機能</string>
     <string name="premium_pass_title">12時間魔法パス</string>
     <string name="premium_pass_summary">短い動画を見て、12時間すべてのプレミアム機能を開放しましょう！</string>
-    <string name="premium_pass_active">魔法パス有効：残り %1$s</string>
+    <string name="premium_pass_active">魔法パス有効</string>
+    <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
+    <string name="loading_magic">魔法を読み込み中... 少々お待ちください。</string>
     <string name="reward_ad_not_ready">魔法の準備がまだできていません。数秒後にもう一度お試しください。</string>
     <string name="theme_unlock_prompt">動画を見て、このセッションの間このテーマをアンロックしましょう！</string>
 

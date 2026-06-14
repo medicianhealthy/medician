@@ -233,7 +233,9 @@
     <string name="premium_only_feature">ميزة متاحة لمشتركي بريميوم فقط</string>
     <string name="premium_pass_title">بطاقة سحرية لمدة ١٢ ساعة</string>
     <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل ميزات البريميوم لمدة ١٢ ساعة!</string>
-    <string name="premium_pass_active">البطاقة السحرية مفعلة: متبقي %1$s</string>
+    <string name="premium_pass_active">البطاقة السحرية مفعلة</string>
+    <string name="premium_pass_remaining_format">متبقي %1$02d ساعة و %2$02d دقيقة</string>
+    <string name="loading_magic">جاري تحميل السحر... يرجى الانتظار.</string>
     <string name="reward_ad_not_ready">السحر ليس جاهزاً بعد. يرجى المحاولة مرة أخرى بعد ثوانٍ.</string>
     <string name="theme_unlock_prompt">شاهد فيديو لفتح هذا الثيم لهذه الجلسة!</string>
 

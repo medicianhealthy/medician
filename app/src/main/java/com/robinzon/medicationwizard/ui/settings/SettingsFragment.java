@@ -687,7 +687,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             long diff = expiry - System.currentTimeMillis();
             long hours = diff / (60 * 60 * 1000);
             long mins = (diff % (60 * 60 * 1000)) / (60 * 1000);
-            binding.txtMagicPassSummary.setText(String.format(java.util.Locale.getDefault(), "%02dh %02dm remaining", hours, mins));
+            binding.txtMagicPassSummary.setText(getString(R.string.premium_pass_remaining_format, hours, mins));
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
@@ -699,7 +699,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                 binding.cardMagicPass.setEnabled(true);
             } else {
                 binding.cardMagicPass.setAlpha(0.6f);
-                binding.txtMagicPassSummary.setText(R.string.reward_ad_not_ready);
+                binding.txtMagicPassSummary.setText(R.string.loading_magic);
                 // Keep enabled so the user can click to see the "Not ready" snackbar
                 binding.cardMagicPass.setEnabled(true);
             }
