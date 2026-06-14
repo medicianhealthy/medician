@@ -235,7 +235,12 @@
     <string name="premium_pass_summary">短い動画を見て、12時間すべてのプレミアム機能を開放しましょう！</string>
     <string name="premium_pass_active">魔法パス有効</string>
     <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
-    <string name="loading_magic">魔法を読み込み中... 少々お待ちください。</string>
+    <string name="sign_in_error_title">魔法の接続エラー</string>
+    <string name="sign_in_error_network">魔法の雲に到達できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
+    <string name="sign_in_error_cancelled">ログインが中断されました。もう一度お試しになりますか？</string>
+    <string name="sign_in_error_dev">魔法のポータルは現在メンテナンス中です。魔法使いたちがすでに対応しています。</string>
+    <string name="sign_in_error_generic">アカウントへの接続中に予期しない問題が発生しました。しばらくしてからもう一度お試しください。</string>
+    <string name="sign_in_error_btn_retry">もう一度試す</string>
     <string name="reward_ad_not_ready">魔法の準備がまだできていません。数秒後にもう一度お試しください。</string>
     <string name="theme_unlock_prompt">動画を見て、このセッションの間このテーマをアンロックしましょう！</string>
 

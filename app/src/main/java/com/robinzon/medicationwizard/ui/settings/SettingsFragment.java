@@ -57,31 +57,61 @@ public class SettingsFragment extends MedicationWizardFragment {
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                Logger.log("SettingsFragment", "Sign-in result code: " + result.getResultCode());
-                if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
-                    GoogleSignIn.getSignedInAccountFromIntent(result.getData())
-                            .addOnSuccessListener(account -> {
-                                Logger.log("SettingsFragment", "Sign-in success: " + account.getEmail());
-                                handleSignInSuccess(account);
-                                Snackbar.make(binding.getRoot(), getString(R.string.signed_in_as_format, account.getEmail()), Snackbar.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> {
-                                Logger.log("SettingsFragment", "Sign-in failed: " + e.getMessage());
-                                String errorMsg = e.getMessage();
-                                if (e instanceof com.google.android.gms.common.api.ApiException) {
-                                    int statusCode = ((com.google.android.gms.common.api.ApiException) e).getStatusCode();
-                                    errorMsg = com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.getStatusCodeString(statusCode);
-                                }
-                                Snackbar.make(binding.getRoot(), getString(R.string.sign_in_failed_format, errorMsg), Snackbar.LENGTH_LONG).show();
-                            });
+                Logger.log("SettingsFragment", "Sign-in intent returned. Result code: " + result.getResultCode());
+                
+                // CRITICAL: We must use getSignedInAccountFromIntent even if result is not OK
+                // as it extracts the specific ApiException and status codes.
+                com.google.android.gms.tasks.Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                
+                if (task.isSuccessful()) {
+                    GoogleSignInAccount account = task.getResult();
+                    Logger.log("SettingsFragment", "Sign-in success: " + account.getEmail());
+                    handleSignInSuccess(account);
+                    Snackbar.make(binding.getRoot(), getString(R.string.signed_in_as_format, account.getEmail()), Snackbar.LENGTH_SHORT).show();
                 } else {
-                    String message = (result.getResultCode() == android.app.Activity.RESULT_CANCELED) ? 
-                            getString(R.string.button_skip) : "Sign-in failed (code: " + result.getResultCode() + ")";
-                    Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
-                    Logger.log("SettingsFragment", message);
+                    Exception e = task.getException();
+                    Logger.log("SettingsFragment", "Sign-in task failed: " + (e != null ? e.getMessage() : "Unknown error"));
+                    
+                    // Filter out explicit user cancellation (12501)
+                    if (e instanceof com.google.android.gms.common.api.ApiException) {
+                        int code = ((com.google.android.gms.common.api.ApiException) e).getStatusCode();
+                        if (code == 12501) {
+                            Logger.log("SettingsFragment", "User cancelled sign-in picker.");
+                            return;
+                        }
+                    }
+                    
+                    // For all other errors, show the high-end feedback dialog
+                    handleSignInError(e);
                 }
             }
     );
+
+    private void handleSignInError(@Nullable Exception e) {
+        int statusCode = -1;
+        if (e instanceof com.google.android.gms.common.api.ApiException) {
+            statusCode = ((com.google.android.gms.common.api.ApiException) e).getStatusCode();
+            Logger.log("SettingsFragment", "Mapping error for status code: " + statusCode);
+        }
+
+        int messageResId = switch (statusCode) {
+            case 7 -> R.string.sign_in_error_network; // NETWORK_ERROR
+            case 12501 -> R.string.sign_in_error_cancelled; // SIGN_IN_CANCELLED
+            case 10, 12500 -> R.string.sign_in_error_dev; // DEVELOPER_ERROR or SIGN_IN_FAILED (config)
+            default -> R.string.sign_in_error_generic;
+        };
+
+        if (getContext() != null) {
+            new MaterialAlertDialogBuilder(getContext())
+                    .setTitle(R.string.sign_in_error_title)
+                    .setMessage(messageResId)
+                    .setPositiveButton(R.string.sign_in_error_btn_retry, (dialog, which) -> {
+                        googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+        }
+    }
 
     private void handleSignInSuccess(GoogleSignInAccount account) {
         GoogleAccountManager.getInstance(requireContext()).saveAccountInfo(

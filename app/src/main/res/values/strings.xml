@@ -260,6 +260,12 @@
     <string name="cloud_backup_sign_out">Sign Out</string>
     <string name="cloud_backup_auto_title">Auto Cloud Backup</string>
     <string name="cloud_backup_auto_summary">Sync data automatically to Google Drive</string>
+    <string name="sign_in_error_title">Magic Connection Issue</string>
+    <string name="sign_in_error_network">We couldn\'t reach the magic clouds. Please check your internet connection and try again.</string>
+    <string name="sign_in_error_cancelled">Sign-in was interrupted. Would you like to try again?</string>
+    <string name="sign_in_error_dev">The magic portal is undergoing maintenance. Our wizards are already looking into it.</string>
+    <string name="sign_in_error_generic">Something unexpected happened while connecting to your account. Please try again in a moment.</string>
+    <string name="sign_in_error_btn_retry">Try Again</string>
     <string name="cloud_backup_wifi_title">Backup on Wi-Fi only</string>
     <string name="cloud_backup_wifi_summary">Save mobile data</string>
     <string name="cloud_backup_now">Backup to Cloud Now</string>

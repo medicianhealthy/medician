@@ -235,7 +235,12 @@
     <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل ميزات البريميوم لمدة ١٢ ساعة!</string>
     <string name="premium_pass_active">البطاقة السحرية مفعلة</string>
     <string name="premium_pass_remaining_format">متبقي %1$02d ساعة و %2$02d دقيقة</string>
-    <string name="loading_magic">جاري تحميل السحر... يرجى الانتظار.</string>
+    <string name="sign_in_error_title">مشكلة في اتصال السحر</string>
+    <string name="sign_in_error_network">لم نتمكن من الوصول إلى سحب السحر. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.</string>
+    <string name="sign_in_error_cancelled">تم إلغاء تسجيل الدخول. هل ترغب في المحاولة مرة أخرى؟</string>
+    <string name="sign_in_error_dev">بوابة السحر تخضع للصيانة. السحرة لدينا يعملون على ذلك بالفعل.</string>
+    <string name="sign_in_error_generic">حدث شيء غير متوقع أثناء الاتصال بحسابك. يرجى المحاولة مرة أخرى بعد قليل.</string>
+    <string name="sign_in_error_btn_retry">المحاولة مرة أخرى</string>
     <string name="reward_ad_not_ready">السحر ليس جاهزاً بعد. يرجى المحاولة مرة أخرى بعد ثوانٍ.</string>
     <string name="theme_unlock_prompt">شاهد فيديو لفتح هذا الثيم لهذه الجلسة!</string>
 

@@ -235,7 +235,12 @@
     <string name="premium_pass_summary">Assista a um vídeo curto para liberar toda a mágica Premium por 12 horas!</string>
     <string name="premium_pass_active">Passe Mágico Ativo</string>
     <string name="premium_pass_remaining_format">restam %1$02dh %2$02dm</string>
-    <string name="loading_magic">Carregando magia... por favor, aguarde.</string>
+    <string name="sign_in_error_title">Problema na Conexão Mágica</string>
+    <string name="sign_in_error_network">Não conseguimos alcançar as nuvens mágicas. Verifique sua conexão com a internet e tente novamente.</string>
+    <string name="sign_in_error_cancelled">O login foi interrompido. Gostaria de tentar novamente?</string>
+    <string name="sign_in_error_dev">O portal mágico está em manutenção. Nossos magos já estão cuidando disso.</string>
+    <string name="sign_in_error_generic">Algo inesperado aconteceu ao conectar à sua conta. Tente novamente em alguns instantes.</string>
+    <string name="sign_in_error_btn_retry">Tentar Novamente</string>
     <string name="reward_ad_not_ready">A mágica ainda não está pronta. Tente novamente em alguns segundos.</string>
     <string name="theme_unlock_prompt">Assista a um vídeo para liberar este tema para esta sessão!</string>
 

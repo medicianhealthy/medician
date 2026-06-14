@@ -235,7 +235,12 @@
     <string name="premium_pass_summary">Regardez une courte vidéo pour débloquer toute la magie Premium pendant 12 heures !</string>
     <string name="premium_pass_active">Pass Magique Actif</string>
     <string name="premium_pass_remaining_format">%1$02dh %2$02dm restant</string>
-    <string name="loading_magic">Chargement de la magie... veuillez patienter.</string>
+    <string name="sign_in_error_title">Problème de connexion magique</string>
+    <string name="sign_in_error_network">Nous n\'avons pas pu atteindre les nuages magiques. Veuillez vérifier votre connexion Internet et réessayer.</string>
+    <string name="sign_in_error_cancelled">La connexion a été interrompue. Souhaitez-vous réessayer ?</string>
+    <string name="sign_in_error_dev">Le portail magique est en cours de maintenance. Nos magiciens s\'en occupent déjà.</string>
+    <string name="sign_in_error_generic">Une erreur inattendue s\'est produite lors de la connexion à votre compte. Veuillez réessayer dans un instant.</string>
+    <string name="sign_in_error_btn_retry">Réessayer</string>
     <string name="reward_ad_not_ready">La magie n\'est pas encore prête. Veuillez réessayer dans quelques secondes.</string>
     <string name="theme_unlock_prompt">Regardez une vidéo pour débloquer ce thème pour cette session !</string>
 

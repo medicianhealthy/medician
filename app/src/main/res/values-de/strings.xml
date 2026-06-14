@@ -235,7 +235,12 @@
     <string name="premium_pass_summary">Schau dir ein kurzes Video an, um die gesamte Premium-Magie für 12 Stunden freizuschalten!</string>
     <string name="premium_pass_active">Zauber-Pass Aktiv</string>
     <string name="premium_pass_remaining_format">%1$02dh %2$02dm verbleibend</string>
-    <string name="loading_magic">Magie wird geladen... bitte warten.</string>
+    <string name="sign_in_error_title">Problem mit der Magic-Verbindung</string>
+    <string name="sign_in_error_network">Wir konnten die Magic-Clouds nicht erreichen. Bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
+    <string name="sign_in_error_cancelled">Anmeldung wurde unterbrochen. Möchten Sie es erneut versuchen?</string>
+    <string name="sign_in_error_dev">Das Magic-Portal wird gerade gewartet. Unsere Zauberer kümmern sich bereits darum.</string>
+    <string name="sign_in_error_generic">Beim Verbinden mit Ihrem Konto ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es in einem Moment erneut.</string>
+    <string name="sign_in_error_btn_retry">Erneut versuchen</string>
     <string name="reward_ad_not_ready">Die Magie ist noch nicht bereit. Bitte versuche es in ein paar Sekunden erneut.</string>
     <string name="theme_unlock_prompt">Schau dir ein Video an, um dieses Design für diese Sitzung freizuschalten!</string>
 
