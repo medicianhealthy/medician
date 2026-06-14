@@ -682,12 +682,13 @@ public class SettingsFragment extends MedicationWizardFragment {
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else if (isTempPremium) {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
-            binding.cardMagicPass.setAlpha(1.0f);
+            binding.cardMagicPass.setAlpha(rvLoaded ? 1.0f : 0.6f);
             binding.txtMagicPassTitle.setText(R.string.premium_pass_active);
             long diff = expiry - System.currentTimeMillis();
             long hours = diff / (60 * 60 * 1000);
             long mins = (diff % (60 * 60 * 1000)) / (60 * 1000);
-            binding.txtMagicPassSummary.setText(getString(R.string.premium_pass_remaining_format, hours, mins));
+            String timeLeft = getString(R.string.premium_pass_remaining_format, hours, mins);
+            binding.txtMagicPassSummary.setText(rvLoaded ? timeLeft : getString(R.string.loading_magic));
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else {
             binding.cardMagicPass.setVisibility(View.VISIBLE);

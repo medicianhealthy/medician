@@ -105,9 +105,14 @@ public abstract class AdMobAd {
 
     @Nullable
     protected Boolean shouldBeLoaded() {
-        if (com.robinzon.medicationwizard.AppConfig.isPremium(getContext()) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
-            return false;
+        // Allow Rewarded ads to load even if premium (so users can extend Magic Pass)
+        // For other types (Banner, Interstitial), block if premium.
+        if (getAdType() != AdType.Rewarded && getAdType() != AdType.RewardedInterstitial) {
+            if (com.robinzon.medicationwizard.AppConfig.isPremium(getContext()) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
+                return false;
+            }
         }
+
         final Context applicationContext = getContext().getApplicationContext();
         if (null != applicationContext) {
             final boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable(applicationContext);
