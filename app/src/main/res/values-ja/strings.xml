@@ -125,8 +125,8 @@
     <string name="onboarding_desc_3">健康の歩みを詳しく記録します。医師との相談時にも役立ちます。</string>
     <string name="onboarding_terms_agree"><![CDATA[<a href="%1$s">利用規約</a>と<a href="%2$s">プライバシーポリシー</a>に同意します]]></string>
     <string name="onboarding_error_terms">魔法を続けるには、利用規約とプライバシーポリシーへの同意が必要です。</string>
-    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
-    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
     <string name="legal_terms_title">利用規約</string>
     <string name="legal_privacy_title">プライバシーポリシー</string>
 
@@ -231,6 +231,11 @@
     <string name="notification_channel_name">お薬リマインダー</string>
     <string name="notification_channel_desc">指定したお薬の服用時間をお知らせします</string>
     <string name="premium_only_feature">プレミアム機能</string>
+    <string name="premium_pass_title">12時間魔法パス</string>
+    <string name="premium_pass_summary">短い動画を見て、12時間すべてのプレミアム機能を開放しましょう！</string>
+    <string name="premium_pass_active">魔法パス有効：残り %1$s</string>
+    <string name="reward_ad_not_ready">魔法の準備がまだできていません。数秒後にもう一度お試しください。</string>
+    <string name="theme_unlock_prompt">動画を見て、このセッションの間このテーマをアンロックしましょう！</string>
 
     <string name="cloud_backup_title">クラウドバックアップ</string>
     <string name="cloud_backup_summary">Google ドライブでデータを保護</string>

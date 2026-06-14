@@ -22,7 +22,13 @@ import java.util.TimerTask;
 
 public class AdMobRewarded extends AdMobAd {
 
+    private AdsManager.OnRewardedFinishedListener mRewardedFinishedListener;
     RewardedAd mRewardedAd;
+
+    public void setRewardedFinishedListener(AdsManager.OnRewardedFinishedListener listener) {
+        this.mRewardedFinishedListener = listener;
+    }
+
     public AdMobRewarded(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
         log("%s Creating object.\n%s",getLogTag() , thisToString());
@@ -77,9 +83,12 @@ public class AdMobRewarded extends AdMobAd {
         }
     }
 
+    private boolean mUserEarnedReward = false;
+
     @Override
     public void show() {
         if (shouldShow() && canShow()) {
+            mUserEarnedReward = false;
             mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdClicked() {
@@ -96,6 +105,12 @@ public class AdMobRewarded extends AdMobAd {
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
+
+                    if (mRewardedFinishedListener != null) {
+                        mRewardedFinishedListener.onRewarded(mUserEarnedReward);
+                        mRewardedFinishedListener = null;
+                    }
+
                     final Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
@@ -116,6 +131,10 @@ public class AdMobRewarded extends AdMobAd {
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
+                    if (mRewardedFinishedListener != null) {
+                        mRewardedFinishedListener.onRewarded(false);
+                        mRewardedFinishedListener = null;
+                    }
                     log("%s Failed to show. Reason is %s.\n%s",getLogTag() ,adError.getMessage(), thisToString());
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.FailedToShow);
                 }
@@ -139,6 +158,7 @@ public class AdMobRewarded extends AdMobAd {
             mRewardedAd.show(getActivity(), new OnUserEarnedRewardListener() {
                 @Override
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    mUserEarnedReward = true;
                     log("%s Rewarded.\n%s",getLogTag() , thisToString());
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Rewarding);
                 }
@@ -153,7 +173,7 @@ public class AdMobRewarded extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        return !com.robinzon.medicationwizard.AppConfig.IS_PREMIUM || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
+        return !com.robinzon.medicationwizard.AppConfig.isPremium(getActivity()) || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
     }
 
     @Override

@@ -55,7 +55,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlin.bom)
+    implementation(platform(libs.kotlin.bom))
     //Ads
     implementation libs.play.services.ads
     implementation libs.firebase.ads
@@ -99,7 +99,7 @@ dependencies {
     implementation libs.androidx.swiperefreshlayout
     //Firebase
     // https://firebase.google.com/docs/android/learn-more#compare-bom-versions
-    implementation libs.firebase.bom
+    implementation platform(libs.firebase.bom)
     implementation libs.firebase.analytics
     implementation libs.firebase.config
     implementation libs.firebase.inappmessaging

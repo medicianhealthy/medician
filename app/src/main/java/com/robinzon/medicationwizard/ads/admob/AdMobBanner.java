@@ -72,7 +72,7 @@ public class AdMobBanner extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        return !com.robinzon.medicationwizard.AppConfig.IS_PREMIUM || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
+        return !com.robinzon.medicationwizard.AppConfig.isPremium(getContext()) || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
     }
 
     private void createAdListener() {

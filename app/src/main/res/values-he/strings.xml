@@ -125,8 +125,8 @@
     <string name="onboarding_desc_3">נהל היסטוריה מפורטת של המסע הבריאותי שלך. זה מושלם לשיתוף עם הצוות הרפואי שלך.</string>
     <string name="onboarding_terms_agree"><![CDATA[אני מסכים ל<a href="%1$s">תנאי השימוש</a> ול<a href="%2$s">מדיניות הפרטיות</a>]]></string>
     <string name="onboarding_error_terms">אנא אשר את תנאי השימוש ומדיניות הפרטיות כדי להמשיך בקסם.</string>
-    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
-    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
     <string name="legal_terms_title">תנאי שימוש</string>
     <string name="legal_privacy_title">מדיניות פרטיות</string>
 
@@ -228,6 +228,11 @@
     <string name="form_inhaler">משאף</string>
     <string name="form_other">אחר</string>
     <string name="premium_only_feature">פיצ\'ר למנויי פרימיום בלבד</string>
+    <string name="premium_pass_title">מנוי קסם ל-12 שעות</string>
+    <string name="premium_pass_summary">צפה בסרטון קצר כדי לפתוח את כל קסמי הפרימיום ל-12 שעות!</string>
+    <string name="premium_pass_active">מנוי קסם פעיל: נותרו %1$s</string>
+    <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
+    <string name="theme_unlock_prompt">צפה בסרטון כדי לפתוח את ערכת הנושא הזו לסשן הנוכחי!</string>
 
     <string name="cloud_backup_title">גיבוי בענן</string>
     <string name="cloud_backup_summary">הגן על הנתונים שלך באמצעות Google Drive</string>

@@ -187,6 +187,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
+            
+            // FIX: If marked as TAKEN or SKIPPED, cancel the future system alarm
+            if (!"SCHEDULED".equals(status)) {
+                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(requireContext(), instance.getId());
+            }
         });
 
         // Track achievements for In-App Review eligibility
@@ -199,6 +204,8 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                     instance.setActionTime(0);
                     AppDatabase.databaseWriteExecutor.execute(() -> {
                         AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
+                        // Re-schedule the alarm since it was undone
+                        com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(requireContext(), instance);
                     });
                 }).show();
         
@@ -232,9 +239,14 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             cal.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour());
             cal.set(java.util.Calendar.MINUTE, picker.getMinute());
             
+            // FIX: Cancel old alarm before updating to new time
+            com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(requireContext(), instance.getId());
+            
             instance.setScheduledTime(cal.getTimeInMillis());
             AppDatabase.databaseWriteExecutor.execute(() -> {
                 AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
+                // Schedule new alarm
+                com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(requireContext(), instance);
             });
         });
 

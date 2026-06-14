@@ -147,8 +147,20 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
 
         // 2. Room logic: Generate and save schedules
         AppDatabase.databaseWriteExecutor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(context);
+            long now = System.currentTimeMillis();
+            
+            // FIX: Cancel all existing future alarms before deleting records and creating new ones
+            long endRange = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
+            List<DoseInstanceEntity> oldInstances = db.doseInstanceDao().getInstancesInRangeInternal(now - 60000, endRange);
+            for (DoseInstanceEntity e : oldInstances) {
+                if (mId.equals(e.getMedicationId())) {
+                    ReminderManager.cancelReminder(context, e.getId());
+                }
+            }
+
             // Remove existing future schedules for this specific medication to avoid duplicates/overlap
-            AppDatabase.getDatabase(context).doseInstanceDao().deleteByMedicationId(mId);
+            db.doseInstanceDao().deleteByMedicationId(mId);
 
             List<DoseInstanceEntity> entities = new ArrayList<>();
             for (int i = 0; i < AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE; i++) {
@@ -163,14 +175,10 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             }
 
             if (!entities.isEmpty()) {
-                AppDatabase db = AppDatabase.getDatabase(context);
                 db.doseInstanceDao().insertAll(entities);
                 
                 // Re-fetch with generated IDs to schedule alarms
-                long now = System.currentTimeMillis();
-                long end = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
-                
-                List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getInstancesInRangeInternal(now, end);
+                List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getInstancesInRangeInternal(now, endRange);
                 for (DoseInstanceEntity e : scheduled) {
                     if (mId.equals(e.getMedicationId())) {
                         ReminderManager.scheduleReminder(context, e);
@@ -229,7 +237,19 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         
         // Purge records from database
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase.getDatabase(context).doseInstanceDao().deleteByMedicationId(id);
+            AppDatabase db = AppDatabase.getDatabase(context);
+            
+            // FIX: Cancel all future alarms for this medication before deleting
+            long now = System.currentTimeMillis();
+            long endRange = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
+            List<DoseInstanceEntity> oldInstances = db.doseInstanceDao().getInstancesInRangeInternal(now - 60000, endRange);
+            for (DoseInstanceEntity e : oldInstances) {
+                if (id.equals(e.getMedicationId())) {
+                    ReminderManager.cancelReminder(context, e.getId());
+                }
+            }
+            
+            db.doseInstanceDao().deleteByMedicationId(id);
         });
     }
 
@@ -243,7 +263,17 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         
         // Wipe database
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase.getDatabase(context).doseInstanceDao().deleteAll();
+            AppDatabase db = AppDatabase.getDatabase(context);
+            
+            // FIX: Cancel all future alarms before clearing database
+            long now = System.currentTimeMillis();
+            long endRange = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
+            List<DoseInstanceEntity> allFuture = db.doseInstanceDao().getInstancesInRangeInternal(now - 60000, endRange);
+            for (DoseInstanceEntity e : allFuture) {
+                ReminderManager.cancelReminder(context, e.getId());
+            }
+            
+            db.doseInstanceDao().deleteAll();
         });
     }
 
@@ -391,6 +421,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
         return this.mCommercialName.compareToIgnoreCase(other.mCommercialName);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Medication{" +

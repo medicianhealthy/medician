@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -36,9 +37,11 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.backup.CloudBackupManager;
 import com.robinzon.medicationwizard.backup.DriveServiceHelper;
 import com.robinzon.medicationwizard.utils.Logger;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.Collections;
 
@@ -149,8 +152,32 @@ public class SettingsFragment extends MedicationWizardFragment {
         setupCloudBackup();
     }
 
+    private final Runnable adAvailabilityListener = this::updateRewardedUi;
+
     private void setupSettings() {
         binding.txtVersion.setText(getString(R.string.settings_version_summary, BuildConfig.VERSION_NAME));
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.getAdsManager().addAdAvailabilityListener(adAvailabilityListener);
+        }
+        updateRewardedUi();
+
+        binding.cardMagicPass.setOnClickListener(v -> {
+            if (mainActivity == null) return;
+            if (mainActivity.getAdsManager().isRewardedLoaded()) {
+                mainActivity.getAdsManager().showRewarded(success -> {
+                    if (success) {
+                        long expiry = System.currentTimeMillis() + (12 * 60 * 60 * 1000);
+                        SharedPreferencesManager.getInstance(requireContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, expiry);
+                        updateRewardedUi();
+                        Snackbar.make(binding.getRoot(), "Premium Magic Unlocked for 12 hours!", Snackbar.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                Snackbar.make(binding.getRoot(), R.string.reward_ad_not_ready, Snackbar.LENGTH_SHORT).show();
+            }
+        });
 
         updateNotificationStatus();
         binding.btnNotifications.setOnClickListener(v -> {
@@ -178,7 +205,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
         
         binding.btnBypassVolume.setOnClickListener(v -> {
-            if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            if (AppConfig.isPremium(requireContext())) {
                 viewModel.setBypassVolume(!Boolean.TRUE.equals(viewModel.getBypassVolume().getValue()));
             } else {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
@@ -301,7 +328,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range)));
 
         binding.btnQuietHours.setOnClickListener(v -> {
-            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            if (!AppConfig.isPremium(requireContext())) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
@@ -328,7 +355,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         updateCloudUi(accountManager, cloudSettings);
 
         View.OnClickListener signInListener = v -> {
-            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            if (!AppConfig.isPremium(requireContext())) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
@@ -350,7 +377,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnAutoBackup.setOnClickListener(v -> {
-            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            if (!AppConfig.isPremium(requireContext())) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
@@ -364,7 +391,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnWifiOnly.setOnClickListener(v -> {
-            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            if (!AppConfig.isPremium(requireContext())) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
@@ -378,7 +405,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnBackupNow.setOnClickListener(v -> {
-            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            if (!AppConfig.isPremium(requireContext())) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
@@ -390,7 +417,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
         
         binding.btnRestoreCloud.setOnClickListener(v -> {
-            if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+            if (!AppConfig.isPremium(requireContext())) {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
                 return;
             }
@@ -464,7 +491,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     }
 
     private void updateCloudUi(GoogleAccountManager accountManager, CloudBackupSettings cloudSettings) {
-        boolean isPremium = com.robinzon.medicationwizard.AppConfig.IS_PREMIUM;
+        boolean isPremium = com.robinzon.medicationwizard.AppConfig.isPremium(requireContext());
         
         // Check real Google Sign In state
         GoogleSignInAccount googleAccount = GoogleSignIn.getLastSignedInAccount(requireContext());
@@ -606,6 +633,34 @@ public class SettingsFragment extends MedicationWizardFragment {
         boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
         binding.switchNotifications.setChecked(isGranted);
         binding.containerAlertDetails.setVisibility(isGranted ? View.VISIBLE : View.GONE);
+    }
+
+    private void updateRewardedUi() {
+        if (getContext() == null || binding == null) return;
+        boolean isFullPremium = AppConfig.IS_PREMIUM;
+        long expiry = SharedPreferencesManager.getInstance(requireContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
+        boolean isTempPremium = System.currentTimeMillis() < expiry;
+        
+        MainActivity mainActivity = (MainActivity) getActivity();
+        boolean rvLoaded = mainActivity != null && mainActivity.getAdsManager().isRewardedLoaded();
+
+        if (isFullPremium) {
+            binding.cardMagicPass.setVisibility(View.GONE);
+            ((MaterialButton) binding.btnThemeDark).setIcon(null);
+        } else if (isTempPremium) {
+            binding.cardMagicPass.setVisibility(View.VISIBLE);
+            binding.txtMagicPassTitle.setText(R.string.premium_pass_active);
+            long diff = expiry - System.currentTimeMillis();
+            long hours = diff / (60 * 60 * 1000);
+            long mins = (diff % (60 * 60 * 1000)) / (60 * 1000);
+            binding.txtMagicPassSummary.setText(String.format(java.util.Locale.getDefault(), "%02dh %02dm remaining", hours, mins));
+            ((MaterialButton) binding.btnThemeDark).setIcon(null);
+        } else {
+            binding.cardMagicPass.setVisibility(rvLoaded ? View.VISIBLE : View.GONE);
+            binding.txtMagicPassTitle.setText(R.string.premium_pass_title);
+            binding.txtMagicPassSummary.setText(R.string.premium_pass_summary);
+            ((MaterialButton) binding.btnThemeDark).setIconResource(R.drawable.ic_magic_wand);
+        }
     }
 
     @Override

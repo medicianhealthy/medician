@@ -2,9 +2,12 @@ package com.robinzon.medicationwizard.notifications;
 
 import android.app.Activity;
 
+import com.google.android.ump.ConsentDebugSettings;
 import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.UserMessagingPlatform;
+import com.robinzon.medicationwizard.BuildConfig;
+import com.robinzon.medicationwizard.utils.Logger;
 
 /**
  * Orchestrates the Google User Messaging Platform (UMP) SDK flow.
@@ -36,15 +39,28 @@ public class ConsentManager {
      * @param listener The listener to notify upon completion.
      */
     public static void gatherConsent(Activity activity, OnConsentFinishedListener listener) {
-        ConsentRequestParameters params = new ConsentRequestParameters.Builder()
-                .setTagForUnderAgeOfConsent(false)
-                .build();
+        ConsentRequestParameters.Builder paramsBuilder = new ConsentRequestParameters.Builder()
+                .setTagForUnderAgeOfConsent(false);
+
+        if (BuildConfig.DEBUG) {
+            ConsentDebugSettings debugSettings = new ConsentDebugSettings.Builder(activity)
+                    .setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
+                    .addTestDeviceHashedId("D66793A602B7390D434222E426F66E74") // Emulator ID
+                    .build();
+            paramsBuilder.setConsentDebugSettings(debugSettings);
+            Logger.log("ConsentManager", "Debug mode active: Forcing EEA geography.");
+        }
+
+        ConsentRequestParameters params = paramsBuilder.build();
 
         ConsentInformation consentInformation = UserMessagingPlatform.getConsentInformation(activity);
         consentInformation.requestConsentInfoUpdate(
                 activity,
                 params,
                 () -> {
+                    Logger.log("ConsentManager", "Consent info updated. Form available: " + consentInformation.isConsentFormAvailable() 
+                        + ", Status: " + consentInformation.getConsentStatus());
+                    
                     // Check if a consent form is available and required
                     if (consentInformation.isConsentFormAvailable()) {
                         loadAndShowForm(activity, listener);
@@ -54,6 +70,7 @@ public class ConsentManager {
                     }
                 },
                 requestConsentError -> {
+                    Logger.log("ConsentManager", "Consent update failed: " + requestConsentError.getMessage());
                     // Consent info update failed; proceed with cautious initialization
                     if (listener != null) listener.onFinished();
                 });
@@ -63,9 +80,15 @@ public class ConsentManager {
      * Loads and presents the official Google consent form.
      */
     private static void loadAndShowForm(Activity activity, OnConsentFinishedListener listener) {
+        Logger.log("ConsentManager", "Loading and showing form...");
         UserMessagingPlatform.loadAndShowConsentFormIfRequired(
                 activity,
                 formError -> {
+                    if (formError != null) {
+                        Logger.log("ConsentManager", "Form error: " + formError.getMessage());
+                    } else {
+                        Logger.log("ConsentManager", "Form flow finished successfully.");
+                    }
                     // Form flow finished (either dismissed or error)
                     if (listener != null) listener.onFinished();
                 }

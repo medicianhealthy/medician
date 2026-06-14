@@ -147,7 +147,7 @@ public class AdMobAppOpen extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(getActivity()) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
             return false;
         }
         return getAdsManager().hasCoolDownForFullScreenNonUserInitiatedAd();

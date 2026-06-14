@@ -37,7 +37,7 @@ public class CloudBackupManager {
      * Performs a full backup of medications and history to Google Drive appDataFolder.
      */
     public Task<Void> backupToCloud() {
-        if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+        if (!com.robinzon.medicationwizard.AppConfig.isPremium(mContext)) {
             Logger.log("CloudBackupManager", "Skipping backup: User is not premium");
             return Tasks.forResult(null);
         }

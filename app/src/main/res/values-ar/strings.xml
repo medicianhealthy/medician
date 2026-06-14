@@ -125,8 +125,8 @@
     <string name="onboarding_desc_3">احتفظ بسجل مفصل لرحلتك الصحية. إنه مثالي لمشاركته مع مقدم الرعاية الصحية الخاص بك.</string>
     <string name="onboarding_terms_agree"><![CDATA[أنا أوافق على <a href="%1$s">شروط الاستخدام</a> و <a href="%2$s">سياسة الخصوصية</a>]]></string>
     <string name="onboarding_error_terms">يرجى الموافقة على الشروط وسياسة الخصوصية لمتابعة السحر.</string>
-    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
-    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
     <string name="legal_terms_title">شروط الاستخدام</string>
     <string name="legal_privacy_title">سياسة الخصوصية</string>
 
@@ -231,6 +231,11 @@
     <string name="notification_channel_name">تذكيرات الأدوية</string>
     <string name="notification_channel_desc">تذكيرات لتناول أدويتك المجدولة</string>
     <string name="premium_only_feature">ميزة متاحة لمشتركي بريميوم فقط</string>
+    <string name="premium_pass_title">بطاقة سحرية لمدة ١٢ ساعة</string>
+    <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل ميزات البريميوم لمدة ١٢ ساعة!</string>
+    <string name="premium_pass_active">البطاقة السحرية مفعلة: متبقي %1$s</string>
+    <string name="reward_ad_not_ready">السحر ليس جاهزاً بعد. يرجى المحاولة مرة أخرى بعد ثوانٍ.</string>
+    <string name="theme_unlock_prompt">شاهد فيديو لفتح هذا الثيم لهذه الجلسة!</string>
 
     <string name="cloud_backup_title">النسخ الاحتياطي السحابي</string>
     <string name="cloud_backup_summary">احمِ بياناتك باستخدام Google Drive</string>

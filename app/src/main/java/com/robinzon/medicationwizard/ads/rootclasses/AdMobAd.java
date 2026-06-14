@@ -105,7 +105,7 @@ public abstract class AdMobAd {
 
     @Nullable
     protected Boolean shouldBeLoaded() {
-        if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(getContext()) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
             return false;
         }
         final Context applicationContext = getContext().getApplicationContext();

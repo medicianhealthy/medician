@@ -35,7 +35,7 @@ public class CloudBackupWorker extends Worker {
         
         Context context = getApplicationContext();
         
-        if (!com.robinzon.medicationwizard.AppConfig.IS_PREMIUM) {
+        if (!com.robinzon.medicationwizard.AppConfig.isPremium(getApplicationContext())) {
             Logger.log("CloudBackupWorker", "User is not premium, skipping backup");
             return Result.success();
         }

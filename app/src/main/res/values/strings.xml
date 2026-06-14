@@ -139,8 +139,8 @@
     <string name="onboarding_desc_3">Keep a detailed history of your health journey. It’s perfect for sharing with your healthcare provider.</string>
     <string name="onboarding_terms_agree"><![CDATA[I agree to the <a href="%1$s">Terms of Use</a> and <a href="%2$s">Privacy Policy</a>]]></string>
     <string name="onboarding_error_terms">Please agree to the Terms and Privacy Policy to continue the magic.</string>
-    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
-    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
     <string name="legal_terms_title">Terms of Use</string>
     <string name="legal_privacy_title">Privacy Policy</string>
 
@@ -246,6 +246,11 @@
     <string name="notification_channel_name">Medication Reminders</string>
     <string name="notification_channel_desc">Reminders to take your scheduled medications</string>
     <string name="premium_only_feature">Premium only feature</string>
+    <string name="premium_pass_title">12h Magic Pass</string>
+    <string name="premium_pass_summary">Watch a short video to unlock all Premium magic for 12 hours!</string>
+    <string name="premium_pass_active">Magic Pass Active: %1$s left</string>
+    <string name="reward_ad_not_ready">The Magic isn\'t ready yet. Please try again in a few seconds.</string>
+    <string name="theme_unlock_prompt">Watch a video to unlock this theme for this session!</string>
 
     <string name="cloud_backup_title">Cloud Backup</string>
     <string name="cloud_backup_summary">Protect your data with Google Drive</string>

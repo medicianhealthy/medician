@@ -125,8 +125,8 @@
     <string name="onboarding_desc_3">Führe einen detaillierten Verlauf deiner Gesundheitsreise. Perfekt, um ihn mit deinem Arzt zu teilen.</string>
     <string name="onboarding_terms_agree"><![CDATA[Ich stimme den <a href="%1$s">Nutzungsbedingungen</a> und der <a href="%2$s">Datenschutzerklärung</a> zu]]></string>
     <string name="onboarding_error_terms">Bitte stimme den Bedingungen und der Datenschutzerklärung zu, um den Zauber fortzusetzen.</string>
-    <string name="url_terms">https://medicianhealthy.github.io/terms-of-use/index.html</string>
-    <string name="url_privacy">https://medicianhealthy.github.io/privacy-policy/index.html</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
     <string name="legal_terms_title">Nutzungsbedingungen</string>
     <string name="legal_privacy_title">Datenschutzerklärung</string>
 
@@ -231,6 +231,11 @@
     <string name="notification_channel_name">Medikamenten-Erinnerungen</string>
     <string name="notification_channel_desc">Erinnerungen zur Einnahme deiner geplanten Medikamente</string>
     <string name="premium_only_feature">Nur für Premium-Mitglieder</string>
+    <string name="premium_pass_title">12h Zauber-Pass</string>
+    <string name="premium_pass_summary">Schau dir ein kurzes Video an, um die gesamte Premium-Magie für 12 Stunden freizuschalten!</string>
+    <string name="premium_pass_active">Zauber-Pass Aktiv: %1$s verbleibend</string>
+    <string name="reward_ad_not_ready">Die Magie ist noch nicht bereit. Bitte versuche es in ein paar Sekunden erneut.</string>
+    <string name="theme_unlock_prompt">Schau dir ein Video an, um dieses Design für diese Sitzung freizuschalten!</string>
 
     <string name="cloud_backup_title">Cloud-Backup</string>
     <string name="cloud_backup_summary">Schütze deine Daten mit Google Drive</string>

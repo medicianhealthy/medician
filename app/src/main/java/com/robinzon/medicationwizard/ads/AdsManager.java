@@ -19,6 +19,10 @@ import java.util.ArrayList;
 public class AdsManager implements OnAdActionListener{
 
 
+    public interface OnRewardedFinishedListener {
+        void onRewarded(boolean success);
+    }
+
     private final Activity mActivity;
     private AdMobBanner mMainBanner;
     private AdMobInterstitial mMainInterstitial;
@@ -28,9 +32,26 @@ public class AdsManager implements OnAdActionListener{
     private ArrayList<AdMobAd> mAdsCollections;
     private long mFullAdDismissedTimeStamp;
     private long mBannerClickTimeStamp;
+    private final java.util.List<Runnable> mAdAvailabilityListeners = new java.util.ArrayList<>();
 
     public AdsManager(final @NonNull Activity activity) {
         this.mActivity = activity;
+    }
+
+    public void addAdAvailabilityListener(Runnable listener) {
+        mAdAvailabilityListeners.add(listener);
+    }
+
+    public void removeAdAvailabilityListener(Runnable listener) {
+        mAdAvailabilityListeners.remove(listener);
+    }
+
+    private void notifyAvailabilityChanged() {
+        mActivity.runOnUiThread(() -> {
+            for (Runnable listener : mAdAvailabilityListeners) {
+                listener.run();
+            }
+        });
     }
 
     public Activity getActivity() {
@@ -139,7 +160,7 @@ public class AdsManager implements OnAdActionListener{
 
     /** @noinspection unused*/
     public void showInterstitialAd() {
-        if (com.robinzon.medicationwizard.AppConfig.IS_PREMIUM && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(mActivity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
 
         if (null != mMainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             if (shouldShowInterstitialBasedOnUsage()) {
@@ -157,10 +178,17 @@ public class AdsManager implements OnAdActionListener{
         return sessions >= 2 || minutes >= 2.0f;
     }
     /** @noinspection unused*/
-    public void showRewarded() {
+    public void showRewarded(OnRewardedFinishedListener listener) {
         if (null != mMainRewarded) {
+            mMainRewarded.setRewardedFinishedListener(listener);
             mMainRewarded.show();
+        } else if (listener != null) {
+            listener.onRewarded(false);
         }
+    }
+
+    public boolean isRewardedLoaded() {
+        return mMainRewarded != null && mMainRewarded.isLoaded();
     }
 
     public void showAppOpenAd() {
@@ -172,6 +200,11 @@ public class AdsManager implements OnAdActionListener{
     @Override
     public void onAdAction(@NonNull AdMobAd adMobAd, AdAction adAction) {
         final AdType adType = adMobAd.getAdType();
+        
+        if (adAction == AdAction.LoadedSuccessfully || adAction == AdAction.FailedToLoad || adAction == AdAction.Dismissed) {
+            notifyAvailabilityChanged();
+        }
+
         final String AD_ACTIONS = "medi_ad_actions";
         final String CLASS_NAME = AdsManager.class.getSimpleName();
         Logger.log(AD_ACTIONS, "%s ad action: %s, " +
