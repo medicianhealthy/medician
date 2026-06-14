@@ -255,6 +255,9 @@ public class AdsManager implements OnAdActionListener{
 
     @SuppressWarnings("SameReturnValue")
     private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
-        return 180L; // 3 minutes
+        // Refined Hybrid Cooldown: 120 seconds (2 minutes).
+        // A compromise between the aggressive 60-90s of Casual Gaming and the 
+        // high-trust expectations of a Medical Utility app.
+        return 120L;
     }
 }
