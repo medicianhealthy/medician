@@ -54,8 +54,9 @@ public class ReminderManager {
         // Allow a 1-minute grace period for "now" reminders to account for processing time
         if (time < System.currentTimeMillis() - 60000) return;
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, ReminderReceiver.class);
+        Context appContext = context.getApplicationContext();
+        AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(appContext, ReminderReceiver.class);
         intent.setAction(ReminderReceiver.ACTION_REMIND);
         intent.putExtra(ReminderReceiver.EXTRA_INSTANCE_ID, instance.getId());
         intent.putExtra(ReminderReceiver.EXTRA_MED_NAME, instance.getMedicationName());
@@ -64,7 +65,7 @@ public class ReminderManager {
 
         // Use instance.getId() as the requestCode to keep individual alarms unique
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context, 
+                appContext, 
                 instance.getId(), 
                 intent, 
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
@@ -94,12 +95,13 @@ public class ReminderManager {
      * @param instanceId The unique ID of the dose instance (matches the requestCode).
      */
     public static void cancelReminder(Context context, int instanceId) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, ReminderReceiver.class);
+        Context appContext = context.getApplicationContext();
+        AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(appContext, ReminderReceiver.class);
         intent.setAction(ReminderReceiver.ACTION_REMIND);
         
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context, 
+                appContext, 
                 instanceId, 
                 intent, 
                 PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
@@ -107,6 +109,8 @@ public class ReminderManager {
 
         if (alarmManager != null && pendingIntent != null) {
             alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+            com.robinzon.medicationwizard.utils.Logger.log("ReminderManager", "Successfully cancelled alarm ID: " + instanceId);
         }
     }
 }

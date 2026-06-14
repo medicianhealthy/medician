@@ -26,7 +26,8 @@ import java.lang.ref.WeakReference;
 
 public class NotificationManager implements DialogInterface.OnClickListener, DialogInterface.OnDismissListener {
 
-    public static final String CHANNEL_ID = "medication_reminders";
+    // REFINED: V2 Channel ID to force-apply the 'No Sound' setting on existing installs
+    public static final String CHANNEL_ID = "medication_reminders_v2";
 
     private static final String SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL = "do_not_show_rational";
     private static final String SHARED_PREF_KEY_REFUSE_COUNT = "refuse_count";
@@ -41,14 +42,24 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
 
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Delete old channel if it exists to clean up
+            android.app.NotificationManager manager = context.getSystemService(android.app.NotificationManager.class);
+            if (manager != null) {
+                manager.deleteNotificationChannel("medication_reminders");
+            }
+
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     context.getString(R.string.notification_channel_name),
                     android.app.NotificationManager.IMPORTANCE_HIGH
             );
             channel.setDescription(context.getString(R.string.notification_channel_desc));
+            
+            // FIX: Silence the system sound so we only hear the app's custom MediaPlayer alert.
+            // This prevents the "Double Sound" issue.
+            channel.setSound(null, null);
+            channel.enableVibration(true);
 
-            android.app.NotificationManager manager = context.getSystemService(android.app.NotificationManager.class);
             if (manager != null) {
                 manager.createNotificationChannel(channel);
             }
