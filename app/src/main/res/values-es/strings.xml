@@ -242,8 +242,9 @@
     <string name="sign_in_error_generic">Ocurrió algo inesperado al conectar con tu cuenta. Por favor, inténtalo de nuevo en un momento.</string>
     <string name="sign_in_error_btn_retry">Intentar de nuevo</string>
     <string name="reward_ad_not_ready">La magia aún no está lista. Inténtalo de nuevo en unos segundos.</string>
-    <string name="theme_unlock_prompt">¡Mira un video para desbloquear este tema para esta sesión!</string>
-
+    <string name="theme_unlock_title">Desbloquear este tema</string>
+    <string name="theme_unlock_prompt">¡Mira un video corto para desbloquear este tema y toda la magia Premium por 12 horas!</string>
+    <string name="premium_pass_btn_watch">Ver video</string>
     <string name="cloud_backup_title">Copia en la Nube</string>
     <string name="cloud_backup_summary">Protege tus datos con Google Drive</string>
     <string name="cloud_backup_sign_in_hint">Inicia sesión para proteger tus datos</string>

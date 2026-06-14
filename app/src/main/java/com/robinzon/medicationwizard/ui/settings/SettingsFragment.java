@@ -53,6 +53,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     private FragmentSettingsBinding binding;
     private SettingsViewModel viewModel;
     private GoogleSignInClient mGoogleSignInClient;
+    private boolean isThemeReverting = false;
 
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -271,7 +272,28 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.toggleGroupTheme.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (!isChecked) return;
+            if (!isChecked || isThemeReverting) return;
+            
+            // "System" is free, Light/Dark require Premium/Ad
+            if (checkedId != R.id.btn_theme_system && !AppConfig.isPremium(requireContext())) {
+                isThemeReverting = true;
+                
+                // Revert UI selection to current theme
+                Integer currentTheme = viewModel.getTheme().getValue();
+                int currentId = (currentTheme != null && currentTheme == SettingsViewModel.THEME_LIGHT) ? R.id.btn_theme_light : 
+                                (currentTheme != null && currentTheme == SettingsViewModel.THEME_DARK) ? R.id.btn_theme_dark : R.id.btn_theme_system;
+                
+                // Show prompt to watch ad to unlock theme
+                showThemeUnlockAdDialog(checkedId);
+                
+                // Re-check the previous one to avoid visual mismatch
+                group.post(() -> {
+                    group.check(currentId);
+                    isThemeReverting = false;
+                });
+                return;
+            }
+
             int theme = (checkedId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : 
                         (checkedId == R.id.btn_theme_dark) ? SettingsViewModel.THEME_DARK : SettingsViewModel.THEME_SYSTEM;
             viewModel.setTheme(theme);
@@ -692,6 +714,38 @@ public class SettingsFragment extends MedicationWizardFragment {
                 .show();
     }
 
+    private void showThemeUnlockAdDialog(int targetThemeId) {
+        if (getContext() == null) return;
+        
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.theme_unlock_title)
+                .setMessage(R.string.theme_unlock_prompt)
+                .setPositiveButton(R.string.premium_pass_btn_watch, (dialog, which) -> {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    if (mainActivity != null && mainActivity.getAdsManager().isRewardedLoaded()) {
+                        mainActivity.getAdsManager().showRewarded(success -> {
+                            if (success && getContext() != null) {
+                                long currentExpiry = SharedPreferencesManager.getInstance(getContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
+                                long baseTime = Math.max(System.currentTimeMillis(), currentExpiry);
+                                long newExpiry = baseTime + (12 * 60 * 60 * 1000);
+                                
+                                SharedPreferencesManager.getInstance(getContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, newExpiry);
+                                
+                                int theme = (targetThemeId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : SettingsViewModel.THEME_DARK;
+                                viewModel.setTheme(theme);
+                                
+                                updateRewardedUi();
+                                Snackbar.make(binding.getRoot(), getString(R.string.premium_pass_active), Snackbar.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        Snackbar.make(binding.getRoot(), R.string.reward_ad_not_ready, Snackbar.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
     private void updateNotificationStatus() {
         boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
         binding.switchNotifications.setChecked(isGranted);
@@ -709,6 +763,7 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         if (isFullPremium) {
             binding.cardMagicPass.setVisibility(View.GONE);
+            ((MaterialButton) binding.btnThemeLight).setIcon(null);
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else if (isTempPremium) {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
@@ -719,6 +774,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             long mins = (diff % (60 * 60 * 1000)) / (60 * 1000);
             String timeLeft = getString(R.string.premium_pass_remaining_format, hours, mins);
             binding.txtMagicPassSummary.setText(rvLoaded ? timeLeft : getString(R.string.loading_magic));
+            ((MaterialButton) binding.btnThemeLight).setIcon(null);
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
@@ -734,6 +790,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                 // Keep enabled so the user can click to see the "Not ready" snackbar
                 binding.cardMagicPass.setEnabled(true);
             }
+            ((MaterialButton) binding.btnThemeLight).setIconResource(R.drawable.ic_magic_wand);
             ((MaterialButton) binding.btnThemeDark).setIconResource(R.drawable.ic_magic_wand);
         }
     }

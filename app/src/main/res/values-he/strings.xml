@@ -239,8 +239,9 @@
     <string name="sign_in_error_generic">משהו לא צפוי קרה בזמן החיבור לחשבון שלך. אנא נסו שוב בעוד רגע.</string>
     <string name="sign_in_error_btn_retry">נסה שוב</string>
     <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
-    <string name="theme_unlock_prompt">צפה בסרטון כדי לפתוח את ערכת הנושא הזו לסשן הנוכחי!</string>
-
+    <string name="theme_unlock_title">פתיחת ערכת נושא</string>
+    <string name="theme_unlock_prompt">צפה בסרטון קצר כדי לפתוח את ערכת הנושא הזו ואת כל שאר קסמי הפרימיום ל-12 שעות!</string>
+    <string name="premium_pass_btn_watch">צפה בסרטון</string>
     <string name="cloud_backup_title">גיבוי בענן</string>
     <string name="cloud_backup_summary">הגן על הנתונים שלך באמצעות Google Drive</string>
     <string name="cloud_backup_sign_in_hint">התחבר כדי להגן על הנתונים שלך</string>

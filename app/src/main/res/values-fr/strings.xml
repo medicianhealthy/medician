@@ -242,8 +242,9 @@
     <string name="sign_in_error_generic">Une erreur inattendue s\'est produite lors de la connexion à votre compte. Veuillez réessayer dans un instant.</string>
     <string name="sign_in_error_btn_retry">Réessayer</string>
     <string name="reward_ad_not_ready">La magie n\'est pas encore prête. Veuillez réessayer dans quelques secondes.</string>
-    <string name="theme_unlock_prompt">Regardez une vidéo pour débloquer ce thème pour cette session !</string>
-
+    <string name="theme_unlock_title">Débloquer ce thème</string>
+    <string name="theme_unlock_prompt">Regardez une courte vidéo pour débloquer ce thème et toute la magie Premium pendant 12 heures !</string>
+    <string name="premium_pass_btn_watch">Regarder la vidéo</string>
     <string name="cloud_backup_title">Sauvegarde Cloud</string>
     <string name="cloud_backup_summary">Protégez vos données avec Google Drive</string>
     <string name="cloud_backup_sign_in_hint">Connectez-vous pour protéger vos données</string>
