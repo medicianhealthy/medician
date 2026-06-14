@@ -165,13 +165,18 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         binding.cardMagicPass.setOnClickListener(v -> {
             if (mainActivity == null) return;
+
+            // Allow clicking even if active to "extend" or re-apply magic
             if (mainActivity.getAdsManager().isRewardedLoaded()) {
                 mainActivity.getAdsManager().showRewarded(success -> {
-                    if (success) {
-                        long expiry = System.currentTimeMillis() + (12 * 60 * 60 * 1000);
-                        SharedPreferencesManager.getInstance(requireContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, expiry);
+                    if (success && getContext() != null) {
+                        long currentExpiry = SharedPreferencesManager.getInstance(getContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
+                        long baseTime = Math.max(System.currentTimeMillis(), currentExpiry);
+                        long newExpiry = baseTime + (12 * 60 * 60 * 1000);
+                        
+                        SharedPreferencesManager.getInstance(getContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, newExpiry);
                         updateRewardedUi();
-                        Snackbar.make(binding.getRoot(), "Premium Magic Unlocked for 12 hours!", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(binding.getRoot(), getString(R.string.premium_pass_active), Snackbar.LENGTH_LONG).show();
                     }
                 });
             } else {
@@ -181,6 +186,10 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         updateNotificationStatus();
         binding.btnNotifications.setOnClickListener(v -> {
+            if (!AppConfig.isPremium(requireContext())) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
             boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
             if (!isGranted) {
                 NotificationManager.getInstance(requireActivity()).requestPermissionIfNeeded();
@@ -193,10 +202,14 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name)));
         
         binding.btnNotifSound.setOnClickListener(v -> {
-            SoundPickerBottomSheet picker = new SoundPickerBottomSheet();
-            picker.setCurrentSoundUri(viewModel.getSoundUri().getValue());
-            picker.setOnSoundSelectedListener((name, uri) -> viewModel.setSound(name, uri));
-            picker.show(getChildFragmentManager(), "SoundPicker");
+            if (AppConfig.isPremium(requireContext())) {
+                SoundPickerBottomSheet picker = new SoundPickerBottomSheet();
+                picker.setCurrentSoundUri(viewModel.getSoundUri().getValue());
+                picker.setOnSoundSelectedListener((name, uri) -> viewModel.setSound(name, uri));
+                picker.show(getChildFragmentManager(), "SoundPicker");
+            } else {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+            }
         });
 
         viewModel.getBypassVolume().observe(getViewLifecycleOwner(), bypass -> {
@@ -250,6 +263,10 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnLanguage.setOnClickListener(v -> {
+            if (!AppConfig.isPremium(requireContext())) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
             String[] langs = {
                     getString(R.string.lang_english),
                     getString(R.string.lang_hebrew),
@@ -300,6 +317,10 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnBackup.setOnClickListener(v -> {
+            if (!AppConfig.isPremium(requireContext())) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
             String[] options = {getString(R.string.backup_export), getString(R.string.backup_import)};
             new MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.settings_backup_title)
@@ -338,14 +359,26 @@ public class SettingsFragment extends MedicationWizardFragment {
         viewModel.getSnoozeDuration().observe(getViewLifecycleOwner(), mins -> 
             binding.txtSnoozeDurationDesc.setText(getString(R.string.settings_snooze_duration_summary, mins)));
         
-        binding.btnSnoozeDuration.setOnClickListener(v -> showSnoozeDurationPicker());
+        binding.btnSnoozeDuration.setOnClickListener(v -> {
+            if (!AppConfig.isPremium(requireContext())) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            showSnoozeDurationPicker();
+        });
 
         viewModel.getMaxSnoozes().observe(getViewLifecycleOwner(), max -> {
             if (max != null && max == -1) binding.txtMaxSnoozesDesc.setText(R.string.settings_max_snoozes_unlimited_summary);
             else binding.txtMaxSnoozesDesc.setText(getString(R.string.settings_max_snoozes_summary, String.valueOf(max)));
         });
 
-        binding.btnMaxSnoozes.setOnClickListener(v -> showMaxSnoozesPicker());
+        binding.btnMaxSnoozes.setOnClickListener(v -> {
+            if (!AppConfig.isPremium(requireContext())) {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+                return;
+            }
+            showMaxSnoozesPicker();
+        });
     }
 
     private void setupCloudBackup() {
@@ -649,6 +682,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else if (isTempPremium) {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
+            binding.cardMagicPass.setAlpha(1.0f);
             binding.txtMagicPassTitle.setText(R.string.premium_pass_active);
             long diff = expiry - System.currentTimeMillis();
             long hours = diff / (60 * 60 * 1000);
@@ -656,9 +690,19 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.txtMagicPassSummary.setText(String.format(java.util.Locale.getDefault(), "%02dh %02dm remaining", hours, mins));
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else {
-            binding.cardMagicPass.setVisibility(rvLoaded ? View.VISIBLE : View.GONE);
+            binding.cardMagicPass.setVisibility(View.VISIBLE);
             binding.txtMagicPassTitle.setText(R.string.premium_pass_title);
-            binding.txtMagicPassSummary.setText(R.string.premium_pass_summary);
+            
+            if (rvLoaded) {
+                binding.cardMagicPass.setAlpha(1.0f);
+                binding.txtMagicPassSummary.setText(R.string.premium_pass_summary);
+                binding.cardMagicPass.setEnabled(true);
+            } else {
+                binding.cardMagicPass.setAlpha(0.6f);
+                binding.txtMagicPassSummary.setText(R.string.reward_ad_not_ready);
+                // Keep enabled so the user can click to see the "Not ready" snackbar
+                binding.cardMagicPass.setEnabled(true);
+            }
             ((MaterialButton) binding.btnThemeDark).setIconResource(R.drawable.ic_magic_wand);
         }
     }

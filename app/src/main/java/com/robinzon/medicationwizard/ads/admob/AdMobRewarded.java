@@ -173,7 +173,8 @@ public class AdMobRewarded extends AdMobAd {
 
     @Override
     public boolean shouldShow() {
-        return !com.robinzon.medicationwizard.AppConfig.isPremium(getActivity()) || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
+        // user initiated reward should show even if premium to allow extension 
+        return true;
     }
 
     @Override
