@@ -56,7 +56,16 @@ public class SettingsViewModel extends AndroidViewModel {
         super(application);
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(application);
         
-        mTheme.setValue(sp.getInt(KEY_APP_THEME, THEME_SYSTEM));
+        int savedTheme = sp.getInt(KEY_APP_THEME, THEME_SYSTEM);
+        
+        // Auto-reversion: If the theme is restricted but the user is no longer premium, revert to System.
+        if (savedTheme != THEME_SYSTEM && !com.robinzon.medicationwizard.AppConfig.isPremium(application)) {
+            savedTheme = THEME_SYSTEM;
+            sp.setInt(KEY_APP_THEME, THEME_SYSTEM);
+            // Note: We don't call applyTheme here to avoid configuration change loops during init.
+        }
+
+        mTheme.setValue(savedTheme);
 
         String start = sp.getString(KEY_QUIET_HOURS_START, "23:00");
         String end = sp.getString(KEY_QUIET_HOURS_END, "07:00");

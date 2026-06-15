@@ -754,10 +754,20 @@ public class SettingsFragment extends MedicationWizardFragment {
 
     private void updateRewardedUi() {
         if (getContext() == null || binding == null) return;
+        
         boolean isFullPremium = AppConfig.IS_PREMIUM;
         long expiry = SharedPreferencesManager.getInstance(requireContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
         boolean isTempPremium = System.currentTimeMillis() < expiry;
-        
+        boolean isPremium = isFullPremium || isTempPremium;
+
+        // Auto-reversion: If the theme is restricted but the user is no longer premium, revert to System.
+        Integer currentTheme = viewModel.getTheme().getValue();
+        if (currentTheme != null && currentTheme != SettingsViewModel.THEME_SYSTEM && !isPremium) {
+            isThemeReverting = true;
+            viewModel.setTheme(SettingsViewModel.THEME_SYSTEM);
+            isThemeReverting = false;
+        }
+
         MainActivity mainActivity = (MainActivity) getActivity();
         boolean rvLoaded = mainActivity != null && mainActivity.getAdsManager().isRewardedLoaded();
 
