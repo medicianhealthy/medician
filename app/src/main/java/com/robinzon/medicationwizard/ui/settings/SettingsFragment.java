@@ -192,7 +192,6 @@ public class SettingsFragment extends MedicationWizardFragment {
         if (mainActivity != null) {
             mainActivity.getAdsManager().addAdAvailabilityListener(adAvailabilityListener);
         }
-        updateRewardedUi();
 
         binding.cardMagicPass.setOnClickListener(v -> {
             if (mainActivity == null) return;
@@ -431,6 +430,9 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
             showMaxSnoozesPicker();
         });
+
+        // Initialize UI state based on current premium status
+        updateRewardedUi();
     }
 
     private void setupCloudBackup() {
@@ -763,9 +765,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         // Auto-reversion: If the theme is restricted but the user is no longer premium, revert to System.
         Integer currentTheme = viewModel.getTheme().getValue();
         if (currentTheme != null && currentTheme != SettingsViewModel.THEME_SYSTEM && !isPremium) {
+            // Signal to the listener to ignore this programmatic change
             isThemeReverting = true;
             viewModel.setTheme(SettingsViewModel.THEME_SYSTEM);
-            isThemeReverting = false;
+            // We'll reset this flag after a short delay to ensure the observer/listener cycle completes
+            binding.getRoot().postDelayed(() -> isThemeReverting = false, 100);
         }
 
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -773,6 +777,7 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         if (isFullPremium) {
             binding.cardMagicPass.setVisibility(View.GONE);
+            binding.imgMagicPassStatus.setVisibility(View.GONE);
             ((MaterialButton) binding.btnThemeLight).setIcon(null);
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else if (isTempPremium) {
@@ -784,11 +789,20 @@ public class SettingsFragment extends MedicationWizardFragment {
             long mins = (diff % (60 * 60 * 1000)) / (60 * 1000);
             String timeLeft = getString(R.string.premium_pass_remaining_format, hours, mins);
             binding.txtMagicPassSummary.setText(rvLoaded ? timeLeft : getString(R.string.loading_magic));
+            
+            // Show Checkmark for active pass
+            binding.imgMagicPassStatus.setVisibility(View.VISIBLE);
+            binding.imgMagicPassStatus.setImageResource(R.drawable.ic_done_pill);
+            
             ((MaterialButton) binding.btnThemeLight).setIcon(null);
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
             binding.txtMagicPassTitle.setText(R.string.premium_pass_title);
+            
+            // Show Magic Wand for inactive pass
+            binding.imgMagicPassStatus.setVisibility(View.VISIBLE);
+            binding.imgMagicPassStatus.setImageResource(R.drawable.ic_magic_wand);
             
             if (rvLoaded) {
                 binding.cardMagicPass.setAlpha(1.0f);
@@ -797,7 +811,6 @@ public class SettingsFragment extends MedicationWizardFragment {
             } else {
                 binding.cardMagicPass.setAlpha(0.6f);
                 binding.txtMagicPassSummary.setText(R.string.loading_magic);
-                // Keep enabled so the user can click to see the "Not ready" snackbar
                 binding.cardMagicPass.setEnabled(true);
             }
             ((MaterialButton) binding.btnThemeLight).setIconResource(R.drawable.ic_magic_wand);
@@ -809,6 +822,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     public void onResume() {
         super.onResume();
         updateNotificationStatus();
+        updateRewardedUi();
         
         // Sync account info with Google Sign In state
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());

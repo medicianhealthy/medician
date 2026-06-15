@@ -532,6 +532,7 @@
                             android:focusable="false" />
                     </LinearLayout>
                     <ImageView
+                        android:id="@+id/img_magic_pass_status"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         app:srcCompat="@drawable/ic_done_pill"
