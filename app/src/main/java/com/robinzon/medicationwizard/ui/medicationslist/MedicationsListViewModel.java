@@ -46,9 +46,16 @@ public class MedicationsListViewModel extends AndroidViewModel implements Shared
 
     /**
      * Forces a fresh reload of medications from SharedPreferences.
+     * <p>
+     * Performance: Runs parsing on a background thread to prevent UI stutter 
+     * when the medication list grows large.
+     * </p>
      */
     public void refreshMedications() {
-        mMedications.setValue(Medication.getSavedMedications(getApplication()));
+        new Thread(() -> {
+            List<Medication> list = Medication.getSavedMedications(getApplication());
+            mMedications.postValue(list);
+        }).start();
     }
 
     /**

@@ -143,7 +143,9 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     private void showSnackNoPermissionAndOpen() {
-        Snackbar.make(getActivity().findViewById(R.id.fab), getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
+        View rootView = getActivity().findViewById(android.R.id.content);
+        if (rootView == null) return;
+        Snackbar.make(rootView, getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
                 .setAction(getActivity().getString(R.string.button_allow), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -153,7 +155,9 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     private void showSnackNoPermission() {
-        Snackbar.make(getActivity().findViewById(R.id.fab), getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
+        View rootView = getActivity().findViewById(android.R.id.content);
+        if (rootView == null) return;
+        Snackbar.make(rootView, getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
                 .setAction(getActivity().getString(R.string.button_allow), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

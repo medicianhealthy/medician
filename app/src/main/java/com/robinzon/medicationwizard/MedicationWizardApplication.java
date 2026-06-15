@@ -102,7 +102,9 @@ public class MedicationWizardApplication extends Application
 
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
-        mCurrentActivity = activity;
+        if (mCurrentActivity == activity) {
+            mCurrentActivity = null;
+        }
     }
 
     /** LifecycleObserver method that shows the app open ad when the app moves to foreground. */

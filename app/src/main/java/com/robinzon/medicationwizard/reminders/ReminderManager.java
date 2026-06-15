@@ -73,16 +73,22 @@ public class ReminderManager {
 
         if (alarmManager != null) {
             com.robinzon.medicationwizard.utils.Logger.log("ReminderManager", "Scheduling alarm for " + instance.getMedicationName() + " at " + time);
-            // Android 12 (API 31) introduced strict exact alarm permissions
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (alarmManager.canScheduleExactAlarms()) {
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            try {
+                // Android 12 (API 31) introduced strict exact alarm permissions
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (alarmManager.canScheduleExactAlarms()) {
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+                    } else {
+                        // Safety fallback if user hasn't granted "Schedule Exact Alarms" permission
+                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+                    }
                 } else {
-                    // Safety fallback if user hasn't granted "Schedule Exact Alarms" permission
-                    alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
                 }
-            } else {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            } catch (SecurityException e) {
+                // Fallback for Android 14+ if permission is revoked between the check and the call
+                com.robinzon.medicationwizard.utils.Logger.log("ReminderManager", "SecurityException: Falling back to inexact alarm.");
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
             }
         }
     }

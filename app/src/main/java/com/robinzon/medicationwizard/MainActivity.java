@@ -267,7 +267,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    runOnUiThread(() -> getAdsManager().showAppOpenAd());
+                    runOnUiThread(() -> {
+                        if (!isFinishing() && !isDestroyed() && getAdsManager() != null) {
+                            getAdsManager().showAppOpenAd();
+                        }
+                    });
                 }
             }, 300L);
         }

@@ -15,6 +15,7 @@ import com.robinzon.medicationwizard.utils.NetworkUtils;
 import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AdsManager implements OnAdActionListener{
 
@@ -32,7 +33,7 @@ public class AdsManager implements OnAdActionListener{
     private ArrayList<AdMobAd> mAdsCollections;
     private long mFullAdDismissedTimeStamp;
     private long mBannerClickTimeStamp;
-    private final java.util.List<Runnable> mAdAvailabilityListeners = new java.util.ArrayList<>();
+    private final CopyOnWriteArrayList<Runnable> mAdAvailabilityListeners = new CopyOnWriteArrayList<>();
 
     public AdsManager(final @NonNull Activity activity) {
         this.mActivity = activity;

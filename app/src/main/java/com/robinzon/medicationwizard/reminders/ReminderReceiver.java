@@ -210,30 +210,47 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         if (uri == null) return;
 
-        try {
-            MediaPlayer player = new MediaPlayer();
-            player.setDataSource(context, uri);
+        // Run MediaPlayer preparation in a background thread to prevent Main-thread ANRs
+        // especially if the URI is on a slow network or SD card.
+        new Thread(() -> {
+            try {
+                MediaPlayer player = new MediaPlayer();
+                player.setDataSource(context, uri);
 
-            if (bypass) {
-                // ALARM stream can be heard even when phone is in 'Priority Only' or 'Silent' mode
-                player.setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ALARM)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build());
+                if (bypass) {
+                    player.setAudioAttributes(new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .build());
+                    
+                    float volume = volumePercent / 100f;
+                    player.setVolume(volume, volume);
+                } else {
+                    player.setAudioAttributes(new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .build());
+                }
+
+                // prepare() is a blocking I/O call.
+                player.prepare();
+                player.start();
                 
-                float volume = volumePercent / 100f;
-                player.setVolume(volume, volume);
-            } else {
-                player.setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build());
-            }
+                // Release resources once finished
+                player.setOnCompletionListener(mp -> {
+                    mp.release();
+                    com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "MediaPlayer released.");
+                });
+                
+                // Safety: Release if error occurs during playback
+                player.setOnErrorListener((mp, what, extra) -> {
+                    mp.release();
+                    return true;
+                });
 
-            player.prepare();
-            player.start();
-            // Critical: release resources once the sound finishes playing
-            player.setOnCompletionListener(MediaPlayer::release);
-        } catch (Exception ignored) {}
+            } catch (Exception e) {
+                com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Error playing sound: " + e.getMessage());
+            }
+        }).start();
     }
 }
