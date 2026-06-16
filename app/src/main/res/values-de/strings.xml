@@ -235,6 +235,7 @@
     <string name="premium_pass_summary">Schau dir ein kurzes Video an, um die gesamte Premium-Magie für 12 Stunden freizuschalten!</string>
     <string name="premium_pass_active">Zauber-Pass Aktiv</string>
     <string name="premium_pass_remaining_format">%1$02dh %2$02dm verbleibend</string>
+    <string name="medication_deleted_format">wurde gelöscht</string>
     <string name="sign_in_error_title">Problem mit der Magic-Verbindung</string>
     <string name="sign_in_error_network">Wir konnten die Magic-Clouds nicht erreichen. Bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
     <string name="sign_in_error_cancelled">Anmeldung wurde unterbrochen. Möchten Sie es erneut versuchen?</string>

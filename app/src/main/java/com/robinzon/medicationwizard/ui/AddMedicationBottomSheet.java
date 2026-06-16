@@ -28,7 +28,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -456,11 +455,11 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         Context context = getContext();
         if (context == null) return;
 
-        new MaterialAlertDialogBuilder(context)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())
-                .show();
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(context);
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setPositiveButton(getString(android.R.string.ok), (d, which) -> d.dismiss());
+        dialog.show();
     }
 
 

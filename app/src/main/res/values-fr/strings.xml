@@ -235,6 +235,7 @@
     <string name="premium_pass_summary">Regardez une courte vidéo pour débloquer toute la magie Premium pendant 12 heures !</string>
     <string name="premium_pass_active">Pass Magique Actif</string>
     <string name="premium_pass_remaining_format">%1$02dh %2$02dm restant</string>
+    <string name="medication_deleted_format">a été supprimé</string>
     <string name="sign_in_error_title">Problème de connexion magique</string>
     <string name="sign_in_error_network">Nous n\'avons pas pu atteindre les nuages magiques. Veuillez vérifier votre connexion Internet et réessayer.</string>
     <string name="sign_in_error_cancelled">La connexion a été interrompue. Souhaitez-vous réessayer ?</string>

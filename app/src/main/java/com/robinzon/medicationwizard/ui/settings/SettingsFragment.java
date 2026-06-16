@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -103,14 +102,14 @@ public class SettingsFragment extends MedicationWizardFragment {
         };
 
         if (getContext() != null) {
-            new MaterialAlertDialogBuilder(getContext())
-                    .setTitle(R.string.sign_in_error_title)
-                    .setMessage(messageResId)
-                    .setPositiveButton(R.string.sign_in_error_btn_retry, (dialog, which) -> {
-                        googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(getContext());
+            dialog.setTitle(getString(R.string.sign_in_error_title));
+            dialog.setMessage(getString(messageResId));
+            dialog.setPositiveButton(getString(R.string.sign_in_error_btn_retry), (d, which) -> {
+                googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+            });
+            dialog.setNegativeButton(getString(android.R.string.cancel), null);
+            dialog.show();
         }
     }
 
@@ -140,17 +139,17 @@ public class SettingsFragment extends MedicationWizardFragment {
             new ActivityResultContracts.OpenDocument(),
             uri -> {
                 if (uri != null) {
-                    new MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("Restore Backup")
-                            .setMessage(R.string.backup_restore_warning)
-                            .setPositiveButton("Restore", (dialog, which) -> {
-                                BackupManager.restoreBackup(requireContext(), uri, (success, message) -> {
-                                    requireActivity().runOnUiThread(() -> 
-                                        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show());
-                                });
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
+                    com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+                    dialog.setTitle("Restore Backup");
+                    dialog.setMessage(getString(R.string.backup_restore_warning));
+                    dialog.setPositiveButton("Restore", (d, which) -> {
+                        BackupManager.restoreBackup(requireContext(), uri, (success, message) -> {
+                            requireActivity().runOnUiThread(() -> 
+                                Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show());
+                        });
+                    });
+                    dialog.setNegativeButton("Cancel", null);
+                    dialog.show();
                 }
             }
     );
@@ -216,10 +215,6 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         updateNotificationStatus();
         binding.btnNotifications.setOnClickListener(v -> {
-            if (!AppConfig.isPremium(requireContext())) {
-                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
-                return;
-            }
             boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
             if (!isGranted) {
                 NotificationManager.getInstance(requireActivity()).requestPermissionIfNeeded();
@@ -232,14 +227,10 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name)));
         
         binding.btnNotifSound.setOnClickListener(v -> {
-            if (AppConfig.isPremium(requireContext())) {
-                SoundPickerBottomSheet picker = new SoundPickerBottomSheet();
-                picker.setCurrentSoundUri(viewModel.getSoundUri().getValue());
-                picker.setOnSoundSelectedListener((name, uri) -> viewModel.setSound(name, uri));
-                picker.show(getChildFragmentManager(), "SoundPicker");
-            } else {
-                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
-            }
+            SoundPickerBottomSheet picker = new SoundPickerBottomSheet();
+            picker.setCurrentSoundUri(viewModel.getSoundUri().getValue());
+            picker.setOnSoundSelectedListener((name, uri) -> viewModel.setSound(name, uri));
+            picker.show(getChildFragmentManager(), "SoundPicker");
         });
 
         viewModel.getBypassVolume().observe(getViewLifecycleOwner(), bypass -> {
@@ -314,10 +305,6 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnLanguage.setOnClickListener(v -> {
-            if (!AppConfig.isPremium(requireContext())) {
-                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
-                return;
-            }
             String[] langs = {
                     getString(R.string.lang_english),
                     getString(R.string.lang_hebrew),
@@ -331,27 +318,27 @@ public class SettingsFragment extends MedicationWizardFragment {
             };
             String[] codes = {"en", "iw", "ar", "es", "fr", "de", "ja", "pt-BR", "ko"};
 
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.settings_language_title)
-                    .setItems(langs, (dialog, which) -> {
-                        String selectedCode = codes[which];
-                        if (!selectedCode.equals(viewModel.getLanguageCode().getValue())) {
-                            new MaterialAlertDialogBuilder(requireContext())
-                                    .setTitle(R.string.settings_language_title)
-                                    .setMessage(R.string.settings_language_restart_warning)
-                                    .setPositiveButton(R.string.button_ok, (d, w) -> {
-                                        viewModel.setLanguage(selectedCode);
-                                        if (getActivity() != null) {
-                                            android.content.Intent intent = getActivity().getIntent();
-                                            getActivity().finish();
-                                            getActivity().startActivity(intent);
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.buttoh_not_now, null)
-                                    .show();
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+            dialog.setTitle(getString(R.string.settings_language_title));
+            dialog.setItems(langs, (d, which) -> {
+                String selectedCode = codes[which];
+                if (!selectedCode.equals(viewModel.getLanguageCode().getValue())) {
+                    com.robinzon.medicationwizard.ui.CustomMaterialDialog confirmDialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+                    confirmDialog.setTitle(getString(R.string.settings_language_title));
+                    confirmDialog.setMessage(getString(R.string.settings_language_restart_warning));
+                    confirmDialog.setPositiveButton(getString(R.string.button_ok), (d2, w) -> {
+                        viewModel.setLanguage(selectedCode);
+                        if (getActivity() != null) {
+                            android.content.Intent intent = getActivity().getIntent();
+                            getActivity().finish();
+                            getActivity().startActivity(intent);
                         }
-                    })
-                    .show();
+                    });
+                    confirmDialog.setNegativeButton(getString(R.string.buttoh_not_now), null);
+                    confirmDialog.show();
+                }
+            });
+            dialog.show();
         });
 
         // Use a more reliable trigger: 10 taps on the version text
@@ -368,30 +355,26 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnBackup.setOnClickListener(v -> {
-            if (!AppConfig.isPremium(requireContext())) {
-                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
-                return;
-            }
             String[] options = {getString(R.string.backup_export), getString(R.string.backup_import)};
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.settings_backup_title)
-                    .setItems(options, (dialog, which) -> {
-                        if (which == 0) exportLauncher.launch("medication_wizard_backup_" + System.currentTimeMillis() + ".json");
-                        else importLauncher.launch(new String[]{"application/json"});
-                    })
-                    .show();
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+            dialog.setTitle(getString(R.string.settings_backup_title));
+            dialog.setItems(options, (d, which) -> {
+                if (which == 0) exportLauncher.launch("medication_wizard_backup_" + System.currentTimeMillis() + ".json");
+                else importLauncher.launch(new String[]{"application/json"});
+            });
+            dialog.show();
         });
 
         binding.btnClearData.setOnClickListener(v -> {
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Wipe everything?")
-                    .setMessage("This will delete all your medications and history.")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        Medication.clearAllMedications(requireContext());
-                        Snackbar.make(binding.getRoot(), R.string.data_cleared, Snackbar.LENGTH_SHORT).show();
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+            dialog.setTitle(getString(R.string.settings_clear_data_title));
+            dialog.setMessage(getString(R.string.backup_restore_warning));
+            dialog.setPositiveButton(getString(android.R.string.yes), (d, which) -> {
+                Medication.clearAllMedications(requireContext());
+                Snackbar.make(binding.getRoot(), R.string.data_cleared, Snackbar.LENGTH_SHORT).show();
+            });
+            dialog.setNegativeButton(getString(android.R.string.no), null);
+            dialog.show();
         });
 
         binding.btnSupport.setOnClickListener(v -> showSupportOptionsDialog());
@@ -411,11 +394,12 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.txtSnoozeDurationDesc.setText(getString(R.string.settings_snooze_duration_summary, mins)));
         
         binding.btnSnoozeDuration.setOnClickListener(v -> {
-            if (!AppConfig.isPremium(requireContext())) {
-                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
-                return;
-            }
-            showSnoozeDurationPicker();
+            String[] options = {"5 min", "10 min", "15 min", "20 min", "30 min"};
+            int[] values = {5, 10, 15, 20, 30};
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+            dialog.setTitle(getString(R.string.settings_snooze_duration_title));
+            dialog.setItems(options, (d, which) -> viewModel.setSnoozeDuration(values[which]));
+            dialog.show();
         });
 
         viewModel.getMaxSnoozes().observe(getViewLifecycleOwner(), max -> {
@@ -424,11 +408,12 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnMaxSnoozes.setOnClickListener(v -> {
-            if (!AppConfig.isPremium(requireContext())) {
-                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
-                return;
-            }
-            showMaxSnoozesPicker();
+            String[] options = {"1 time", "2 times", "3 times", "5 times", "Unlimited"};
+            int[] values = {1, 2, 3, 5, -1};
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+            dialog.setTitle(getString(R.string.settings_max_snoozes_title));
+            dialog.setItems(options, (d, which) -> viewModel.setMaxSnoozes(values[which]));
+            dialog.show();
         });
 
         // Initialize UI state based on current premium status
@@ -517,14 +502,14 @@ public class SettingsFragment extends MedicationWizardFragment {
     }
 
     private void showSignInRequiredDialog() {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.sign_in_required_title)
-                .setMessage(R.string.sign_in_required_message)
-                .setPositiveButton(R.string.cloud_backup_title, (dialog, which) -> {
-                    googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
-                })
-                .setNegativeButton(R.string.buttoh_not_now, null)
-                .show();
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.sign_in_required_title));
+        dialog.setMessage(getString(R.string.sign_in_required_message));
+        dialog.setPositiveButton(getString(R.string.cloud_backup_title), (d, which) -> {
+            googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+        });
+        dialog.setNegativeButton(getString(R.string.buttoh_not_now), null);
+        dialog.show();
     }
 
     private void performCloudAction(boolean isBackup) {
@@ -555,25 +540,25 @@ public class SettingsFragment extends MedicationWizardFragment {
                 .addOnFailureListener(e -> 
                 Snackbar.make(binding.getRoot(), R.string.cloud_backup_failed, Snackbar.LENGTH_SHORT).show());
         } else {
-            new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(R.string.cloud_restore_title)
-                    .setMessage(R.string.cloud_restore_message)
-                    .setPositiveButton(R.string.button_restore, (dialog, which) -> {
-                        Snackbar.make(binding.getRoot(), R.string.restoring_cloud, Snackbar.LENGTH_SHORT).show();
-                        manager.restoreFromCloud().addOnSuccessListener(success -> {
-                            if (success) {
-                                Snackbar.make(binding.getRoot(), R.string.restore_success, Snackbar.LENGTH_LONG).show();
-                                if (getActivity() instanceof MainActivity) {
-                                    ((MainActivity) getActivity()).recreate();
-                                }
-                            } else {
-                                Snackbar.make(binding.getRoot(), R.string.no_backup_found, Snackbar.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(e -> 
-                            Snackbar.make(binding.getRoot(), getString(R.string.restore_failed_format, e.getMessage()), Snackbar.LENGTH_SHORT).show());
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+            dialog.setTitle(getString(R.string.cloud_restore_title));
+            dialog.setMessage(getString(R.string.cloud_restore_message));
+            dialog.setPositiveButton(getString(R.string.button_restore), (d, which) -> {
+                Snackbar.make(binding.getRoot(), R.string.restoring_cloud, Snackbar.LENGTH_SHORT).show();
+                manager.restoreFromCloud().addOnSuccessListener(success -> {
+                    if (success) {
+                        Snackbar.make(binding.getRoot(), R.string.restore_success, Snackbar.LENGTH_LONG).show();
+                        if (getActivity() instanceof MainActivity) {
+                            ((MainActivity) getActivity()).recreate();
+                        }
+                    } else {
+                        Snackbar.make(binding.getRoot(), R.string.no_backup_found, Snackbar.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(e -> 
+                    Snackbar.make(binding.getRoot(), getString(R.string.restore_failed_format, e.getMessage()), Snackbar.LENGTH_SHORT).show());
+            });
+            dialog.setNegativeButton("Cancel", null);
+            dialog.show();
         }
     }
 
@@ -648,23 +633,31 @@ public class SettingsFragment extends MedicationWizardFragment {
     private void showSnoozeDurationPicker() {
         String[] options = {"5 min", "10 min", "15 min", "20 min", "30 min"};
         int[] values = {5, 10, 15, 20, 30};
-        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.settings_snooze_duration_title).setItems(options, (dialog, which) -> viewModel.setSnoozeDuration(values[which])).show();
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.settings_snooze_duration_title));
+        dialog.setItems(options, (d, which) -> viewModel.setSnoozeDuration(values[which]));
+        dialog.show();
     }
 
     private void showMaxSnoozesPicker() {
         String[] options = {"1 time", "2 times", "3 times", "5 times", "Unlimited"};
         int[] values = {1, 2, 3, 5, -1};
-        new MaterialAlertDialogBuilder(requireContext()).setTitle(R.string.settings_max_snoozes_title).setItems(options, (dialog, which) -> viewModel.setMaxSnoozes(values[which])).show();
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.settings_max_snoozes_title));
+        dialog.setItems(options, (d, which) -> viewModel.setMaxSnoozes(values[which]));
+        dialog.show();
     }
 
     private void showSupportOptionsDialog() {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.support_dialog_title)
-                .setMessage(R.string.support_dialog_message)
-                .setPositiveButton(R.string.support_option_bug, (dialog, which) -> openEmailClient(true))
-                .setNegativeButton(R.string.support_option_feature, (dialog, which) -> openEmailClient(false))
-                .setNeutralButton(R.string.buttoh_not_now, null)
-                .show();
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.support_dialog_title));
+        dialog.setMessage(getString(R.string.support_dialog_message));
+        dialog.setPositiveButton(getString(R.string.support_option_bug), (d, which) -> openEmailClient(true));
+        dialog.setNegativeButton(getString(R.string.support_option_feature), (d, which) -> openEmailClient(false));
+        // CustomMaterialDialog currently doesn't support neutral button, 
+        // we'll skip it or add it if needed. 
+        // For support, positive/negative are the main actions.
+        dialog.show();
     }
 
     private void openEmailClient(boolean isBug) {
@@ -701,51 +694,51 @@ public class SettingsFragment extends MedicationWizardFragment {
         android.widget.EditText input = new android.widget.EditText(requireContext());
         input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
         
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Developer Access")
-                .setMessage("Enter access code")
-                .setView(input)
-                .setPositiveButton("Confirm", (dialog, which) -> {
-                    if ("Gway1952".equals(input.getText().toString())) {
-                        new com.robinzon.medicationwizard.ui.cheats.CheatsBottomSheet().show(getChildFragmentManager(), "CheatsBS");
-                    } else {
-                        Snackbar.make(binding.getRoot(), R.string.invalid_code, Snackbar.LENGTH_SHORT).show();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle("Developer Access");
+        dialog.setMessage("Enter access code");
+        dialog.setView(input);
+        dialog.setPositiveButton("Confirm", (d, which) -> {
+            if ("Gway1952".equals(input.getText().toString())) {
+                new com.robinzon.medicationwizard.ui.cheats.CheatsBottomSheet().show(getChildFragmentManager(), "CheatsBS");
+            } else {
+                Snackbar.make(binding.getRoot(), R.string.invalid_code, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        dialog.setNegativeButton("Cancel", null);
+        dialog.show();
     }
 
     private void showThemeUnlockAdDialog(int targetThemeId) {
         if (getContext() == null) return;
         
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.theme_unlock_title)
-                .setMessage(R.string.theme_unlock_prompt)
-                .setPositiveButton(R.string.premium_pass_btn_watch, (dialog, which) -> {
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    if (mainActivity != null && mainActivity.getAdsManager().isRewardedLoaded()) {
-                        mainActivity.getAdsManager().showRewarded(success -> {
-                            if (success && getContext() != null) {
-                                long currentExpiry = SharedPreferencesManager.getInstance(getContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
-                                long baseTime = Math.max(System.currentTimeMillis(), currentExpiry);
-                                long newExpiry = baseTime + (12 * 60 * 60 * 1000);
-                                
-                                SharedPreferencesManager.getInstance(getContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, newExpiry);
-                                
-                                int theme = (targetThemeId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : SettingsViewModel.THEME_DARK;
-                                viewModel.setTheme(theme);
-                                
-                                updateRewardedUi();
-                                Snackbar.make(binding.getRoot(), getString(R.string.premium_pass_active), Snackbar.LENGTH_LONG).show();
-                            }
-                        });
-                    } else {
-                        Snackbar.make(binding.getRoot(), R.string.reward_ad_not_ready, Snackbar.LENGTH_SHORT).show();
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.theme_unlock_title));
+        dialog.setMessage(getString(R.string.theme_unlock_prompt));
+        dialog.setPositiveButton(getString(R.string.premium_pass_btn_watch), (d, which) -> {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            if (mainActivity != null && mainActivity.getAdsManager().isRewardedLoaded()) {
+                mainActivity.getAdsManager().showRewarded(success -> {
+                    if (success && getContext() != null) {
+                        long currentExpiry = SharedPreferencesManager.getInstance(getContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
+                        long baseTime = Math.max(System.currentTimeMillis(), currentExpiry);
+                        long newExpiry = baseTime + (12 * 60 * 60 * 1000);
+                        
+                        SharedPreferencesManager.getInstance(getContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, newExpiry);
+                        
+                        int theme = (targetThemeId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : SettingsViewModel.THEME_DARK;
+                        viewModel.setTheme(theme);
+                        
+                        updateRewardedUi();
+                        Snackbar.make(binding.getRoot(), getString(R.string.premium_pass_active), Snackbar.LENGTH_LONG).show();
                     }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                });
+            } else {
+                Snackbar.make(binding.getRoot(), R.string.reward_ad_not_ready, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+        dialog.setNegativeButton(getString(android.R.string.cancel), null);
+        dialog.show();
     }
 
     private void updateNotificationStatus() {

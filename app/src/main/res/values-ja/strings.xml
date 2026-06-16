@@ -235,6 +235,7 @@
     <string name="premium_pass_summary">短い動画を見て、12時間すべてのプレミアム機能を開放しましょう！</string>
     <string name="premium_pass_active">魔法パス有効</string>
     <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
+    <string name="medication_deleted_format">が削除されました</string>
     <string name="sign_in_error_title">魔法の接続エラー</string>
     <string name="sign_in_error_network">魔法の雲に到達できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
     <string name="sign_in_error_cancelled">ログインが中断されました。もう一度お試しになりますか？</string>

@@ -235,6 +235,7 @@
     <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل ميزات البريميوم لمدة ١٢ ساعة!</string>
     <string name="premium_pass_active">البطاقة السحرية مفعلة</string>
     <string name="premium_pass_remaining_format">متبقي %1$02d ساعة و %2$02d دقيقة</string>
+    <string name="medication_deleted_format">تم الحذف بنجاح</string>
     <string name="sign_in_error_title">مشكلة في اتصال السحر</string>
     <string name="sign_in_error_network">لم نتمكن من الوصول إلى سحب السحر. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.</string>
     <string name="sign_in_error_cancelled">تم إلغاء تسجيل الدخول. هل ترغب في المحاولة مرة أخرى؟</string>

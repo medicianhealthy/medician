@@ -243,6 +243,7 @@
     <string name="form_inhaler">Inhaler</string>
     <string name="form_other">Other</string>
 
+    <string name="medication_deleted_format">was deleted</string>
     <string name="notification_channel_name">Medication Reminders</string>
     <string name="notification_channel_desc">Reminders to take your scheduled medications</string>
     <string name="premium_only_feature">Premium only feature</string>

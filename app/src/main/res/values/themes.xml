@@ -43,14 +43,35 @@
 
     <style name="CustomBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
         <item name="backgroundTint">?attr/colorSurface</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.App.BottomSheet</item>
+        <item name="shapeAppearance">@style/ShapeAppearance_App_BottomSheet</item>
         <item name="android:maxWidth">10000dp</item>
     </style>
 
-    <style name="ShapeAppearance.App.BottomSheet" parent="ShapeAppearance.Material3.LargeComponent">
+    <style name="ShapeAppearance_App_BottomSheet" parent="ShapeAppearance.Material3.LargeComponent">
         <item name="cornerSizeTopLeft">28dp</item>
         <item name="cornerSizeTopRight">28dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="ShapeAppearance_App_Dialog" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerSize">28dp</item>
+    </style>
+
+    <!-- SAFE Branded Typography for Dialogs -->
+    <style name="MedicationWizard_Dialog_Title" parent="">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MedicationWizard_Dialog_Body">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="MedicationWizard_Dialog_Button_Positive" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

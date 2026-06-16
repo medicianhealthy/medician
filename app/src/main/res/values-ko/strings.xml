@@ -232,6 +232,7 @@
     <string name="premium_pass_summary">짧은 영상을 시청하고 12시간 동안 모든 프리미엄 기능을 사용해 보세요!</string>
     <string name="premium_pass_active">마법 패스 활성화</string>
     <string name="premium_pass_remaining_format">%1$02d시간 %2$02d분 남음</string>
+    <string name="medication_deleted_format">삭제되었습니다</string>
     <string name="sign_in_error_title">마법 연결 문제</string>
     <string name="sign_in_error_network">마법 구름에 도달할 수 없습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.</string>
     <string name="sign_in_error_cancelled">로그인이 중단되었습니다. 다시 시도하시겠습니까?</string>

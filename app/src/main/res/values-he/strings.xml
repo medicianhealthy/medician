@@ -232,6 +232,7 @@
     <string name="premium_pass_summary">צפה בסרטון קצר כדי לפתוח את כל קסמי הפרימיום ל-12 שעות!</string>
     <string name="premium_pass_active">מנוי קסם פעיל</string>
     <string name="premium_pass_remaining_format">נותרו %1$02d ש\' ו-%2$02d ד\'</string>
+    <string name="medication_deleted_format">נמחק בהצלחה</string>
     <string name="sign_in_error_title">בעיה בחיבור לענן</string>
     <string name="sign_in_error_network">לא הצלחנו להתחבר לענני הקסם. אנא בדקו את חיבור האינטרנט ונסו שוב.</string>
     <string name="sign_in_error_cancelled">ההתחברות הופסקה. תרצו לנסות שוב?</string>
