@@ -217,7 +217,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnNotifications.setOnClickListener(v -> {
             NotificationManager nm = NotificationManager.getInstance(requireActivity());
             if (!nm.hasPermission()) {
-                nm.requestPermissionIfNeeded();
+                nm.showInvitationDialog();
             } else {
                 com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
                 dialog.setTitle(getString(R.string.settings_notifications_title));

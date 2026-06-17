@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
@@ -104,22 +103,18 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
                 if (0 == (getCountRefusedSoFar() % getDeltaToShowRational())) {
                     showRationaleDialog();
                 } else {
-                    showSnackNoPermission();
+                    showPermissionDialog(false);
                 }
                 increaseRefuseNumber();
             } else {
                 if (!getHasDeniedPermission()) {
                     requestPermission();
                 } else {
-                    showSnackNoPermissionAndOpen();
+                    showPermissionDialog(true);
                 }
             }
         } else if (notificationsAreDisabled()) {
-            if (shouldShowRationalInnerDialog()) {
-                showSnackNoPermission();
-            } else {
-                showSnackNoPermissionAndOpen();
-            }
+            showPermissionDialog(!shouldShowRationalInnerDialog());
         }
     }
 
@@ -141,28 +136,25 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return PermissionManager.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.POST_NOTIFICATIONS);
     }
 
-    private void showSnackNoPermissionAndOpen() {
-        View rootView = getActivity().findViewById(android.R.id.content);
-        if (rootView == null) return;
-        Snackbar.make(rootView, getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
-                .setAction(getActivity().getString(R.string.button_allow), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openNotificationAppSettings(getActivity().getApplicationContext());
-                    }
-                }).show();
+    public void showInvitationDialog() {
+        // If we can show the system dialog, do that. Otherwise, we must guide them to settings.
+        boolean mustGoToSettings = !shouldShowRationalInnerDialog() && getHasDeniedPermission();
+        showPermissionDialog(mustGoToSettings);
     }
 
-    private void showSnackNoPermission() {
-        View rootView = getActivity().findViewById(android.R.id.content);
-        if (rootView == null) return;
-        Snackbar.make(rootView, getActivity().getString(R.string.notification_missing), Snackbar.LENGTH_LONG)
-                .setAction(getActivity().getString(R.string.button_allow), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestPermission();
-                    }
-                }).show();
+    private void showPermissionDialog(boolean forceSettings) {
+        final CustomMaterialDialog dialog = new CustomMaterialDialog(getActivity());
+        dialog.setTitle(getActivity().getString(R.string.permission_rational_notification_title));
+        dialog.setMessage(getActivity().getString(R.string.permission_rational_notification_message));
+        dialog.setPositiveButton(getActivity().getString(R.string.button_sure), (d, which) -> {
+            if (forceSettings) {
+                openNotificationAppSettings(getActivity());
+            } else {
+                requestPermission();
+            }
+        });
+        dialog.setNegativeButton(getActivity().getString(R.string.buttoh_not_now), null);
+        dialog.show();
     }
 
     private void requestPermission() {
