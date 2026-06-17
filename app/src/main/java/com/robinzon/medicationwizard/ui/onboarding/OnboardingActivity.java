@@ -103,7 +103,12 @@ public class OnboardingActivity extends AppCompatActivity {
             }
         });
 
-        binding.btnSkip.setOnClickListener(v -> finishOnboarding());
+        binding.btnSkip.setOnClickListener(v -> {
+            // Fix: Skip now navigates to the final page to ensure Terms agreement
+            if (!pages.isEmpty()) {
+                binding.viewPager.setCurrentItem(pages.size() - 1, true);
+            }
+        });
 
         // Handle Back Button: Navigate to previous slide instead of closing the app
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
