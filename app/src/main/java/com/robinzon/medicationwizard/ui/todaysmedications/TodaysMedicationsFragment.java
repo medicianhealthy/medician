@@ -22,9 +22,9 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
-import com.robinzon.medicationwizard.databinding.FragmentTodaysMedicationsBinding;
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+import com.robinzon.medicationwizard.databinding.FragmentTodaysMedicationsBinding;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 

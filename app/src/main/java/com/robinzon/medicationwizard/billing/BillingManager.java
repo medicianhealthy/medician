@@ -17,11 +17,10 @@ import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.utils.Logger;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 /**
  * Manages all Google Play Billing interactions for the application.

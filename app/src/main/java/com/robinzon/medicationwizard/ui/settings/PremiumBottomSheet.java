@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.billing.BillingManager;
 

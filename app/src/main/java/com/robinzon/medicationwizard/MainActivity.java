@@ -1,13 +1,11 @@
 package com.robinzon.medicationwizard;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -24,8 +21,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.robinzon.medicationwizard.ads.AdAction;
 import com.robinzon.medicationwizard.ads.AdsManager;
 import com.robinzon.medicationwizard.ads.OnAdActionListener;
-import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
+import com.robinzon.medicationwizard.backup.GoogleAccountManager;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.notifications.ConsentManager;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
@@ -33,16 +30,12 @@ import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
-import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.PermissionManager;
-import com.robinzon.medicationwizard.utils.Screen;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.Statisticator;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import com.robinzon.medicationwizard.backup.GoogleAccountManager;
 
 /**
  * The main entry point and hosting activity for the Medication Wizard application.

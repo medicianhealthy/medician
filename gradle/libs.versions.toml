@@ -6,7 +6,7 @@ comGoogleFirebase = "20.0.6"
 comGoogleFirebaseX2 = "23.1.0"
 comGoogleFirebaseX3 = "22.0.3"
 comGoogleFirebaseX4 = "22.0.3"
-comGoogleFirebaseX5 = "25.0.2"
+comGoogleFirebaseX5 = "25.1.0"
 constraintlayout = "2.2.1"
 firebaseAds = "23.6.0"
 firebaseBom = "34.14.0"
@@ -16,8 +16,8 @@ googleApiClientAndroid = "2.9.0"
 googleApiServicesDrive = "v3-rev20260428-2.0.0"
 googleFirebase = "23.2.0"
 googleFirebaseCrashlytics = "20.0.6"
-googleGmsGoogleServices = "4.4.4"
-googleServices = "4.4.4"
+googleGmsGoogleServices = "4.5.0"
+googleServices = "4.5.0"
 gradle = "9.2.1"
 gradleToolchainsFoojayResolverConvention = "1.0.0"
 grpc = "1.81.0"
@@ -49,7 +49,7 @@ androidx-work-runtime = { group = "androidx.work", name = "work-runtime", versio
 billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 firebase-ads = { group = "com.google.firebase", name = "firebase-ads", version.ref = "firebaseAds" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.14.1" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.15.0" }
 firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version.ref = "googleApiClientAndroid" }

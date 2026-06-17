@@ -13,7 +13,6 @@ import android.provider.Settings;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.snackbar.Snackbar;

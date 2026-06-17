@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
-import com.robinzon.medicationwizard.databinding.FragmentHistoryBinding;
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+import com.robinzon.medicationwizard.databinding.FragmentHistoryBinding;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.ui.todaysmedications.MedicationsAdapter;

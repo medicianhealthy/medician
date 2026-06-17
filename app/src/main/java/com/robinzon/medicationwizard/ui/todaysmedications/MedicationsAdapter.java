@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +12,6 @@ import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A specialized RecyclerView Adapter for displaying medication dose instances.

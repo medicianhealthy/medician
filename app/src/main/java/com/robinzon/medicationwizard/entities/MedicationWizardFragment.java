@@ -1,15 +1,11 @@
 package com.robinzon.medicationwizard.entities;
 
 
-import static com.robinzon.medicationwizard.MainActivity.BANNER_HEIGHT_MULTIPLIER;
-
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.robinzon.medicationwizard.R;
-import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.utils.Screen;
 
 import java.util.ArrayList;

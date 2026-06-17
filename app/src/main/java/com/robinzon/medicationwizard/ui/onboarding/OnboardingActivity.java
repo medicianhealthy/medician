@@ -45,6 +45,13 @@ public class OnboardingActivity extends AppCompatActivity {
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Resolve status bar overlap: Apply window insets to the root view
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
+            androidx.core.graphics.Insets bars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+
         List<OnboardingPage> pages = new ArrayList<>();
         pages.add(new OnboardingPage(
                 R.drawable.ic_magic_wand, 

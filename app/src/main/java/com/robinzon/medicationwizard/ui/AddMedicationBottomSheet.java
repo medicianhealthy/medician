@@ -3,7 +3,6 @@ package com.robinzon.medicationwizard.ui;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -12,18 +11,15 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -37,18 +33,14 @@ import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 import com.robinzon.medicationwizard.entities.Medication;
-import com.robinzon.medicationwizard.utils.Logger;
-import com.robinzon.medicationwizard.utils.Screen;
 import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 
 /**

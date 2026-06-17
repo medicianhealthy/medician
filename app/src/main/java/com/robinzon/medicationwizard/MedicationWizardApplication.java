@@ -15,11 +15,11 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import com.robinzon.medicationwizard.billing.BillingManager;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.workers.HistoryCleanupWorker;
-import com.robinzon.medicationwizard.billing.BillingManager;
 
 import java.util.concurrent.TimeUnit;
 
