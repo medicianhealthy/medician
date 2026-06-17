@@ -70,6 +70,7 @@
     <string name="backup_restore_warning">שחזור גיבוי ימחק את כל התרופות וההיסטוריה הנוכחיים שלך. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
 
     <string name="settings_clear_data_title">התחלה מחדש</string>
+    <string name="settings_clear_data_message">פעולה זו תמחק לצמיתות את כל התרופות, ההיסטוריה וכל גיבוי בענן. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
     <string name="settings_clear_data_summary">מחק את כל התרופות וההיסטוריה. זהירות, לא ניתן לבטל זאת!</string>
 
     <string name="settings_category_about">אודות</string>

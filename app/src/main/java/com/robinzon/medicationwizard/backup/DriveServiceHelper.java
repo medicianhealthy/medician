@@ -73,6 +73,16 @@ public class DriveServiceHelper {
     /**
      * Finds a file ID by name in the appDataFolder.
      */
+    public Task<Void> deleteFile(String fileName) {
+        return Tasks.call(mExecutor, () -> {
+            String fileId = findFileId(fileName);
+            if (fileId != null) {
+                mDriveService.files().delete(fileId).execute();
+            }
+            return null;
+        });
+    }
+
     public String findFileId(String fileName) throws IOException {
         FileList result = mDriveService.files().list()
                 .setSpaces("appDataFolder")

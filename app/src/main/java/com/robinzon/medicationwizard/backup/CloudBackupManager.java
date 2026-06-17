@@ -117,6 +117,10 @@ public class CloudBackupManager {
         });
     }
 
+    public Task<Void> deleteBackup() {
+        return mDriveHelper.deleteFile(BACKUP_FILE_NAME);
+    }
+
     private boolean shouldPerformBackup() {
         CloudBackupSettings settings = CloudBackupSettings.getInstance(mContext);
         if (!settings.isAutoBackupEnabled()) return false;

@@ -69,6 +69,7 @@
     <string name="backup_restore_warning">Restoring a backup will delete all your current medications and history. This cannot be undone. Are you sure?</string>
 
     <string name="settings_clear_data_title">Start Fresh</string>
+    <string name="settings_clear_data_message">This will permanently delete all your medications, history, and any cloud backups. This cannot be undone. Are you sure?</string>
     <string name="settings_clear_data_summary">Wipe all medications and history. Careful, this can\'t be undone!</string>
 
     <string name="settings_category_about">About</string>

@@ -106,6 +106,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             });
 
             refreshNavHeader();
+
+            mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                invalidateOptionsMenu();
+            });
         }
 
         mAdsManager = new AdsManager(this);
@@ -190,11 +194,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mNavController != null) {
-            int currentId = mNavController.getCurrentDestination() != null ? mNavController.getCurrentDestination().getId() : -1;
+        if (mNavController != null && mNavController.getCurrentDestination() != null) {
+            int currentId = mNavController.getCurrentDestination().getId();
             
-            // Hide the settings icon if we're already on the settings screen
-            android.view.MenuItem settingsItem = menu.findItem(R.id.action_settings);
+            // Hide the settings icon ONLY if we're already on the settings screen
+            android.view.MenuItem settingsItem = menu.findItem(R.id.action_app_settings);
             if (settingsItem != null) {
                 settingsItem.setVisible(currentId != R.id.nav_settings);
             }
@@ -211,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_app_settings) {
             mNavController.navigate(R.id.nav_settings);
             return true;
         } else if (id == R.id.action_premium) {

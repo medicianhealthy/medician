@@ -373,9 +373,28 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnClearData.setOnClickListener(v -> {
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.settings_clear_data_title));
-            dialog.setMessage(getString(R.string.backup_restore_warning));
+            dialog.setMessage(getString(R.string.settings_clear_data_message));
             dialog.setPositiveButton(getString(android.R.string.yes), (d, which) -> {
+                // 1. Clear local database
                 Medication.clearAllMedications(requireContext());
+                
+                // 2. Clear cloud backup if signed in
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
+                if (account != null) {
+                    Drive googleDriveService = new Drive.Builder(
+                            new com.google.api.client.http.javanet.NetHttpTransport(),
+                            new com.google.api.client.json.gson.GsonFactory(),
+                            com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential.usingOAuth2(
+                                    requireContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA))
+                                    .setSelectedAccount(account.getAccount())
+                    ).setApplicationName("Medication Wizard").build();
+
+                    DriveServiceHelper driveHelper = new DriveServiceHelper(googleDriveService);
+                    CloudBackupManager cloudManager = new CloudBackupManager(requireContext(), driveHelper);
+                    cloudManager.deleteBackup().addOnFailureListener(e -> 
+                        com.robinzon.medicationwizard.utils.Logger.log("SettingsFragment", "Failed to delete cloud backup: " + e.getMessage()));
+                }
+
                 Snackbar.make(binding.getRoot(), R.string.data_cleared, Snackbar.LENGTH_SHORT).show();
             });
             dialog.setNegativeButton(getString(android.R.string.no), null);
