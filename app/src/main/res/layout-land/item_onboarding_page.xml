@@ -9,17 +9,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_illustration"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_onboarding"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_onboarding"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <View
             android:id="@+id/glow"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:background="@drawable/soft_glow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,8 +28,8 @@
 
         <ImageView
             android:id="@+id/img_mascot"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:elevation="4dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_wizard_high_def"
@@ -40,17 +40,32 @@
 
         <ImageView
             android:id="@+id/img_accessory_1"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:alpha="0.8"
             app:layout_constraintBottom_toTopOf="@+id/img_mascot"
             app:layout_constraintEnd_toStartOf="@+id/img_mascot"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.9"
+            app:layout_constraintVertical_bias="0.8"
             app:tint="?attr/colorPrimary"
             tools:src="@drawable/ic_magic_wand" />
+
+        <ImageView
+            android:id="@+id/img_accessory_2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:alpha="0.6"
+            android:rotation="15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintStart_toEndOf="@+id/img_mascot"
+            app:layout_constraintTop_toBottomOf="@+id/img_mascot"
+            app:layout_constraintVertical_bias="0.2"
+            app:tint="?attr/colorPrimary"
+            tools:src="@drawable/ic_med_pill" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -101,6 +116,5 @@
     <ImageView android:id="@+id/sparkle_2" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints" />
     <ImageView android:id="@+id/sparkle_3" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints" />
     <ImageView android:id="@+id/sparkle_4" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints" />
-    <ImageView android:id="@+id/img_accessory_2" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

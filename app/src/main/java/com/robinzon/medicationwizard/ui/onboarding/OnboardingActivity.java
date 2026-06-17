@@ -81,13 +81,7 @@ public class OnboardingActivity extends AppCompatActivity {
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                updateDots(position);
-                boolean isLastPage = position == pages.size() - 1;
-                binding.btnNext.setText(isLastPage ? R.string.onboarding_btn_finish : R.string.onboarding_btn_next);
-                binding.containerTerms.setVisibility(isLastPage ? View.VISIBLE : View.GONE);
-                
-                // Hide Skip button on the last page to ensure agreement
-                binding.btnSkip.setVisibility(isLastPage ? View.GONE : View.VISIBLE);
+                updateUiForPage(position, pages.size());
             }
 
             @Override
@@ -98,6 +92,9 @@ public class OnboardingActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Ensure initial UI state is correct (crucial for rotation/restoration)
+        binding.viewPager.post(() -> updateUiForPage(binding.viewPager.getCurrentItem(), pages.size()));
 
         binding.btnNext.setOnClickListener(v -> {
             pageBeforeSkip = -1; // Reset skip history on manual navigation
@@ -221,6 +218,16 @@ public class OnboardingActivity extends AppCompatActivity {
             float scale = (i == position) ? 1.2f : 1.0f;
             dots.get(i).animate().scaleX(scale).scaleY(scale).setDuration(200).start();
         }
+    }
+
+    private void updateUiForPage(int position, int totalPages) {
+        updateDots(position);
+        boolean isLastPage = position == totalPages - 1;
+        binding.btnNext.setText(isLastPage ? R.string.onboarding_btn_finish : R.string.onboarding_btn_next);
+        binding.containerTerms.setVisibility(isLastPage ? View.VISIBLE : View.GONE);
+        
+        // Hide Skip button on the last page to ensure agreement
+        binding.btnSkip.setVisibility(isLastPage ? View.GONE : View.VISIBLE);
     }
 
     private void finishOnboarding() {
