@@ -201,6 +201,7 @@
     <string name="button_undo">Undo</string>
 
     <string name="sound_picker_title">Choose Alert Sound</string>
+    <string name="extra_details_label">Extra Details (optional)</string>
     <string name="instructions_label">Instructions</string>
     <string name="instruction_before_eating">Before eating</string>
     <string name="instruction_after_eating">After eating</string>
@@ -218,8 +219,8 @@
     <string name="hint_amount">Amount</string>
     <string name="hint_form">Form</string>
     <string name="hint_frequency">How often?</string>
-    <string name="hint_strength">Strength</string>
-    <string name="hint_unit">Unit</string>
+    <string name="hint_strength">Strength (optional)</string>
+    <string name="hint_unit">Unit (optional)</string>
 
     <string name="frequency_once">Once a day</string>
     <string name="frequency_twice">Twice a day</string>
