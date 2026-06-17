@@ -18,6 +18,8 @@
 
     <!-- Settings Screen -->
     <string name="settings_category_reminders">תזכורות</string>
+    <string name="settings_notifications_disabled_summary">לחץ כאן כדי לאפשר תזכורות ולהישאר בריא.</string>
+    <string name="settings_notifications_manage_prompt">כדי לבטל או לנהל את התראות הבריאות שלך, אנא השתמש בהגדרות המערכת.</string>
     <string name="settings_notifications_title">התראות בריאות</string>
     <string name="settings_notifications_summary">שמור על התזכורות פעילות כדי לא לפספס אף מנה. לבריאות!</string>
 

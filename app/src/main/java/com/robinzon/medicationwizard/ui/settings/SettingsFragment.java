@@ -215,11 +215,16 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         updateNotificationStatus();
         binding.btnNotifications.setOnClickListener(v -> {
-            boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
-            if (!isGranted) {
-                NotificationManager.getInstance(requireActivity()).requestPermissionIfNeeded();
+            NotificationManager nm = NotificationManager.getInstance(requireActivity());
+            if (!nm.hasPermission()) {
+                nm.requestPermissionIfNeeded();
             } else {
-                Snackbar.make(binding.getRoot(), R.string.notif_already_active, Snackbar.LENGTH_LONG).show();
+                com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+                dialog.setTitle(getString(R.string.settings_notifications_title));
+                dialog.setMessage(getString(R.string.settings_notifications_manage_prompt));
+                dialog.setPositiveButton(getString(R.string.action_settings), (d, which) -> nm.openNotificationAppSettings(requireContext()));
+                dialog.setNegativeButton(getString(android.R.string.cancel), null);
+                dialog.show();
             }
         });
 
@@ -743,8 +748,15 @@ public class SettingsFragment extends MedicationWizardFragment {
 
     private void updateNotificationStatus() {
         boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
-        binding.switchNotifications.setChecked(isGranted);
         binding.containerAlertDetails.setVisibility(isGranted ? View.VISIBLE : View.GONE);
+        
+        if (isGranted) {
+            binding.txtNotificationsTitle.setText(R.string.settings_notifications_title);
+            binding.txtNotificationsSummary.setText(R.string.settings_notifications_summary);
+        } else {
+            binding.txtNotificationsTitle.setText(R.string.notification_missing);
+            binding.txtNotificationsSummary.setText(R.string.settings_notifications_disabled_summary);
+        }
     }
 
     private void updateRewardedUi() {

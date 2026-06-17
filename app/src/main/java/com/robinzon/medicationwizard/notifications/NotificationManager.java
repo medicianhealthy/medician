@@ -244,7 +244,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_HAS_DENIED_NOTI_PERM, false);
     }
 
-    private void openNotificationAppSettings(final Context context) {
+    public void openNotificationAppSettings(final Context context) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + context.getPackageName()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

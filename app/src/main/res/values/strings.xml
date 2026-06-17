@@ -17,6 +17,8 @@
 
     <!-- Settings Screen -->
     <string name="settings_category_reminders">Reminders</string>
+    <string name="settings_notifications_disabled_summary">Tap here to allow reminders and stay healthy.</string>
+    <string name="settings_notifications_manage_prompt">To disable or manage your health alerts, please use the system settings.</string>
     <string name="settings_notifications_title">Health Alerts</string>
     <string name="settings_notifications_summary">Keep your reminders active so you never miss a dose. Stay healthy!</string>
 
