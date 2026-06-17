@@ -38,6 +38,7 @@ public class OnboardingActivity extends AppCompatActivity {
     public static final String KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding";
     private ActivityOnboardingBinding binding;
     private final List<ImageView> dots = new ArrayList<>();
+    private int pageBeforeSkip = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +89,18 @@ public class OnboardingActivity extends AppCompatActivity {
                 // Hide Skip button on the last page to ensure agreement
                 binding.btnSkip.setVisibility(isLastPage ? View.GONE : View.VISIBLE);
             }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (state == ViewPager2.SCROLL_STATE_DRAGGING) {
+                    // Reset skip history if user starts manual navigation
+                    pageBeforeSkip = -1;
+                }
+            }
         });
 
         binding.btnNext.setOnClickListener(v -> {
+            pageBeforeSkip = -1; // Reset skip history on manual navigation
             if (binding.viewPager.getCurrentItem() < pages.size() - 1) {
                 binding.viewPager.setCurrentItem(binding.viewPager.getCurrentItem() + 1);
             } else {
@@ -106,6 +116,7 @@ public class OnboardingActivity extends AppCompatActivity {
         binding.btnSkip.setOnClickListener(v -> {
             // Fix: Skip now navigates to the final page to ensure Terms agreement
             if (!pages.isEmpty()) {
+                pageBeforeSkip = binding.viewPager.getCurrentItem();
                 binding.viewPager.setCurrentItem(pages.size() - 1, true);
             }
         });
@@ -116,8 +127,15 @@ public class OnboardingActivity extends AppCompatActivity {
             public void handleOnBackPressed() {
                 int currentItem = binding.viewPager.getCurrentItem();
                 if (currentItem > 0) {
-                    // Go back one slide
-                    binding.viewPager.setCurrentItem(currentItem - 1, true);
+                    if (pageBeforeSkip != -1 && currentItem == pages.size() - 1) {
+                        // Reverse the "Skip" jump
+                        binding.viewPager.setCurrentItem(pageBeforeSkip, true);
+                        pageBeforeSkip = -1;
+                    } else {
+                        // Standard linear back navigation
+                        binding.viewPager.setCurrentItem(currentItem - 1, true);
+                        pageBeforeSkip = -1;
+                    }
                 } else {
                     // First slide: Close the app (standard behavior)
                     setEnabled(false);
