@@ -23,6 +23,16 @@
 
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- Global Card Styling -->
+        <item name="materialCardViewElevatedStyle">@style/Widget.MedicationWizard.Card.Elevated</item>
+    </style>
+
+    <style name="Widget.MedicationWizard.Card.Elevated" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">6dp</item>
+        <item name="cardCornerRadius">24dp</item>
+        <!-- Subtle border for better visibility in dark mode -->
+        <item name="strokeWidth">0dp</item>
     </style>
 
     <style name="Theme.MedicationWizard.NoActionBar">

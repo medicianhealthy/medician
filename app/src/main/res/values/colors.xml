@@ -35,8 +35,8 @@
     <color name="md_theme_dark_tertiaryContainer">#484264</color>
     <color name="md_theme_dark_onTertiaryContainer">#E6DEFF</color>
 
-    <color name="md_theme_dark_background">#0F1113</color>
+    <color name="md_theme_dark_background">#0A0C10</color>
     <color name="md_theme_dark_onBackground">#E2E2E5</color>
-    <color name="md_theme_dark_surface">#1A1C1E</color>
+    <color name="md_theme_dark_surface">#161B22</color>
     <color name="md_theme_dark_onSurface">#E2E2E5</color>
 </resources>
