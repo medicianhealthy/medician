@@ -231,8 +231,8 @@
     <string name="notification_channel_name">Lembretes de Remédio</string>
     <string name="notification_channel_desc">Avisos para você tomar seus remédios agendados</string>
     <string name="premium_only_feature">Função exclusiva para Premium</string>
-    <string name="premium_pass_title">Passe Mágico de 12h</string>
-    <string name="premium_pass_summary">Assista a um vídeo curto para liberar toda a mágica Premium por 12 horas!</string>
+    <string name="premium_pass_title">Passe Mágico de %1$dh</string>
+    <string name="premium_pass_summary">Assista a um vídeo curto para liberar toda a mágica Premium por %1$d horas!</string>
     <string name="premium_pass_active">Passe Mágico Ativo</string>
     <string name="premium_pass_remaining_format">restam %1$02dh %2$02dm</string>
     <string name="medication_deleted_format">foi removido</string>
@@ -244,7 +244,7 @@
     <string name="sign_in_error_btn_retry">Tentar Novamente</string>
     <string name="reward_ad_not_ready">A mágica ainda não está pronta. Tente novamente em alguns segundos.</string>
     <string name="theme_unlock_title">Desbloquear este tema</string>
-    <string name="theme_unlock_prompt">Assista a um pequeno vídeo para desbloquear este tema e toda a magia Premium por 12 horas!</string>
+    <string name="theme_unlock_prompt">Assista a um pequeno vídeo para desbloquear este tema e toda a magia Premium por %1$d horas!</string>
     <string name="premium_pass_btn_watch">Assistir vídeo</string>
     <string name="cloud_backup_title">Backup na Nuvem</string>
     <string name="cloud_backup_summary">Proteja seus dados com o Google Drive</string>

@@ -231,8 +231,8 @@
     <string name="notification_channel_name">تذكيرات الأدوية</string>
     <string name="notification_channel_desc">تذكيرات لتناول أدويتك المجدولة</string>
     <string name="premium_only_feature">ميزة متاحة لمشتركي بريميوم فقط</string>
-    <string name="premium_pass_title">بطاقة سحرية لمدة ١٢ ساعة</string>
-    <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل ميزات البريميوم لمدة ١٢ ساعة!</string>
+    <string name="premium_pass_title">بطاقة سحرية لمدة %1$d ساعة</string>
+    <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل ميزات البريميوم لمدة %1$d ساعة!</string>
     <string name="premium_pass_active">البطاقة السحرية مفعلة</string>
     <string name="premium_pass_remaining_format">متبقي %1$02d ساعة و %2$02d دقيقة</string>
     <string name="medication_deleted_format">تم الحذف بنجاح</string>
@@ -244,7 +244,7 @@
     <string name="sign_in_error_btn_retry">المحاولة مرة أخرى</string>
     <string name="reward_ad_not_ready">السحر ليس جاهزاً بعد. يرجى المحاولة مرة أخرى بعد ثوانٍ.</string>
     <string name="theme_unlock_title">فتح هذا الثيم</string>
-    <string name="theme_unlock_prompt">شاهد فيديو قصير لفتح هذا الثيم وجميع مزايا البريميوم الأخرى لمدة ١٢ ساعة!</string>
+    <string name="theme_unlock_prompt">شاهد فيديو قصير لفتح هذا الثيم وجميع مزايا البريميوم الأخرى لمدة %1$d ساعة!</string>
     <string name="premium_pass_btn_watch">شاهد الفيديو</string>
     <string name="cloud_backup_title">النسخ الاحتياطي السحابي</string>
     <string name="cloud_backup_summary">احمِ بياناتك باستخدام Google Drive</string>

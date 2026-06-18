@@ -231,8 +231,8 @@
     <string name="notification_channel_name">Medikamenten-Erinnerungen</string>
     <string name="notification_channel_desc">Erinnerungen zur Einnahme deiner geplanten Medikamente</string>
     <string name="premium_only_feature">Nur für Premium-Mitglieder</string>
-    <string name="premium_pass_title">12h Zauber-Pass</string>
-    <string name="premium_pass_summary">Schau dir ein kurzes Video an, um die gesamte Premium-Magie für 12 Stunden freizuschalten!</string>
+    <string name="premium_pass_title">%1$dh Zauber-Pass</string>
+    <string name="premium_pass_summary">Schau dir ein kurzes Video an, um die gesamte Premium-Magie für %1$d Stunden freizuschalten!</string>
     <string name="premium_pass_active">Zauber-Pass Aktiv</string>
     <string name="premium_pass_remaining_format">%1$02dh %2$02dm verbleibend</string>
     <string name="medication_deleted_format">wurde gelöscht</string>
@@ -244,7 +244,7 @@
     <string name="sign_in_error_btn_retry">Erneut versuchen</string>
     <string name="reward_ad_not_ready">Die Magie ist noch nicht bereit. Bitte versuche es in ein paar Sekunden erneut.</string>
     <string name="theme_unlock_title">Dieses Design freischalten</string>
-    <string name="theme_unlock_prompt">Schauen Sie sich ein kurzes Video an, um dieses Design und die gesamte Premium-Magie für 12 Stunden freizuschalten!</string>
+    <string name="theme_unlock_prompt">Schauen Sie sich ein kurzes Video an, um dieses Design und die gesamte Premium-Magie für %1$d Stunden freizuschalten!</string>
     <string name="premium_pass_btn_watch">Video ansehen</string>
     <string name="cloud_backup_title">Cloud-Backup</string>
     <string name="cloud_backup_summary">Schütze deine Daten mit Google Drive</string>

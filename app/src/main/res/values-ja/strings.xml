@@ -231,8 +231,8 @@
     <string name="notification_channel_name">お薬リマインダー</string>
     <string name="notification_channel_desc">指定したお薬の服用時間をお知らせします</string>
     <string name="premium_only_feature">プレミアム機能</string>
-    <string name="premium_pass_title">12時間魔法パス</string>
-    <string name="premium_pass_summary">短い動画を見て、12時間すべてのプレミアム機能を開放しましょう！</string>
+    <string name="premium_pass_title">%1$d時間魔法パス</string>
+    <string name="premium_pass_summary">短い動画を見て、%1$d時間すべてのプレミアム機能を開放しましょう！</string>
     <string name="premium_pass_active">魔法パス有効</string>
     <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
     <string name="medication_deleted_format">が削除されました</string>
@@ -244,7 +244,7 @@
     <string name="sign_in_error_btn_retry">もう一度試す</string>
     <string name="reward_ad_not_ready">魔法の準備がまだできていません。数秒後にもう一度お試しください。</string>
     <string name="theme_unlock_title">テーマをアンロック</string>
-    <string name="theme_unlock_prompt">短い動画を視聴して、このテーマと他のすべてのプレミアム機能を12時間アンロックしましょう！</string>
+    <string name="theme_unlock_prompt">短い動画を視聴して、このテーマと他のすべてのプレミアム機能を%1$d時間アンロックしましょう！</string>
     <string name="premium_pass_btn_watch">動画を見る</string>
     <string name="cloud_backup_title">クラウドバックアップ</string>
     <string name="cloud_backup_summary">Google ドライブでデータを保護</string>

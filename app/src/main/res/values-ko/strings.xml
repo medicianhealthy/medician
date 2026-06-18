@@ -228,8 +228,8 @@
     <string name="form_inhaler">흡입기</string>
     <string name="form_other">기타</string>
     <string name="premium_only_feature">프리미엄 전용 기능</string>
-    <string name="premium_pass_title">12시간 마법 패스</string>
-    <string name="premium_pass_summary">짧은 영상을 시청하고 12시간 동안 모든 프리미엄 기능을 사용해 보세요!</string>
+    <string name="premium_pass_title">%1$d시간 마법 패스</string>
+    <string name="premium_pass_summary">짧은 영상을 시청하고 %1$d시간 동안 모든 프리미엄 기능을 사용해 보세요!</string>
     <string name="premium_pass_active">마법 패스 활성화</string>
     <string name="premium_pass_remaining_format">%1$02d시간 %2$02d분 남음</string>
     <string name="medication_deleted_format">삭제되었습니다</string>
@@ -241,7 +241,7 @@
     <string name="sign_in_error_btn_retry">다시 시도</string>
     <string name="reward_ad_not_ready">아직 마법이 준비되지 않았습니다. 몇 초 후에 다시 시도해 주세요.</string>
     <string name="theme_unlock_title">테마 잠금 해제</string>
-    <string name="theme_unlock_prompt">짧은 영상을 시청하고 이 테마와 모든 프리미엄 기능을 12시간 동안 잠금 해제하세요!</string>
+    <string name="theme_unlock_prompt">짧은 영상을 시청하고 이 테마와 모든 프리미엄 기능을 %1$d시간 동안 잠금 해제하세요!</string>
     <string name="premium_pass_btn_watch">영상 시청</string>
     <string name="cloud_backup_title">클라우드 백업</string>
     <string name="cloud_backup_summary">Google 드라이브로 데이터를 보호하세요</string>
