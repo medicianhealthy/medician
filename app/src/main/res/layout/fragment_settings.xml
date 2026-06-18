@@ -457,53 +457,101 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="20dp"
-                android:clickable="false"
-                android:focusable="false">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:srcCompat="@drawable/ic_magic_wand"
-                    app:tint="?attr/colorOnTertiaryContainer"
-                    android:clickable="false"
-                    android:focusable="false" />
+                android:orientation="vertical"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="16dp"
-                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
                     android:clickable="false"
                     android:focusable="false">
-                    <TextView
-                        android:id="@+id/txt_magic_pass_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/premium_pass_title"
-                        android:textAppearance="?attr/textAppearanceTitleMedium"
-                        android:textColor="?attr/colorOnTertiaryContainer"
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/ic_magic_wand"
+                        app:tint="?attr/colorOnTertiaryContainer"
                         android:clickable="false"
                         android:focusable="false" />
-                    <TextView
-                        android:id="@+id/txt_magic_pass_summary"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/premium_pass_summary"
-                        android:textAppearance="?attr/textAppearanceBodySmall"
-                        android:textColor="?attr/colorOnTertiaryContainer"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical"
+                        android:clickable="false"
+                        android:focusable="false">
+                        <TextView
+                            android:id="@+id/txt_magic_pass_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/premium_pass_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorOnTertiaryContainer"
+                            android:clickable="false"
+                            android:focusable="false" />
+                        <TextView
+                            android:id="@+id/txt_magic_pass_summary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/premium_pass_summary"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnTertiaryContainer"
+                            android:clickable="false"
+                            android:focusable="false" />
+                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/img_magic_pass_status"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:srcCompat="@drawable/ic_done_pill"
+                        app:tint="?attr/colorOnTertiaryContainer"
                         android:clickable="false"
                         android:focusable="false" />
                 </LinearLayout>
-                <ImageView
-                    android:id="@+id/img_magic_pass_status"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:srcCompat="@drawable/ic_done_pill"
-                    app:tint="?attr/colorOnTertiaryContainer"
-                    android:clickable="false"
-                    android:focusable="false" />
+
+                <!-- Magical Progress System -->
+                <FrameLayout
+                    android:id="@+id/container_magic_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="4dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
+
+                    <!-- The Track (Empty state) -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:background="@drawable/bg_magic_progress_track" />
+
+                    <!-- The Magic (Progress Fill) -->
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/magic_pass_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:trackThickness="12dp"
+                        app:trackCornerRadius="6dp"
+                        app:indicatorColor="?attr/colorPrimary"
+                        app:trackColor="@android:color/transparent"
+                        tools:progress="60" />
+
+                    <!-- The Sparkle (Tip Follower) -->
+                    <ImageView
+                        android:id="@+id/img_magic_sparkle"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_sparkle"
+                        app:tint="?attr/colorPrimary"
+                        android:elevation="4dp"
+                        android:translationX="-14dp" />
+                </FrameLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.ui.settings;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,10 @@ public class SettingsFragment extends MedicationWizardFragment {
     private SettingsViewModel viewModel;
     private GoogleSignInClient mGoogleSignInClient;
     private boolean isThemeReverting = false;
+
+    private final android.os.Handler mProgressHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable mProgressRunnable = this::refreshMagicPassProgress;
+    private android.animation.AnimatorSet mMagicAnimator;
 
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -802,6 +807,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         if (isFullPremium) {
             binding.cardMagicPass.setVisibility(View.GONE);
             binding.imgMagicPassStatus.setVisibility(View.GONE);
+            binding.magicPassProgress.setVisibility(View.GONE);
             ((MaterialButton) binding.btnThemeLight).setIcon(null);
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else if (isTempPremium) {
@@ -818,6 +824,9 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.imgMagicPassStatus.setVisibility(View.VISIBLE);
             binding.imgMagicPassStatus.setImageResource(R.drawable.ic_done_pill);
             
+            // Show and update progress bar
+            refreshMagicPassProgress();
+            
             ((MaterialButton) binding.btnThemeLight).setIcon(null);
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else {
@@ -827,6 +836,9 @@ public class SettingsFragment extends MedicationWizardFragment {
             // Show Magic Wand for inactive pass
             binding.imgMagicPassStatus.setVisibility(View.VISIBLE);
             binding.imgMagicPassStatus.setImageResource(R.drawable.ic_magic_wand);
+            
+            // Show empty progress bar for inactive pass
+            refreshMagicPassProgress();
             
             if (rvLoaded) {
                 binding.cardMagicPass.setAlpha(1.0f);
@@ -839,6 +851,94 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
             ((MaterialButton) binding.btnThemeLight).setIconResource(R.drawable.ic_magic_wand);
             ((MaterialButton) binding.btnThemeDark).setIconResource(R.drawable.ic_magic_wand);
+        }
+    }
+
+    private void refreshMagicPassProgress() {
+        if (binding == null || getContext() == null) return;
+
+        long expiry = SharedPreferencesManager.getInstance(requireContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
+        long currentTime = System.currentTimeMillis();
+        long totalDuration = (long) AppConfig.getMagicPassDurationHours() * 60 * 60 * 1000;
+
+        int progress;
+        if (currentTime < expiry) {
+            long remaining = expiry - currentTime;
+            progress = (int) ((remaining * 100) / totalDuration);
+            progress = Math.max(1, Math.min(100, progress)); // Keep at least 1% if active
+        } else {
+            progress = 0;
+        }
+
+        // 1. Animate the bar itself
+        int finalProgress = progress;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            binding.magicPassProgress.setProgress(finalProgress, true);
+        } else {
+            binding.magicPassProgress.setProgress(finalProgress);
+        }
+
+        // 2. Position and animate the Sparkle at the tip
+        binding.magicPassProgress.post(() -> {
+            if (binding == null) return;
+            float width = binding.magicPassProgress.getWidth();
+            float tipX = (width * finalProgress) / 100f;
+            
+            // Adjust for sparkle center
+            binding.imgMagicSparkle.animate()
+                    .translationX(tipX - (binding.imgMagicSparkle.getWidth() / 2f))
+                    .setDuration(currentTime < expiry ? 1000 : 0)
+                    .start();
+            
+            // 3. Keep the "alive" magic pulse running
+            if (finalProgress > 0) {
+                startMagicPulse();
+            } else {
+                stopMagicPulse();
+            }
+        });
+
+        if (currentTime < expiry) {
+            mProgressHandler.removeCallbacks(mProgressRunnable);
+            mProgressHandler.postDelayed(mProgressRunnable, 30000);
+        }
+    }
+
+    private void startMagicPulse() {
+        if (mMagicAnimator != null && mMagicAnimator.isRunning()) return;
+
+        android.animation.ObjectAnimator scaleX = android.animation.ObjectAnimator.ofFloat(binding.imgMagicSparkle, "scaleX", 0.8f, 1.3f, 0.8f);
+        android.animation.ObjectAnimator scaleY = android.animation.ObjectAnimator.ofFloat(binding.imgMagicSparkle, "scaleY", 0.8f, 1.3f, 0.8f);
+        android.animation.ObjectAnimator rotate = android.animation.ObjectAnimator.ofFloat(binding.imgMagicSparkle, "rotation", 0f, 180f);
+        android.animation.ObjectAnimator alpha = android.animation.ObjectAnimator.ofFloat(binding.magicPassProgress, "alpha", 0.6f, 1.0f, 0.6f);
+
+        mMagicAnimator = new android.animation.AnimatorSet();
+        mMagicAnimator.playTogether(scaleX, scaleY, rotate, alpha);
+        mMagicAnimator.setDuration(2000);
+        mMagicAnimator.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+        
+        mMagicAnimator.addListener(new android.animation.AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                if (binding != null && AppConfig.isPremium(requireContext())) {
+                    animation.start();
+                }
+            }
+        });
+        mMagicAnimator.start();
+    }
+
+    private void stopMagicPulse() {
+        if (mMagicAnimator != null) {
+            mMagicAnimator.removeAllListeners();
+            mMagicAnimator.cancel();
+            mMagicAnimator = null;
+        }
+        if (binding != null) {
+            binding.imgMagicSparkle.setScaleX(1.0f);
+            binding.imgMagicSparkle.setScaleY(1.0f);
+            binding.imgMagicSparkle.setAlpha(1.0f);
+            binding.magicPassProgress.setAlpha(1.0f);
         }
     }
 
@@ -856,6 +956,12 @@ public class SettingsFragment extends MedicationWizardFragment {
         }
         
         updateCloudUi(accountManager, CloudBackupSettings.getInstance(requireContext()));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mProgressHandler.removeCallbacks(mProgressRunnable);
     }
 
     @Override

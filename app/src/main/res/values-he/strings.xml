@@ -231,8 +231,8 @@
     <string name="form_inhaler">משאף</string>
     <string name="form_other">אחר</string>
     <string name="premium_only_feature">פיצ\'ר למנויי פרימיום בלבד</string>
-    <string name="premium_pass_title">מנוי קסם ל-12 שעות</string>
-    <string name="premium_pass_summary">צפה בסרטון קצר כדי לפתוח את כל קסמי הפרימיום ל-12 שעות!</string>
+    <string name="premium_pass_title">מנוי קסם ל-%1$d שעות</string>
+    <string name="premium_pass_summary">צפה בסרטון קצר כדי לפתוח את כל קסמי הפרימיום ל-%1$d שעות!</string>
     <string name="premium_pass_active">מנוי קסם פעיל</string>
     <string name="premium_pass_remaining_format">נותרו %1$02d ש\' ו-%2$02d ד\'</string>
     <string name="medication_deleted_format">נמחק בהצלחה</string>
@@ -244,7 +244,7 @@
     <string name="sign_in_error_btn_retry">נסה שוב</string>
     <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
     <string name="theme_unlock_title">פתיחת ערכת נושא</string>
-    <string name="theme_unlock_prompt">צפה בסרטון קצר כדי לפתוח את ערכת הנושא הזו ואת כל שאר קסמי הפרימיום ל-12 שעות!</string>
+    <string name="theme_unlock_prompt">צפה בסרטון קצר כדי לפתוח את ערכת הנושא הזו ואת כל שאר קסמי הפרימיום ל-%1$d שעות!</string>
     <string name="premium_pass_btn_watch">צפה בסרטון</string>
     <string name="cloud_backup_title">גיבוי בענן</string>
     <string name="cloud_backup_summary">הגן על הנתונים שלך באמצעות Google Drive</string>
