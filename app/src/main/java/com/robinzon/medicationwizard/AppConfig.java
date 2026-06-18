@@ -10,6 +10,10 @@ public class AppConfig {
     public static final String KEY_CHEAT_SHOW_ADS = "cheat_show_ads";
     public static final String KEY_TEMP_PREMIUM_EXPIRY = "temp_premium_expiry";
 
+    public static int getMagicPassDurationHours() {
+        return 8;
+    }
+
     public static boolean isPremium(android.content.Context context) {
         if (IS_PREMIUM) return true;
         long expiry = com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(context).getLong(KEY_TEMP_PREMIUM_EXPIRY, 0);

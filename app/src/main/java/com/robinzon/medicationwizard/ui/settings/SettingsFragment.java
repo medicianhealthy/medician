@@ -201,7 +201,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                     if (success && getContext() != null) {
                         long currentExpiry = SharedPreferencesManager.getInstance(getContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
                         long baseTime = Math.max(System.currentTimeMillis(), currentExpiry);
-                        long newExpiry = baseTime + (12 * 60 * 60 * 1000);
+                        long newExpiry = baseTime + ((long) AppConfig.getMagicPassDurationHours() * 60 * 60 * 1000);
                         
                         SharedPreferencesManager.getInstance(getContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, newExpiry);
                         updateRewardedUi();
@@ -738,7 +738,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         
         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(R.string.theme_unlock_title));
-        dialog.setMessage(getString(R.string.theme_unlock_prompt));
+        dialog.setMessage(getString(R.string.theme_unlock_prompt, AppConfig.getMagicPassDurationHours()));
         dialog.setPositiveButton(getString(R.string.premium_pass_btn_watch), (d, which) -> {
             MainActivity mainActivity = (MainActivity) getActivity();
             if (mainActivity != null && mainActivity.getAdsManager().isRewardedLoaded()) {
@@ -746,7 +746,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                     if (success && getContext() != null) {
                         long currentExpiry = SharedPreferencesManager.getInstance(getContext()).getLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, 0);
                         long baseTime = Math.max(System.currentTimeMillis(), currentExpiry);
-                        long newExpiry = baseTime + (12 * 60 * 60 * 1000);
+                        long newExpiry = baseTime + ((long) AppConfig.getMagicPassDurationHours() * 60 * 60 * 1000);
                         
                         SharedPreferencesManager.getInstance(getContext()).setLong(AppConfig.KEY_TEMP_PREMIUM_EXPIRY, newExpiry);
                         
@@ -822,7 +822,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             ((MaterialButton) binding.btnThemeDark).setIcon(null);
         } else {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
-            binding.txtMagicPassTitle.setText(R.string.premium_pass_title);
+            binding.txtMagicPassTitle.setText(getString(R.string.premium_pass_title, AppConfig.getMagicPassDurationHours()));
             
             // Show Magic Wand for inactive pass
             binding.imgMagicPassStatus.setVisibility(View.VISIBLE);
@@ -830,7 +830,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             
             if (rvLoaded) {
                 binding.cardMagicPass.setAlpha(1.0f);
-                binding.txtMagicPassSummary.setText(R.string.premium_pass_summary);
+                binding.txtMagicPassSummary.setText(getString(R.string.premium_pass_summary, AppConfig.getMagicPassDurationHours()));
                 binding.cardMagicPass.setEnabled(true);
             } else {
                 binding.cardMagicPass.setAlpha(0.6f);
