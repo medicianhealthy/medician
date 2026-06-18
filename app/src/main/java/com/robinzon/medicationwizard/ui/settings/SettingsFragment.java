@@ -193,9 +193,6 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.txtVersion.setText(getString(R.string.settings_version_summary, BuildConfig.VERSION_NAME));
 
         MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null) {
-            mainActivity.getAdsManager().addAdAvailabilityListener(adAvailabilityListener);
-        }
 
         binding.cardMagicPass.setOnClickListener(v -> {
             if (mainActivity == null) return;
@@ -880,7 +877,7 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         // 2. Position and animate the Sparkle at the tip
         binding.magicPassProgress.post(() -> {
-            if (binding == null) return;
+            if (binding == null || getContext() == null) return;
             float width = binding.magicPassProgress.getWidth();
             float tipX = (width * finalProgress) / 100f;
             
@@ -920,7 +917,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         mMagicAnimator.addListener(new android.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
-                if (binding != null && AppConfig.isPremium(requireContext())) {
+                if (binding != null && getContext() != null && AppConfig.isPremium(requireContext())) {
                     animation.start();
                 }
             }
@@ -948,6 +945,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         updateNotificationStatus();
         updateRewardedUi();
         
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.getAdsManager().addAdAvailabilityListener(adAvailabilityListener);
+        }
+
         // Sync account info with Google Sign In state
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
         GoogleAccountManager accountManager = GoogleAccountManager.getInstance(requireContext());
@@ -962,11 +964,23 @@ public class SettingsFragment extends MedicationWizardFragment {
     public void onPause() {
         super.onPause();
         mProgressHandler.removeCallbacks(mProgressRunnable);
+        stopMagicPulse();
+        
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.getAdsManager().removeAdAvailabilityListener(adAvailabilityListener);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mProgressHandler.removeCallbacksAndMessages(null);
+        if (mMagicAnimator != null) {
+            mMagicAnimator.removeAllListeners();
+            mMagicAnimator.cancel();
+            mMagicAnimator = null;
+        }
         binding = null;
     }
 }
