@@ -10,7 +10,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ import com.robinzon.medicationwizard.R;
 
 /**
  * Branded Dialog wrapper for Medication Wizard.
- * Provides the "Magical" look: 28dp corners, 2dp primary stroke, and symmetrical wand headers.
+ * Provides the "Magical" look: 28dp corners, 1dp primary stroke, and centered headers.
  */
 public class CustomMaterialDialog {
 
@@ -42,7 +41,7 @@ public class CustomMaterialDialog {
     private void applyMagicalStyling() {
         float density = context.getResources().getDisplayMetrics().density;
         float cornerRadius = 28 * density;
-        float strokeWidth = 2 * density;
+        float strokeWidth = 1 * density; // Softened from 2dp to 1dp
 
         // 1. Geometry: 28dp Rounded Corners
         ShapeAppearanceModel shapeAppearanceModel = new ShapeAppearanceModel.Builder()
@@ -51,7 +50,7 @@ public class CustomMaterialDialog {
 
         MaterialShapeDrawable shapeDrawable = new MaterialShapeDrawable(shapeAppearanceModel);
         
-        // 2. Magic Border: Primary Colored Stroke
+        // 2. Magic Border: Primary Colored Stroke (Subtle 1dp)
         int surfaceAttr = context.getResources().getIdentifier("colorSurface", "attr", context.getPackageName());
         int primaryAttr = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
         
@@ -65,45 +64,21 @@ public class CustomMaterialDialog {
     }
 
     public void setTitle(String title) {
-        // 3. Magical Header: Centered title with symmetrical magic wands
-        LinearLayout titleLayout = new LinearLayout(context);
-        titleLayout.setOrientation(LinearLayout.HORIZONTAL);
-        titleLayout.setGravity(Gravity.CENTER);
-        int padding = (int) (24 * context.getResources().getDisplayMetrics().density);
-        titleLayout.setPadding(padding, padding, padding, (int) (padding * 0.2));
-
-        int primaryAttr = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
-        int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
-        int iconSize = (int) (24 * context.getResources().getDisplayMetrics().density);
-
-        ImageView leftIcon = new ImageView(context);
-        leftIcon.setImageResource(R.drawable.ic_magic_wand);
-        leftIcon.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize));
-        leftIcon.setImageTintList(ColorStateList.valueOf(primaryColor));
-
+        // 3. Magical Header: Centered title (Wands removed for a cleaner look)
         TextView titleView = new TextView(context);
         titleView.setText(title);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         titleView.setTypeface(null, Typeface.BOLD);
-        titleView.setTextColor(primaryColor);
-        titleView.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int textMargin = (int) (12 * context.getResources().getDisplayMetrics().density);
-        textParams.setMargins(textMargin, 0, textMargin, 0);
-        titleView.setLayoutParams(textParams);
-
-        ImageView rightIcon = new ImageView(context);
-        rightIcon.setImageResource(R.drawable.ic_magic_wand);
-        rightIcon.setLayoutParams(new LinearLayout.LayoutParams(iconSize, iconSize));
-        rightIcon.setImageTintList(ColorStateList.valueOf(primaryColor));
-        rightIcon.setScaleX(-1); // Flip horizontally for symmetry
-
-        titleLayout.addView(leftIcon);
-        titleLayout.addView(titleView);
-        titleLayout.addView(rightIcon);
         
-        builder.setCustomTitle(titleLayout);
+        int primaryAttr = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
+        int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
+        titleView.setTextColor(primaryColor);
+        
+        titleView.setGravity(Gravity.CENTER);
+        int padding = (int) (24 * context.getResources().getDisplayMetrics().density);
+        titleView.setPadding(padding, padding, padding, (int) (padding * 0.2));
+        
+        builder.setCustomTitle(titleView);
     }
 
     public void setMessage(String message) {
@@ -164,7 +139,7 @@ public class CustomMaterialDialog {
                 int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
                 positiveButton.setTextColor(primaryColor);
                 positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                positiveButton.setAllCaps(true);
+                positiveButton.setAllCaps(false); // M3 compliant sentence-case
             }
             
             Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
@@ -173,7 +148,16 @@ public class CustomMaterialDialog {
                 int secondaryColor = MaterialColors.getColor(context, variantAttr, Color.GRAY);
                 negativeButton.setTextColor(secondaryColor);
                 negativeButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                negativeButton.setAllCaps(false);
+                negativeButton.setAllCaps(false); // M3 compliant sentence-case
+            }
+
+            Button neutralButton = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+            if (neutralButton != null) {
+                int variantAttr = context.getResources().getIdentifier("colorOnSurfaceVariant", "attr", context.getPackageName());
+                int secondaryColor = MaterialColors.getColor(context, variantAttr, Color.GRAY);
+                neutralButton.setTextColor(secondaryColor);
+                neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                neutralButton.setAllCaps(false); // M3 compliant sentence-case
             }
         }
     }
