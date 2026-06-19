@@ -26,10 +26,13 @@ import java.util.concurrent.TimeUnit;
 public class MedicationWizardApplication extends Application
         implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
 
+    private static android.content.Context sContext;
     private Activity mCurrentActivity;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        sContext = getApplicationContext();
         this.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         
@@ -105,6 +108,10 @@ public class MedicationWizardApplication extends Application
         if (mCurrentActivity == activity) {
             mCurrentActivity = null;
         }
+    }
+
+    public static android.content.Context getContext() {
+        return sContext;
     }
 
     /** LifecycleObserver method that shows the app open ad when the app moves to foreground. */

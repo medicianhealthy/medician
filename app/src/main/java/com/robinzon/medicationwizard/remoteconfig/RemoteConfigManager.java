@@ -7,7 +7,9 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 import com.robinzon.medicationwizard.BuildConfig;
+import com.robinzon.medicationwizard.MedicationWizardApplication;
 import com.robinzon.medicationwizard.utils.Logger;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.lang.ref.WeakReference;
@@ -18,11 +20,12 @@ import java.util.Objects;
 
 public class RemoteConfigManager {
 
+    private static final String PREF_PREFIX = "rc_cache_";
     private String LOG_REMOTE_CONFIG_VALUES;
-    public static WeakReference<RemoteConfigManager> sThisInstance;
+    public static WeakReference<RemoteConfigManager> sRemoteConfigManagerInstance;
 
 
-    private Map<String, FirebaseRemoteConfigValue> mFirebaseValues;
+    private Map<String, FirebaseRemoteConfigValue> mRemoteConfigValues;
     public static final float FETCH_INTERVAL_HOURS = 0.5F;
     public static final byte FETCH_TIMEOUT_SECONDS = 5;
 
@@ -53,28 +56,40 @@ public class RemoteConfigManager {
     }
 
     @NonNull public static RemoteConfigManager getInstance() {
-        if (null == sThisInstance || null == sThisInstance.get()) {
-            sThisInstance = new WeakReference<>(new RemoteConfigManager());
+        if (null == sRemoteConfigManagerInstance || null == sRemoteConfigManagerInstance.get()) {
+            sRemoteConfigManagerInstance = new WeakReference<>(new RemoteConfigManager());
         }
-        return sThisInstance.get();
+        return sRemoteConfigManagerInstance.get();
     }
 
-    public void fetchConfiguration(@NonNull final FireBaseFetchCallBack fireBaseFetchCallBack) {
+    public void fetchConfiguration(@NonNull final FireBaseFetchCallBack fetchCallbackListener) {
         getFirebaseClient().fetchAndActivate().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 setFirebaseValues(getFirebaseClient().getAll());
+                cacheValuesToPrefs(mRemoteConfigValues);
                 if (Logger.IS_LOGGING_ENABLED) {
                     logRemoteConfigValues();
                 }
             }
-            fireBaseFetchCallBack.onFetchCompleted(task.isSuccessful());
+            fetchCallbackListener.onFetchCompleted(task.isSuccessful());
         });
     }
 
+    private void cacheValuesToPrefs(Map<String, FirebaseRemoteConfigValue> remoteValuesMap) {
+        if (remoteValuesMap == null) return;
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(MedicationWizardApplication.getContext());
+        for (Map.Entry<String, FirebaseRemoteConfigValue> entry : remoteValuesMap.entrySet()) {
+            String configKey = entry.getKey();
+            FirebaseRemoteConfigValue remoteValue = entry.getValue();
+            // We store everything as strings in the cache for simplicity
+            sharedPreferencesManager.setString(PREF_PREFIX + configKey, remoteValue.asString());
+        }
+    }
+
     private void logRemoteConfigValues() {
-        final Map<String, FirebaseRemoteConfigValue> firebaseValues = getFirebaseValues();
-        if (null != firebaseValues && !firebaseValues.isEmpty()) {
-            for (Map.Entry<String, FirebaseRemoteConfigValue> entry : firebaseValues.entrySet()) {
+        final Map<String, FirebaseRemoteConfigValue> remoteConfigValues = getFirebaseValues();
+        if (null != remoteConfigValues && !remoteConfigValues.isEmpty()) {
+            for (Map.Entry<String, FirebaseRemoteConfigValue> entry : remoteConfigValues.entrySet()) {
                 if (Logger.IS_LOGGING_ENABLED) {
                     Logger.log(Logger.REMOTE_CONFIG,
                             "[%s, %s]",
@@ -99,82 +114,138 @@ public class RemoteConfigManager {
         return null;
     }
 
-    public int getIntValue(final @NonNull String key) {
-        final Map<String, FirebaseRemoteConfigValue> firebaseValues = getFirebaseValues();
-        if (null != firebaseValues && !firebaseValues.isEmpty()) {
-            final FirebaseRemoteConfigValue remoteConfigValue = firebaseValues.get(key);
-            if (null != remoteConfigValue) {
+    // --- Core 3-Tier Getters ---
+
+    public int getIntValue(final @NonNull String configKey) {
+        // 1. Fresh Memory Cache
+        final Map<String, FirebaseRemoteConfigValue> remoteConfigValues = getFirebaseValues();
+        if (remoteConfigValues != null && remoteConfigValues.containsKey(configKey)) {
+            FirebaseRemoteConfigValue remoteValue = remoteConfigValues.get(configKey);
+            // Only use if the value actually came from a Remote source (Server or Cache)
+            if (remoteValue != null && remoteValue.getSource() != FirebaseRemoteConfig.VALUE_SOURCE_STATIC) {
                 try {
-                    return (int) remoteConfigValue.asLong();
-                } catch (IllegalArgumentException e) {
-                    return getDefaultIntValue(key);
-                }
+                    String rawStringValue = remoteValue.asString();
+                    return Integer.parseInt(rawStringValue);
+                } catch (Exception ignored) {}
             }
         }
-        return getDefaultIntValue(key);
-    }
 
-    private int getDefaultIntValue(@NonNull String key) {
-        final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(key);
-        return null != defaultValueFromMap ? (int) defaultValueFromMap : Integer.MAX_VALUE;
-    }
-
-
-    @SuppressWarnings("unused")
-    public boolean getBooleanValue(final String key) {
-        if (isFirBaseValueExist(key)) {
+        // 2. Persistent Prefs Cache
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(MedicationWizardApplication.getContext());
+        String cachedValue = sharedPreferencesManager.getString(PREF_PREFIX + configKey, null);
+        if (cachedValue != null) {
             try {
-                return Objects.requireNonNull(getFirebaseValues().get(key)).asBoolean();
-            } catch (IllegalArgumentException e) {
-                return getDefaultBooleanValue(key);
-            }
+                return Integer.parseInt(cachedValue);
+            } catch (Exception ignored) {}
         }
-        return getDefaultBooleanValue(key);
+
+        // 3. Static Defaults
+        return getDefaultIntValue(configKey);
     }
 
+    private int getDefaultIntValue(@NonNull String configKey) {
+        final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(configKey);
+        return null != defaultValueFromMap ? (int) defaultValueFromMap : 0;
+    }
 
-    private boolean getDefaultBooleanValue(String key) {
-        final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(key);
+    public boolean getBooleanValue(final @NonNull String configKey) {
+        // 1. Fresh Memory Cache
+        final Map<String, FirebaseRemoteConfigValue> remoteConfigValues = getFirebaseValues();
+        if (remoteConfigValues != null && remoteConfigValues.containsKey(configKey)) {
+            FirebaseRemoteConfigValue remoteValue = remoteConfigValues.get(configKey);
+            if (remoteValue != null && remoteValue.getSource() != FirebaseRemoteConfig.VALUE_SOURCE_STATIC) {
+                try {
+                    return remoteValue.asBoolean();
+                } catch (Exception ignored) {}
+            }
+        }
+
+        // 2. Persistent Prefs Cache
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(MedicationWizardApplication.getContext());
+        String cachedValue = sharedPreferencesManager.getString(PREF_PREFIX + configKey, null);
+        if (cachedValue != null) {
+            return Boolean.parseBoolean(cachedValue);
+        }
+
+        // 3. Static Defaults
+        return getDefaultBooleanValue(configKey);
+    }
+
+    private boolean getDefaultBooleanValue(String configKey) {
+        final Object defaultValueFromMap = RemoteConfigKeysAndDefaults.VALUES.get(configKey);
         return null != defaultValueFromMap && (boolean) defaultValueFromMap;
     }
 
-
-
-    @SuppressWarnings("unused")
-    @Nullable public String getStringValue(final String key) {
-        if (null != getFirebaseValues() && !getFirebaseValues().isEmpty()) {
-            final FirebaseRemoteConfigValue remoteConfigValue = getFirebaseValues().get(key);
-            if (null != remoteConfigValue) {
-                try {
-                    return remoteConfigValue.asString();
-                } catch (IllegalArgumentException e) {
-                    return (String) RemoteConfigKeysAndDefaults.VALUES.get(key);
-                }
+    @NonNull public String getStringValue(final @NonNull String configKey) {
+        // 1. Fresh Memory Cache
+        final Map<String, FirebaseRemoteConfigValue> remoteConfigValues = getFirebaseValues();
+        if (remoteConfigValues != null && remoteConfigValues.containsKey(configKey)) {
+            FirebaseRemoteConfigValue remoteValue = remoteConfigValues.get(configKey);
+            if (remoteValue != null && remoteValue.getSource() != FirebaseRemoteConfig.VALUE_SOURCE_STATIC) {
+                return remoteValue.asString();
             }
         }
-        return (String) RemoteConfigKeysAndDefaults.VALUES.get(key);
+
+        // 2. Persistent Prefs Cache
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(MedicationWizardApplication.getContext());
+        String cachedValue = sharedPreferencesManager.getString(PREF_PREFIX + configKey, null);
+        if (cachedValue != null) {
+            return cachedValue;
+        }
+
+        // 3. Static Defaults
+        Object defaultValue = RemoteConfigKeysAndDefaults.VALUES.get(configKey);
+        return defaultValue != null ? defaultValue.toString() : "";
     }
 
+    // --- Semantic Getters ---
 
-    boolean isFirBaseValueExist(final String key) {
-        final Map<String, FirebaseRemoteConfigValue> firebaseValues = getFirebaseValues();
-        if (null != firebaseValues && !firebaseValues.isEmpty()) {
-            final FirebaseRemoteConfigValue remoteConfigValue = firebaseValues.get(key);
-            return null != remoteConfigValue;
-        }
-        return false;
+    public int getMinSessionsForInterstitial() {
+        return getIntValue(RemoteConfigKeysAndDefaults.MIN_SESSIONS_INTERSTITIAL);
+    }
+
+    public int getMinAppTimeForInterstitialMins() {
+        return getIntValue(RemoteConfigKeysAndDefaults.MIN_APP_TIME_INTERSTITIAL_MINS);
+    }
+
+    public int getMinAppTimeForBannerMins() {
+        return getIntValue(RemoteConfigKeysAndDefaults.MIN_APP_TIME_BANNER_MINS);
+    }
+
+    public int getMagicPassDurationHours() {
+        return getIntValue(RemoteConfigKeysAndDefaults.MAGIC_PASS_DURATION_HOURS);
+    }
+
+    public int getHistoryRetentionDays() {
+        return getIntValue(RemoteConfigKeysAndDefaults.HISTORY_RETENTION_DAYS);
+    }
+
+    public int getNumOfMedsToShowRv() {
+        return getIntValue(RemoteConfigKeysAndDefaults.NUM_OF_MEDS_TO_SHOW_RV);
+    }
+
+    public boolean shouldShowAppOpen() {
+        return getBooleanValue(RemoteConfigKeysAndDefaults.AD_SHOULD_SHOW_APP_OPEN);
+    }
+
+    public int getAdInterstitialCoolDownSeconds() {
+        return getIntValue(RemoteConfigKeysAndDefaults.AD_INTERSTITIAL_COOL_DOWN_SECONDS);
+    }
+
+    // --- Internal Helpers ---
+
+    boolean isFirBaseValueExist(final String configKey) {
+        final Map<String, FirebaseRemoteConfigValue> remoteConfigValues = getFirebaseValues();
+        return remoteConfigValues != null && remoteConfigValues.containsKey(configKey);
     }
 
     @Nullable private Map<String, FirebaseRemoteConfigValue> getFirebaseValues() {
-        return mFirebaseValues;
+        return mRemoteConfigValues;
     }
 
-    /**
-     * @param firebaseValues Sets the firebase values map member of this object.
-     *                       This method assumes the map is not null.
-     */
-    private void setFirebaseValues(@NonNull Map<String, FirebaseRemoteConfigValue> firebaseValues) {
-        mFirebaseValues = firebaseValues;
+    private void setFirebaseValues(@NonNull Map<String, FirebaseRemoteConfigValue> remoteConfigValues) {
+        mRemoteConfigValues = remoteConfigValues;
     }
 
 }
+

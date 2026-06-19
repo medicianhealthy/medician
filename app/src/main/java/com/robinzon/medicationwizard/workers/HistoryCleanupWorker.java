@@ -29,12 +29,13 @@ public class HistoryCleanupWorker extends Worker {
         Logger.log("HistoryCleanupWorker", "Starting history cleanup...");
 
         try {
-            long thresholdMillis = System.currentTimeMillis() - (AppConfig.NUMBER_OF_DAYS_TO_KEEP_HISTORY * 24 * 60 * 60 * 1000L);
+            int retentionDays = AppConfig.getHistoryRetentionDays();
+            long thresholdMillis = System.currentTimeMillis() - ((long) retentionDays * 24 * 60 * 60 * 1000L);
             
             AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
             db.doseInstanceDao().deleteOldInstances(thresholdMillis);
 
-            Logger.log("HistoryCleanupWorker", "Cleanup completed successfully.");
+            Logger.log("HistoryCleanupWorker", "Cleanup completed successfully. Retained: " + retentionDays + " days.");
             return Result.success();
         } catch (Exception e) {
             Logger.log("HistoryCleanupWorker", "Error during cleanup: " + e.getMessage());

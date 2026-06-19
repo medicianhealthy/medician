@@ -290,8 +290,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void loadCheats() {
-        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(this);
-        AppConfig.IS_PREMIUM = sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM);
-        AppConfig.FORCED_ADS_VISIBLE = sp.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE);
+        SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(this);
+        AppConfig.IS_PREMIUM = sharedPreferencesManager.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM);
+        AppConfig.FORCED_ADS_VISIBLE = sharedPreferencesManager.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE);
     }
 }

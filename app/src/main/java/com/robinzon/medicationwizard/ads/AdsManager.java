@@ -103,7 +103,13 @@ public class AdsManager implements OnAdActionListener{
 
     private void loadAds() {
         if (null != mMainBanner) {
-            mMainBanner.load();
+            float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(mActivity);
+            int minimumMinutesForBanner = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getMinAppTimeForBannerMins();
+            if (totalUsageMinutes >= (float) minimumMinutesForBanner) {
+                mMainBanner.load();
+            } else {
+                com.robinzon.medicationwizard.utils.Logger.log("AdsManager", "Banner load skipped. Usage mins: " + totalUsageMinutes + " < Min: " + minimumMinutesForBanner);
+            }
         }
         if (null != mMainInterstitial) {
             mMainInterstitial.load();
@@ -171,12 +177,15 @@ public class AdsManager implements OnAdActionListener{
     }
 
     private boolean shouldShowInterstitialBasedOnUsage() {
-        final int sessions = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(mActivity);
-        final float minutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(mActivity);
+        final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(mActivity);
+        final float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(mActivity);
         
-        // Thresholds: User must have either opened the app at least twice 
-        // OR spent more than 2 minutes of active time in the app.
-        return sessions >= 2 || minutes >= 2.0f;
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager remoteConfigManager = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
+        int minimumSessionsThreshold = remoteConfigManager.getMinSessionsForInterstitial();
+        int minimumMinutesThreshold = remoteConfigManager.getMinAppTimeForInterstitialMins();
+
+        // Thresholds from Remote Config
+        return sessionCount >= minimumSessionsThreshold || totalUsageMinutes >= (float) minimumMinutesThreshold;
     }
     /** @noinspection unused*/
     public void showRewarded(OnRewardedFinishedListener listener) {
