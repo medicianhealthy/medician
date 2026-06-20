@@ -341,7 +341,7 @@ public class SettingsFragment extends MedicationWizardFragment {
                             getActivity().startActivity(intent);
                         }
                     });
-                    confirmDialog.setNegativeButton(getString(R.string.buttoh_not_now), null);
+                    confirmDialog.setNegativeButton(getString(R.string.button_not_now), null);
                     confirmDialog.show();
                 }
             });
@@ -534,7 +534,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         dialog.setPositiveButton(getString(R.string.cloud_backup_title), (d, which) -> {
             googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
         });
-        dialog.setNegativeButton(getString(R.string.buttoh_not_now), null);
+        dialog.setNegativeButton(getString(R.string.button_not_now), null);
         dialog.show();
     }
 

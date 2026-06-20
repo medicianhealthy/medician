@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
                     startActivity(intent);
                 });
-                dialog.setNegativeButton(getString(R.string.buttoh_not_now), null);
+                dialog.setNegativeButton(getString(R.string.button_not_now), null);
                 dialog.show();
             }
         }

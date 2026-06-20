@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Le Magicien des Médicaments</string>
     <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
@@ -18,6 +18,8 @@
 
     <!-- Settings Screen -->
     <string name="settings_category_reminders">Rappels</string>
+    <string name="settings_notifications_disabled_summary">Appuyez ici pour autoriser les rappels et rester en bonne santé.</string>
+    <string name="settings_notifications_manage_prompt">Pour désactiver ou gérer vos alertes de santé, veuillez utiliser les paramètres du système.</string>
     <string name="settings_notifications_title">Alertes de Santé</string>
     <string name="settings_notifications_summary">Gardez vos rappels actifs pour ne jamais manquer une dose. Restez en bonne santé !</string>
 
@@ -68,6 +70,7 @@
     <string name="backup_restore_warning">Restaurer une sauvegarde supprimera tous vos médicaments et votre historique actuels. Cette action est irréversible. Êtes-vous sûr ?</string>
 
     <string name="settings_clear_data_title">Nouveau Départ</string>
+    <string name="settings_clear_data_message">Cela supprimera définitivement tous vos médicaments, votre historique et toutes les sauvegardes cloud. Cette action est irréversible. Êtes-vous sûr ?</string>
     <string name="settings_clear_data_summary">Effacer tous les médicaments et l\'historique. Attention, c\'est irréversible !</string>
 
     <string name="settings_category_about">À propos</string>
@@ -81,8 +84,8 @@
     <string name="permission_rational_notification_title">Restez sur la bonne voie !</string>
     <string name="permission_rational_notification_message">Pour vous aider à vous souvenir de vos doses, j\'aimerais vous envoyer un petit rappel amical le moment venu. Ça vous va ?</string>
     <string name="button_sure">Bien sûr</string>
-    <string name="buttoh_not_now">Pas maintenant</string>
-    <string name="buttoh_never">Jamais</string>
+    <string name="button_not_now">Pas maintenant</string>
+    <string name="button_never">Jamais</string>
     <string name="notification_missing">Pas de permission pour les notifications</string>
     <string name="button_allow">Autoriser</string>
     <string name="button_grant">Accorder</string>
@@ -168,8 +171,8 @@
     <string name="support_body_locale">Langue : %1$s</string>
     <string name="support_body_message_hint">--- Décrivez la magie ici ---</string>
     <string name="sign_in_first">Veuillez vous connecter d\'abord</string>
-    <string name="backing_up_drive">Sauvegarde sur Google Drive&#8230;</string>
-    <string name="restoring_cloud">Restauration depuis le cloud&#8230;</string>
+    <string name="backing_up_drive">Sauvegarde sur Google Drive\u2026</string>
+    <string name="restoring_cloud">Restauration depuis le cloud\u2026</string>
     <string name="restore_success">Restauration réussie !</string>
     <string name="no_backup_found">Aucune sauvegarde cloud trouvée.</string>
     <string name="restore_failed_format">Échec de la restauration : %1$s</string>
@@ -186,6 +189,7 @@
     <string name="button_undo">Annuler</string>
 
     <string name="sound_picker_title">Choisir le Son d\'Alerte</string>
+    <string name="extra_details_label">Détails Supplémentaires (optionnel)</string>
     <string name="instructions_label">Instructions</string>
     <string name="instruction_before_eating">Avant de manger</string>
     <string name="instruction_after_eating">Après avoir mangé</string>
@@ -235,14 +239,16 @@
     <string name="premium_pass_summary">Regardez une courte vidéo pour débloquer toute la magie Premium pendant %1$d heures !</string>
     <string name="premium_pass_active">Pass Magique Actif</string>
     <string name="premium_pass_remaining_format">%1$02dh %2$02dm restant</string>
+    <string name="loading_magic">Chargement de la magie\u2026 veuillez patienter.</string>
+    <string name="reward_ad_not_ready">La magie n\'est pas encore prête. Veuillez réessayer dans quelques secondes.</string>
     <string name="medication_deleted_format">a été supprimé</string>
+
     <string name="sign_in_error_title">Problème de connexion magique</string>
     <string name="sign_in_error_network">Nous n\'avons pas pu atteindre les nuages magiques. Veuillez vérifier votre connexion Internet et réessayer.</string>
     <string name="sign_in_error_cancelled">La connexion a été interrompue. Souhaitez-vous réessayer ?</string>
     <string name="sign_in_error_dev">Le portail magique est en cours de maintenance. Nos magiciens s\'en occupent déjà.</string>
     <string name="sign_in_error_generic">Une erreur inattendue s\'est produite lors de la connexion à votre compte. Veuillez réessayer dans un instant.</string>
     <string name="sign_in_error_btn_retry">Réessayer</string>
-    <string name="reward_ad_not_ready">La magie n\'est pas encore prête. Veuillez réessayer dans quelques secondes.</string>
     <string name="theme_unlock_title">Débloquer ce thème</string>
     <string name="theme_unlock_prompt">Regardez une courte vidéo pour débloquer ce thème et toute la magie Premium pendant %1$d heures !</string>
     <string name="premium_pass_btn_watch">Regarder la vidéo</string>
@@ -259,5 +265,17 @@
     <string name="cloud_backup_failed">Échec de la sauvegarde.</string>
 
     <string name="alarm_permission_title">Alarmes Exactes Requises</string>
-    <string name="alarm_permission_message">Pour garantir que vos rappels sonnent à la minute près, veuillez autoriser l\'application à programmer des alarmas exactes.</string>
+    <string name="alarm_permission_message">Pour garantir que vos rappels sonnent à la minute près, veuillez autoriser l\'application à programmer des alarmes exactas.</string>
+    <string name="admob_application_id_test" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banner_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="admob_rewarded_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/5354046379</string>
+    <string name="admob_rv_id_test" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="admob_app_open_id_test" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="admob_application_id_live" translatable="false">ca-app-pub-1732884929436465~8629726144</string>
+    <string name="admob_banner_id_live" translatable="false">ca-app-pub-1732884929436465/8454840017</string>
+    <string name="admob_interstitial_id_live" translatable="false">ca-app-pub-1732884929436465/1796850753</string>
+    <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
+    <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
 </resources>

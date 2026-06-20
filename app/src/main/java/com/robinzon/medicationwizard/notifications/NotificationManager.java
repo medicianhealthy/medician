@@ -153,7 +153,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
                 requestPermission();
             }
         });
-        dialog.setNegativeButton(getActivity().getString(R.string.buttoh_not_now), null);
+        dialog.setNegativeButton(getActivity().getString(R.string.button_not_now), null);
         dialog.show();
     }
 
@@ -170,8 +170,8 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         dialog.setTitle(getActivity().getString(R.string.permission_rational_notification_title));
         dialog.setMessage(getActivity().getString(R.string.permission_rational_notification_message));
         dialog.setPositiveButton(getActivity().getString(R.string.button_sure), this);
-        dialog.setNegativeButton(getActivity().getString(R.string.buttoh_not_now), this);
-        dialog.setNeutralButton(getActivity().getString(R.string.buttoh_never), this);
+        dialog.setNegativeButton(getActivity().getString(R.string.button_not_now), this);
+        dialog.setNeutralButton(getActivity().getString(R.string.button_never), this);
         dialog.setOnDismissListener(this);
         dialog.show();
     }

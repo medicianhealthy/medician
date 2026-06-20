@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">お薬の魔法使い</string>
     <string name="navigation_drawer_open">ナビゲーションメニューを開く</string>
@@ -18,6 +18,8 @@
 
     <!-- Settings Screen -->
     <string name="settings_category_reminders">リマインダー</string>
+    <string name="settings_notifications_disabled_summary">ここをタップしてリマインダーを許可し、健康を維持しましょう。</string>
+    <string name="settings_notifications_manage_prompt">健康アラートを無効にしたり管理したりするには、システム設定を使用してください。</string>
     <string name="settings_notifications_title">健康アラート</string>
     <string name="settings_notifications_summary">飲み忘れを防ぐために通知をオンにしておきましょう。健康第一！</string>
 
@@ -68,6 +70,7 @@
     <string name="backup_restore_warning">バックアップを復元すると、現在のお薬と履歴がすべて削除されます。この操作は取り消せません。よろしいですか？</string>
 
     <string name="settings_clear_data_title">データを初期化</string>
+    <string name="settings_clear_data_message">これにより、すべてのお薬、履歴、およびクラウドバックアップが完全に削除されます。この操作は取り消せません。よろしいですか？</string>
     <string name="settings_clear_data_summary">お薬と履歴をすべて消去します。ご注意ください！</string>
 
     <string name="settings_category_about">このアプリについて</string>
@@ -81,8 +84,8 @@
     <string name="permission_rational_notification_title">健康管理をサポート！</string>
     <string name="permission_rational_notification_message">お薬の時間を忘れないよう、お知らせを送ってもよろしいですか？</string>
     <string name="button_sure">はい</string>
-    <string name="buttoh_not_now">あとで</string>
-    <string name="buttoh_never">しない</string>
+    <string name="button_not_now">あとで</string>
+    <string name="button_never">しない</string>
     <string name="notification_missing">通知の権限がありません</string>
     <string name="button_allow">許可する</string>
     <string name="button_grant">権限を与える</string>
@@ -168,8 +171,8 @@
     <string name="support_body_locale">言語: %1$s</string>
     <string name="support_body_message_hint">--- ここに詳細を記入してください ---</string>
     <string name="sign_in_first">先にサインインしてください</string>
-    <string name="backing_up_drive">Google ドライブにバックアップ中&#8230;</string>
-    <string name="restoring_cloud">クラウドから復元中&#8230;</string>
+    <string name="backing_up_drive">Google ドライブにバックアップ中\u2026</string>
+    <string name="restoring_cloud">クラウドから復元中\u2026</string>
     <string name="restore_success">復元が完了しました！</string>
     <string name="no_backup_found">バックアップが見つかりません。</string>
     <string name="restore_failed_format">復元に失敗しました: %1$s</string>
@@ -186,6 +189,7 @@
     <string name="button_undo">元に戻す</string>
 
     <string name="sound_picker_title">通知音を選択</string>
+    <string name="extra_details_label">追加の詳細 (オプション)</string>
     <string name="instructions_label">服用指示</string>
     <string name="instruction_before_eating">食前</string>
     <string name="instruction_after_eating">食後</string>
@@ -235,14 +239,16 @@
     <string name="premium_pass_summary">短い動画を見て、%1$d時間すべてのプレミアム機能を開放しましょう！</string>
     <string name="premium_pass_active">魔法パス有効</string>
     <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
+    <string name="loading_magic">魔法を読み込み中\u2026 少々お待ちください。</string>
+    <string name="reward_ad_not_ready">魔法の準備がまだできていません。数秒後にもう一度お試しください。</string>
     <string name="medication_deleted_format">が削除されました</string>
+
     <string name="sign_in_error_title">魔法の接続エラー</string>
     <string name="sign_in_error_network">魔法の雲に到達できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
     <string name="sign_in_error_cancelled">ログインが中断されました。もう一度お試しになりますか？</string>
     <string name="sign_in_error_dev">魔法のポータルは現在メンテナンス中です。魔法使いたちがすでに対応しています。</string>
     <string name="sign_in_error_generic">アカウントへの接続中に予期しない問題が発生しました。しばらくしてからもう一度お試しください。</string>
     <string name="sign_in_error_btn_retry">もう一度試す</string>
-    <string name="reward_ad_not_ready">魔法の準備がまだできていません。数秒後にもう一度お試しください。</string>
     <string name="theme_unlock_title">テーマをアンロック</string>
     <string name="theme_unlock_prompt">短い動画を視聴して、このテーマと他のすべてのプレミアム機能を%1$d時間アンロックしましょう！</string>
     <string name="premium_pass_btn_watch">動画を見る</string>
@@ -260,4 +266,16 @@
 
     <string name="alarm_permission_title">正確なアラーム設定の許可</string>
     <string name="alarm_permission_message">お薬の時間を正確にお知らせするために、システム設定で正確なアラームの予約を許可してください。</string>
+    <string name="admob_application_id_test" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banner_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="admob_rewarded_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/5354046379</string>
+    <string name="admob_rv_id_test" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="admob_app_open_id_test" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="admob_application_id_live" translatable="false">ca-app-pub-1732884929436465~8629726144</string>
+    <string name="admob_banner_id_live" translatable="false">ca-app-pub-1732884929436465/8454840017</string>
+    <string name="admob_interstitial_id_live" translatable="false">ca-app-pub-1732884929436465/1796850753</string>
+    <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
+    <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
 </resources>

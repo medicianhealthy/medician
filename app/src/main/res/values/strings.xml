@@ -98,8 +98,8 @@
     <string name="permission_rational_notification_title">Stay on Track!</string>
     <string name="permission_rational_notification_message">To help you remember your doses, I\'d love to send you a friendly nudge when it\'s time. Sound good?</string>
     <string name="button_sure">Sure</string>
-    <string name="buttoh_not_now">Not now</string>
-    <string name="buttoh_never">Never</string>
+    <string name="button_not_now">Not now</string>
+    <string name="button_never">Never</string>
     <string name="notification_missing">No notifications permission</string>
     <string name="button_allow">Allow</string>
     <string name="button_grant">Grant</string>

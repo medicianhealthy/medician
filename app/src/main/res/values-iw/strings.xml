@@ -18,6 +18,8 @@
 
     <!-- Settings Screen -->
     <string name="settings_category_reminders">תזכורות</string>
+    <string name="settings_notifications_disabled_summary">לחץ כאן כדי לאפשר תזכורות ולהישאר בריא.</string>
+    <string name="settings_notifications_manage_prompt">כדי לבטל או לנהל את התראות הבריאות שלך, אנא השתמש בהגדרות המערכת.</string>
     <string name="settings_notifications_title">התראות בריאות</string>
     <string name="settings_notifications_summary">שמור על התזכורות פעילות כדי לא לפספס אף מנה. לבריאות!</string>
 
@@ -68,6 +70,7 @@
     <string name="backup_restore_warning">שחזור גיבוי ימחק את כל התרופות וההיסטוריה הנוכחיים שלך. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
 
     <string name="settings_clear_data_title">התחלה מחדש</string>
+    <string name="settings_clear_data_message">פעולה זו תמחק לצמיתות את כל התרופות, ההיסטוריה וכל גיבוי בענן. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
     <string name="settings_clear_data_summary">מחק את כל התרופות וההיסטוריה. זהירות, לא ניתן לבטל זאת!</string>
 
     <string name="settings_category_about">אודות</string>
@@ -81,8 +84,8 @@
     <string name="permission_rational_notification_title">הישאר במסלול!</string>
     <string name="permission_rational_notification_message">כדי לעזור לך לזכור את המנות שלך, אשמח לשלוח לך תזכורת ידידותית כשמגיע הזמן. נשמע טוב?</string>
     <string name="button_sure">בטח</string>
-    <string name="buttoh_not_now">לא עכשיו</string>
-    <string name="buttoh_never">לעולם לא</string>
+    <string name="button_not_now">לא עכשיו</string>
+    <string name="button_never">לעולם לא</string>
     <string name="notification_missing">אין הרשאה להתראות</string>
     <string name="button_allow">אפשר</string>
     <string name="button_grant">הענק הרשאה</string>
@@ -164,7 +167,7 @@
     <string name="support_body_header">--- פרטי המגילה הקסומה ---</string>
     <string name="support_body_version">גרסת אפליקציה: %1$s</string>
     <string name="support_body_device">מכשיר: %1$s</string>
-    <string name="support_body_os">גרסת אנדרואי드: %1$s</string>
+    <string name="support_body_os">גרסת אנדרואיד: %1$s</string>
     <string name="support_body_locale">שפה: %1$s</string>
     <string name="support_body_message_hint">--- תאר את הקסם כאן ---</string>
     <string name="sign_in_first">בבקשה התחבר קודם</string>
@@ -186,6 +189,7 @@
     <string name="button_undo">בטל</string>
 
     <string name="sound_picker_title">בחר צליל התראה</string>
+    <string name="extra_details_label">פרטים נוספים (אופציונלי)</string>
     <string name="instructions_label">הוראות</string>
     <string name="instruction_before_eating">לפני האוכל</string>
     <string name="instruction_after_eating">אחרי האוכל</string>
@@ -227,16 +231,20 @@
     <string name="form_drops">טיפות</string>
     <string name="form_inhaler">משאף</string>
     <string name="form_other">אחר</string>
+
+    <string name="notification_channel_name">תזכורות תרופות</string>
+    <string name="notification_channel_desc">תזכורות לקחת את התרופות שנקבעו</string>
     <string name="premium_only_feature">פיצ\'ר למנויי פרימיום בלבד</string>
     <string name="premium_pass_title">מנוי קסם ל-%1$d שעות</string>
     <string name="premium_pass_summary">צפה בסרטון קצר כדי לפתוח את כל קסמי הפרימיום ל-%1$d שעות!</string>
     <string name="premium_pass_active">מנוי קסם פעיל</string>
     <string name="premium_pass_remaining_format">נותרו %1$02d ש\' ו-%2$02d ד\'</string>
+    <string name="loading_magic">טוען קסם... אנא המתן.</string>
     <string name="medication_deleted_format">נמחק בהצלחה</string>
     <string name="sign_in_error_title">בעיה בחיבור לענן</string>
     <string name="sign_in_error_network">לא הצלחנו להתחבר לענני הקסם. אנא בדקו את חיבור האינטרנט ונסו שוב.</string>
     <string name="sign_in_error_cancelled">ההתחברות הופסקה. תרצו לנסות שוב?</string>
-    <string name="sign_in_error_dev">פורטל הקסם נמצא כעת בתחזוקה. הקוסמים שלנו כבר מטפלים בזה.</string>
+    <string name="sign_in_error_dev">פורטל הקסם נמצא כעת בתחזוקה. הקוסמים שלנו כבר מטפטים בזה.</string>
     <string name="sign_in_error_generic">משהו לא צפוי קרה בזמן החיבור לחשבון שלך. אנא נסו שוב בעוד רגע.</string>
     <string name="sign_in_error_btn_retry">נסה שוב</string>
     <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
@@ -257,4 +265,16 @@
 
     <string name="alarm_permission_title">נדרשת הרשאת התראות מדויקות</string>
     <string name="alarm_permission_message">כדי להבטיח שתזכורות התרופות שלך יופעלו בדקה המדויקת, אנא אפשר לאפליקציה לתזמן התראות מדויקות.</string>
+    <string name="admob_application_id_test" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_banner_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="admob_rewarded_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/5354046379</string>
+    <string name="admob_rv_id_test" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="admob_app_open_id_test" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="admob_application_id_live" translatable="false">ca-app-pub-1732884929436465~8629726144</string>
+    <string name="admob_banner_id_live" translatable="false">ca-app-pub-1732884929436465/8454840017</string>
+    <string name="admob_interstitial_id_live" translatable="false">ca-app-pub-1732884929436465/1796850753</string>
+    <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
+    <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
 </resources>
