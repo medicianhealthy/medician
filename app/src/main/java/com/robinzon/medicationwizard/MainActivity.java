@@ -195,12 +195,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (mNavController != null && mNavController.getCurrentDestination() != null) {
-            int currentId = mNavController.getCurrentDestination().getId();
+            int currentDestinationId = mNavController.getCurrentDestination().getId();
             
             // Hide the settings icon ONLY if we're already on the settings screen
-            android.view.MenuItem settingsItem = menu.findItem(R.id.action_app_settings);
-            if (settingsItem != null) {
-                settingsItem.setVisible(currentId != R.id.nav_settings);
+            android.view.MenuItem settingsMenuItem = menu.findItem(R.id.nav_settings);
+            if (settingsMenuItem != null) {
+                settingsMenuItem.setVisible(currentDestinationId != R.id.nav_settings);
             }
         }
         return super.onPrepareOptionsMenu(menu);
@@ -214,14 +214,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_app_settings) {
-            mNavController.navigate(R.id.nav_settings);
+        // Standard NavigationUI handling for items matching destination IDs (like nav_settings)
+        if (NavigationUI.onNavDestinationSelected(item, mNavController)) {
             return true;
-        } else if (id == R.id.action_premium) {
+        }
+
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_premium) {
             new com.robinzon.medicationwizard.ui.settings.PremiumBottomSheet().show(getSupportFragmentManager(), "PremiumMain");
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
