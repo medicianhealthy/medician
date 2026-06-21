@@ -64,7 +64,7 @@ public class CustomMaterialDialog {
     }
 
     public void setTitle(String title) {
-        // 3. Magical Header: Centered title (Wands removed for a cleaner look)
+        // 3. Magical Header: Centered title
         TextView titleView = new TextView(context);
         titleView.setText(title);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
@@ -76,7 +76,8 @@ public class CustomMaterialDialog {
         
         titleView.setGravity(Gravity.CENTER);
         int padding = (int) (24 * context.getResources().getDisplayMetrics().density);
-        titleView.setPadding(padding, padding, padding, (int) (padding * 0.2));
+        // Reduced bottom padding of the title to bring message closer
+        titleView.setPadding(padding, padding, padding, (int) (4 * context.getResources().getDisplayMetrics().density));
         
         builder.setCustomTitle(titleView);
     }
@@ -87,8 +88,13 @@ public class CustomMaterialDialog {
         messageView.setText(message);
         messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         messageView.setGravity(Gravity.CENTER);
-        int padding = (int) (20 * context.getResources().getDisplayMetrics().density);
-        messageView.setPadding(padding, (int)(padding * 0.5), padding, padding);
+        
+        float density = context.getResources().getDisplayMetrics().density;
+        int paddingSide = (int) (24 * density);
+        int paddingTop = 0; // Removed top padding as title now provides enough
+        int paddingBottom = (int) (8 * density); // Minimal bottom padding
+        
+        messageView.setPadding(paddingSide, paddingTop, paddingSide, paddingBottom);
         
         int variantAttr = context.getResources().getIdentifier("colorOnSurfaceVariant", "attr", context.getPackageName());
         int textColor = MaterialColors.getColor(context, variantAttr, Color.GRAY);

@@ -805,8 +805,8 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.cardMagicPass.setVisibility(View.GONE);
             binding.imgMagicPassStatus.setVisibility(View.GONE);
             binding.magicPassProgress.setVisibility(View.GONE);
-            ((MaterialButton) binding.btnThemeLight).setIcon(null);
-            ((MaterialButton) binding.btnThemeDark).setIcon(null);
+            binding.badgeAdLight.setVisibility(View.GONE);
+            binding.badgeAdDark.setVisibility(View.GONE);
         } else if (isTempPremium) {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
             binding.cardMagicPass.setAlpha(rvLoaded ? 1.0f : 0.6f);
@@ -824,8 +824,8 @@ public class SettingsFragment extends MedicationWizardFragment {
             // Show and update progress bar
             refreshMagicPassProgress();
             
-            ((MaterialButton) binding.btnThemeLight).setIcon(null);
-            ((MaterialButton) binding.btnThemeDark).setIcon(null);
+            binding.badgeAdLight.setVisibility(View.GONE);
+            binding.badgeAdDark.setVisibility(View.GONE);
         } else {
             binding.cardMagicPass.setVisibility(View.VISIBLE);
             binding.txtMagicPassTitle.setText(getString(R.string.premium_pass_title, AppConfig.getMagicPassDurationHours()));
@@ -846,8 +846,8 @@ public class SettingsFragment extends MedicationWizardFragment {
                 binding.txtMagicPassSummary.setText(R.string.loading_magic);
                 binding.cardMagicPass.setEnabled(true);
             }
-            ((MaterialButton) binding.btnThemeLight).setIconResource(R.drawable.ic_magic_wand);
-            ((MaterialButton) binding.btnThemeDark).setIconResource(R.drawable.ic_magic_wand);
+            binding.badgeAdLight.setVisibility(View.VISIBLE);
+            binding.badgeAdDark.setVisibility(View.VISIBLE);
         }
     }
 
