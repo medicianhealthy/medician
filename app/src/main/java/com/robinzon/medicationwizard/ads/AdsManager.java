@@ -178,14 +178,14 @@ public class AdsManager implements OnAdActionListener{
 
     private boolean shouldShowInterstitialBasedOnUsage() {
         final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(mActivity);
-        final float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(mActivity);
+        final float usageMinutesForAds = com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(mActivity);
         
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager remoteConfigManager = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
         int minimumSessionsThreshold = remoteConfigManager.getMinSessionsForInterstitial();
         int minimumMinutesThreshold = remoteConfigManager.getMinAppTimeForInterstitialMins();
 
-        // Thresholds from Remote Config
-        return sessionCount >= minimumSessionsThreshold || totalUsageMinutes >= (float) minimumMinutesThreshold;
+        // Thresholds from Remote Config: Meets session count AND usage time since last ad
+        return sessionCount >= minimumSessionsThreshold && usageMinutesForAds >= (float) minimumMinutesThreshold;
     }
     /** @noinspection unused*/
     public void showRewarded(OnRewardedFinishedListener listener) {
@@ -240,6 +240,8 @@ public class AdsManager implements OnAdActionListener{
 
     private void setFullScreenNonUserInitiatedAdDismissTimeStamp() {
         this.mFullAdDismissedTimeStamp = System.currentTimeMillis();
+        // FSA cooldown reset requirement
+        com.robinzon.medicationwizard.utils.Statisticator.resetUsageMinutesForAds(mActivity);
     }
 
     private void setBannerClickTimeStamp() {

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ساحر الأدوية</string>
     <string name="navigation_drawer_open">فتح درج التنقل</string>
@@ -186,11 +186,11 @@
     <string name="cloud_restore_message">سيؤدي هذا إلى استبدال جميع أدويتك وسجلك المحلي بالنسخة السحابية. هل تريد الاستمرار؟</string>
     <string name="button_restore">استعادة</string>
     <string name="medication_status_format">تم تحديد %1$s كـ %2$s</string>
-    <string name="button_undo">تراجع</string>
+    <string name="button_undo">إلغاء</string>
 
     <string name="sound_picker_title">اختر صوت التنبيه</string>
     <string name="extra_details_label">تفاصيل إضافية (اختياري)</string>
-    <string name="instructions_label">التعليمات</string>
+    <string name="instructions_label">التعليمات (اختياري)</string>
     <string name="instruction_before_eating">قبل الأكل</string>
     <string name="instruction_after_eating">بعد الأكل</string>
     <string name="instruction_while_eating">أثناء الأكل</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">اسم الدواء</string>
     <string name="hint_amount">الكمية</string>
-    <string name="hint_form">الشكل الدوائي</string>
+    <string name="hint_form">النوع</string>
     <string name="hint_frequency">كم مرة؟</string>
-    <string name="hint_strength">القوة</string>
-    <string name="hint_unit">الوحدة</string>
+    <string name="hint_strength">القوة (اختياري)</string>
+    <string name="hint_unit">الوحدة (اختياري)</string>
 
     <string name="frequency_once">مرة واحدة يومياً</string>
     <string name="frequency_twice">مرتين يومياً</string>
@@ -239,16 +239,8 @@
     <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل ميزات البريميوم لمدة %1$d ساعة!</string>
     <string name="premium_pass_active">البطاقة السحرية مفعلة</string>
     <string name="premium_pass_remaining_format">متبقي %1$02d ساعة و %2$02d دقيقة</string>
-    <string name="loading_magic">جاري تحميل السحر... يرجى الانتظار.</string>
+    <string name="loading_magic">جاري تحميل السحر\u2026 يرجى الانتظار.</string>
     <string name="reward_ad_not_ready">السحر ليس جاهزاً بعد. يرجى المحاولة مرة أخرى بعد ثوانٍ.</string>
-    <string name="medication_deleted_format">تم الحذف بنجاح</string>
-
-    <string name="sign_in_error_title">مشكلة في اتصال السحر</string>
-    <string name="sign_in_error_network">لم نتمكن من الوصول إلى سحب السحر. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.</string>
-    <string name="sign_in_error_cancelled">تم إلغاء تسجيل الدخول. هل ترغب في المحاولة مرة أخرى؟</string>
-    <string name="sign_in_error_dev">بوابة السحر تخضع للصيانة. السحرة لدينا يعملون على ذلك بالفعل.</string>
-    <string name="sign_in_error_generic">حدث شيء غير متوقع أثناء الاتصال بحسابك. يرجى المحاولة مرة أخرى بعد قليل.</string>
-    <string name="sign_in_error_btn_retry">المحاولة مرة أخرى</string>
     <string name="theme_unlock_title">فتح هذا الثيم</string>
     <string name="theme_unlock_prompt">شاهد فيديو قصير لفتح هذا الثيم وجميع مزايا البريميوم الأخرى لمدة %1$d ساعة!</string>
     <string name="premium_pass_btn_watch">شاهد الفيديو</string>
@@ -266,6 +258,12 @@
 
     <string name="alarm_permission_title">مطلوب إذن التنبيهات الدقيقة</string>
     <string name="alarm_permission_message">لضمان عمل تذكيرات الأدوية في الدقيقة المحددة، يرجى السماح للتطبيق بجدولة التنبيهات الدقيقة.</string>
+    <string name="take_early_warning">الوقت مبكر قليلاً لهذه الجرعة. هل تتناولها على أي حال؟</string>
+    <string name="take_late_warning">كان من المقرر تناول هذه الجرعة في وقت سابق. هل تسجل تناولها الآن؟</string>
+    <string name="button_cancel">إلغاء</string>
+    <string name="button_confirm">تأكيد</string>
+    <string name="button_delete">حذف</string>
+
     <string name="admob_application_id_test" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>

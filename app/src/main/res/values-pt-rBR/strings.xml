@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Mago dos Remédios</string>
     <string name="navigation_drawer_open">Abrir menu de navegação</string>
@@ -64,7 +64,7 @@
 
     <string name="settings_category_data">Dados e Privacidade</string>
     <string name="settings_backup_title">Backup e Restauração</string>
-    <string name="settings_backup_summary">Proteja seus nados ou mude para um novo aparelho.</string>
+    <string name="settings_backup_summary">Proteja seus dados ou mude para um novo aparelho.</string>
     <string name="backup_export">Exportar Dados</string>
     <string name="backup_import">Importar Dados</string>
     <string name="backup_restore_warning">Restaurar um backup vai apagar todos os seus remédios e histórico atuais. Não tem como desfazer. Tem certeza?</string>
@@ -171,8 +171,8 @@
     <string name="support_body_locale">Idioma: %1$s</string>
     <string name="support_body_message_hint">--- Descreva a mágica aqui ---</string>
     <string name="sign_in_first">Por favor, entre na conta primeiro</string>
-    <string name="backing_up_drive">Fazendo backup no Google Drive\u2026</string>
-    <string name="restoring_cloud">Restaurando da nuvem\u2026</string>
+    <string name="backing_up_drive">Fazendo backup no Google Drive&#8230;</string>
+    <string name="restoring_cloud">Restaurando da nuvem&#8230;</string>
     <string name="restore_success">Restaurado com sucesso!</string>
     <string name="no_backup_found">Nenhum backup encontrado na nuvem.</string>
     <string name="restore_failed_format">Erro ao restaurar: %1$s</string>
@@ -190,7 +190,7 @@
 
     <string name="sound_picker_title">Escolha o Som do Alerta</string>
     <string name="extra_details_label">Detalhes Extras (opcional)</string>
-    <string name="instructions_label">Instruções</string>
+    <string name="instructions_label">Instruções (opcional)</string>
     <string name="instruction_before_eating">Antes de comer</string>
     <string name="instruction_after_eating">Depois de comer</string>
     <string name="instruction_while_eating">Durante a refeição</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">Nome do Remédio</string>
     <string name="hint_amount">Quantidade</string>
-    <string name="hint_form">Forma</string>
+    <string name="hint_form">Tipo</string>
     <string name="hint_frequency">Qual a frequência?</string>
-    <string name="hint_strength">Concentração</string>
-    <string name="hint_unit">Unidade</string>
+    <string name="hint_strength">Concentração (opcional)</string>
+    <string name="hint_unit">Unidade (opcional)</string>
 
     <string name="frequency_once">Uma vez por dia</string>
     <string name="frequency_twice">Duas vezes por dia</string>
@@ -241,19 +241,11 @@
     <string name="premium_pass_remaining_format">restam %1$02dh %2$02dm</string>
     <string name="loading_magic">Carregando mágica\u2026 por favor aguarde.</string>
     <string name="reward_ad_not_ready">A mágica ainda não está pronta. Tente novamente em alguns segundos.</string>
-    <string name="medication_deleted_format">foi removido</string>
-
-    <string name="sign_in_error_title">Problema na Conexão Mágica</string>
-    <string name="sign_in_error_network">Não conseguimos alcançar as nuvens mágicas. Verifique sua conexão com a internet e tente novamente.</string>
-    <string name="sign_in_error_cancelled">O login foi interrompido. Gostaria de tentar novamente?</string>
-    <string name="sign_in_error_dev">O portal mágico está em manutenção. Nossos magos já estão cuidando disso.</string>
-    <string name="sign_in_error_generic">Algo inesperado aconteceu ao conectar à sua conta. Tente novamente em alguns instantes.</string>
-    <string name="sign_in_error_btn_retry">Tentar Novamente</string>
     <string name="theme_unlock_title">Desbloquear este tema</string>
     <string name="theme_unlock_prompt">Assista a um pequeno vídeo para desbloquear este tema e toda a magia Premium por %1$d horas!</string>
     <string name="premium_pass_btn_watch">Assistir vídeo</string>
     <string name="cloud_backup_title">Backup na Nuvem</string>
-    <string name="cloud_backup_summary">Proteja seus dados com o Google Drive</string>
+    <string name="cloud_backup_summary">Protege seus dados com o Google Drive</string>
     <string name="cloud_backup_sign_in_hint">Entre para proteger seus dados</string>
     <string name="cloud_backup_sign_out">Sair da conta</string>
     <string name="cloud_backup_auto_title">Backup Automático</string>
@@ -278,4 +270,9 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="take_early_warning">Está um pouco cedo para esta dose. Tomar mesmo assim?</string>
+    <string name="take_late_warning">Esta dose estava agendada para mais cedo. Marcar como tomada agora?</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="button_confirm">Confirmar</string>
+    <string name="button_delete">Excluir</string>
 </resources>

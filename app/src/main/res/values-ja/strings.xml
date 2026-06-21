@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">お薬の魔法使い</string>
     <string name="navigation_drawer_open">ナビゲーションメニューを開く</string>
@@ -190,7 +190,7 @@
 
     <string name="sound_picker_title">通知音を選択</string>
     <string name="extra_details_label">追加の詳細 (オプション)</string>
-    <string name="instructions_label">服用指示</string>
+    <string name="instructions_label">服用指示 (オプション)</string>
     <string name="instruction_before_eating">食前</string>
     <string name="instruction_after_eating">食後</string>
     <string name="instruction_while_eating">食中</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">お薬の名前</string>
     <string name="hint_amount">量</string>
-    <string name="hint_form">形状</string>
+    <string name="hint_form">種類</string>
     <string name="hint_frequency">頻度</string>
-    <string name="hint_strength">強さ</string>
-    <string name="hint_unit">単位</string>
+    <string name="hint_strength">強さ (オプション)</string>
+    <string name="hint_unit">単位 (オプション)</string>
 
     <string name="frequency_once">1日1回</string>
     <string name="frequency_twice">1日2回</string>
@@ -241,14 +241,6 @@
     <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
     <string name="loading_magic">魔法を読み込み中\u2026 少々お待ちください。</string>
     <string name="reward_ad_not_ready">魔法の準備がまだできていません。数秒後にもう一度お試しください。</string>
-    <string name="medication_deleted_format">が削除されました</string>
-
-    <string name="sign_in_error_title">魔法の接続エラー</string>
-    <string name="sign_in_error_network">魔法の雲に到達できませんでした。インターネット接続を確認して、もう一度お試しください。</string>
-    <string name="sign_in_error_cancelled">ログインが中断されました。もう一度お試しになりますか？</string>
-    <string name="sign_in_error_dev">魔法のポータルは現在メンテナンス中です。魔法使いたちがすでに対応しています。</string>
-    <string name="sign_in_error_generic">アカウントへの接続中に予期しない問題が発生しました。しばらくしてからもう一度お試しください。</string>
-    <string name="sign_in_error_btn_retry">もう一度試す</string>
     <string name="theme_unlock_title">テーマをアンロック</string>
     <string name="theme_unlock_prompt">短い動画を視聴して、このテーマと他のすべてのプレミアム機能を%1$d時間アンロックしましょう！</string>
     <string name="premium_pass_btn_watch">動画を見る</string>
@@ -278,4 +270,9 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="take_early_warning">この薬を飲むには少し早すぎます。それでも服用しますか？</string>
+    <string name="take_late_warning">この薬はもっと早い時間に予定されていました。今服用したものとして記録しますか？</string>
+    <string name="button_cancel">キャンセル</string>
+    <string name="button_confirm">確認</string>
+    <string name="button_delete">削除</string>
 </resources>

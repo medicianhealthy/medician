@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">קוסם התרופות</string>
     <string name="navigation_drawer_open">פתח תפריט ניווט</string>
@@ -21,7 +21,7 @@
     <string name="settings_notifications_disabled_summary">לחץ כאן כדי לאפשר תזכורות ולהישאר בריא.</string>
     <string name="settings_notifications_manage_prompt">כדי לבטל או לנהל את התראות הבריאות שלך, אנא השתמש בהגדרות המערכת.</string>
     <string name="settings_notifications_title">התראות בריאות</string>
-    <string name="settings_notifications_summary">שמור על התזכורות פעילות כדי לא לפספס אף מנה. לבריאות!</string>
+    <string name="settings_notifications_summary">שמור على התזכורות פעילות כדי לא לפספס אף מנה. לבריאות!</string>
 
     <string name="settings_quiet_hours_title">שעות שקט</string>
     <string name="settings_quiet_hours_summary">אל תפריע לי בזמן שאני ישן.</string>
@@ -34,7 +34,7 @@
     <string name="settings_max_snoozes_unlimited_summary">אל תפסיק להזכיר לי עד שאבצע פעולה.</string>
     <string name="max_snoozes_unlimited">ללא הגבלה</string>
 
-    <string name="settings_sound_title">צליל התראה</string>
+    <string name="settings_sound_title">צليל התראה</string>
     <string name="settings_sound_summary">צליל נוכחי: %1$s</string>
 
     <string name="settings_bypass_title">עקיפת עוצמת קול</string>
@@ -152,18 +152,18 @@
     <string name="cheats_title">פיצ\'רים למפתחים</string>
     <string name="cheats_is_premium">משתמש פרימיום</string>
     <string name="cheats_show_ads">הצג פרסומות (בכוח)</string>
-    <string name="cheats_apply_restart">החל ואתחל מחדש</string>
+    <string name="cheats_apply_restart">החל ואתחל מحدש</string>
 
     <string name="notif_already_active">ההתראות כבר פעילות!</string>
     <string name="data_cleared">הנתונים נמחקו.</string>
     <string name="support_coming_soon">התמיכה תהיה זמינה בקרוב!</string>
     <string name="support_dialog_title">תמיכה קסומה</string>
-    <string name="support_dialog_message">האם יש תקלה בקסם (דיווח על באג) או שיש לך רעיון ללחש חדש (בקשת פיצ\'ר)?</string>
+    <string name="support_dialog_message">האם יש תקלה בקסם (דיווח על באג) أو שיש לך רعيון ללחש חדש (בקשת פיצ\'ר)?</string>
     <string name="support_option_bug">תקלה (באג)</string>
     <string name="support_option_feature">לחש חדש (פיצ\'ר)</string>
     <string name="support_subject_bug">דיווח על תקלה: [%1$s]</string>
     <string name="support_subject_feature">רעיון ללחש חדש: [%1$s]</string>
-    <string name="support_no_email_client">לא נמצאה אפליקציית אימייל. אנא צור קשר בכתובת medicationwizard@gmail.com</string>
+    <string name="support_no_email_client">לא נמצאה אפליקציית אימيل. אנא צור קשר בכתובת medicationwizard@gmail.com</string>
     <string name="support_body_header">--- פרטי המגילה הקסומה ---</string>
     <string name="support_body_version">גרסת אפליקציה: %1$s</string>
     <string name="support_body_device">מכשיר: %1$s</string>
@@ -190,7 +190,7 @@
 
     <string name="sound_picker_title">בחר צליל התראה</string>
     <string name="extra_details_label">פרטים נוספים (אופציונלי)</string>
-    <string name="instructions_label">הוראות</string>
+    <string name="instructions_label">הוראות (אופציונלי)</string>
     <string name="instruction_before_eating">לפני האוכל</string>
     <string name="instruction_after_eating">אחרי האוכל</string>
     <string name="instruction_while_eating">בזמן האוכל</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">שם התרופה</string>
     <string name="hint_amount">כמות</string>
-    <string name="hint_form">צורה</string>
+    <string name="hint_form">סוג</string>
     <string name="hint_frequency">כל כמה זמן?</string>
-    <string name="hint_strength">חוזק</string>
-    <string name="hint_unit">יחידה</string>
+    <string name="hint_strength">חוזק (אופציונלי)</string>
+    <string name="hint_unit">יחידה (אופציונלי)</string>
 
     <string name="frequency_once">פעם ביום</string>
     <string name="frequency_twice">פעמיים ביום</string>
@@ -240,16 +240,9 @@
     <string name="premium_pass_active">מנוי קסם פעיל</string>
     <string name="premium_pass_remaining_format">נותרו %1$02d ש\' ו-%2$02d ד\'</string>
     <string name="loading_magic">טוען קסם... אנא המתן.</string>
-    <string name="medication_deleted_format">נמחק בהצלחה</string>
-    <string name="sign_in_error_title">בעיה בחיבור לענן</string>
-    <string name="sign_in_error_network">לא הצלחנו להתחבר לענני הקסם. אנא בדקו את חיבור האינטרנט ונסו שוב.</string>
-    <string name="sign_in_error_cancelled">ההתחברות הופסקה. תרצו לנסות שוב?</string>
-    <string name="sign_in_error_dev">פורטל הקסם נמצא כעת בתחזוקה. הקוסמים שלנו כבר מטפטים בזה.</string>
-    <string name="sign_in_error_generic">משהו לא צפוי קרה בזמן החיבור לחשבון שלך. אנא נסו שוב בעוד רגע.</string>
-    <string name="sign_in_error_btn_retry">נסה שוב</string>
     <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
     <string name="theme_unlock_title">פתיחת ערכת נושא</string>
-    <string name="theme_unlock_prompt">צפה בסרטון קצר כדי לפתוח את ערכת הנושא הזו ואת כל שאר קסמי הפרימיום ל-%1$d שעות!</string>
+    <string name="theme_unlock_prompt">צפה בסרטون קصر כדי לפתוח את ערכת הנושא הזו ואת כל שאר קסמי הפרימיום ל-%1$d שעות!</string>
     <string name="premium_pass_btn_watch">צפה בסרטון</string>
     <string name="cloud_backup_title">גיבוי בענן</string>
     <string name="cloud_backup_summary">הגן על הנתונים שלך באמצעות Google Drive</string>
@@ -258,23 +251,16 @@
     <string name="cloud_backup_auto_title">גיבוי ענן אוטומטי</string>
     <string name="cloud_backup_auto_summary">סנכרן נתונים באופן אוטומטי ל-Google Drive</string>
     <string name="cloud_backup_wifi_title">גיבוי ב-Wi-Fi בלבד</string>
-    <string name="cloud_backup_wifi_summary">חסוך בנתוני גלישה</string>
+    <string name="cloud_backup_wifi_summary">חסוך בנתוני גليשה</string>
     <string name="cloud_backup_now">גבה לענן עכשיו</string>
     <string name="cloud_backup_success">הגיבוי לענן הצליח!</string>
-    <string name="cloud_backup_failed">הגיבוי לענן נכשל.</string>
+    <string name="cloud_backup_failed">הגיבوي לענן נכשל.</string>
 
     <string name="alarm_permission_title">נדרשת הרשאת התראות מדויקות</string>
     <string name="alarm_permission_message">כדי להבטיח שתזכורות התרופות שלך יופעלו בדקה המדויקת, אנא אפשר לאפליקציה לתזמן התראות מדויקות.</string>
-    <string name="admob_application_id_test" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="admob_banner_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="admob_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="admob_rewarded_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/5354046379</string>
-    <string name="admob_rv_id_test" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
-    <string name="admob_app_open_id_test" translatable="false">ca-app-pub-3940256099942544/3419835294</string>
-    <string name="admob_application_id_live" translatable="false">ca-app-pub-1732884929436465~8629726144</string>
-    <string name="admob_banner_id_live" translatable="false">ca-app-pub-1732884929436465/8454840017</string>
-    <string name="admob_interstitial_id_live" translatable="false">ca-app-pub-1732884929436465/1796850753</string>
-    <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
-    <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
-    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="take_early_warning">זה קצת מוקדם למנה זו. לקחת בכל זאת?</string>
+    <string name="take_late_warning">מנה זו תוכננה למועד מוקדם יותר. לסמן כנלקחה עכשיו?</string>
+    <string name="button_cancel">ביטול</string>
+    <string name="button_confirm">אישור</string>
+    <string name="button_delete">מחיקה</string>
 </resources>

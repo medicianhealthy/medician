@@ -179,9 +179,9 @@ public class MedicationsListFragment extends MedicationWizardFragment {
         String message = medication.getCommercialName() + " " + getString(R.string.medication_deleted_format);
 
         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-        dialog.setTitle(getString(R.string.settings_clear_data_title));
+        dialog.setTitle(getString(R.string.delete));
         dialog.setMessage(getString(R.string.backup_restore_warning));
-        dialog.setPositiveButton("Delete", (d, which) -> {
+        dialog.setPositiveButton(getString(R.string.button_delete), (d, which) -> {
             Medication.deleteMedication(requireContext(), medication.getId());
             adapter.removeItem(position);
             updateUiState(adapter.getItemCount() == 0);
@@ -189,7 +189,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
                     .setAction(R.string.button_undo, v -> medication.addToMedicationList(requireContext()))
                     .show();
         });
-        dialog.setNegativeButton("Cancel", null);
+        dialog.setNegativeButton(getString(R.string.button_cancel), null);
         dialog.show();
     }
 

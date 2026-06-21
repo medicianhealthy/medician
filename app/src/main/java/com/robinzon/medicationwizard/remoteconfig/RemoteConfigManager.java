@@ -220,6 +220,14 @@ public class RemoteConfigManager {
         return getIntValue(RemoteConfigKeysAndDefaults.HISTORY_RETENTION_DAYS);
     }
 
+    public int getEarlyTakeThresholdMins() {
+        return getIntValue(RemoteConfigKeysAndDefaults.EARLY_TAKE_THRESHOLD_MINS);
+    }
+
+    public int getLateTakeThresholdMins() {
+        return getIntValue(RemoteConfigKeysAndDefaults.LATE_TAKE_THRESHOLD_MINS);
+    }
+
     public int getNumOfMedsToShowRv() {
         return getIntValue(RemoteConfigKeysAndDefaults.NUM_OF_MEDS_TO_SHOW_RV);
     }

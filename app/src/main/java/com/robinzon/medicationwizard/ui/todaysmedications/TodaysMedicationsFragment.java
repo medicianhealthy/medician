@@ -181,6 +181,46 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
      * @param status   The new status (TAKEN, SKIPPED, or SCHEDULED).
      */
     private void updateInstanceStatus(DoseInstanceEntity instance, String status) {
+        if ("TAKEN".equals(status)) {
+            checkAndClarifyTakeTiming(instance, status);
+        } else {
+            applyStatusUpdate(instance, status);
+        }
+    }
+
+    private void checkAndClarifyTakeTiming(DoseInstanceEntity instance, String status) {
+        long now = System.currentTimeMillis();
+        long scheduled = instance.getScheduledTime();
+        long diffMins = (scheduled - now) / (60 * 1000);
+
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = 
+                com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
+        
+        int earlyThreshold = rcm.getEarlyTakeThresholdMins();
+        int lateThreshold = rcm.getLateTakeThresholdMins();
+
+        if (diffMins > earlyThreshold) {
+            // Taking too early
+            showTimingClarificationDialog(instance, status, getString(R.string.take_early_warning));
+        } else if (diffMins < -lateThreshold) {
+            // Taking too late
+            showTimingClarificationDialog(instance, status, getString(R.string.take_late_warning));
+        } else {
+            applyStatusUpdate(instance, status);
+        }
+    }
+
+    private void showTimingClarificationDialog(DoseInstanceEntity instance, String status, String message) {
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = 
+                new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(instance.getMedicationName());
+        dialog.setMessage(message);
+        dialog.setPositiveButton(getString(R.string.button_sure), (d, which) -> applyStatusUpdate(instance, status));
+        dialog.setNegativeButton(getString(R.string.button_not_now), null);
+        dialog.show();
+    }
+
+    private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
         instance.setStatus(status);
         // Record the time of the action for the "Took at HH:mm" summary
         instance.setActionTime(System.currentTimeMillis());

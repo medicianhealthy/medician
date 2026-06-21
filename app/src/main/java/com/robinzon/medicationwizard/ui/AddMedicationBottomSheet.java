@@ -3,6 +3,9 @@ package com.robinzon.medicationwizard.ui;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -23,6 +26,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -196,6 +200,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                     case Powder -> layoutForm.setStartIconDrawable(R.drawable.ic_med_powder);
                     case Other -> layoutForm.setStartIconDrawable(R.drawable.ic_med_other);
                 }
+                layoutForm.setStartIconTintList(ColorStateList.valueOf(Color.WHITE));
             }
         }
 
@@ -213,12 +218,12 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             }
             generateTimePickers(mMedication.getDailyFrequency());
             if (mMedication.getTimesADay() != null) {
-                for (int i = 0; i < mMedication.getTimesADay().size(); i++) {
-                    int key = mMedication.getTimesADay().keyAt(i);
-                    SimpleDayTime time = mMedication.getTimesADay().valueAt(i);
+                for (int k = 0; k < mMedication.getTimesADay().size(); k++) {
+                    int key = mMedication.getTimesADay().keyAt(k);
+                    SimpleDayTime time = mMedication.getTimesADay().valueAt(k);
                     mTimesInDay.put(key, time);
-                    if (i < timesContainer.getChildCount()) {
-                        Button btn = (Button) timesContainer.getChildAt(i);
+                    if (k < timesContainer.getChildCount()) {
+                        Button btn = (Button) timesContainer.getChildAt(k);
                         btn.setText(getString(R.string.time_set_format, time.toString()));
                     }
                 }
@@ -392,21 +397,28 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
             return;
         }
 
-        if (mMedication.getDailyFrequency() != mTimesInDay.size()) {
-            showErrorDialog(getString(R.string.error_pick_time_title), getString(R.string.error_pick_time_message));
-            return;
+        final int frequency = mMedication.getDailyFrequency();
+        final SparseArray<SimpleDayTime> activeTimes = new SparseArray<>();
+        
+        for (int i = 1; i <= frequency; i++) {
+            SimpleDayTime time = mTimesInDay.get(i);
+            if (time == null) {
+                showErrorDialog(getString(R.string.error_pick_time_title), getString(R.string.error_pick_time_message));
+                return;
+            }
+            activeTimes.put(i, time);
         }
 
         // Logical validation: Doses must be at different times
         Set<SimpleDayTime> uniqueTimes = new HashSet<>();
-        for (int i = 0; i < mTimesInDay.size(); i++) {
-            if (!uniqueTimes.add(mTimesInDay.valueAt(i))) {
+        for (int i = 0; i < activeTimes.size(); i++) {
+            if (!uniqueTimes.add(activeTimes.valueAt(i))) {
                 showErrorDialog(getString(R.string.error_duplicate_times_title), getString(R.string.error_duplicate_times_message));
                 return;
             }
         }
 
-        mMedication.addTimeStampsForDay(mTimesInDay);
+        mMedication.addTimeStampsForDay(activeTimes);
         mMedication.addToMedicationList(getContext());
 
         // Proactively ask for notification permissions on Android 13+ with a friendly rationale
@@ -531,6 +543,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                 case Other -> R.drawable.ic_med_other;
             };
             layoutForm.setStartIconDrawable(icon);
+            layoutForm.setStartIconTintList(ColorStateList.valueOf(Color.WHITE));
         });
     }
 
@@ -554,17 +567,65 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
      * defined by the 'Frequency' dropdown.
      */
     private void generateTimePickers(final int amount) {
-        timesContainer.removeAllViews(); 
+        timesContainer.removeAllViews();
+        
+        final Context context = requireContext();
+        final float density = context.getResources().getDisplayMetrics().density;
+        final int margin = (int) (8 * density);
 
-        for (int i = 1; i <= amount; i++) {
-            Button timeButton = (Button) LayoutInflater.from(requireContext())
-                    .inflate(R.layout.item_time_picker, timesContainer, false);
+        // We use a post() to ensure we have the container width for row-fitting logic
+        timesContainer.post(() -> {
+            if (getView() == null) return;
+            int containerWidth = timesContainer.getWidth();
+            if (containerWidth == 0) containerWidth = (int) (context.getResources().getDisplayMetrics().widthPixels - (32 * density));
 
-            timeButton.setText(getString(R.string.select_time_index_format, i));
-            int finalIndex = i;
-            timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
-            timesContainer.addView(timeButton);
-        }
+            LinearLayout currentRow = createNewRow(context);
+            timesContainer.addView(currentRow);
+            int currentLineWidth = 0;
+
+            for (int i = 1; i <= amount; i++) {
+                MaterialButton timeButton = (MaterialButton) LayoutInflater.from(context)
+                        .inflate(R.layout.item_time_picker, currentRow, false);
+
+                // Preserve existing time if available
+                SimpleDayTime existingTime = mTimesInDay.get(i);
+                if (existingTime != null) {
+                    timeButton.setText(getString(R.string.time_set_format, existingTime.toString()));
+                } else {
+                    timeButton.setText(getString(R.string.select_time_index_format, i));
+                }
+
+                int finalIndex = i;
+                timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
+
+                // Measure button
+                timeButton.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                int btnWidth = timeButton.getMeasuredWidth();
+
+                if (currentLineWidth + btnWidth + margin > containerWidth && currentLineWidth > 0) {
+                    currentRow = createNewRow(context);
+                    timesContainer.addView(currentRow);
+                    currentLineWidth = 0;
+                }
+
+                // Add margin
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) timeButton.getLayoutParams();
+                lp.setMargins(0, 0, margin, margin);
+                timeButton.setLayoutParams(lp);
+
+                currentRow.addView(timeButton);
+                currentLineWidth += btnWidth + margin;
+            }
+        });
+    }
+
+    private LinearLayout createNewRow(Context context) {
+        LinearLayout row = new LinearLayout(context);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setLayoutParams(new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+        return row;
     }
 
     /**

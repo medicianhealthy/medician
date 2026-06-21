@@ -205,7 +205,7 @@
 
     <string name="sound_picker_title">Choose Alert Sound</string>
     <string name="extra_details_label">Extra Details (optional)</string>
-    <string name="instructions_label">Instructions</string>
+    <string name="instructions_label">Instructions (optional)</string>
     <string name="instruction_before_eating">Before eating</string>
     <string name="instruction_after_eating">After eating</string>
     <string name="instruction_while_eating">While eating</string>
@@ -220,7 +220,7 @@
 
     <string name="hint_med_name">Medication Name</string>
     <string name="hint_amount">Amount</string>
-    <string name="hint_form">Form</string>
+    <string name="hint_form">Type</string>
     <string name="hint_frequency">How often?</string>
     <string name="hint_strength">Strength (optional)</string>
     <string name="hint_unit">Unit (optional)</string>
@@ -280,4 +280,9 @@
 
     <string name="alarm_permission_title">Exact Alarms Required</string>
     <string name="alarm_permission_message">To ensure your medication reminders fire at the exact minute, please allow the app to schedule exact alarms.</string>
+    <string name="take_early_warning">It\'s a bit early for this dose. Take anyway?</string>
+    <string name="take_late_warning">This dose was scheduled for earlier. Marking as taken now?</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_confirm">Confirm</string>
+    <string name="button_delete">Delete</string>
 </resources>

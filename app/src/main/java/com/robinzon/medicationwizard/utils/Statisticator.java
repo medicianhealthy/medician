@@ -14,6 +14,7 @@ public class Statisticator {
 
     private static final String SPK_SESSION_COUNT = "spk_session_count";
     private static final String SPK_SESSION_TIME_MINUTES = "spk_session_time_minutes";
+    private static final String SPK_USAGE_MINUTES_FOR_ADS = "spk_usage_minutes_for_ads";
     private static final String SPK_TOTAL_DOSES_LOGGED = "spk_total_doses_logged";
     private static long mStartUserActive;
 
@@ -65,6 +66,25 @@ public class Statisticator {
     }
 
     /**
+     * @param context Application context.
+     * @return Usage time in minutes accumulated since the last Full Screen Ad (FSA).
+     */
+    public static float getUsageMinutesForAds(final Context context) {
+        return SharedPreferencesManager.getInstance(context).getFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
+    }
+
+    /**
+     * Resets the usage timer for ads. Should be called after an FSA (Interstitial or Rewarded) is shown.
+     *
+     * @param context Application context.
+     */
+    public static void resetUsageMinutesForAds(final Context context) {
+        AsyncTask.execute(() -> {
+            SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
+        });
+    }
+
+    /**
      * Called when the app moves to the background to finalize usage time tracking for the current session.
      *
      * @param context Application context.
@@ -72,8 +92,11 @@ public class Statisticator {
     public static void onMoveToBackground(final Context context) {
         AsyncTask.execute(() -> {
             final float currentSessionTimeInMinutes = ((float) System.currentTimeMillis() - (float) mStartUserActive) / 1000F / 60F;
-            SharedPreferencesManager.getInstance(context).setFloat(SPK_SESSION_TIME_MINUTES,
-                    getTotalUsageMinutes(context) + currentSessionTimeInMinutes);
+            float totalUsage = getTotalUsageMinutes(context) + currentSessionTimeInMinutes;
+            float adUsage = getUsageMinutesForAds(context) + currentSessionTimeInMinutes;
+            
+            SharedPreferencesManager.getInstance(context).setFloat(SPK_SESSION_TIME_MINUTES, totalUsage);
+            SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, adUsage);
         });
     }
 

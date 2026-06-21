@@ -144,17 +144,17 @@ public class SettingsFragment extends MedicationWizardFragment {
             new ActivityResultContracts.OpenDocument(),
             uri -> {
                 if (uri != null) {
-                    com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-                    dialog.setTitle("Restore Backup");
-                    dialog.setMessage(getString(R.string.backup_restore_warning));
-                    dialog.setPositiveButton("Restore", (d, which) -> {
-                        BackupManager.restoreBackup(requireContext(), uri, (success, message) -> {
-                            requireActivity().runOnUiThread(() -> 
-                                Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show());
-                        });
-                    });
-                    dialog.setNegativeButton("Cancel", null);
-                    dialog.show();
+            com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+            dialog.setTitle("Restore Backup");
+            dialog.setMessage(getString(R.string.backup_restore_warning));
+            dialog.setPositiveButton(getString(R.string.button_confirm), (d, which) -> {
+                BackupManager.restoreBackup(requireContext(), uri, (success, message) -> {
+                    requireActivity().runOnUiThread(() -> 
+                        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show());
+                });
+            });
+            dialog.setNegativeButton(getString(R.string.button_cancel), null);
+            dialog.show();
                 }
             }
     );
@@ -724,14 +724,14 @@ public class SettingsFragment extends MedicationWizardFragment {
         dialog.setTitle("Developer Access");
         dialog.setMessage("Enter access code");
         dialog.setView(input);
-        dialog.setPositiveButton("Confirm", (d, which) -> {
+        dialog.setPositiveButton(getString(R.string.button_confirm), (d, which) -> {
             if ("Gway1952".equals(input.getText().toString())) {
                 new com.robinzon.medicationwizard.ui.cheats.CheatsBottomSheet().show(getChildFragmentManager(), "CheatsBS");
             } else {
                 Snackbar.make(binding.getRoot(), R.string.invalid_code, Snackbar.LENGTH_SHORT).show();
             }
         });
-        dialog.setNegativeButton("Cancel", null);
+        dialog.setNegativeButton(getString(R.string.button_cancel), null);
         dialog.show();
     }
 

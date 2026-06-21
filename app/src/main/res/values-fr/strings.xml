@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Le Magicien des Médicaments</string>
     <string name="navigation_drawer_open">Ouvrir le menu de navigation</string>
@@ -190,7 +190,7 @@
 
     <string name="sound_picker_title">Choisir le Son d\'Alerte</string>
     <string name="extra_details_label">Détails Supplémentaires (optionnel)</string>
-    <string name="instructions_label">Instructions</string>
+    <string name="instructions_label">Instructions (optionnel)</string>
     <string name="instruction_before_eating">Avant de manger</string>
     <string name="instruction_after_eating">Après avoir mangé</string>
     <string name="instruction_while_eating">Pendant le repas</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">Nom du Médicament</string>
     <string name="hint_amount">Quantité</string>
-    <string name="hint_form">Forme</string>
+    <string name="hint_form">Type</string>
     <string name="hint_frequency">À quelle fréquence ?</string>
-    <string name="hint_strength">Dosage</string>
-    <string name="hint_unit">Unité</string>
+    <string name="hint_strength">Dosage (optionnel)</string>
+    <string name="hint_unit">Unité (optionnel)</string>
 
     <string name="frequency_once">Une fois par jour</string>
     <string name="frequency_twice">Deux fois par jour</string>
@@ -264,8 +264,8 @@
     <string name="cloud_backup_success">Sauvegarde réussie !</string>
     <string name="cloud_backup_failed">Échec de la sauvegarde.</string>
 
-    <string name="alarm_permission_title">Alarmes Exactes Requises</string>
-    <string name="alarm_permission_message">Pour garantir que vos rappels sonnent à la minute près, veuillez autoriser l\'application à programmer des alarmes exactas.</string>
+    <string name="alarm_permission_title">Alarmas Exactas Requeridas</string>
+    <string name="alarm_permission_message">Pour garantir que vos rappels sonnent à la minute près, veuillez autoriser l\'application à programmer des alarmas exactas.</string>
     <string name="admob_application_id_test" translatable="false">ca-app-pub-3940256099942544~3347511713</string>
     <string name="admob_banner_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_interstitial_id_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
@@ -278,4 +278,9 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="take_early_warning">C\'est un peu tôt pour cette dose. Prendre quand même ?</string>
+    <string name="take_late_warning">Cette dose était prévue pour plus tôt. Marquer comme prise maintenant ?</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_confirm">Confirmer</string>
+    <string name="button_delete">Supprimer</string>
 </resources>

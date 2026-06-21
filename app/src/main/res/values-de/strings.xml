@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Medikamenten-Zauberer</string>
     <string name="navigation_drawer_open">Navigationsmenü öffnen</string>
@@ -190,7 +190,7 @@
 
     <string name="sound_picker_title">Alarmton wählen</string>
     <string name="extra_details_label">Zusätzliche Details (optional)</string>
-    <string name="instructions_label">Anweisungen</string>
+    <string name="instructions_label">Anweisungen (optional)</string>
     <string name="instruction_before_eating">Vor dem Essen</string>
     <string name="instruction_after_eating">Nach dem Essen</string>
     <string name="instruction_while_eating">Während des Essens</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">Medikamentenname</string>
     <string name="hint_amount">Menge</string>
-    <string name="hint_form">Darreichungsform</string>
+    <string name="hint_form">Typ</string>
     <string name="hint_frequency">Wie oft?</string>
-    <string name="hint_strength">Stärke</string>
-    <string name="hint_unit">Einheit</string>
+    <string name="hint_strength">Stärke (optional)</string>
+    <string name="hint_unit">Einheit (optional)</string>
 
     <string name="frequency_once">Einmal täglich</string>
     <string name="frequency_twice">Zweimal täglich</string>
@@ -241,14 +241,6 @@
     <string name="premium_pass_remaining_format">%1$02dh %2$02dm verbleibend</string>
     <string name="loading_magic">Magie wird geladen\u2026 bitte warten.</string>
     <string name="reward_ad_not_ready">Die Magie ist noch nicht bereit. Bitte versuche es in ein paar Sekunden erneut.</string>
-    <string name="medication_deleted_format">wurde gelöscht</string>
-
-    <string name="sign_in_error_title">Problem mit der Magic-Verbindung</string>
-    <string name="sign_in_error_network">Wir konnten die Magic-Clouds nicht erreichen. Bitte prüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
-    <string name="sign_in_error_cancelled">Anmeldung wurde unterbrochen. Möchten Sie es erneut versuchen?</string>
-    <string name="sign_in_error_dev">Das Magic-Portal wird gerade gewartet. Unsere Zauberer kümmern sich bereits darum.</string>
-    <string name="sign_in_error_generic">Beim Verbinden mit Ihrem Konto ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es in einem Moment erneut.</string>
-    <string name="sign_in_error_btn_retry">Erneut versuchen</string>
     <string name="theme_unlock_title">Dieses Design freischalten</string>
     <string name="theme_unlock_prompt">Schauen Sie sich ein kurzes Video an, um dieses Design und die gesamte Premium-Magie für %1$d Stunden freizuschalten!</string>
     <string name="premium_pass_btn_watch">Video ansehen</string>
@@ -278,4 +270,9 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="take_early_warning">Es ist etwas früh für diese Dosis. Trotzdem einnehmen?</string>
+    <string name="take_late_warning">Diese Dosis war für früher geplant. Jetzt als eingenommen markieren?</string>
+    <string name="button_cancel">Abbrechen</string>
+    <string name="button_confirm">Bestätigen</string>
+    <string name="button_delete">Löschen</string>
 </resources>

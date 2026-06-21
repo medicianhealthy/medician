@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Mago de las Medicinas</string>
     <string name="navigation_drawer_open">Abrir menú de navegación</string>
@@ -190,7 +190,7 @@
 
     <string name="sound_picker_title">Elegir Sonido de Alerta</string>
     <string name="extra_details_label">Detalles Extra (opcional)</string>
-    <string name="instructions_label">Instrucciones</string>
+    <string name="instructions_label">Instrucciones (opcional)</string>
     <string name="instruction_before_eating">Antes de comer</string>
     <string name="instruction_after_eating">Después de comer</string>
     <string name="instruction_while_eating">Durante la comida</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">Nombre de la Medicina</string>
     <string name="hint_amount">Cantidad</string>
-    <string name="hint_form">Forma</string>
+    <string name="hint_form">Tipo</string>
     <string name="hint_frequency">¿Cada cuánto?</string>
-    <string name="hint_strength">Concentración</string>
-    <string name="hint_unit">Unidad</string>
+    <string name="hint_strength">Concentración (opcional)</string>
+    <string name="hint_unit">Unidad (opcional)</string>
 
     <string name="frequency_once">Una vez al día</string>
     <string name="frequency_twice">Dos veces al día</string>
@@ -241,14 +241,6 @@
     <string name="premium_pass_remaining_format">quedan %1$02dh %2$02dm</string>
     <string name="loading_magic">Cargando magia... por favor espera.</string>
     <string name="reward_ad_not_ready">La magia aún no está lista. Inténtalo de nuevo en unos segundos.</string>
-    <string name="medication_deleted_format">fue eliminado</string>
-
-    <string name="sign_in_error_title">Problema de conexión mágica</string>
-    <string name="sign_in_error_network">No pudimos llegar a las nubes mágicas. Por favor, comprueba tu conexión a internet e inténtalo de nuevo.</string>
-    <string name="sign_in_error_cancelled">El inicio de sesión fue interrumpido. ¿Te gustaría intentarlo de nuevo?</string>
-    <string name="sign_in_error_dev">El portal mágico está en mantenimiento. Nuestros magos ya lo están revisando.</string>
-    <string name="sign_in_error_generic">Ocurrió algo inesperado al conectar con tu cuenta. Por favor, inténtalo de nuevo en un momento.</string>
-    <string name="sign_in_error_btn_retry">Intentar de nuevo</string>
     <string name="theme_unlock_title">Desbloquear este tema</string>
     <string name="theme_unlock_prompt">¡Mira un video corto para desbloquear este tema y toda la magia Premium por %1$d horas!</string>
     <string name="premium_pass_btn_watch">Ver video</string>
@@ -278,4 +270,9 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="take_early_warning">Es un poco temprano para esta dosis. ¿Tomar de todos modos?</string>
+    <string name="take_late_warning">Esta dosis estaba programada para antes. ¿Marcar como tomada ahora?</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="button_confirm">Confirmar</string>
+    <string name="button_delete">Eliminar</string>
 </resources>

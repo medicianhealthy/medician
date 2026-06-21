@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">투약 마법사</string>
     <string name="navigation_drawer_open">메뉴 열기</string>
@@ -190,7 +190,7 @@
 
     <string name="sound_picker_title">알림 소리 선택</string>
     <string name="extra_details_label">추가 상세 정보 (선택 사항)</string>
-    <string name="instructions_label">복용 지침</string>
+    <string name="instructions_label">복용 지침 (선택 사항)</string>
     <string name="instruction_before_eating">식전</string>
     <string name="instruction_after_eating">식후</string>
     <string name="instruction_while_eating">식사 도중</string>
@@ -205,10 +205,10 @@
 
     <string name="hint_med_name">약 이름</string>
     <string name="hint_amount">수량</string>
-    <string name="hint_form">형태</string>
+    <string name="hint_form">종류</string>
     <string name="hint_frequency">복용 횟수</string>
-    <string name="hint_strength">용량</string>
-    <string name="hint_unit">단위</string>
+    <string name="hint_strength">용량 (선택 사항)</string>
+    <string name="hint_unit">단위 (선택 사항)</string>
 
     <string name="frequency_once">하루 한 번</string>
     <string name="frequency_twice">하루 두 번</string>
@@ -241,14 +241,6 @@
     <string name="premium_pass_remaining_format">%1$02d시간 %2$02d분 남음</string>
     <string name="loading_magic">마법을 불러오는 중\u2026 잠시만 기다려 주세요.</string>
     <string name="reward_ad_not_ready">아직 마법이 준비되지 않았습니다. 몇 초 후에 다시 시도해 주세요.</string>
-    <string name="medication_deleted_format">삭제되었습니다</string>
-
-    <string name="sign_in_error_title">마법 연결 문제</string>
-    <string name="sign_in_error_network">마법 구름에 도달할 수 없습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.</string>
-    <string name="sign_in_error_cancelled">로그인이 중단되었습니다. 다시 시도하시겠습니까?</string>
-    <string name="sign_in_error_dev">마법 포털이 점검 중입니다. 우리 마법사들이 이미 문제를 해결하고 있습니다.</string>
-    <string name="sign_in_error_generic">계정에 연결하는 동안 예기치 않은 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.</string>
-    <string name="sign_in_error_btn_retry">다시 시도</string>
     <string name="theme_unlock_title">테마 잠금 해제</string>
     <string name="theme_unlock_prompt">짧은 영상을 시청하고 이 테마와 모든 프리미엄 기능을 %1$d시간 동안 잠금 해제하세요!</string>
     <string name="premium_pass_btn_watch">영상 시청</string>
@@ -278,4 +270,9 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="take_early_warning">복용 시간이 아직 되지 않았습니다. 지금 복용하시겠습니까?</string>
+    <string name="take_late_warning">복용 예정 시간이 지났습니다. 지금 복용 완료로 표시할까요?</string>
+    <string name="button_cancel">취소</string>
+    <string name="button_confirm">확인</string>
+    <string name="button_delete">삭제</string>
 </resources>
