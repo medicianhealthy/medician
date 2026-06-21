@@ -65,13 +65,16 @@
                 android:layout_weight="1.5"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_form"
+                app:hintEnabled="true"
                 app:startIconDrawable="@drawable/baseline_medication_24"
                 app:startIconTint="@android:color/white">
                 <AutoCompleteTextView
                     android:id="@+id/med_form_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 

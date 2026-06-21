@@ -191,7 +191,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private void checkAndClarifyTakeTiming(DoseInstanceEntity instance, String status) {
         long now = System.currentTimeMillis();
         long scheduled = instance.getScheduledTime();
-        long diffMins = (scheduled - now) / (60 * 1000);
+        
+        // Difference in minutes: positive if late, negative if early
+        long diffMins = (now - scheduled) / 60000;
 
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = 
                 com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
@@ -199,10 +201,14 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         int earlyThreshold = rcm.getEarlyTakeThresholdMins();
         int lateThreshold = rcm.getLateTakeThresholdMins();
 
-        if (diffMins > earlyThreshold) {
+        // Fallback to defaults if values are not yet fetched or invalid
+        if (earlyThreshold <= 0) earlyThreshold = 60;
+        if (lateThreshold <= 0) lateThreshold = 180;
+
+        if (diffMins < -earlyThreshold) {
             // Taking too early
             showTimingClarificationDialog(instance, status, getString(R.string.take_early_warning));
-        } else if (diffMins < -lateThreshold) {
+        } else if (diffMins > lateThreshold) {
             // Taking too late
             showTimingClarificationDialog(instance, status, getString(R.string.take_late_warning));
         } else {

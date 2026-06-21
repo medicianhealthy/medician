@@ -1,6 +1,5 @@
 package com.robinzon.medicationwizard.ui.medicationslist;
 
-import android.media.ToneGenerator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -221,12 +220,6 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
             binding.btnDelete.setOnClickListener(v -> {
                 int pos = getBindingAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    // Play a modern feedback sound
-                    try {
-                        ToneGenerator tg = new ToneGenerator(android.media.AudioManager.STREAM_MUSIC, 100);
-                        tg.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
-                    } catch (Exception ignored) {}
-
                     // Material "Slide & Fade" removal animation
                     binding.cardView.animate()
                             .translationX(binding.cardView.getWidth() * 0.5f)

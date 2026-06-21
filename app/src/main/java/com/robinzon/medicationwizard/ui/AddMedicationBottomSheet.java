@@ -369,6 +369,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         };
         ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, frequencies);
         dropdownFrequency.setAdapter(freqAdapter);
+        dropdownFrequency.setThreshold(Integer.MAX_VALUE); // Disable filtering
 
         // When Frequency changes, we must regenerate the specific time picker buttons
         dropdownFrequency.setOnItemClickListener((parent, view12, position, id) -> {
@@ -525,7 +526,16 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                 getString(R.string.form_other)
         };
 
-        dropdownForm.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, forms));
+        // Use a standard layout and disable filtering to prevent hint/text clearance issues
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), 
+                android.R.layout.simple_dropdown_item_1line, forms);
+        dropdownForm.setAdapter(adapter);
+        dropdownForm.setThreshold(Integer.MAX_VALUE); // Disable filtering by typing
+        
+        // Ensure hint is visible initially if no value
+        if (TextUtils.isEmpty(dropdownForm.getText())) {
+            dropdownForm.setText(null);
+        }
 
         final TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
         if (null == layoutForm) return;
@@ -567,6 +577,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
      * defined by the 'Frequency' dropdown.
      */
     private void generateTimePickers(final int amount) {
+        // Clear all previous views immediately to avoid ghost buttons
         timesContainer.removeAllViews();
         
         final Context context = requireContext();
@@ -576,8 +587,14 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         // We use a post() to ensure we have the container width for row-fitting logic
         timesContainer.post(() -> {
             if (getView() == null) return;
+            
+            // Double check clear inside post to handle rapid frequency changes
+            timesContainer.removeAllViews();
+
             int containerWidth = timesContainer.getWidth();
-            if (containerWidth == 0) containerWidth = (int) (context.getResources().getDisplayMetrics().widthPixels - (32 * density));
+            if (containerWidth <= 0) {
+                containerWidth = (int) (context.getResources().getDisplayMetrics().widthPixels - (32 * density));
+            }
 
             LinearLayout currentRow = createNewRow(context);
             timesContainer.addView(currentRow);
@@ -598,17 +615,20 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                 int finalIndex = i;
                 timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
 
-                // Measure button
-                timeButton.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                // Measure button with constraints to get a realistic width
+                int maxWidthSpec = View.MeasureSpec.makeMeasureSpec(containerWidth, View.MeasureSpec.AT_MOST);
+                int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+                timeButton.measure(maxWidthSpec, heightSpec);
                 int btnWidth = timeButton.getMeasuredWidth();
 
+                // If adding this button exceeds width, start a new row
                 if (currentLineWidth + btnWidth + margin > containerWidth && currentLineWidth > 0) {
                     currentRow = createNewRow(context);
                     timesContainer.addView(currentRow);
                     currentLineWidth = 0;
                 }
 
-                // Add margin
+                // Add margin to the button
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) timeButton.getLayoutParams();
                 lp.setMargins(0, 0, margin, margin);
                 timeButton.setLayoutParams(lp);

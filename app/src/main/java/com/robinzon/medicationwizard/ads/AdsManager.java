@@ -101,8 +101,8 @@ public class AdsManager implements OnAdActionListener{
         return mAdsCollections;
     }
 
-    private void loadAds() {
-        if (null != mMainBanner) {
+    public void loadAds() {
+        if (null != mMainBanner && !mMainBanner.isLoaded()) {
             float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(mActivity);
             int minimumMinutesForBanner = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getMinAppTimeForBannerMins();
             if (totalUsageMinutes >= (float) minimumMinutesForBanner) {
@@ -111,14 +111,14 @@ public class AdsManager implements OnAdActionListener{
                 com.robinzon.medicationwizard.utils.Logger.log("AdsManager", "Banner load skipped. Usage mins: " + totalUsageMinutes + " < Min: " + minimumMinutesForBanner);
             }
         }
-        if (null != mMainInterstitial) {
+        if (null != mMainInterstitial && !mMainInterstitial.isLoaded()) {
             mMainInterstitial.load();
         }
-        if (null != mMainRewarded) {
+        if (null != mMainRewarded && !mMainRewarded.isLoaded()) {
             mMainRewarded.load();
         }
 
-        if (null != mAppOpenAd) {
+        if (null != mAppOpenAd && !mAppOpenAd.isLoaded()) {
             mAppOpenAd.load();
         }
     }
@@ -142,6 +142,7 @@ public class AdsManager implements OnAdActionListener{
     }
 
     public void onResume() {
+        loadAds(); // Check if we should load banners or reload failed ads
         for (AdMobAd ad : getAdsCollection()) {
             if (null != ad) {
                 ad.onResume();
@@ -184,8 +185,8 @@ public class AdsManager implements OnAdActionListener{
         int minimumSessionsThreshold = remoteConfigManager.getMinSessionsForInterstitial();
         int minimumMinutesThreshold = remoteConfigManager.getMinAppTimeForInterstitialMins();
 
-        // Thresholds from Remote Config: Meets session count AND usage time since last ad
-        return sessionCount >= minimumSessionsThreshold && usageMinutesForAds >= (float) minimumMinutesThreshold;
+        // Standard Hybrid Trigger: Show if minimum session count OR usage time since last ad is met
+        return sessionCount >= minimumSessionsThreshold || usageMinutesForAds >= (float) minimumMinutesThreshold;
     }
     /** @noinspection unused*/
     public void showRewarded(OnRewardedFinishedListener listener) {

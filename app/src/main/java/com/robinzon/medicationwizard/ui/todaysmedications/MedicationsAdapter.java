@@ -289,11 +289,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         // 6. Interaction Listeners with M3-styled animations
         viewHolder.getTakeButton().setOnClickListener(v -> {
             if (mListener != null) {
-                try {
-                    android.media.ToneGenerator tg = new android.media.ToneGenerator(android.media.AudioManager.STREAM_MUSIC, 100);
-                    tg.startTone(android.media.ToneGenerator.TONE_PROP_BEEP, 200);
-                } catch (Exception ignored) {}
-
                 // Scale success animation
                 viewHolder.itemView.animate()
                         .scaleX(1.05f)
@@ -311,11 +306,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
         viewHolder.getSkip().setOnClickListener(v -> {
             if (mListener != null) {
-                try {
-                    android.media.ToneGenerator tg = new android.media.ToneGenerator(android.media.AudioManager.STREAM_MUSIC, 100);
-                    tg.startTone(android.media.ToneGenerator.TONE_CDMA_PIP, 150);
-                } catch (Exception ignored) {}
-
                 // Slide dismiss animation
                 viewHolder.itemView.animate()
                         .translationX(-viewHolder.itemView.getWidth())

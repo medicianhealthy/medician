@@ -117,6 +117,9 @@ public class MedicationWizardApplication extends Application
     /** LifecycleObserver method that shows the app open ad when the app moves to foreground. */
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     protected void onMoveToForeground() {
+        // Record as a new session for ad decision purposes
+        com.robinzon.medicationwizard.utils.Statisticator.onSessionStarted(this);
+
         // Show the ad (if available) when the app moves to foreground.
         if (mCurrentActivity instanceof MainActivity) {
             ((MainActivity) mCurrentActivity).onMoveToForeground();
