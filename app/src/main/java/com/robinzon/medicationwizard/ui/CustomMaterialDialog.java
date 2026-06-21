@@ -64,7 +64,7 @@ public class CustomMaterialDialog {
     }
 
     public void setTitle(String title) {
-        // 3. Magical Header: Centered title
+        // Magical Header: Start-aligned title (Industry standard for M3 dialogs)
         TextView titleView = new TextView(context);
         titleView.setText(title);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
@@ -74,25 +74,37 @@ public class CustomMaterialDialog {
         int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
         titleView.setTextColor(primaryColor);
         
-        titleView.setGravity(Gravity.CENTER);
+        titleView.setGravity(Gravity.START);
         int padding = (int) (24 * context.getResources().getDisplayMetrics().density);
-        // Reduced bottom padding of the title to bring message closer
         titleView.setPadding(padding, padding, padding, (int) (4 * context.getResources().getDisplayMetrics().density));
         
         builder.setCustomTitle(titleView);
     }
 
     public void setMessage(String message) {
-        // We wrap the message to ensure it's centered and has better padding
+        // Use Start alignment (Left for LTR, Right for RTL) - Industry standard for readability.
         TextView messageView = new TextView(context);
         messageView.setText(message);
         messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        messageView.setGravity(Gravity.CENTER);
+        
+        // Remove justification (it causes awkward gaps on small screens)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            messageView.setJustificationMode(0); // 0 is JUSTIFICATION_MODE_NONE
+        }
+        
+        // Balanced break strategy (added in API 23) is the standard for 
+        // avoiding "lonely words" at the bottom.
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            messageView.setBreakStrategy(2); // 2 is BREAK_STRATEGY_BALANCED
+        }
+
+        // Align to the start (standard clean look)
+        messageView.setGravity(Gravity.START);
         
         float density = context.getResources().getDisplayMetrics().density;
         int paddingSide = (int) (24 * density);
-        int paddingTop = 0; // Removed top padding as title now provides enough
-        int paddingBottom = (int) (8 * density); // Minimal bottom padding
+        int paddingTop = 0;
+        int paddingBottom = (int) (8 * density);
         
         messageView.setPadding(paddingSide, paddingTop, paddingSide, paddingBottom);
         
