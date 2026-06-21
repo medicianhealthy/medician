@@ -23,6 +23,7 @@
             android:textColor="?attr/colorPrimary" />
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_notifications"
             style="?attr/materialCardViewElevatedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,7 +132,6 @@
                                     android:layout_height="20dp"
                                     android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
-                                    app:tint="#FFD700"
                                     android:contentDescription="@null" />
                             </LinearLayout>
                             <TextView
@@ -188,7 +188,6 @@
                                 android:layout_height="20dp"
                                 android:layout_marginStart="8dp"
                                 app:srcCompat="@drawable/ic_crown"
-                                app:tint="#FFD700"
                                 android:contentDescription="@null" />
                         </LinearLayout>
                         <TextView
@@ -308,7 +307,6 @@
                                 android:layout_height="20dp"
                                 android:layout_marginStart="8dp"
                                 app:srcCompat="@drawable/ic_crown"
-                                app:tint="#FFD700"
                                 android:contentDescription="@null" />
                         </LinearLayout>
                         <TextView
@@ -544,13 +542,13 @@
                     <!-- The Sparkle (Tip Follower) -->
                     <ImageView
                         android:id="@+id/img_magic_sparkle"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_sparkle"
                         app:tint="?attr/colorPrimary"
                         android:elevation="4dp"
-                        android:translationX="-14dp" />
+                        android:translationX="-8dp" />
                 </FrameLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

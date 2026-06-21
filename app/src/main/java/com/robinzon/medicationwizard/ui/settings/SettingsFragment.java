@@ -774,9 +774,30 @@ public class SettingsFragment extends MedicationWizardFragment {
         if (isGranted) {
             binding.txtNotificationsTitle.setText(R.string.settings_notifications_title);
             binding.txtNotificationsSummary.setText(R.string.settings_notifications_summary);
+            
+            // Revert standing out effect
+            binding.cardNotifications.setStrokeWidth(0);
+            
+            int surfaceAttr = requireContext().getResources().getIdentifier("colorSurface", "attr", requireContext().getPackageName());
+            int surfaceColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), surfaceAttr, android.graphics.Color.WHITE);
+            binding.cardNotifications.setCardBackgroundColor(surfaceColor);
         } else {
             binding.txtNotificationsTitle.setText(R.string.notification_missing);
             binding.txtNotificationsSummary.setText(R.string.settings_notifications_disabled_summary);
+            
+            // Subtle standing out effect: Thin primary stroke and very light surface tint
+            float density = getResources().getDisplayMetrics().density;
+            binding.cardNotifications.setStrokeWidth((int) (1 * density));
+            
+            int primaryAttr = requireContext().getResources().getIdentifier("colorPrimary", "attr", requireContext().getPackageName());
+            int primaryColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), primaryAttr, android.graphics.Color.BLUE);
+            binding.cardNotifications.setStrokeColor(primaryColor);
+            
+            // 5% alpha of primary for background
+            int surfaceAttr = requireContext().getResources().getIdentifier("colorSurface", "attr", requireContext().getPackageName());
+            int surfaceColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), surfaceAttr, android.graphics.Color.WHITE);
+            int blendedColor = androidx.core.graphics.ColorUtils.blendARGB(surfaceColor, primaryColor, 0.05f);
+            binding.cardNotifications.setCardBackgroundColor(blendedColor);
         }
     }
 
