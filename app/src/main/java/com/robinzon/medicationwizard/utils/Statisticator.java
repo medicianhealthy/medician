@@ -16,7 +16,12 @@ public class Statisticator {
     private static final String SPK_SESSION_TIME_MINUTES = "spk_session_time_minutes";
     private static final String SPK_USAGE_MINUTES_FOR_ADS = "spk_usage_minutes_for_ads";
     private static final String SPK_TOTAL_DOSES_LOGGED = "spk_total_doses_logged";
+    
+    /** Anchor for total usage calculation in the current foreground session. */
     private static long mStartUserActive;
+    
+    /** Anchor for ad-specific usage calculation (resets after showing an ad). */
+    private static long mStartAdUsageActive;
 
     /**
      * Records the start of a new app session and increments the persistent counter.
@@ -39,10 +44,14 @@ public class Statisticator {
 
     /**
      * @param context Application context.
-     * @return Total accumulated usage time in minutes.
+     * @return Total accumulated usage time in minutes, including the current active session.
      */
     public static float getTotalUsageMinutes(final Context context) {
-        return SharedPreferencesManager.getInstance(context).getFloat(SPK_SESSION_TIME_MINUTES, 0F);
+        float persisted = SharedPreferencesManager.getInstance(context).getFloat(SPK_SESSION_TIME_MINUTES, 0F);
+        if (mStartUserActive > 0) {
+            persisted += ((float) System.currentTimeMillis() - (float) mStartUserActive) / 1000F / 60F;
+        }
+        return persisted;
     }
 
     /**
@@ -67,10 +76,14 @@ public class Statisticator {
 
     /**
      * @param context Application context.
-     * @return Usage time in minutes accumulated since the last Full Screen Ad (FSA).
+     * @return Usage time in minutes accumulated since the last Full Screen Ad (FSA), including current session.
      */
     public static float getUsageMinutesForAds(final Context context) {
-        return SharedPreferencesManager.getInstance(context).getFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
+        float persisted = SharedPreferencesManager.getInstance(context).getFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
+        if (mStartAdUsageActive > 0) {
+            persisted += ((float) System.currentTimeMillis() - (float) mStartAdUsageActive) / 1000F / 60F;
+        }
+        return persisted;
     }
 
     /**
@@ -81,6 +94,8 @@ public class Statisticator {
     public static void resetUsageMinutesForAds(final Context context) {
         AsyncTask.execute(() -> {
             SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
+            // Reset the foreground anchor for ad usage so only future time counts
+            mStartAdUsageActive = System.currentTimeMillis();
         });
     }
 
@@ -91,12 +106,13 @@ public class Statisticator {
      */
     public static void onMoveToBackground(final Context context) {
         AsyncTask.execute(() -> {
-            final float currentSessionTimeInMinutes = ((float) System.currentTimeMillis() - (float) mStartUserActive) / 1000F / 60F;
-            float totalUsage = getTotalUsageMinutes(context) + currentSessionTimeInMinutes;
-            float adUsage = getUsageMinutesForAds(context) + currentSessionTimeInMinutes;
+            // Persist the live values which already include the elapsed foreground time
+            SharedPreferencesManager.getInstance(context).setFloat(SPK_SESSION_TIME_MINUTES, getTotalUsageMinutes(context));
+            SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, getUsageMinutesForAds(context));
             
-            SharedPreferencesManager.getInstance(context).setFloat(SPK_SESSION_TIME_MINUTES, totalUsage);
-            SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, adUsage);
+            // Stop live tracking
+            mStartUserActive = 0;
+            mStartAdUsageActive = 0;
         });
     }
 
@@ -107,7 +123,9 @@ public class Statisticator {
      */
     public static void onMoveToForeground(final Context context) {
         AsyncTask.execute(() -> {
-            mStartUserActive = System.currentTimeMillis();
+            long now = System.currentTimeMillis();
+            mStartUserActive = now;
+            mStartAdUsageActive = now;
         });
     }
 }
