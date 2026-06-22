@@ -284,8 +284,15 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.toggleGroupTheme.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (!isChecked || isThemeReverting) return;
             
-            // "System" is free, Light/Dark require Premium/Ad
-            if (checkedId != R.id.btn_theme_system && !AppConfig.isPremium(requireContext())) {
+            // "System" is free. 
+            // Light/Dark require Ad/Premium UNLESS it matches the current system theme.
+            boolean isSystemDark = (getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK) 
+                    == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+            
+            boolean matchesSystem = (checkedId == R.id.btn_theme_light && !isSystemDark) || 
+                                     (checkedId == R.id.btn_theme_dark && isSystemDark);
+
+            if (checkedId != R.id.btn_theme_system && !matchesSystem && !AppConfig.isPremium(requireContext())) {
                 isThemeReverting = true;
                 
                 // Revert UI selection to current theme
@@ -835,9 +842,22 @@ public class SettingsFragment extends MedicationWizardFragment {
         boolean isTempPremium = System.currentTimeMillis() < expiry;
         boolean isPremium = isFullPremium || isTempPremium;
 
+        boolean isSystemDark = (getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK) 
+                == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+
         // Auto-reversion: If the theme is restricted but the user is no longer premium, revert to System.
+        // A theme is restricted if it's NOT System AND it's NOT the current system theme.
         Integer currentTheme = viewModel.getTheme().getValue();
-        if (currentTheme != null && currentTheme != SettingsViewModel.THEME_SYSTEM && !isPremium) {
+        boolean isThemeRestricted = false;
+        if (currentTheme != null && currentTheme != SettingsViewModel.THEME_SYSTEM) {
+            boolean matchesSystem = (currentTheme == SettingsViewModel.THEME_LIGHT && !isSystemDark) || 
+                                     (currentTheme == SettingsViewModel.THEME_DARK && isSystemDark);
+            if (!matchesSystem) {
+                isThemeRestricted = true;
+            }
+        }
+
+        if (isThemeRestricted && !isPremium) {
             // Signal to the listener to ignore this programmatic change
             isThemeReverting = true;
             viewModel.setTheme(SettingsViewModel.THEME_SYSTEM);
@@ -893,8 +913,12 @@ public class SettingsFragment extends MedicationWizardFragment {
                 binding.txtMagicPassSummary.setText(R.string.loading_magic);
                 binding.cardMagicPass.setEnabled(true);
             }
-            binding.badgeAdLight.setVisibility(View.VISIBLE);
-            binding.badgeAdDark.setVisibility(View.VISIBLE);
+            
+            // Dynamic AD badges based on system theme:
+            // If system is Light, "Light" is free (no badge), "Dark" requires Ad.
+            // If system is Dark, "Dark" is free (no badge), "Light" requires Ad.
+            binding.badgeAdLight.setVisibility(isSystemDark ? View.VISIBLE : View.GONE);
+            binding.badgeAdDark.setVisibility(isSystemDark ? View.GONE : View.VISIBLE);
         }
     }
 
