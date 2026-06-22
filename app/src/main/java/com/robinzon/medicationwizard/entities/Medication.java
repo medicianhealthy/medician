@@ -150,23 +150,26 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             AppDatabase db = AppDatabase.getDatabase(context);
             long now = System.currentTimeMillis();
             
-            // FIX: Cancel all existing future alarms before deleting records and creating new ones
+            // FIX: Cancel and delete only FUTURE doses to preserve historical records in History view.
+            // Range: from 1 minute ago (buffer) to the end of the scheduling window.
+            long startRange = now - 60000;
             long endRange = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
-            List<DoseInstanceEntity> oldInstances = db.doseInstanceDao().getInstancesInRangeInternal(now - 60000, endRange);
-            for (DoseInstanceEntity e : oldInstances) {
+            
+            List<DoseInstanceEntity> instancesInRange = db.doseInstanceDao().getInstancesInRangeInternal(startRange, endRange);
+            for (DoseInstanceEntity e : instancesInRange) {
                 if (mId.equals(e.getMedicationId())) {
                     ReminderManager.cancelReminder(context, e.getId());
+                    // Delete future doses only (SCHEDULED) or all in current range to refresh definition?
+                    // We delete all in range to ensure the 7-day window always matches the latest definition.
+                    db.doseInstanceDao().deleteInstanceInternal(e);
                 }
             }
 
-            // Remove existing future schedules for this specific medication to avoid duplicates/overlap
-            db.doseInstanceDao().deleteByMedicationId(mId);
+            final SparseArray<SimpleDayTime> timesADay = getTimesADay();
+            if (timesADay == null || timesADay.size() == 0) return;
 
             List<DoseInstanceEntity> entities = new ArrayList<>();
             for (int i = 0; i < AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE; i++) {
-                final SparseArray<SimpleDayTime> timesADay = getTimesADay();
-                if (timesADay == null) continue;
-                
                 for (int k = 0; k < timesADay.size(); k++) {
                     SimpleDayTime time = timesADay.valueAt(k);
                     MedicationInstance instance = getMedicationInstance(i, time);
@@ -177,7 +180,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
             if (!entities.isEmpty()) {
                 db.doseInstanceDao().insertAll(entities);
                 
-                // Re-fetch with generated IDs to schedule alarms
+                // Re-fetch only the newly inserted future instances to set alarms
                 List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getInstancesInRangeInternal(now, endRange);
                 for (DoseInstanceEntity e : scheduled) {
                     if (mId.equals(e.getMedicationId())) {
@@ -185,7 +188,7 @@ public class Medication extends MedicationWizardSuper implements Comparable<Medi
                     }
                 }
 
-                Logger.log("Room", "Saved " + entities.size() + " scheduled doses for " + mCommercialName);
+                Logger.log("Room", "Saved " + entities.size() + " doses for " + mCommercialName);
             }
         });
     }

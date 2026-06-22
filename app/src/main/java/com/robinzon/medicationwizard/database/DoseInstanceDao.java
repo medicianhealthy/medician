@@ -45,7 +45,15 @@ public interface DoseInstanceDao {
     void update(DoseInstanceEntity instance);
 
     /**
-     * Fetches every dose instance in the database, ordered chronologically.
+     * Deletes a specific dose instance.
+     *
+     * @param instance The entity to remove.
+     */
+    @androidx.room.Delete
+    void deleteInstanceInternal(DoseInstanceEntity instance);
+
+    /**
+     * Returns every dose instance in the database, ordered chronologically.
      *
      * @return Observable list of all historical and future dose instances.
      */

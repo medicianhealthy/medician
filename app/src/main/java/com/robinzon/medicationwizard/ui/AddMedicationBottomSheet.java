@@ -429,19 +429,26 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         }
 
         mMedication.addTimeStampsForDay(activeTimes);
-        mMedication.addToMedicationList(getContext());
-
-        // Proactively ask for notification permissions on Android 13+ with a friendly rationale
-        if (getActivity() != null) {
-            com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(getActivity()).requestWithRationale();
-            
-            // Trigger interstitial ad after a slight delay so it doesn't overlap with the permission logic
-            if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity) {
-                ((com.robinzon.medicationwizard.MainActivity) getActivity()).getAdsManager().showInterstitialAd();
-            }
-        }
+        mMedication.addToMedicationList(requireContext().getApplicationContext());
 
         dismiss();
+        
+        // Handle post-save logic (Ads and Permissions) after a delay to allow the database to commit
+        // and the BottomSheet to finish its exit animation, ensuring a clean UI transition.
+        // We wait 800ms to ensure the background fragment is fully settled.
+        if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity) {
+            final com.robinzon.medicationwizard.MainActivity main = (com.robinzon.medicationwizard.MainActivity) getActivity();
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                if (main.isFinishing() || main.isDestroyed()) return;
+                
+                // 1. Trigger interstitial ad (if eligible)
+                main.getAdsManager().showInterstitialAd();
+                
+                // 2. Request notification permissions (Android 13+) 
+                // We do this after the ad trigger to avoid overlapping system dialogs.
+                com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(main).requestWithRationale();
+            }, 800);
+        }
     }
 
     /**
