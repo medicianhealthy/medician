@@ -793,25 +793,17 @@ public class SettingsFragment extends MedicationWizardFragment {
             binding.txtNotificationsTitle.setText(R.string.settings_notifications_title);
             binding.txtNotificationsSummary.setText(R.string.settings_notifications_summary);
             
-            // 1. Reset Background: This is the most reliable way to restore theme elevation overlays
-            binding.cardNotifications.setCardBackgroundColor(null);
-            
-            // 2. Restore Theme-Default Stroke
-            boolean isDarkMode = (getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK) 
-                    == android.content.res.Configuration.UI_MODE_NIGHT_YES;
-            
-            if (isDarkMode) {
-                float density = getResources().getDisplayMetrics().density;
-                binding.cardNotifications.setStrokeWidth((int) (1 * density));
-                String pkg = requireContext().getPackageName();
-                int outlineAttrId = getResources().getIdentifier("colorOutlineVariant", "attr", pkg);
-                int outlineColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), outlineAttrId, android.graphics.Color.GRAY);
-                binding.cardNotifications.setStrokeColor(outlineColor);
-            } else {
-                binding.cardNotifications.setStrokeWidth(0);
+            // RESTORE ORIGINAL STYLE: 
+            // We use the exact values captured in onViewCreated to ensure 100% parity with other cards.
+            if (mDefaultCardBgColor != null) {
+                binding.cardNotifications.setCardBackgroundColor(mDefaultCardBgColor);
+            }
+            binding.cardNotifications.setStrokeWidth(mDefaultCardStrokeWidth);
+            if (mDefaultCardStrokeColor != null) {
+                binding.cardNotifications.setStrokeColor(mDefaultCardStrokeColor);
             }
             
-            Logger.log("SettingsFragment", "Restored card styling using theme defaults.");
+            Logger.log("SettingsFragment", "Restored card styling to defaults.");
         } else {
             binding.txtNotificationsTitle.setText(R.string.notification_missing);
             binding.txtNotificationsSummary.setText(R.string.settings_notifications_disabled_summary);

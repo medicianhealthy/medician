@@ -286,22 +286,30 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             final boolean granted = hasResults && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
             NotificationManager.getInstance(this).setHasGrantedPermission(granted);
             
-            // Re-sync UI in the Settings screen if it's visible. 
-            // We use a small delay to ensure the system permission state is committed.
+            // Aggressive UI refresh: Iterate all possible fragment managers to find the Settings screen
             new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
                 try {
                     final NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                             .findFragmentById(R.id.nav_host_fragment_content_main);
                     if (navHostFragment != null) {
-                        androidx.fragment.app.Fragment current = navHostFragment.getChildFragmentManager().getPrimaryNavigationFragment();
-                        if (current instanceof com.robinzon.medicationwizard.ui.settings.SettingsFragment) {
-                            ((com.robinzon.medicationwizard.ui.settings.SettingsFragment) current).updateNotificationStatus();
+                        for (androidx.fragment.app.Fragment fragment : navHostFragment.getChildFragmentManager().getFragments()) {
+                            refreshFragmentNotificationUi(fragment);
                         }
                     }
                 } catch (Exception e) {
-                    Logger.log("MainActivity", "Error during notification UI refresh: " + e.getMessage());
+                    Logger.log("MainActivity", "Error during post-permission UI refresh: " + e.getMessage());
                 }
-            }, 500);
+            }, 800);
+        }
+    }
+
+    private void refreshFragmentNotificationUi(androidx.fragment.app.Fragment fragment) {
+        if (fragment instanceof com.robinzon.medicationwizard.ui.settings.SettingsFragment) {
+            ((com.robinzon.medicationwizard.ui.settings.SettingsFragment) fragment).updateNotificationStatus();
+        }
+        // Recursively search child fragments
+        for (androidx.fragment.app.Fragment child : fragment.getChildFragmentManager().getFragments()) {
+            refreshFragmentNotificationUi(child);
         }
     }
 
