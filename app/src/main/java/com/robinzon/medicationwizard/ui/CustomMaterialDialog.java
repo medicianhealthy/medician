@@ -87,13 +87,15 @@ public class CustomMaterialDialog {
         messageView.setText(message);
         messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         
-        // BALANCED break strategy is the industry secret for avoiding orphans/widows
+        // HIGH_QUALITY/BALANCED break strategy to prevent "lonely words"
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            // Constant 2 is BREAK_STRATEGY_BALANCED
-            messageView.setBreakStrategy(2);
+            // Constant 1 is BREAK_STRATEGY_HIGH_QUALITY, 2 is BREAK_STRATEGY_BALANCED
+            // High quality performs more aggressive optimization to avoid orphans
+            messageView.setBreakStrategy(1);
+            messageView.setHyphenationFrequency(android.text.Layout.HYPHENATION_FREQUENCY_FULL);
         }
         
-        // Start alignment (Left for LTR, Right for RTL) - Industry standard for readability
+        // Start alignment (Left for LTR, Right for RTL)
         messageView.setGravity(Gravity.START);
         
         float density = context.getResources().getDisplayMetrics().density;
