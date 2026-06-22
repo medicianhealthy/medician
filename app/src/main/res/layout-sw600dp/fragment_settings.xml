@@ -37,14 +37,14 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Notifications Toggle -->
                     <LinearLayout
                         android:id="@+id/btn_notifications"
                         android:layout_width="match_parent"
@@ -90,10 +90,7 @@
                         android:orientation="vertical"
                         android:visibility="gone"
                         tools:visibility="visible">
-
                         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
-
-                        <!-- Sound Picker -->
                         <LinearLayout
                             android:id="@+id/btn_notif_sound"
                             android:layout_width="match_parent"
@@ -116,8 +113,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
-                        <!-- Bypass Volume -->
                         <LinearLayout
                             android:id="@+id/btn_bypass_volume"
                             android:layout_width="match_parent"
@@ -164,8 +159,6 @@
                                 android:clickable="false"
                                 android:focusable="false" />
                         </LinearLayout>
-
-                        <!-- Volume Slider -->
                         <LinearLayout
                             android:id="@+id/layout_volume"
                             android:layout_width="match_parent"
@@ -182,8 +175,6 @@
                                 android:valueFrom="0"
                                 android:valueTo="100" />
                         </LinearLayout>
-
-                        <!-- Quiet Hours -->
                         <LinearLayout
                             android:id="@+id/btn_quiet_hours"
                             android:layout_width="match_parent"
@@ -218,8 +209,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
-                        <!-- Snooze Duration -->
                         <LinearLayout
                             android:id="@+id/btn_snooze_duration"
                             android:layout_width="match_parent"
@@ -242,8 +231,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
-                        <!-- Max Snoozes -->
                         <LinearLayout
                             android:id="@+id/btn_max_snoozes"
                             android:layout_width="match_parent"
@@ -266,7 +253,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -276,7 +262,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/cloud_backup_title"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
@@ -285,7 +270,8 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -457,7 +443,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/settings_category_appearance"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
@@ -469,7 +454,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="20dp"
                 android:visibility="gone"
                 app:cardBackgroundColor="?attr/colorTertiaryContainer"
                 android:clickable="true"
@@ -583,7 +568,8 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -725,7 +711,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/settings_category_data"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
@@ -734,7 +719,8 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
                     <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_backup_title" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
@@ -748,11 +734,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="32dp"
+                android:paddingVertical="24dp"
                 tools:text="Version 1.0"
                 android:textAppearance="?attr/textAppearanceBodySmall" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
