@@ -64,7 +64,7 @@ public class CustomMaterialDialog {
     }
 
     public void setTitle(String title) {
-        // Magical Header: Start-aligned title (Industry standard for M3 dialogs)
+        // Magical Header: Start-aligned title for a professional, readable look
         TextView titleView = new TextView(context);
         titleView.setText(title);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
@@ -82,23 +82,18 @@ public class CustomMaterialDialog {
     }
 
     public void setMessage(String message) {
-        // Use Start alignment (Left for LTR, Right for RTL) - Industry standard for readability.
+        // High-end readable text layout: Start-aligned and balanced to avoid orphans.
         TextView messageView = new TextView(context);
         messageView.setText(message);
         messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         
-        // Remove justification (it causes awkward gaps on small screens)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            messageView.setJustificationMode(0); // 0 is JUSTIFICATION_MODE_NONE
+        // BALANCED break strategy is the industry secret for avoiding orphans/widows
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            // Constant 2 is BREAK_STRATEGY_BALANCED
+            messageView.setBreakStrategy(2);
         }
         
-        // Balanced break strategy (added in API 23) is the standard for 
-        // avoiding "lonely words" at the bottom.
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            messageView.setBreakStrategy(2); // 2 is BREAK_STRATEGY_BALANCED
-        }
-
-        // Align to the start (standard clean look)
+        // Start alignment (Left for LTR, Right for RTL) - Industry standard for readability
         messageView.setGravity(Gravity.START);
         
         float density = context.getResources().getDisplayMetrics().density;

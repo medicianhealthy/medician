@@ -30,6 +30,7 @@ import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
+import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.Statisticator;
@@ -284,6 +285,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             final boolean hasResults = grantResults.length > 0;
             final boolean granted = hasResults && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
             NotificationManager.getInstance(this).setHasGrantedPermission(granted);
+            
+            // Re-sync UI in the Settings screen if it's visible. 
+            // We use a small delay to ensure the system permission state is committed.
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                try {
+                    final NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                            .findFragmentById(R.id.nav_host_fragment_content_main);
+                    if (navHostFragment != null) {
+                        androidx.fragment.app.Fragment current = navHostFragment.getChildFragmentManager().getPrimaryNavigationFragment();
+                        if (current instanceof com.robinzon.medicationwizard.ui.settings.SettingsFragment) {
+                            ((com.robinzon.medicationwizard.ui.settings.SettingsFragment) current).updateNotificationStatus();
+                        }
+                    }
+                } catch (Exception e) {
+                    Logger.log("MainActivity", "Error during notification UI refresh: " + e.getMessage());
+                }
+            }, 500);
         }
     }
 

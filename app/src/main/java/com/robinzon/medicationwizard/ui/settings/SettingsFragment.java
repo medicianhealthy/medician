@@ -55,6 +55,11 @@ public class SettingsFragment extends MedicationWizardFragment {
     private GoogleSignInClient mGoogleSignInClient;
     private boolean isThemeReverting = false;
 
+    // Default styles for Health Alerts card to ensure a perfect match when enabled
+    private android.content.res.ColorStateList mDefaultCardBgColor;
+    private int mDefaultCardStrokeWidth;
+    private android.content.res.ColorStateList mDefaultCardStrokeColor;
+
     private final android.os.Handler mProgressHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private final Runnable mProgressRunnable = this::refreshMagicPassProgress;
     private android.animation.AnimatorSet mMagicAnimator;
@@ -182,6 +187,14 @@ public class SettingsFragment extends MedicationWizardFragment {
             ((MainActivity) getActivity()).setFabVisible(false);
         }
         setPaddingForRecyclerView(binding.fragmentSettingsMainView, false);
+
+        // Capture default card styling only once to avoid capturing modified state
+        if (binding != null && mDefaultCardBgColor == null) {
+            mDefaultCardBgColor = binding.cardNotifications.getCardBackgroundColor();
+            mDefaultCardStrokeWidth = binding.cardNotifications.getStrokeWidth();
+            mDefaultCardStrokeColor = binding.cardNotifications.getStrokeColorStateList();
+            Logger.log("SettingsFragment", "Captured defaults - Stroke: " + mDefaultCardStrokeWidth);
+        }
 
         setupSettings();
         setupCloudBackup();
@@ -767,37 +780,51 @@ public class SettingsFragment extends MedicationWizardFragment {
         dialog.show();
     }
 
-    private void updateNotificationStatus() {
-        boolean isGranted = NotificationManager.getInstance(requireActivity()).hasPermission();
+    public void updateNotificationStatus() {
+        if (binding == null || getContext() == null) return;
+        
+        // Non-cached check
+        boolean isGranted = androidx.core.app.NotificationManagerCompat.from(requireContext().getApplicationContext()).areNotificationsEnabled();
+        Logger.log("SettingsFragment", "updateNotificationStatus: granted=" + isGranted);
+        
         binding.containerAlertDetails.setVisibility(isGranted ? View.VISIBLE : View.GONE);
         
         if (isGranted) {
             binding.txtNotificationsTitle.setText(R.string.settings_notifications_title);
             binding.txtNotificationsSummary.setText(R.string.settings_notifications_summary);
             
-            // Revert standing out effect
-            binding.cardNotifications.setStrokeWidth(0);
+            // RESTORE ORIGINAL STYLE: 
+            // We use the exact values captured in onViewCreated to ensure 100% parity with other cards.
+            if (mDefaultCardBgColor != null) {
+                binding.cardNotifications.setCardBackgroundColor(mDefaultCardBgColor);
+            }
+            binding.cardNotifications.setStrokeWidth(mDefaultCardStrokeWidth);
+            if (mDefaultCardStrokeColor != null) {
+                binding.cardNotifications.setStrokeColor(mDefaultCardStrokeColor);
+            }
             
-            int surfaceAttr = requireContext().getResources().getIdentifier("colorSurface", "attr", requireContext().getPackageName());
-            int surfaceColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), surfaceAttr, android.graphics.Color.WHITE);
-            binding.cardNotifications.setCardBackgroundColor(surfaceColor);
+            Logger.log("SettingsFragment", "Restored card styling to defaults.");
         } else {
             binding.txtNotificationsTitle.setText(R.string.notification_missing);
             binding.txtNotificationsSummary.setText(R.string.settings_notifications_disabled_summary);
             
-            // Subtle standing out effect: Thin primary stroke and very light surface tint
             float density = getResources().getDisplayMetrics().density;
-            binding.cardNotifications.setStrokeWidth((int) (1 * density));
+            String pkg = requireContext().getPackageName();
+            int primaryAttrId = getResources().getIdentifier("colorPrimary", "attr", pkg);
+            int surfaceAttrId = getResources().getIdentifier("colorSurface", "attr", pkg);
             
-            int primaryAttr = requireContext().getResources().getIdentifier("colorPrimary", "attr", requireContext().getPackageName());
-            int primaryColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), primaryAttr, android.graphics.Color.BLUE);
+            int primaryColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), primaryAttrId, android.graphics.Color.BLUE);
+            int surfaceColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), surfaceAttrId, android.graphics.Color.WHITE);
+            
+            // STANDOUT EFFECT: 
+            // We use a primary-colored stroke and a subtle 10% primary tint for the background.
+            binding.cardNotifications.setStrokeWidth((int) (1.5f * density));
             binding.cardNotifications.setStrokeColor(primaryColor);
             
-            // 5% alpha of primary for background
-            int surfaceAttr = requireContext().getResources().getIdentifier("colorSurface", "attr", requireContext().getPackageName());
-            int surfaceColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), surfaceAttr, android.graphics.Color.WHITE);
-            int blendedColor = androidx.core.graphics.ColorUtils.blendARGB(surfaceColor, primaryColor, 0.05f);
-            binding.cardNotifications.setCardBackgroundColor(blendedColor);
+            int blendedColor = androidx.core.graphics.ColorUtils.blendARGB(surfaceColor, primaryColor, 0.10f);
+            binding.cardNotifications.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(blendedColor));
+            
+            Logger.log("SettingsFragment", "Applied standout styling to card.");
         }
     }
 

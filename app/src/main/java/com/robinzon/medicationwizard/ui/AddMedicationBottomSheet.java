@@ -154,6 +154,13 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         }
 
         setupDropdowns(view);
+        
+        // Fix for disappearing hint: explicitly re-set it after dropdown setup
+        TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
+        if (layoutForm != null) {
+            layoutForm.setHint(R.string.hint_form);
+        }
+
         setupInstructions(view);
         setTextChangeListeners(view);
         timesContainer = view.findViewById(R.id.times_container);
