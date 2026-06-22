@@ -31,4 +31,21 @@
         android:layout_marginTop="24dp"
         android:text="@string/cheats_apply_restart" />
 
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginVertical="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Remote Config Values"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/txt_config_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:lineSpacingExtra="4dp" />
+
 </LinearLayout>

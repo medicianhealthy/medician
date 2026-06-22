@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.widget.TextView;
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 public class CheatsBottomSheet extends BottomSheetDialogFragment {
@@ -28,12 +31,15 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
 
         MaterialCheckBox checkPremium = view.findViewById(R.id.check_premium);
         MaterialCheckBox checkShowAds = view.findViewById(R.id.check_show_ads);
+        TextView txtConfigInfo = view.findViewById(R.id.txt_config_info);
         View btnApply = view.findViewById(R.id.btn_apply);
 
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(requireContext());
         
         checkPremium.setChecked(sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM));
         checkShowAds.setChecked(sp.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE));
+
+        setupConfigInfo(txtConfigInfo);
 
         btnApply.setOnClickListener(v -> {
             sp.setBoolean(AppConfig.KEY_CHEAT_PREMIUM, checkPremium.isChecked());
@@ -54,5 +60,28 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
 
             dismiss();
         });
+    }
+
+    private void setupConfigInfo(TextView textView) {
+        RemoteConfigManager rc = RemoteConfigManager.getInstance();
+        StringBuilder builder = new StringBuilder();
+        java.util.Locale locale = java.util.Locale.getDefault();
+        
+        builder.append("--- Remote Config Defaults/Server ---\n");
+        builder.append("Int. Cooldown: ").append(rc.getAdInterstitialCoolDownSeconds()).append("s\n");
+        builder.append("Min Sessions (Int): ").append(rc.getMinSessionsForInterstitial()).append("\n");
+        builder.append("Min Usage (Int): ").append(rc.getMinAppTimeForInterstitialMins()).append("m\n");
+        builder.append("Min Usage (Banner): ").append(rc.getMinAppTimeForBannerMins()).append("m\n");
+        builder.append("Magic Pass Duration: ").append(rc.getMagicPassDurationHours()).append("h\n");
+        builder.append("History Retention: ").append(rc.getHistoryRetentionDays()).append("d\n");
+        builder.append("Early Take: ").append(rc.getEarlyTakeThresholdMins()).append("m\n");
+        builder.append("Late Take: ").append(rc.getLateTakeThresholdMins()).append("m\n\n");
+
+        builder.append("--- Live Usage Statistics ---\n");
+        builder.append("Session Count: ").append(com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(requireContext())).append("\n");
+        builder.append("Total Usage: ").append(String.format(locale, "%.2fm", com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(requireContext()))).append("\n");
+        builder.append("Usage since last FSA: ").append(String.format(locale, "%.2fm", com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(requireContext())));
+
+        textView.setText(builder.toString());
     }
 }

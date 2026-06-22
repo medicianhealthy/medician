@@ -266,11 +266,8 @@ public class AdsManager implements OnAdActionListener{
                 (now - lastBannerClick) >  coolDownMillis;
     }
 
-    @SuppressWarnings("SameReturnValue")
     private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
-        // Refined Hybrid Cooldown: 120 seconds (2 minutes).
-        // A compromise between the aggressive 60-90s of Casual Gaming and the 
-        // high-trust expectations of a Medical Utility app.
-        return 120L;
+        // Use the value defined in Remote Config (Server or Local Cache)
+        return com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getAdInterstitialCoolDownSeconds();
     }
 }
