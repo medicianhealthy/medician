@@ -207,7 +207,9 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                     case Powder -> layoutForm.setStartIconDrawable(R.drawable.ic_med_powder);
                     case Other -> layoutForm.setStartIconDrawable(R.drawable.ic_med_other);
                 }
-                layoutForm.setStartIconTintList(ColorStateList.valueOf(Color.WHITE));
+                int onSurfaceAttr = com.google.android.material.R.attr.colorOnSurface;
+                int iconColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
+                layoutForm.setStartIconTintList(ColorStateList.valueOf(iconColor));
             }
         }
 
@@ -560,7 +562,11 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
                 case Other -> R.drawable.ic_med_other;
             };
             layoutForm.setStartIconDrawable(icon);
-            layoutForm.setStartIconTintList(ColorStateList.valueOf(Color.WHITE));
+            
+            // Apply theme-aware tint instead of hardcoded white
+            int onSurfaceAttr = com.google.android.material.R.attr.colorOnSurface;
+            int iconColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
+            layoutForm.setStartIconTintList(ColorStateList.valueOf(iconColor));
         });
     }
 

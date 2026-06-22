@@ -67,7 +67,7 @@
                 android:hint="@string/hint_form"
                 app:hintEnabled="true"
                 app:startIconDrawable="@drawable/baseline_medication_24"
-                app:startIconTint="@android:color/white">
+                app:startIconTint="?attr/colorOnSurface">
                 <AutoCompleteTextView
                     android:id="@+id/med_form_fragment_add_med"
                     android:layout_width="match_parent"
