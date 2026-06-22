@@ -24,39 +24,39 @@ public class AdsManager implements OnAdActionListener{
         void onRewarded(boolean success);
     }
 
-    private final Activity mActivity;
-    private AdMobBanner mMainBanner;
-    private AdMobInterstitial mMainInterstitial;
-    private AdMobRewarded mMainRewarded;
-    private AdMobAppOpen mAppOpenAd;
+    private final Activity activity;
+    private AdMobBanner mainBanner;
+    private AdMobInterstitial mainInterstitial;
+    private AdMobRewarded mainRewarded;
+    private AdMobAppOpen appOpenAd;
 
-    private ArrayList<AdMobAd> mAdsCollections;
-    private long mFullAdDismissedTimeStamp;
-    private long mBannerClickTimeStamp;
-    private final CopyOnWriteArrayList<Runnable> mAdAvailabilityListeners = new CopyOnWriteArrayList<>();
+    private ArrayList<AdMobAd> adsCollection;
+    private long fullAdDismissedTimeStamp;
+    private long bannerClickTimeStamp;
+    private final CopyOnWriteArrayList<Runnable> adAvailabilityListeners = new CopyOnWriteArrayList<>();
 
     public AdsManager(final @NonNull Activity activity) {
-        this.mActivity = activity;
+        this.activity = activity;
     }
 
     public void addAdAvailabilityListener(Runnable listener) {
-        mAdAvailabilityListeners.add(listener);
+        adAvailabilityListeners.add(listener);
     }
 
     public void removeAdAvailabilityListener(Runnable listener) {
-        mAdAvailabilityListeners.remove(listener);
+        adAvailabilityListeners.remove(listener);
     }
 
     private void notifyAvailabilityChanged() {
-        mActivity.runOnUiThread(() -> {
-            for (Runnable listener : mAdAvailabilityListeners) {
+        activity.runOnUiThread(() -> {
+            for (Runnable listener : adAvailabilityListeners) {
                 listener.run();
             }
         });
     }
 
     public Activity getActivity() {
-        return mActivity;
+        return activity;
     }
 
     public void initializeAds() {
@@ -66,60 +66,60 @@ public class AdsManager implements OnAdActionListener{
 
     private void createAds() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            if (null == mMainBanner) {
-                mMainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Banner) : "a",
+            if (null == mainBanner) {
+                mainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Banner) : "a",
                         this,
                         AdPlacement.Main);
-                getAdsCollection().add(mMainBanner);
+                getAdsCollection().add(mainBanner);
 
             }
-            if (null == mMainInterstitial) {
-                mMainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
+            if (null == mainInterstitial) {
+                mainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
                         this,
                         AdPlacement.Main);
-                getAdsCollection().add(mMainInterstitial);
+                getAdsCollection().add(mainInterstitial);
             }
-            if (null == mMainRewarded) {
-                mMainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
+            if (null == mainRewarded) {
+                mainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
                         this,
                         AdPlacement.Main);
-                getAdsCollection().add(mMainRewarded);
+                getAdsCollection().add(mainRewarded);
             }
-            if (null == mAppOpenAd) {
-                mAppOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
+            if (null == appOpenAd) {
+                appOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
                         this,
                         AdPlacement.Main);
-                getAdsCollection().add(mAppOpenAd);
+                getAdsCollection().add(appOpenAd);
             }
         }
     }
 
     public ArrayList<AdMobAd> getAdsCollection() {
-        if (null == mAdsCollections) {
-            mAdsCollections = new ArrayList<>();
+        if (null == adsCollection) {
+            adsCollection = new ArrayList<>();
         }
-        return mAdsCollections;
+        return adsCollection;
     }
 
     public void loadAds() {
-        if (null != mMainBanner && !mMainBanner.isLoaded()) {
-            float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(mActivity);
+        if (null != mainBanner && !mainBanner.isLoaded()) {
+            float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(activity);
             int minimumMinutesForBanner = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getMinAppTimeForBannerMins();
             if (totalUsageMinutes >= (float) minimumMinutesForBanner) {
-                mMainBanner.load();
+                mainBanner.load();
             } else {
                 com.robinzon.medicationwizard.utils.Logger.log("AdsManager", "Banner load skipped. Usage mins: " + totalUsageMinutes + " < Min: " + minimumMinutesForBanner);
             }
         }
-        if (null != mMainInterstitial && !mMainInterstitial.isLoaded()) {
-            mMainInterstitial.load();
+        if (null != mainInterstitial && !mainInterstitial.isLoaded()) {
+            mainInterstitial.load();
         }
-        if (null != mMainRewarded && !mMainRewarded.isLoaded()) {
-            mMainRewarded.load();
+        if (null != mainRewarded && !mainRewarded.isLoaded()) {
+            mainRewarded.load();
         }
 
-        if (null != mAppOpenAd && !mAppOpenAd.isLoaded()) {
-            mAppOpenAd.load();
+        if (null != appOpenAd && !appOpenAd.isLoaded()) {
+            appOpenAd.load();
         }
     }
 
@@ -168,18 +168,18 @@ public class AdsManager implements OnAdActionListener{
 
     /** @noinspection unused*/
     public void showInterstitialAd() {
-        if (com.robinzon.medicationwizard.AppConfig.isPremium(mActivity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
 
-        if (null != mMainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
+        if (null != mainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             if (shouldShowInterstitialBasedOnUsage()) {
-                mMainInterstitial.show();
+                mainInterstitial.show();
             }
         }
     }
 
     private boolean shouldShowInterstitialBasedOnUsage() {
-        final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(mActivity);
-        final float usageMinutesForAds = com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(mActivity);
+        final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
+        final float usageMinutesForAds = com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(activity);
         
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager remoteConfigManager = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
         int minimumSessionsThreshold = remoteConfigManager.getMinSessionsForInterstitial();
@@ -190,21 +190,21 @@ public class AdsManager implements OnAdActionListener{
     }
     /** @noinspection unused*/
     public void showRewarded(OnRewardedFinishedListener listener) {
-        if (null != mMainRewarded) {
-            mMainRewarded.setRewardedFinishedListener(listener);
-            mMainRewarded.show();
+        if (null != mainRewarded) {
+            mainRewarded.setRewardedFinishedListener(listener);
+            mainRewarded.show();
         } else if (listener != null) {
             listener.onRewarded(false);
         }
     }
 
     public boolean isRewardedLoaded() {
-        return mMainRewarded != null && mMainRewarded.isLoaded();
+        return mainRewarded != null && mainRewarded.isLoaded();
     }
 
     public void showAppOpenAd() {
-        if (null != mAppOpenAd && hasCoolDownForFullScreenNonUserInitiatedAd()) {
-            mAppOpenAd.show();
+        if (null != appOpenAd && hasCoolDownForFullScreenNonUserInitiatedAd()) {
+            appOpenAd.show();
         }
     }
 
@@ -240,29 +240,29 @@ public class AdsManager implements OnAdActionListener{
     }
 
     private void setFullScreenNonUserInitiatedAdDismissTimeStamp() {
-        this.mFullAdDismissedTimeStamp = System.currentTimeMillis();
+        this.fullAdDismissedTimeStamp = System.currentTimeMillis();
         // FSA cooldown reset requirement
-        com.robinzon.medicationwizard.utils.Statisticator.resetUsageMinutesForAds(mActivity);
+        com.robinzon.medicationwizard.utils.Statisticator.resetUsageMinutesForAds(activity);
     }
 
     private void setBannerClickTimeStamp() {
-        this.mBannerClickTimeStamp = System.currentTimeMillis();
+        this.bannerClickTimeStamp = System.currentTimeMillis();
     }
 
     public long getFullScreenNonUserInitiatedAdDismissTimeStamp() {
-        return mFullAdDismissedTimeStamp;
+        return fullAdDismissedTimeStamp;
     }
 
     public long getBannerClickTimeStamp() {
-        return mBannerClickTimeStamp;
+        return bannerClickTimeStamp;
     }
 
     public boolean hasCoolDownForFullScreenNonUserInitiatedAd() {
         final long coolDownMillis = TimeManager.getInstance().toMillisFromSeconds(getCoolDownSecondsForFullScreenNonUserInitiatedAd());
         final long now = System.currentTimeMillis();
-        final long fullScreenNonUserInitiatedAdDismissTimeStamp = getFullScreenNonUserInitiatedAdDismissTimeStamp();
+        final long lastFullAdDismiss = getFullScreenNonUserInitiatedAdDismissTimeStamp();
         final long lastBannerClick = getBannerClickTimeStamp();
-        return (now - fullScreenNonUserInitiatedAdDismissTimeStamp) > coolDownMillis &&
+        return (now - lastFullAdDismiss) > coolDownMillis &&
                 (now - lastBannerClick) >  coolDownMillis;
     }
 

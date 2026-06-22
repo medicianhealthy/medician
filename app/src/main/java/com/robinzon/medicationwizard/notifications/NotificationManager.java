@@ -1,5 +1,4 @@
 package com.robinzon.medicationwizard.notifications;
-//https://developer.android.com/develop/ui/views/notifications/notification-permission
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,7 +13,6 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ui.CustomMaterialDialog;
 import com.robinzon.medicationwizard.utils.PermissionManager;
@@ -27,15 +25,16 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     // REFINED: V2 Channel ID to force-apply the 'No Sound' setting on existing installs
     public static final String CHANNEL_ID = "medication_reminders_v2";
 
-    private static final String SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL = "do_not_show_rational";
-    private static final String SHARED_PREF_KEY_REFUSE_COUNT = "refuse_count";
-    public static final String SHARED_PREF_KEY_HAS_DENIED_NOTI_PERM = "has_denied_noti_perm";
-    private static WeakReference<NotificationManager> sInstance;
-    private final Activity mActivity;
-    private Integer mButtonClickedBeforeDismissed;
+    private static final String PREF_KEY_DO_NOT_SHOW_RATIONALE = "do_not_show_rationale";
+    private static final String PREF_KEY_REFUSE_COUNT = "refuse_count";
+    public static final String PREF_KEY_HAS_DENIED_NOTIFICATION_PERMISSION = "has_denied_noti_perm";
+    
+    private static WeakReference<NotificationManager> singletonInstance;
+    private final Activity activity;
+    private Integer lastClickedButton;
 
     public NotificationManager(@NonNull final Activity activity) {
-        this.mActivity = activity;
+        this.activity = activity;
     }
 
     public static void createNotificationChannel(Context context) {
@@ -67,23 +66,23 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     private boolean shouldAskForNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return notificationsAreDisabled() &&
-                    !SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, false);
+                    !SharedPreferencesManager.getInstance(activity).getBoolean(PREF_KEY_DO_NOT_SHOW_RATIONALE, false);
         }
         return false;
     }
 
-    private int getDeltaToShowRational() {
+    private int getDeltaToShowRationale() {
         return 5;
     }
 
     private boolean notificationsAreDisabled() {
-        final NotificationManagerCompat notificationManager = getNotificationManager();
-        return !notificationManager.areNotificationsEnabled();
+        final NotificationManagerCompat managerCompat = getNotificationManagerCompat();
+        return !managerCompat.areNotificationsEnabled();
     }
 
     @NonNull
-    private NotificationManagerCompat getNotificationManager() {
-        return NotificationManagerCompat.from(getActivity().getApplicationContext());
+    private NotificationManagerCompat getNotificationManagerCompat() {
+        return NotificationManagerCompat.from(activity.getApplicationContext());
     }
 
     public boolean hasPermission() {
@@ -91,16 +90,16 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     public static NotificationManager getInstance(final Activity activity) {
-        if (null == sInstance || null == sInstance.get()) {
-            sInstance = new WeakReference<>(new NotificationManager(activity));
+        if (null == singletonInstance || null == singletonInstance.get()) {
+            singletonInstance = new WeakReference<>(new NotificationManager(activity));
         }
-        return sInstance.get();
+        return singletonInstance.get();
     }
 
     public void requestPermissionIfNeeded() {
         if (shouldAskForNotificationPermission()) {
             if (shouldShowRationalInnerDialog()) {
-                if (0 == (getCountRefusedSoFar() % getDeltaToShowRational())) {
+                if (0 == (getCountRefusedSoFar() % getDeltaToShowRationale())) {
                     showRationaleDialog();
                 } else {
                     showPermissionDialog(false);
@@ -124,7 +123,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
      */
     public void requestWithRationale() {
         if (notificationsAreDisabled()) {
-            if (!SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, false)) {
+            if (!SharedPreferencesManager.getInstance(activity).getBoolean(PREF_KEY_DO_NOT_SHOW_RATIONALE, false)) {
                 showRationaleDialog();
             } else {
                 requestPermission();
@@ -133,7 +132,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     private boolean shouldShowRationalInnerDialog() {
-        return PermissionManager.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.POST_NOTIFICATIONS);
+        return PermissionManager.shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS);
     }
 
     public void showInvitationDialog() {
@@ -143,35 +142,35 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     private void showPermissionDialog(boolean forceSettings) {
-        final CustomMaterialDialog dialog = new CustomMaterialDialog(getActivity());
-        dialog.setTitle(getActivity().getString(R.string.permission_rational_notification_title));
-        dialog.setMessage(getActivity().getString(R.string.permission_rational_notification_message));
-        dialog.setPositiveButton(getActivity().getString(R.string.button_sure), (d, which) -> {
+        final CustomMaterialDialog dialog = new CustomMaterialDialog(activity);
+        dialog.setTitle(activity.getString(R.string.permission_rational_notification_title));
+        dialog.setMessage(activity.getString(R.string.permission_rational_notification_message));
+        dialog.setPositiveButton(activity.getString(R.string.button_sure), (currentDialog, buttonIndex) -> {
             if (forceSettings) {
-                openNotificationAppSettings(getActivity());
+                openNotificationAppSettings(activity);
             } else {
                 requestPermission();
             }
         });
-        dialog.setNegativeButton(getActivity().getString(R.string.button_not_now), null);
+        dialog.setNegativeButton(activity.getString(R.string.button_not_now), null);
         dialog.show();
     }
 
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            PermissionManager.askForPermission(getActivity(),
+            PermissionManager.askForPermission(activity,
                     new String[]{Manifest.permission.POST_NOTIFICATIONS},
                     PermissionManager.REQUEST_PERMISSION_CODE_POST_NOTIFICATIONS);
         }
     }
 
     private void showRationaleDialog() {
-        final CustomMaterialDialog dialog = new CustomMaterialDialog(getActivity());
-        dialog.setTitle(getActivity().getString(R.string.permission_rational_notification_title));
-        dialog.setMessage(getActivity().getString(R.string.permission_rational_notification_message));
-        dialog.setPositiveButton(getActivity().getString(R.string.button_sure), this);
-        dialog.setNegativeButton(getActivity().getString(R.string.button_not_now), this);
-        dialog.setNeutralButton(getActivity().getString(R.string.button_never), this);
+        final CustomMaterialDialog dialog = new CustomMaterialDialog(activity);
+        dialog.setTitle(activity.getString(R.string.permission_rational_notification_title));
+        dialog.setMessage(activity.getString(R.string.permission_rational_notification_message));
+        dialog.setPositiveButton(activity.getString(R.string.button_sure), this);
+        dialog.setNegativeButton(activity.getString(R.string.button_not_now), this);
+        dialog.setNeutralButton(activity.getString(R.string.button_never), this);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
@@ -183,15 +182,14 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
             case DialogInterface.BUTTON_NEGATIVE -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEGATIVE);
             case DialogInterface.BUTTON_NEUTRAL -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEUTRAL);
         }
-
     }
 
     private Integer getButtonClickedBeforeDismissed() {
-        return mButtonClickedBeforeDismissed;
+        return lastClickedButton;
     }
 
     private void setButtonClickedBeforeDismissed(Integer buttonClickedBeforeDismissed) {
-        this.mButtonClickedBeforeDismissed = buttonClickedBeforeDismissed;
+        this.lastClickedButton = buttonClickedBeforeDismissed;
     }
 
     @Override
@@ -200,7 +198,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         final boolean hasAReferenceToLastButtonClicked = (null != buttonClickedBeforeDismissed);
         if (hasAReferenceToLastButtonClicked) {
             if (DialogInterface.BUTTON_NEUTRAL == buttonClickedBeforeDismissed) {
-                setDoNotShowRationalAgain();
+                setDoNotShowRationaleAgain();
             } else if (DialogInterface.BUTTON_POSITIVE == buttonClickedBeforeDismissed) {
                 requestPermission();
             }
@@ -210,30 +208,25 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
 
     private void increaseRefuseNumber() {
         final int countRefusedSoFar = getCountRefusedSoFar();
-        SharedPreferencesManager.getInstance(getActivity()).setInt(SHARED_PREF_KEY_REFUSE_COUNT, countRefusedSoFar + 1);
+        SharedPreferencesManager.getInstance(activity).setInt(PREF_KEY_REFUSE_COUNT, countRefusedSoFar + 1);
     }
 
     private int getCountRefusedSoFar() {
-        return SharedPreferencesManager.getInstance(getActivity()).getInt(SHARED_PREF_KEY_REFUSE_COUNT, 0);
+        return SharedPreferencesManager.getInstance(activity).getInt(PREF_KEY_REFUSE_COUNT, 0);
     }
 
-    private void setDoNotShowRationalAgain() {
-        SharedPreferencesManager.getInstance(getActivity()).setBoolean(SHARED_PREF_KEY_DO_NOT_SHOW_RATIONAL, true);
-    }
-
-    @NonNull
-    private Activity getActivity() {
-        return mActivity;
+    private void setDoNotShowRationaleAgain() {
+        SharedPreferencesManager.getInstance(activity).setBoolean(PREF_KEY_DO_NOT_SHOW_RATIONALE, true);
     }
 
     public void setHasGrantedPermission(final boolean granted) {
         if (!granted) {
-            SharedPreferencesManager.getInstance(getActivity()).setBoolean(SHARED_PREF_KEY_HAS_DENIED_NOTI_PERM, true);
+            SharedPreferencesManager.getInstance(activity).setBoolean(PREF_KEY_HAS_DENIED_NOTIFICATION_PERMISSION, true);
         }
     }
 
     private boolean getHasDeniedPermission() {
-        return SharedPreferencesManager.getInstance(getActivity()).getBoolean(SHARED_PREF_KEY_HAS_DENIED_NOTI_PERM, false);
+        return SharedPreferencesManager.getInstance(activity).getBoolean(PREF_KEY_HAS_DENIED_NOTIFICATION_PERMISSION, false);
     }
 
     public void openNotificationAppSettings(final Context context) {

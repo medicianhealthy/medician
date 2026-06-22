@@ -46,7 +46,7 @@ public class BackupManager {
                 backup.put(KEY_VERSION, CURRENT_BACKUP_VERSION);
 
                 // 1. Export Medications (from SharedPreferences)
-                JSONArray medsArray = SharedPreferencesManager.getInstance(context).getJsonArray(Medication.SPK_MEDICATION_LIST, null);
+                JSONArray medsArray = SharedPreferencesManager.getInstance(context).getJsonArray(Medication.PREF_MEDICATION_LIST, null);
                 backup.put(KEY_MEDICATIONS, medsArray != null ? medsArray : new JSONArray());
 
                 // 2. Export History (from Room)
@@ -58,10 +58,10 @@ public class BackupManager {
                 backup.put(KEY_HISTORY, historyArray);
 
                 // 3. Write to file
-                OutputStream os = context.getContentResolver().openOutputStream(uri);
-                if (os != null) {
-                    os.write(backup.toString(2).getBytes());
-                    os.close();
+                OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
+                if (outputStream != null) {
+                    outputStream.write(backup.toString(2).getBytes());
+                    outputStream.close();
                     callback.onComplete(true, "Backup created successfully!");
                 } else {
                     callback.onComplete(false, "Failed to open output stream.");
@@ -81,20 +81,20 @@ public class BackupManager {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             try {
                 // 1. Read file
-                InputStream is = context.getContentResolver().openInputStream(uri);
-                if (is == null) {
+                InputStream inputStream = context.getContentResolver().openInputStream(uri);
+                if (inputStream == null) {
                     callback.onComplete(false, "Failed to open input stream.");
                     return;
                 }
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                StringBuilder sb = new StringBuilder();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder stringBuilder = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    sb.append(line);
+                    stringBuilder.append(line);
                 }
-                is.close();
+                inputStream.close();
 
-                JSONObject backup = new JSONObject(sb.toString());
+                JSONObject backup = new JSONObject(stringBuilder.toString());
                 // int version = backup.optInt(KEY_VERSION, 0);
 
                 // 2. Clear current data
@@ -103,7 +103,7 @@ public class BackupManager {
                 // 3. Restore Medications
                 JSONArray medsArray = backup.optJSONArray(KEY_MEDICATIONS);
                 if (medsArray != null) {
-                    SharedPreferencesManager.getInstance(context).setJsonArray(Medication.SPK_MEDICATION_LIST, medsArray);
+                    SharedPreferencesManager.getInstance(context).setJsonArray(Medication.PREF_MEDICATION_LIST, medsArray);
                 }
 
                 // 4. Restore History
@@ -123,9 +123,9 @@ public class BackupManager {
 
                 // 5. Reschedule all alarms for future doses
                 long now = System.currentTimeMillis();
-                List<DoseInstanceEntity> future = AppDatabase.getDatabase(context).doseInstanceDao().getInstancesInRangeInternal(now, now + (30 * 24 * 60 * 60 * 1000L));
-                for (DoseInstanceEntity e : future) {
-                    ReminderManager.scheduleReminder(context, e);
+                List<DoseInstanceEntity> futureDoses = AppDatabase.getDatabase(context).doseInstanceDao().getInstancesInRangeInternal(now, now + (30 * 24 * 60 * 60 * 1000L));
+                for (DoseInstanceEntity doseInstance : futureDoses) {
+                    ReminderManager.scheduleReminder(context, doseInstance);
                 }
 
                 callback.onComplete(true, "Restore complete! Alarms have been reset.");

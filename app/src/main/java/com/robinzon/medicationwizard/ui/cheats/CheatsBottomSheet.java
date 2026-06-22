@@ -34,19 +34,19 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
         TextView txtConfigInfo = view.findViewById(R.id.txt_config_info);
         View btnApply = view.findViewById(R.id.btn_apply);
 
-        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(requireContext());
+        SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(requireContext());
         
-        checkPremium.setChecked(sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM));
-        checkShowAds.setChecked(sp.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE));
+        checkPremium.setChecked(prefs.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM));
+        checkShowAds.setChecked(prefs.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE));
 
         setupConfigInfo(txtConfigInfo);
 
         btnApply.setOnClickListener(v -> {
-            sp.setBoolean(AppConfig.KEY_CHEAT_PREMIUM, checkPremium.isChecked());
-            sp.setBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, checkShowAds.isChecked());
+            prefs.setBoolean(AppConfig.KEY_CHEAT_PREMIUM, checkPremium.isChecked());
+            prefs.setBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, checkShowAds.isChecked());
             
             // Persist to the main billing cache as well so it survives process death
-            sp.setBoolean("cached_premium_status", checkPremium.isChecked());
+            prefs.setBoolean("cached_premium_status", checkPremium.isChecked());
             
             AppConfig.IS_PREMIUM = checkPremium.isChecked();
             AppConfig.FORCED_ADS_VISIBLE = checkShowAds.isChecked();
@@ -63,19 +63,19 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void setupConfigInfo(TextView textView) {
-        RemoteConfigManager rc = RemoteConfigManager.getInstance();
+        RemoteConfigManager remoteConfigManager = RemoteConfigManager.getInstance();
         StringBuilder builder = new StringBuilder();
         java.util.Locale locale = java.util.Locale.getDefault();
         
         builder.append("--- Remote Config Defaults/Server ---\n");
-        builder.append("Int. Cooldown: ").append(rc.getAdInterstitialCoolDownSeconds()).append("s\n");
-        builder.append("Min Sessions (Int): ").append(rc.getMinSessionsForInterstitial()).append("\n");
-        builder.append("Min Usage (Int): ").append(rc.getMinAppTimeForInterstitialMins()).append("m\n");
-        builder.append("Min Usage (Banner): ").append(rc.getMinAppTimeForBannerMins()).append("m\n");
-        builder.append("Magic Pass Duration: ").append(rc.getMagicPassDurationHours()).append("h\n");
-        builder.append("History Retention: ").append(rc.getHistoryRetentionDays()).append("d\n");
-        builder.append("Early Take: ").append(rc.getEarlyTakeThresholdMins()).append("m\n");
-        builder.append("Late Take: ").append(rc.getLateTakeThresholdMins()).append("m\n\n");
+        builder.append("Int. Cooldown: ").append(remoteConfigManager.getAdInterstitialCoolDownSeconds()).append("s\n");
+        builder.append("Min Sessions (Int): ").append(remoteConfigManager.getMinSessionsForInterstitial()).append("\n");
+        builder.append("Min Usage (Int): ").append(remoteConfigManager.getMinAppTimeForInterstitialMins()).append("m\n");
+        builder.append("Min Usage (Banner): ").append(remoteConfigManager.getMinAppTimeForBannerMins()).append("m\n");
+        builder.append("Magic Pass Duration: ").append(remoteConfigManager.getMagicPassDurationHours()).append("h\n");
+        builder.append("History Retention: ").append(remoteConfigManager.getHistoryRetentionDays()).append("d\n");
+        builder.append("Early Take: ").append(remoteConfigManager.getEarlyTakeThresholdMins()).append("m\n");
+        builder.append("Late Take: ").append(remoteConfigManager.getLateTakeThresholdMins()).append("m\n\n");
 
         builder.append("--- Live Usage Statistics ---\n");
         builder.append("Session Count: ").append(com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(requireContext())).append("\n");

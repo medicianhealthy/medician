@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,8 +24,8 @@ import java.util.List;
  */
 public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.ViewHolder> {
     
-    private List<DoseInstanceEntity> mLocalDataSet;
-    private OnMedicationActionListener mListener;
+    private List<DoseInstanceEntity> doses;
+    private OnMedicationActionListener actionListener;
 
     /**
      * Interface for handling user interactions on a specific dose item.
@@ -46,7 +47,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
      * @param listener The action listener.
      */
     public void setOnMedicationActionListener(OnMedicationActionListener listener) {
-        mListener = listener;
+        actionListener = listener;
     }
 
     /**
@@ -55,7 +56,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
      * @param dataSet The list of doses to display.
      */
     public MedicationsAdapter(List<DoseInstanceEntity> dataSet) {
-        mLocalDataSet = dataSet;
+        doses = dataSet;
     }
 
     /**
@@ -64,7 +65,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
      * @param medications The new list of doses.
      */
     public void setMedications(List<DoseInstanceEntity> medications) {
-        this.mLocalDataSet = medications;
+        this.doses = medications;
         notifyDataSetChanged();
     }
 
@@ -73,88 +74,88 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
      * ViewHolder pattern to hold references to individual item views for performance.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mMedName;
-        private final TextView mStrength;
-        private final TextView mQuantity;
-        private final TextView mTime;
-        private final TextView mDirections;
-        private final TextView mForm;
-        private final TextView mTxtScheduledSummary;
-        private final TextView mTxtActualActionSummary;
-        private final View mGroupScheduledDetails;
-        private final AppCompatButton mSkip;
-        private final AppCompatButton mReschedule;
-        private final AppCompatButton mTakeBtn;
-        private final AppCompatButton mUntakeBtn;
-        private final android.widget.ImageView mMedIcon;
-        private final android.widget.ImageView mIconDone;
+        private final TextView medNameText;
+        private final TextView strengthText;
+        private final TextView quantityText;
+        private final TextView timeText;
+        private final TextView directionsText;
+        private final TextView formText;
+        private final TextView scheduledSummaryText;
+        private final TextView actualActionSummaryText;
+        private final View scheduledDetailsGroup;
+        private final AppCompatButton skipButton;
+        private final AppCompatButton rescheduleButton;
+        private final AppCompatButton takeButton;
+        private final AppCompatButton untakeButton;
+        private final android.widget.ImageView medIconImage;
+        private final android.widget.ImageView doneIconImage;
 
         /**
          * Finds and caches all sub-views for the row layout.
          */
         public ViewHolder(View view) {
             super(view);
-            mMedName = view.findViewById(R.id.med_name);
-            mStrength = view.findViewById(R.id.med_strength);
-            mQuantity = view.findViewById(R.id.quantity);
-            mTime = view.findViewById(R.id.time);
-            mDirections = view.findViewById(R.id.directions);
-            mForm = view.findViewById(R.id.form);
-            mTxtScheduledSummary = view.findViewById(R.id.txt_scheduled_summary);
-            mTxtActualActionSummary = view.findViewById(R.id.txt_actual_action_summary);
-            mGroupScheduledDetails = view.findViewById(R.id.group_scheduled_details);
-            mSkip = view.findViewById(R.id.skip_btn);
-            mReschedule = view.findViewById(R.id.reschedule_btn);
-            mTakeBtn = view.findViewById(R.id.take_btn);
-            mUntakeBtn = view.findViewById(R.id.untake_btn);
-            mMedIcon = view.findViewById(R.id.med_icon);
-            mIconDone = view.findViewById(R.id.icon_done);
+            medNameText = view.findViewById(R.id.med_name);
+            strengthText = view.findViewById(R.id.med_strength);
+            quantityText = view.findViewById(R.id.quantity);
+            timeText = view.findViewById(R.id.time);
+            directionsText = view.findViewById(R.id.directions);
+            formText = view.findViewById(R.id.form);
+            scheduledSummaryText = view.findViewById(R.id.txt_scheduled_summary);
+            actualActionSummaryText = view.findViewById(R.id.txt_actual_action_summary);
+            scheduledDetailsGroup = view.findViewById(R.id.group_scheduled_details);
+            skipButton = view.findViewById(R.id.skip_btn);
+            rescheduleButton = view.findViewById(R.id.reschedule_btn);
+            takeButton = view.findViewById(R.id.take_btn);
+            untakeButton = view.findViewById(R.id.untake_btn);
+            medIconImage = view.findViewById(R.id.med_icon);
+            doneIconImage = view.findViewById(R.id.icon_done);
         }
 
-        public TextView getTxtScheduledSummary() { return mTxtScheduledSummary; }
-        public TextView getTxtActualActionSummary() { return mTxtActualActionSummary; }
-        public View getGroupScheduledDetails() { return mGroupScheduledDetails; }
-        public AppCompatButton getTakeButton() { return mTakeBtn; }
-        public AppCompatButton getUntakeButton() { return mUntakeBtn; }
+        public TextView getTxtScheduledSummary() { return scheduledSummaryText; }
+        public TextView getTxtActualActionSummary() { return actualActionSummaryText; }
+        public View getGroupScheduledDetails() { return scheduledDetailsGroup; }
+        public AppCompatButton getTakeButton() { return takeButton; }
+        public AppCompatButton getUntakeButton() { return untakeButton; }
 
         public android.widget.ImageView getIconDone() {
-            return mIconDone;
+            return doneIconImage;
         }
 
         public TextView getForm() {
-            return mForm;
+            return formText;
         }
 
         public android.widget.ImageView getMedIcon() {
-            return mMedIcon;
+            return medIconImage;
         }
 
         public TextView getMedName() {
-            return mMedName;
+            return medNameText;
         }
 
         public TextView getStrength() {
-            return mStrength;
+            return strengthText;
         }
 
         public TextView getQuantity() {
-            return mQuantity;
+            return quantityText;
         }
 
         public TextView getTime() {
-            return mTime;
+            return timeText;
         }
 
         public TextView getDirections() {
-            return mDirections;
+            return directionsText;
         }
 
         public AppCompatButton getSkip() {
-            return mSkip;
+            return skipButton;
         }
 
         public AppCompatButton getReschedule() {
-            return mReschedule;
+            return rescheduleButton;
         }
     }
 
@@ -162,6 +163,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
     /**
      * Inflates the M3 card layout for each medication row.
      */
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
@@ -182,9 +184,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
      * </p>
      */
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
 
-        final DoseInstanceEntity instance = mLocalDataSet.get(position);
+        final DoseInstanceEntity instance = doses.get(position);
         viewHolder.getMedName().setText(instance.getMedicationName());
 
         // Set icon based on form definition
@@ -288,7 +290,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
         // 6. Interaction Listeners with M3-styled animations
         viewHolder.getTakeButton().setOnClickListener(v -> {
-            if (mListener != null) {
+            if (actionListener != null) {
                 // Scale success animation
                 viewHolder.itemView.animate()
                         .scaleX(1.05f)
@@ -296,7 +298,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
                         .alpha(0f)
                         .setDuration(300)
                         .withEndAction(() -> {
-                            mListener.onTake(instance, viewHolder.getBindingAdapterPosition());
+                            actionListener.onTake(instance, viewHolder.getBindingAdapterPosition());
                             viewHolder.itemView.setScaleX(1f);
                             viewHolder.itemView.setScaleY(1f);
                             viewHolder.itemView.setAlpha(1f);
@@ -305,14 +307,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         });
 
         viewHolder.getSkip().setOnClickListener(v -> {
-            if (mListener != null) {
+            if (actionListener != null) {
                 // Slide dismiss animation
                 viewHolder.itemView.animate()
                         .translationX(-viewHolder.itemView.getWidth())
                         .alpha(0f)
                         .setDuration(300)
                         .withEndAction(() -> {
-                            mListener.onSkip(instance, viewHolder.getBindingAdapterPosition());
+                            actionListener.onSkip(instance, viewHolder.getBindingAdapterPosition());
                             viewHolder.itemView.setTranslationX(0);
                             viewHolder.itemView.setAlpha(1f);
                         }).start();
@@ -320,14 +322,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         });
 
         viewHolder.getReschedule().setOnClickListener(v -> {
-            if (mListener != null) {
-                mListener.onReschedule(instance, viewHolder.getBindingAdapterPosition());
+            if (actionListener != null) {
+                actionListener.onReschedule(instance, viewHolder.getBindingAdapterPosition());
             }
         });
 
         viewHolder.getUntakeButton().setOnClickListener(v -> {
-            if (mListener != null) {
-                mListener.onUntake(instance, viewHolder.getBindingAdapterPosition());
+            if (actionListener != null) {
+                actionListener.onUntake(instance, viewHolder.getBindingAdapterPosition());
             }
         });
     }
@@ -337,6 +339,6 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
      */
     @Override
     public int getItemCount() {
-        return mLocalDataSet.size();
+        return doses.size();
     }
 }

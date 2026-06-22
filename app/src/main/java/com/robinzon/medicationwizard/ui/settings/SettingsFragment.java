@@ -18,7 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -52,17 +51,17 @@ public class SettingsFragment extends MedicationWizardFragment {
 
     private FragmentSettingsBinding binding;
     private SettingsViewModel viewModel;
-    private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInClient googleSignInClient;
     private boolean isThemeReverting = false;
 
     // Default styles for Health Alerts card to ensure a perfect match when enabled
-    private android.content.res.ColorStateList mDefaultCardBgColor;
-    private int mDefaultCardStrokeWidth;
-    private android.content.res.ColorStateList mDefaultCardStrokeColor;
+    private android.content.res.ColorStateList defaultCardBgColor;
+    private int defaultCardStrokeWidth;
+    private android.content.res.ColorStateList defaultCardStrokeColor;
 
-    private final android.os.Handler mProgressHandler = new android.os.Handler(android.os.Looper.getMainLooper());
-    private final Runnable mProgressRunnable = this::refreshMagicPassProgress;
-    private android.animation.AnimatorSet mMagicAnimator;
+    private final android.os.Handler progressHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable progressRunnable = this::refreshMagicPassProgress;
+    private android.animation.AnimatorSet magicAnimator;
 
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -115,8 +114,8 @@ public class SettingsFragment extends MedicationWizardFragment {
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(getContext());
             dialog.setTitle(getString(R.string.sign_in_error_title));
             dialog.setMessage(getString(messageResId));
-            dialog.setPositiveButton(getString(R.string.sign_in_error_btn_retry), (d, which) -> {
-                googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+            dialog.setPositiveButton(getString(R.string.sign_in_error_btn_retry), (reDialog, buttonIndex) -> {
+                googleSignInLauncher.launch(googleSignInClient.getSignInIntent());
             });
             dialog.setNegativeButton(getString(android.R.string.cancel), null);
             dialog.show();
@@ -152,7 +151,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle("Restore Backup");
             dialog.setMessage(getString(R.string.backup_restore_warning));
-            dialog.setPositiveButton(getString(R.string.button_confirm), (d, which) -> {
+            dialog.setPositiveButton(getString(R.string.button_confirm), (confirmDialog, buttonIndex) -> {
                 BackupManager.restoreBackup(requireContext(), uri, (success, message) -> {
                     requireActivity().runOnUiThread(() -> 
                         Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show());
@@ -170,11 +169,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA))
                 .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), signInOptions);
         
         return binding.getRoot();
     }
@@ -189,11 +188,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         setPaddingForRecyclerView(binding.fragmentSettingsMainView, false);
 
         // Capture default card styling only once to avoid capturing modified state
-        if (binding != null && mDefaultCardBgColor == null) {
-            mDefaultCardBgColor = binding.cardNotifications.getCardBackgroundColor();
-            mDefaultCardStrokeWidth = binding.cardNotifications.getStrokeWidth();
-            mDefaultCardStrokeColor = binding.cardNotifications.getStrokeColorStateList();
-            Logger.log("SettingsFragment", "Captured defaults - Stroke: " + mDefaultCardStrokeWidth);
+        if (binding != null && defaultCardBgColor == null) {
+            defaultCardBgColor = binding.cardNotifications.getCardBackgroundColor();
+            defaultCardStrokeWidth = binding.cardNotifications.getStrokeWidth();
+            defaultCardStrokeColor = binding.cardNotifications.getStrokeColorStateList();
+            Logger.log("SettingsFragment", "Captured defaults - Stroke: " + defaultCardStrokeWidth);
         }
 
         setupSettings();
@@ -230,14 +229,14 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         updateNotificationStatus();
         binding.btnNotifications.setOnClickListener(v -> {
-            NotificationManager nm = NotificationManager.getInstance(requireActivity());
-            if (!nm.hasPermission()) {
-                nm.showInvitationDialog();
+            NotificationManager notificationManager = NotificationManager.getInstance(requireActivity());
+            if (!notificationManager.hasPermission()) {
+                notificationManager.showInvitationDialog();
             } else {
                 com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
                 dialog.setTitle(getString(R.string.settings_notifications_title));
                 dialog.setMessage(getString(R.string.settings_notifications_manage_prompt));
-                dialog.setPositiveButton(getString(R.string.action_settings), (d, which) -> nm.openNotificationAppSettings(requireContext()));
+                dialog.setPositiveButton(getString(R.string.action_settings), (d, which) -> notificationManager.openNotificationAppSettings(requireContext()));
                 dialog.setNegativeButton(getString(android.R.string.cancel), null);
                 dialog.show();
             }
@@ -260,7 +259,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         
         binding.btnBypassVolume.setOnClickListener(v -> {
             if (AppConfig.isPremium(requireContext())) {
-                viewModel.setBypassVolume(!Boolean.TRUE.equals(viewModel.getBypassVolume().getValue()));
+                viewModel.setBypassVolume(!java.util.Objects.equals(Boolean.TRUE, viewModel.getBypassVolume().getValue()));
             } else {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
             }
@@ -347,8 +346,8 @@ public class SettingsFragment extends MedicationWizardFragment {
 
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.settings_language_title));
-            dialog.setItems(langs, (d, which) -> {
-                String selectedCode = codes[which];
+            dialog.setItems(langs, (itemDialog, buttonIndex) -> {
+                String selectedCode = codes[buttonIndex];
                 if (!selectedCode.equals(viewModel.getLanguageCode().getValue())) {
                     com.robinzon.medicationwizard.ui.CustomMaterialDialog confirmDialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
                     confirmDialog.setTitle(getString(R.string.settings_language_title));
@@ -385,8 +384,8 @@ public class SettingsFragment extends MedicationWizardFragment {
             String[] options = {getString(R.string.backup_export), getString(R.string.backup_import)};
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.settings_backup_title));
-            dialog.setItems(options, (d, which) -> {
-                if (which == 0) exportLauncher.launch("medication_wizard_backup_" + System.currentTimeMillis() + ".json");
+            dialog.setItems(options, (optionDialog, buttonIndex) -> {
+                if (buttonIndex == 0) exportLauncher.launch("medication_wizard_backup_" + System.currentTimeMillis() + ".json");
                 else importLauncher.launch(new String[]{"application/json"});
             });
             dialog.show();
@@ -396,7 +395,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.settings_clear_data_title));
             dialog.setMessage(getString(R.string.settings_clear_data_message));
-            dialog.setPositiveButton(getString(android.R.string.yes), (d, which) -> {
+            dialog.setPositiveButton(getString(android.R.string.yes), (clearDialog, buttonIndex) -> {
                 // 1. Clear local database
                 Medication.clearAllMedications(requireContext());
                 
@@ -444,7 +443,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             int[] values = {5, 10, 15, 20, 30};
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.settings_snooze_duration_title));
-            dialog.setItems(options, (d, which) -> viewModel.setSnoozeDuration(values[which]));
+            dialog.setItems(options, (optionDialog, buttonIndex) -> viewModel.setSnoozeDuration(values[buttonIndex]));
             dialog.show();
         });
 
@@ -458,7 +457,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             int[] values = {1, 2, 3, 5, -1};
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.settings_max_snoozes_title));
-            dialog.setItems(options, (d, which) -> viewModel.setMaxSnoozes(values[which]));
+            dialog.setItems(options, (optionDialog, buttonIndex) -> viewModel.setMaxSnoozes(values[buttonIndex]));
             dialog.show();
         });
 
@@ -478,14 +477,14 @@ public class SettingsFragment extends MedicationWizardFragment {
                 return;
             }
             if (!accountManager.isSignedIn()) {
-                googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+                googleSignInLauncher.launch(googleSignInClient.getSignInIntent());
             }
         };
         binding.btnGoogleSignin.setOnClickListener(signInListener);
         binding.btnGoogleSigninAction.setOnClickListener(signInListener);
 
         binding.btnSignOut.setOnClickListener(v -> {
-            mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+            googleSignInClient.signOut().addOnCompleteListener(task -> {
                 accountManager.clearAccountInfo();
                 updateCloudUi(accountManager, cloudSettings);
                 if (getActivity() instanceof MainActivity) {
@@ -551,8 +550,8 @@ public class SettingsFragment extends MedicationWizardFragment {
         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(R.string.sign_in_required_title));
         dialog.setMessage(getString(R.string.sign_in_required_message));
-        dialog.setPositiveButton(getString(R.string.cloud_backup_title), (d, which) -> {
-            googleSignInLauncher.launch(mGoogleSignInClient.getSignInIntent());
+        dialog.setPositiveButton(getString(R.string.cloud_backup_title), (signInDialog, buttonIndex) -> {
+            googleSignInLauncher.launch(googleSignInClient.getSignInIntent());
         });
         dialog.setNegativeButton(getString(R.string.button_not_now), null);
         dialog.show();
@@ -589,7 +588,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.cloud_restore_title));
             dialog.setMessage(getString(R.string.cloud_restore_message));
-            dialog.setPositiveButton(getString(R.string.button_restore), (d, which) -> {
+            dialog.setPositiveButton(getString(R.string.button_restore), (restoreDialog, buttonIndex) -> {
                 Snackbar.make(binding.getRoot(), R.string.restoring_cloud, Snackbar.LENGTH_SHORT).show();
                 manager.restoreFromCloud().addOnSuccessListener(success -> {
                     if (success) {
@@ -676,30 +675,12 @@ public class SettingsFragment extends MedicationWizardFragment {
         startPicker.show(getChildFragmentManager(), "start_picker");
     }
 
-    private void showSnoozeDurationPicker() {
-        String[] options = {"5 min", "10 min", "15 min", "20 min", "30 min"};
-        int[] values = {5, 10, 15, 20, 30};
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-        dialog.setTitle(getString(R.string.settings_snooze_duration_title));
-        dialog.setItems(options, (d, which) -> viewModel.setSnoozeDuration(values[which]));
-        dialog.show();
-    }
-
-    private void showMaxSnoozesPicker() {
-        String[] options = {"1 time", "2 times", "3 times", "5 times", "Unlimited"};
-        int[] values = {1, 2, 3, 5, -1};
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-        dialog.setTitle(getString(R.string.settings_max_snoozes_title));
-        dialog.setItems(options, (d, which) -> viewModel.setMaxSnoozes(values[which]));
-        dialog.show();
-    }
-
     private void showSupportOptionsDialog() {
         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(R.string.support_dialog_title));
         dialog.setMessage(getString(R.string.support_dialog_message));
-        dialog.setPositiveButton(getString(R.string.support_option_bug), (d, which) -> openEmailClient(true));
-        dialog.setNegativeButton(getString(R.string.support_option_feature), (d, which) -> openEmailClient(false));
+        dialog.setPositiveButton(getString(R.string.support_option_bug), (supportDialog, buttonIndex) -> openEmailClient(true));
+        dialog.setNegativeButton(getString(R.string.support_option_feature), (supportDialog, buttonIndex) -> openEmailClient(false));
         // CustomMaterialDialog currently doesn't support neutral button, 
         // we'll skip it or add it if needed. 
         // For support, positive/negative are the main actions.
@@ -715,7 +696,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         String subjectTemplate = isBug ? getString(R.string.support_subject_bug) : getString(R.string.support_subject_feature);
         String subject = String.format(subjectTemplate, appVersion);
 
-        StringBuilder body = new java.lang.StringBuilder();
+        java.lang.StringBuilder body = new java.lang.StringBuilder();
         body.append(getString(R.string.support_body_message_hint)).append("\n\n\n");
         body.append(getString(R.string.support_body_header)).append("\n");
         body.append(String.format(getString(R.string.support_body_version), appVersion)).append("\n");
@@ -744,7 +725,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         dialog.setTitle("Developer Access");
         dialog.setMessage("Enter access code");
         dialog.setView(input);
-        dialog.setPositiveButton(getString(R.string.button_confirm), (d, which) -> {
+        dialog.setPositiveButton(getString(R.string.button_confirm), (cheatDialog, buttonIndex) -> {
             if ("Gway1952".equals(input.getText().toString())) {
                 new com.robinzon.medicationwizard.ui.cheats.CheatsBottomSheet().show(getChildFragmentManager(), "CheatsBS");
             } else {
@@ -761,7 +742,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(R.string.theme_unlock_title));
         dialog.setMessage(getString(R.string.theme_unlock_prompt, AppConfig.getMagicPassDurationHours()));
-        dialog.setPositiveButton(getString(R.string.premium_pass_btn_watch), (d, which) -> {
+        dialog.setPositiveButton(getString(R.string.premium_pass_btn_watch), (unlockDialog, buttonIndex) -> {
             MainActivity mainActivity = (MainActivity) getActivity();
             if (mainActivity != null && mainActivity.getAdsManager().isRewardedLoaded()) {
                 mainActivity.getAdsManager().showRewarded(success -> {
@@ -802,12 +783,12 @@ public class SettingsFragment extends MedicationWizardFragment {
             
             // RESTORE ORIGINAL STYLE: 
             // We use the exact values captured in onViewCreated to ensure 100% parity with other cards.
-            if (mDefaultCardBgColor != null) {
-                binding.cardNotifications.setCardBackgroundColor(mDefaultCardBgColor);
+            if (defaultCardBgColor != null) {
+                binding.cardNotifications.setCardBackgroundColor(defaultCardBgColor);
             }
-            binding.cardNotifications.setStrokeWidth(mDefaultCardStrokeWidth);
-            if (mDefaultCardStrokeColor != null) {
-                binding.cardNotifications.setStrokeColor(mDefaultCardStrokeColor);
+            binding.cardNotifications.setStrokeWidth(defaultCardStrokeWidth);
+            if (defaultCardStrokeColor != null) {
+                binding.cardNotifications.setStrokeColor(defaultCardStrokeColor);
             }
             
             Logger.log("SettingsFragment", "Restored card styling to defaults.");
@@ -967,25 +948,25 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         if (currentTime < expiry) {
-            mProgressHandler.removeCallbacks(mProgressRunnable);
-            mProgressHandler.postDelayed(mProgressRunnable, 30000);
+            progressHandler.removeCallbacks(progressRunnable);
+            progressHandler.postDelayed(progressRunnable, 30000);
         }
     }
 
     private void startMagicPulse() {
-        if (mMagicAnimator != null && mMagicAnimator.isRunning()) return;
+        if (magicAnimator != null && magicAnimator.isRunning()) return;
 
         android.animation.ObjectAnimator scaleX = android.animation.ObjectAnimator.ofFloat(binding.imgMagicSparkle, "scaleX", 0.8f, 1.3f, 0.8f);
         android.animation.ObjectAnimator scaleY = android.animation.ObjectAnimator.ofFloat(binding.imgMagicSparkle, "scaleY", 0.8f, 1.3f, 0.8f);
         android.animation.ObjectAnimator rotate = android.animation.ObjectAnimator.ofFloat(binding.imgMagicSparkle, "rotation", 0f, 180f);
         android.animation.ObjectAnimator alpha = android.animation.ObjectAnimator.ofFloat(binding.magicPassProgress, "alpha", 0.6f, 1.0f, 0.6f);
 
-        mMagicAnimator = new android.animation.AnimatorSet();
-        mMagicAnimator.playTogether(scaleX, scaleY, rotate, alpha);
-        mMagicAnimator.setDuration(2000);
-        mMagicAnimator.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+        magicAnimator = new android.animation.AnimatorSet();
+        magicAnimator.playTogether(scaleX, scaleY, rotate, alpha);
+        magicAnimator.setDuration(2000);
+        magicAnimator.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
         
-        mMagicAnimator.addListener(new android.animation.AnimatorListenerAdapter() {
+        magicAnimator.addListener(new android.animation.AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
                 if (binding != null && getContext() != null && AppConfig.isPremium(requireContext())) {
@@ -993,14 +974,14 @@ public class SettingsFragment extends MedicationWizardFragment {
                 }
             }
         });
-        mMagicAnimator.start();
+        magicAnimator.start();
     }
 
     private void stopMagicPulse() {
-        if (mMagicAnimator != null) {
-            mMagicAnimator.removeAllListeners();
-            mMagicAnimator.cancel();
-            mMagicAnimator = null;
+        if (magicAnimator != null) {
+            magicAnimator.removeAllListeners();
+            magicAnimator.cancel();
+            magicAnimator = null;
         }
         if (binding != null) {
             binding.imgMagicSparkle.setScaleX(1.0f);
@@ -1034,7 +1015,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mProgressHandler.removeCallbacks(mProgressRunnable);
+        progressHandler.removeCallbacks(progressRunnable);
         stopMagicPulse();
         
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -1046,11 +1027,11 @@ public class SettingsFragment extends MedicationWizardFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mProgressHandler.removeCallbacksAndMessages(null);
-        if (mMagicAnimator != null) {
-            mMagicAnimator.removeAllListeners();
-            mMagicAnimator.cancel();
-            mMagicAnimator = null;
+        progressHandler.removeCallbacksAndMessages(null);
+        if (magicAnimator != null) {
+            magicAnimator.removeAllListeners();
+            magicAnimator.cancel();
+            magicAnimator = null;
         }
         binding = null;
     }

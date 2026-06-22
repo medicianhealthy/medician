@@ -64,7 +64,7 @@ public class MedicationsListViewModel extends AndroidViewModel implements Shared
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (Medication.SPK_MEDICATION_LIST.equals(key)) {
+        if (Medication.PREF_MEDICATION_LIST.equals(key)) {
             refreshMedications();
         }
     }

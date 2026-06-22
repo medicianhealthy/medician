@@ -43,10 +43,10 @@ import java.util.TimerTask;
  */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnAdActionListener {
 
-    private AppBarConfiguration mAppBarConfiguration;
-    private AdsManager mAdsManager;
-    private NavController mNavController;
-    private boolean mHasCreated;
+    private AppBarConfiguration appBarConfiguration;
+    private AdsManager adsManager;
+    private NavController navController;
+    private boolean isInitialLaunch;
     
     public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
 
@@ -60,22 +60,22 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             return;
         }
 
-        ActivityMainBinding mBinding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(mBinding.getRoot());
+        ActivityMainBinding mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mainBinding.getRoot());
 
         loadCheats();
 
-        mBinding.appBarMain.fab.setOnClickListener(view -> {
+        mainBinding.appBarMain.fab.setOnClickListener(view -> {
             AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
             bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
         });
         
-        setSupportActionBar(mBinding.appBarMain.toolbar);
+        setSupportActionBar(mainBinding.appBarMain.toolbar);
 
-        final DrawerLayout drawer = mBinding.drawerLayout;
-        final NavigationView navigationView = mBinding.navView;
+        final DrawerLayout drawer = mainBinding.drawerLayout;
+        final NavigationView navigationView = mainBinding.navView;
         
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
+        appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_medications_list, R.id.nav_history, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
@@ -84,23 +84,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .findFragmentById(R.id.nav_host_fragment_content_main);
 
         if (navHostFragment != null) {
-            mNavController = navHostFragment.getNavController();
+            navController = navHostFragment.getNavController();
             // Bind Toolbar to NavController with drawer support (for hamburger icon)
-            NavigationUI.setupActionBarWithNavController(this, mNavController, mAppBarConfiguration);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
             // Bind NavigationView to NavController
-            NavigationUI.setupWithNavController(navigationView, mNavController);
+            NavigationUI.setupWithNavController(navigationView, navController);
             
             navigationView.setNavigationItemSelectedListener(item -> {
-                int id = item.getItemId();
-                if (id == R.id.nav_home) {
+                int selectedItemId = item.getItemId();
+                if (selectedItemId == R.id.nav_home) {
                     // Start destination needs careful handling if we're already there or not
-                    if (mNavController.getCurrentDestination() != null && mNavController.getCurrentDestination().getId() == R.id.nav_home) {
+                    if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() == R.id.nav_home) {
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                     }
-                    mNavController.popBackStack(R.id.nav_home, false);
+                    navController.popBackStack(R.id.nav_home, false);
                 } else {
-                    NavigationUI.onNavDestinationSelected(item, mNavController);
+                    NavigationUI.onNavDestinationSelected(item, navController);
                 }
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
@@ -108,12 +108,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             refreshNavHeader();
 
-            mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 invalidateOptionsMenu();
             });
         }
 
-        mAdsManager = new AdsManager(this);
+        adsManager = new AdsManager(this);
         
         ConsentManager.gatherConsent(this, () -> RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
             @Override
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         }));
 
-        mHasCreated = true;
+        isInitialLaunch = true;
         checkExactAlarmPermission();
     }
 
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public AdsManager getAdsManager() {
-        return mAdsManager;
+        return adsManager;
     }
 
     @Override
@@ -194,8 +194,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mNavController != null && mNavController.getCurrentDestination() != null) {
-            int currentDestinationId = mNavController.getCurrentDestination().getId();
+        if (navController != null && navController.getCurrentDestination() != null) {
+            int currentDestinationId = navController.getCurrentDestination().getId();
             
             // Hide the settings icon ONLY if we're already on the settings screen
             android.view.MenuItem settingsMenuItem = menu.findItem(R.id.nav_settings);
@@ -208,14 +208,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(mNavController, mAppBarConfiguration)
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
         // Standard NavigationUI handling for items matching destination IDs (like nav_settings)
-        if (NavigationUI.onNavDestinationSelected(item, mNavController)) {
+        if (NavigationUI.onNavDestinationSelected(item, navController)) {
             return true;
         }
 
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void onMoveToForeground() {
-        if (!mHasCreated) {
+        if (isInitialLaunch) {
             final Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }, 300L);
         }
-        mHasCreated = false;
+        isInitialLaunch = false;
     }
 
     @Override

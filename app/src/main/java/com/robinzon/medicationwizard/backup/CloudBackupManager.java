@@ -52,7 +52,7 @@ public class CloudBackupManager {
                 backup.put("version", 1);
                 backup.put("timestamp", System.currentTimeMillis());
 
-                JSONArray medsArray = SharedPreferencesManager.getInstance(mContext).getJsonArray(Medication.SPK_MEDICATION_LIST, null);
+                JSONArray medsArray = SharedPreferencesManager.getInstance(mContext).getJsonArray(Medication.PREF_MEDICATION_LIST, null);
                 backup.put("medications", medsArray != null ? medsArray : new JSONArray());
 
                 List<DoseInstanceEntity> history = AppDatabase.getDatabase(mContext).doseInstanceDao().getAllInstancesInternal();
@@ -90,7 +90,7 @@ public class CloudBackupManager {
                 // 1. Restore medications to SharedPreferences
                 if (backup.has("medications")) {
                     JSONArray medsArray = backup.getJSONArray("medications");
-                    SharedPreferencesManager.getInstance(mContext).setJsonArray(Medication.SPK_MEDICATION_LIST, medsArray);
+                    SharedPreferencesManager.getInstance(mContext).setJsonArray(Medication.PREF_MEDICATION_LIST, medsArray);
                 }
 
                 // 2. Restore history to Room Database
