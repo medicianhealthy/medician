@@ -36,6 +36,7 @@
                     android:textColor="?attr/colorPrimary" />
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_notifications"
                     style="?attr/materialCardViewElevatedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -143,7 +144,6 @@
                                             android:layout_height="20dp"
                                             android:layout_marginStart="8dp"
                                             app:srcCompat="@drawable/ic_crown"
-                                            app:tint="#FFD700"
                                             android:contentDescription="@null" />
                                     </LinearLayout>
                                     <TextView
@@ -200,7 +200,6 @@
                                         android:layout_height="20dp"
                                         android:layout_marginStart="8dp"
                                         app:srcCompat="@drawable/ic_crown"
-                                        app:tint="#FFD700"
                                         android:contentDescription="@null" />
                                 </LinearLayout>
                                 <TextView
@@ -324,7 +323,6 @@
                                         android:layout_height="20dp"
                                         android:layout_marginStart="8dp"
                                         app:srcCompat="@drawable/ic_crown"
-                                        app:tint="#FFD700"
                                         android:contentDescription="@null" />
                                 </LinearLayout>
                                 <TextView
@@ -532,7 +530,7 @@
                         <FrameLayout
                             android:id="@+id/container_magic_progress"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="24dp"
                             android:layout_marginHorizontal="24dp"
                             android:layout_marginBottom="24dp"
                             android:layout_marginTop="4dp"
@@ -543,6 +541,7 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="12dp"
+                                android:layout_gravity="center_vertical"
                                 android:background="@drawable/bg_magic_progress_track" />
 
                             <!-- The Magic (Progress Fill) -->
@@ -550,6 +549,7 @@
                                 android:id="@+id/magic_pass_progress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 app:trackThickness="12dp"
                                 app:trackCornerRadius="6dp"
                                 app:indicatorColor="?attr/colorPrimary"
@@ -559,13 +559,12 @@
                             <!-- The Sparkle (Tip Follower) -->
                             <ImageView
                                 android:id="@+id/img_magic_sparkle"
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
                                 android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_sparkle"
                                 app:tint="?attr/colorPrimary"
-                                android:elevation="4dp"
-                                android:translationX="-14dp" />
+                                android:elevation="4dp" />
                         </FrameLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -576,35 +575,129 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp">
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/settings_theme_title" android:textAppearance="?attr/textAppearanceTitleMedium" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:id="@+id/txt_theme_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_theme_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <com.google.android.material.button.MaterialButtonToggleGroup
                             android:id="@+id/toggle_group_theme"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            app:singleSelection="true"
-                            app:selectionRequired="true">
-                            <Button android:id="@+id/btn_theme_light" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_light" />
-                            <Button android:id="@+id/btn_theme_dark" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_dark" />
-                            <Button android:id="@+id/btn_theme_system" style="?attr/materialButtonOutlinedStyle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/theme_system" />
+                            app:layout_constraintTop_toBottomOf="@id/txt_theme_title"
+                            app:selectionRequired="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_theme_light"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/theme_light" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_theme_dark"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/theme_dark" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_theme_system"
+                                style="?attr/materialButtonOutlinedStyle"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/theme_system" />
                         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginVertical="16dp" />
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline_theme_33"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.333" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline_theme_66"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.666" />
+
+                        <TextView
+                            android:id="@+id/badge_ad_light"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="2dp"
+                            android:background="@drawable/bg_ad_badge"
+                            android:elevation="4dp"
+                            android:paddingHorizontal="4dp"
+                            android:text="AD"
+                            android:textColor="#000000"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            app:layout_constraintEnd_toEndOf="@id/guideline_theme_33"
+                            app:layout_constraintTop_toTopOf="@id/toggle_group_theme"
+                            tools:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/badge_ad_dark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginEnd="2dp"
+                            android:background="@drawable/bg_ad_badge"
+                            android:elevation="4dp"
+                            android:paddingHorizontal="4dp"
+                            android:text="AD"
+                            android:textColor="#000000"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            app:layout_constraintEnd_toEndOf="@id/guideline_theme_66"
+                            app:layout_constraintTop_toTopOf="@id/toggle_group_theme"
+                            tools:visibility="visible" />
+
+                        <View
+                            android:id="@+id/divider_theme"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            android:background="?attr/colorOutlineVariant"
+                            app:layout_constraintTop_toBottomOf="@id/toggle_group_theme" />
 
                         <LinearLayout
                             android:id="@+id/btn_language"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
                             android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            app:layout_constraintTop_toBottomOf="@id/divider_theme">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/settings_language_title"
                                 android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                             <TextView
                                 android:id="@+id/txt_language_desc"
                                 android:layout_width="wrap_content"
@@ -614,7 +707,7 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
