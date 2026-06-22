@@ -422,7 +422,13 @@ public class SettingsFragment extends MedicationWizardFragment {
             dialog.show();
         });
 
-        binding.btnSupport.setOnClickListener(v -> showSupportOptionsDialog());
+        binding.btnSupport.setOnClickListener(v -> {
+            if (AppConfig.isPremium(requireContext())) {
+                showSupportOptionsDialog();
+            } else {
+                new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
+            }
+        });
         
         viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> 
             binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range)));

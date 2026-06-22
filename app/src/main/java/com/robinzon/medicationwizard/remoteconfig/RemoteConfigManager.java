@@ -204,6 +204,10 @@ public class RemoteConfigManager {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_SESSIONS_INTERSTITIAL);
     }
 
+    public int getMinSessionsAppOpen() {
+        return getIntValue(RemoteConfigKeysAndDefaults.MIN_SESSIONS_APP_OPEN);
+    }
+
     public int getMinAppTimeForInterstitialMins() {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_APP_TIME_INTERSTITIAL_MINS);
     }

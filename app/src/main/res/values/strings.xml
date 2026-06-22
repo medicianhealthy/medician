@@ -77,7 +77,7 @@
     <string name="settings_version_summary">You\'re currently running version %1$s</string>
 
     <string name="settings_support_title">Need help?</string>
-    <string name="settings_support_summary">Have questions or found a bug? We\'d love to hear from you!</string>
+    <string name="settings_support_summary">Premium support for our magical community. Have questions or found a bug?</string>
 
     <!--***********************   Ads   ************************************************************************-->
     <!--Test ad units-->
@@ -149,7 +149,7 @@
 
     <!-- Premium -->
     <string name="premium_title">Unlock Full Magic!</string>
-    <string name="premium_description">Upgrade to Premium and enjoy advanced features like Cloud Backup, Quiet Hours, and an Ad-free experience.</string>
+    <string name="premium_description">Upgrade to Premium and enjoy advanced features like Cloud Backup, Quiet Hours, Premium Support, and an Ad-free experience.</string>
     <string name="premium_upgrade_button">Upgrade Now</string>
     <string name="premium_maybe_later">Maybe Later</string>
     <string name="menu_go_premium">Go Premium</string>
