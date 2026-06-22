@@ -3,6 +3,7 @@ package com.robinzon.medicationwizard.ui.todaysmedications;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -231,17 +232,19 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         // Record the time of the action for the "Took at HH:mm" summary
         instance.setActionTime(System.currentTimeMillis());
         
+        final Context appContext = requireContext().getApplicationContext();
+
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
+            AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
             
             // FIX: If marked as TAKEN or SKIPPED, cancel the future system alarm
             if (!"SCHEDULED".equals(status)) {
-                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(requireContext(), instance.getId());
+                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
             }
         });
 
         // Track achievements for In-App Review eligibility
-        com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(requireContext());
+        com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(appContext);
         
         Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), status.toLowerCase()), Snackbar.LENGTH_LONG)
                 .setAction(R.string.button_undo, v -> {
@@ -249,9 +252,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                     instance.setStatus("SCHEDULED");
                     instance.setActionTime(0);
                     AppDatabase.databaseWriteExecutor.execute(() -> {
-                        AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
+                        AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
                         // Re-schedule the alarm since it was undone
-                        com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(requireContext(), instance);
+                        com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
                     });
                 }).show();
         
@@ -276,24 +279,47 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private void showReschedulePicker(DoseInstanceEntity instance) {
         MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setTitleText("Reschedule " + instance.getMedicationName())
+                .setHour(12)
+                .setMinute(0)
+                .setTitleText(getString(R.string.button_reschedule) + " " + instance.getMedicationName())
                 .build();
 
+        final Context appContext = requireContext().getApplicationContext();
+
         picker.addOnPositiveButtonClickListener(v -> {
-            java.util.Calendar cal = java.util.Calendar.getInstance();
-            cal.setTimeInMillis(instance.getScheduledTime());
-            cal.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour());
-            cal.set(java.util.Calendar.MINUTE, picker.getMinute());
+            java.util.Calendar now = java.util.Calendar.getInstance();
+            java.util.Calendar target = java.util.Calendar.getInstance();
+            target.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour());
+            target.set(java.util.Calendar.MINUTE, picker.getMinute());
+            target.set(java.util.Calendar.SECOND, 0);
+            target.set(java.util.Calendar.MILLISECOND, 0);
             
-            // FIX: Cancel old alarm before updating to new time
-            com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(requireContext(), instance.getId());
+            // If the picked time has already passed today, assume the user meant tomorrow.
+            // This prevents scheduling an alarm in the past.
+            if (target.before(now)) {
+                target.add(java.util.Calendar.DAY_OF_YEAR, 1);
+            }
+
+            // 1. Cancel existing alarm
+            com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
             
-            instance.setScheduledTime(cal.getTimeInMillis());
+            // 2. Update status and time
+            instance.setScheduledTime(target.getTimeInMillis());
+            instance.setStatus("SCHEDULED");
+            instance.setActionTime(0);
+            
+            // 3. Persist and Re-schedule
             AppDatabase.databaseWriteExecutor.execute(() -> {
-                AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
-                // Schedule new alarm
-                com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(requireContext(), instance);
+                AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
+                com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
+                
+                com.robinzon.medicationwizard.utils.Logger.log("Reschedule", 
+                        "Rescheduled " + instance.getMedicationName() + " to " + target.getTime());
             });
+
+            Snackbar.make(mBinding.getRoot(), 
+                    getString(R.string.medication_status_format, instance.getMedicationName(), getString(R.string.button_reschedule).toLowerCase()), 
+                    Snackbar.LENGTH_SHORT).show();
         });
 
         picker.show(getChildFragmentManager(), "reschedule");
