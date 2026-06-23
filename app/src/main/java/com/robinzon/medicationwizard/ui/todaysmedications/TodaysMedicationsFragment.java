@@ -114,10 +114,12 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         Map<Long, List<DoseInstanceEntity>> groupedMap = new LinkedHashMap<>();
         for (DoseInstanceEntity e : instances) {
             long time = e.getScheduledTime();
-            if (!groupedMap.containsKey(time)) {
-                groupedMap.put(time, new ArrayList<>());
+            List<DoseInstanceEntity> group = groupedMap.get(time);
+            if (group == null) {
+                group = new ArrayList<>();
+                groupedMap.put(time, group);
             }
-            groupedMap.get(time).add(e);
+            group.add(e);
         }
 
         List<DoseItem> result = new ArrayList<>();

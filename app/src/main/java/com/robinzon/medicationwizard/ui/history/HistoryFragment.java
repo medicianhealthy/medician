@@ -82,13 +82,17 @@ public class HistoryFragment extends MedicationWizardFragment {
         Map<Long, List<DoseInstanceEntity>> groupedMap = new LinkedHashMap<>();
         for (DoseInstanceEntity e : instances) {
             long time = e.getScheduledTime();
-            if (!groupedMap.containsKey(time)) groupedMap.put(time, new ArrayList<>());
-            groupedMap.get(time).add(e);
+            List<DoseInstanceEntity> group = groupedMap.get(time);
+            if (group == null) {
+                group = new ArrayList<>();
+                groupedMap.put(time, group);
+            }
+            group.add(e);
         }
         List<DoseItem> result = new ArrayList<>();
         for (List<DoseInstanceEntity> group : groupedMap.values()) {
             if (group.size() > 1) result.add(new DoseItem.Group(group));
-            else result.add(new DoseItem.Single(group.get(0)));
+            else if (!group.isEmpty()) result.add(new DoseItem.Single(group.get(0)));
         }
         return result;
     }

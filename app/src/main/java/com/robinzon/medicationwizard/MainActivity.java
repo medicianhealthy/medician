@@ -152,33 +152,33 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void updateNavHeader(NavigationView navigationView) {
         View headerView = navigationView.getHeaderView(0);
-        if (headerView == null) return;
+        if (headerView != null) {
+            android.widget.ImageView profileImage = headerView.findViewById(R.id.imageView);
+            android.widget.TextView profileName = headerView.findViewById(R.id.textView);
 
-        android.widget.ImageView profileImage = headerView.findViewById(R.id.imageView);
-        android.widget.TextView profileName = headerView.findViewById(R.id.textView);
-
-        if (!com.robinzon.medicationwizard.AppConfig.isPremium(this)) {
-            profileName.setText(R.string.nav_header_subtitle);
-            profileImage.setImageResource(R.mipmap.ic_launcher);
-            return;
-        }
-
-        GoogleAccountManager accountManager = GoogleAccountManager.getInstance(this);
-        if (accountManager.isSignedIn()) {
-            String name = accountManager.getAccountName();
-            if (name != null) profileName.setText(name);
-
-            String photoUrl = accountManager.getAccountPhotoUrl();
-            if (photoUrl != null) {
-                com.bumptech.glide.Glide.with(this)
-                        .load(photoUrl)
-                        .circleCrop()
-                        .placeholder(R.mipmap.ic_launcher)
-                        .into(profileImage);
+            if (!com.robinzon.medicationwizard.AppConfig.isPremium(this)) {
+                profileName.setText(R.string.nav_header_subtitle);
+                profileImage.setImageResource(R.mipmap.ic_launcher);
+                return;
             }
-        } else {
-            profileName.setText(R.string.nav_header_subtitle);
-            profileImage.setImageResource(R.mipmap.ic_launcher);
+
+            GoogleAccountManager accountManager = GoogleAccountManager.getInstance(this);
+            if (accountManager.isSignedIn()) {
+                String name = accountManager.getAccountName();
+                if (name != null) profileName.setText(name);
+
+                String photoUrl = accountManager.getAccountPhotoUrl();
+                if (photoUrl != null) {
+                    com.bumptech.glide.Glide.with(this)
+                            .load(photoUrl)
+                            .circleCrop()
+                            .placeholder(R.mipmap.ic_launcher)
+                            .into(profileImage);
+                }
+            } else {
+                profileName.setText(R.string.nav_header_subtitle);
+                profileImage.setImageResource(R.mipmap.ic_launcher);
+            }
         }
     }
 

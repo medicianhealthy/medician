@@ -157,7 +157,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
             timeText.setText(timeFmt.format(new Date(instance.getScheduledTime())));
 
-            if (instance.getInstruction() != null && !instance.getInstruction().equals("DOES_NOT_MATTER")) {
+            if (instance.getInstruction() != null && !java.util.Objects.equals(instance.getInstruction(), "DOES_NOT_MATTER")) {
                 directionsText.setVisibility(View.VISIBLE);
                 try { directionsText.setText(EInstructions.valueOf(instance.getInstruction()).getDescription()); } 
                 catch (Exception e) { directionsText.setText(instance.getInstruction()); }

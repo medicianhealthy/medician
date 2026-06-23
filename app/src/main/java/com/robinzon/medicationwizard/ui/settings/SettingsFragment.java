@@ -422,9 +422,6 @@ public class SettingsFragment extends MedicationWizardFragment {
             dialog.show();
         });
 
-        if (binding.btnSupport instanceof com.google.android.material.button.MaterialButton) {
-            ((com.google.android.material.button.MaterialButton) binding.btnSupport).setIconTint(null);
-        }
         binding.btnSupport.setOnClickListener(v -> {
             if (AppConfig.isPremium(requireContext())) {
                 showSupportOptionsDialog();
@@ -432,6 +429,9 @@ public class SettingsFragment extends MedicationWizardFragment {
                 new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumBS");
             }
         });
+        
+        // Ensure icon reflects premium state colors
+        binding.btnSupport.setIconTint(null);
         
         viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> 
             binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range)));
