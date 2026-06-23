@@ -49,7 +49,10 @@ public class Statisticator {
     public static float getTotalUsageMinutes(final Context context) {
         float persisted = SharedPreferencesManager.getInstance(context).getFloat(SPK_SESSION_TIME_MINUTES, 0F);
         if (mStartUserActive > 0) {
-            persisted += ((float) System.currentTimeMillis() - (float) mStartUserActive) / 1000F / 60F;
+            float sessionElapsed = ((float) System.currentTimeMillis() - (float) mStartUserActive) / 1000F / 60F;
+            if (sessionElapsed > 0) {
+                persisted += sessionElapsed;
+            }
         }
         return persisted;
     }
@@ -81,7 +84,10 @@ public class Statisticator {
     public static float getUsageMinutesForAds(final Context context) {
         float persisted = SharedPreferencesManager.getInstance(context).getFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
         if (mStartAdUsageActive > 0) {
-            persisted += ((float) System.currentTimeMillis() - (float) mStartAdUsageActive) / 1000F / 60F;
+            float sessionElapsed = ((float) System.currentTimeMillis() - (float) mStartAdUsageActive) / 1000F / 60F;
+            if (sessionElapsed > 0) {
+                persisted += sessionElapsed;
+            }
         }
         return persisted;
     }

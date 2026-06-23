@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     
     public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
 
+    private Timer adCheckTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,11 +121,34 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onFetchCompleted(boolean isSuccessFull) {
                 getAdsManager().initializeAds();
+                startAdCheckTimer();
             }
         }));
 
         isInitialLaunch = true;
         checkExactAlarmPermission();
+    }
+
+    private void startAdCheckTimer() {
+        if (adCheckTimer != null) adCheckTimer.cancel();
+        adCheckTimer = new Timer();
+        adCheckTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    if (null != adsManager) {
+                        adsManager.loadAds(); // Check for banner/interstitial eligibility based on real-time usage
+                    }
+                });
+            }
+        }, 10000L, 10000L); // Check every 10 seconds
+    }
+
+    private void stopAdCheckTimer() {
+        if (adCheckTimer != null) {
+            adCheckTimer.cancel();
+            adCheckTimer = null;
+        }
     }
 
     public void refreshNavHeader() {
@@ -235,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             getAdsManager().onResume();
         }
         Statisticator.onMoveToForeground(this);
+        startAdCheckTimer();
     }
 
     @Override
@@ -242,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (null != getAdsManager()) {
             getAdsManager().onDestroy();
         }
+        stopAdCheckTimer();
         super.onDestroy();
     }
 
@@ -252,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             getAdsManager().onPause();
         }
         Statisticator.onMoveToBackground(this);
+        stopAdCheckTimer();
     }
 
     public void setFabVisible(boolean visible) {

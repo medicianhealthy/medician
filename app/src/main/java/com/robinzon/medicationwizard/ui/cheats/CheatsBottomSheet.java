@@ -19,6 +19,9 @@ import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 public class CheatsBottomSheet extends BottomSheetDialogFragment {
 
+    private final android.os.Handler updateHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private Runnable updateRunnable;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,7 +42,16 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
         checkPremium.setChecked(prefs.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM));
         checkShowAds.setChecked(prefs.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE));
 
-        setupConfigInfo(txtConfigInfo);
+        updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isAdded()) {
+                    setupConfigInfo(txtConfigInfo);
+                    updateHandler.postDelayed(this, 2500); // Refresh every 2.5 seconds
+                }
+            }
+        };
+        updateHandler.post(updateRunnable);
 
         btnApply.setOnClickListener(v -> {
             prefs.setBoolean(AppConfig.KEY_CHEAT_PREMIUM, checkPremium.isChecked());
@@ -60,6 +72,12 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
 
             dismiss();
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        updateHandler.removeCallbacks(updateRunnable);
     }
 
     private void setupConfigInfo(TextView textView) {
