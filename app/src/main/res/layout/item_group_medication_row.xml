@@ -64,46 +64,58 @@
             android:id="@+id/btn_take"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:minWidth="0dp"
+            android:minHeight="32dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:paddingHorizontal="12dp"
             android:text="@string/button_take"
-            android:textSize="10sp"
+            android:textSize="11sp"
             app:cornerRadius="16dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_reschedule"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:minWidth="0dp"
+            android:minHeight="32dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:paddingHorizontal="8dp"
             android:text="@string/button_reschedule"
-            android:textSize="10sp" />
+            android:textSize="11sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_skip"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:minWidth="0dp"
+            android:minHeight="32dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:paddingHorizontal="8dp"
             android:text="@string/button_skip"
-            android:textSize="10sp" />
+            android:textSize="11sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_untake"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:minWidth="0dp"
+            android:minHeight="32dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:paddingHorizontal="8dp"
             android:text="@string/button_untake"
             android:textColor="?attr/colorError"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:visibility="gone" />
 
     </LinearLayout>
