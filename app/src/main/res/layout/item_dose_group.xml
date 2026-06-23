@@ -22,7 +22,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_wizard_high_def"
-            app:tint="?attr/colorPrimary"
             android:contentDescription="@null" />
 
         <LinearLayout
