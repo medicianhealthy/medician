@@ -255,7 +255,19 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 AppCompatButton untakeBtn = rowView.findViewById(R.id.btn_untake);
                 View divider = rowView.findViewById(R.id.divider);
 
-                nameTxt.setText(d.getMedicationName());
+                // Smart Detail String: "Med Name - Amount Form Strength"
+                String amountStr = d.getAmount() == (long) d.getAmount() ? String.valueOf((long) d.getAmount()) : String.valueOf(d.getAmount());
+                String formStr = d.getForm() != null ? d.getForm().toLowerCase() : "";
+                if (d.getAmount() > 1 && !formStr.isEmpty() && !formStr.endsWith("s")) formStr += "s";
+                
+                String strengthStr = "";
+                if (d.getStrength() > 0) {
+                    String sVal = d.getStrength() == (long) d.getStrength() ? String.valueOf((long) d.getStrength()) : String.valueOf(d.getStrength());
+                    strengthStr = sVal + (d.getUnit() != null ? " " + d.getUnit() : "");
+                }
+
+                String fullDetail = d.getMedicationName() + " (" + amountStr + " " + formStr + (strengthStr.isEmpty() ? "" : ", " + strengthStr) + ")";
+                nameTxt.setText(fullDetail);
                 
                 // Icon logic
                 int icon = R.drawable.ic_med_pill;
