@@ -399,7 +399,19 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         mBinding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         mBinding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         
+        boolean hasAnyMeds = com.robinzon.medicationwizard.entities.Medication.hasMedications(requireContext());
+
         if (isEmpty) {
+            if (hasAnyMeds) {
+                mBinding.emptyLayout.emptyTitle.setText(R.string.history_empty);
+                mBinding.emptyLayout.emptySubtitle.setText(R.string.history_empty_subtitle);
+                mBinding.emptyLayout.btnEmptyAction.setVisibility(View.GONE);
+            } else {
+                mBinding.emptyLayout.emptyTitle.setText(R.string.empty_meds_title);
+                mBinding.emptyLayout.emptySubtitle.setText(R.string.empty_meds_subtitle);
+                mBinding.emptyLayout.btnEmptyAction.setVisibility(View.VISIBLE);
+            }
+
             startEmptyStateAnimations(mBinding.getRoot());
             startLightningLogic();
         } else {
@@ -407,9 +419,10 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             stopLightningLogic();
         }
 
-        // Hide/Show FAB based on empty state for cleaner M3 aesthetics
+        // Hide/Show FAB based on empty state for cleaner M3 aesthetics.
+        // We only hide the FAB if the entire library is empty to focus on the center "hero" button.
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setFabVisible(!isEmpty);
+            ((MainActivity) getActivity()).setFabVisible(!isEmpty || hasAnyMeds);
         }
     }
 

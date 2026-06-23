@@ -14,6 +14,7 @@
 
     <string name="history_title">Medication History</string>
     <string name="history_empty">No medications recorded for this day.</string>
+    <string name="history_empty_subtitle">It looks like you didn\'t have any doses scheduled or recorded on this date.</string>
 
     <!-- Settings Screen -->
     <string name="settings_category_reminders">Reminders</string>

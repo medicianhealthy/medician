@@ -255,6 +255,15 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
+     * @param context Application context.
+     * @return True if there is at least one medication definition in the library.
+     */
+    public static boolean hasMedications(Context context) {
+        JSONArray array = SharedPreferencesManager.getInstance(context).getJsonArray(PREF_MEDICATION_LIST, null);
+        return array != null && array.length() > 0;
+    }
+
+    /**
      * Retrieves all saved medications as domain objects.
      *
      * @param context Application context.

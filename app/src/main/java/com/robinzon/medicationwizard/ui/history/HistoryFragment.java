@@ -64,17 +64,34 @@ public class HistoryFragment extends MedicationWizardFragment {
             adapter.setData(grouped);
             
             boolean isEmpty = instances == null || instances.isEmpty();
-            binding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-            binding.recyclerHistory.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-            
-            if (isEmpty) {
-                startEmptyStateAnimations(binding.getRoot());
-                binding.cardSummary.setVisibility(View.GONE);
-            } else {
-                stopEmptyStateAnimations();
-                updateSummaryCard(instances);
-            }
+            updateUiState(isEmpty, instances);
         });
+    }
+
+    private void updateUiState(boolean isEmpty, List<DoseInstanceEntity> instances) {
+        binding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        binding.recyclerHistory.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        
+        if (isEmpty) {
+            boolean hasAnyMeds = com.robinzon.medicationwizard.entities.Medication.hasMedications(requireContext());
+            if (hasAnyMeds) {
+                // Show "No records for this day" state
+                binding.emptyLayout.emptyTitle.setText(R.string.history_empty);
+                binding.emptyLayout.emptySubtitle.setText(R.string.history_empty_subtitle);
+                binding.emptyLayout.btnEmptyAction.setVisibility(View.GONE);
+            } else {
+                // Show "First med" state
+                binding.emptyLayout.emptyTitle.setText(R.string.empty_meds_title);
+                binding.emptyLayout.emptySubtitle.setText(R.string.empty_meds_subtitle);
+                binding.emptyLayout.btnEmptyAction.setVisibility(View.VISIBLE);
+            }
+
+            startEmptyStateAnimations(binding.getRoot());
+            binding.cardSummary.setVisibility(View.GONE);
+        } else {
+            stopEmptyStateAnimations();
+            updateSummaryCard(instances);
+        }
     }
 
     private List<DoseItem> groupDoses(List<DoseInstanceEntity> instances) {
