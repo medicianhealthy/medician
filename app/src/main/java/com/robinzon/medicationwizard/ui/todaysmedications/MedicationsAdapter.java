@@ -1,8 +1,11 @@
 package com.robinzon.medicationwizard.ui.todaysmedications;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,91 +14,94 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+import com.robinzon.medicationwizard.entities.EForm;
+import com.robinzon.medicationwizard.entities.EInstructions;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-/**
- * A specialized RecyclerView Adapter for displaying medication dose instances.
- * <p>
- * This adapter is used by both the "Today's Medications" and "History" fragments. 
- * It dynamically adjusts its UI based on the status of the medication (Scheduled vs. Completed) 
- * and handles complex animations for user interactions.
- * </p>
- */
-public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.ViewHolder> {
+public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     
-    private List<DoseInstanceEntity> doses;
+    private static final int TYPE_SINGLE = 0;
+    private static final int TYPE_GROUP = 1;
+
+    private List<DoseItem> items = new ArrayList<>();
     private OnMedicationActionListener actionListener;
 
-    /**
-     * Interface for handling user interactions on a specific dose item.
-     */
     public interface OnMedicationActionListener {
-        /** Called when the user clicks 'Take'. */
         void onTake(DoseInstanceEntity instance, int position);
-        /** Called when the user clicks 'Skip'. */
         void onSkip(DoseInstanceEntity instance, int position);
-        /** Called when the user clicks 'Reschedule'. */
         void onReschedule(DoseInstanceEntity instance, int position);
-        /** Called when the user clicks 'Un-take' on a taken item. */
         void onUntake(DoseInstanceEntity instance, int position);
-        /** Called when the user clicks 'Un-skip' on a skipped item. */
         void onUnskip(DoseInstanceEntity instance, int position);
+
+        // Group actions
+        void onTakeGroup(List<DoseInstanceEntity> doses, int position);
+        void onSkipGroup(List<DoseInstanceEntity> doses, int position);
+        void onRescheduleGroup(List<DoseInstanceEntity> doses, int position);
+        void onUntakeGroup(List<DoseInstanceEntity> doses, int position);
+        void onUnskipGroup(List<DoseInstanceEntity> doses, int position);
     }
 
-    /**
-     * Sets the listener for medication actions.
-     *
-     * @param listener The action listener.
-     */
     public void setOnMedicationActionListener(OnMedicationActionListener listener) {
-        actionListener = listener;
+        this.actionListener = listener;
     }
 
-    /**
-     * Constructs the adapter with an initial dataset.
-     *
-     * @param dataSet The list of doses to display.
-     */
-    public MedicationsAdapter(List<DoseInstanceEntity> dataSet) {
-        doses = dataSet;
+    public MedicationsAdapter(List<DoseItem> dataSet) {
+        this.items = dataSet;
     }
 
-    /**
-     * Updates the dataset and refreshes the entire list.
-     *
-     * @param medications The new list of doses.
-     */
-    public void setMedications(List<DoseInstanceEntity> medications) {
-        this.doses = medications;
+    public void setData(List<DoseItem> newData) {
+        this.items = newData;
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return (items.get(position) instanceof DoseItem.Group) ? TYPE_GROUP : TYPE_SINGLE;
+    }
 
-    /**
-     * ViewHolder pattern to hold references to individual item views for performance.
-     */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView medNameText;
-        private final TextView strengthText;
-        private final TextView quantityText;
-        private final TextView timeText;
-        private final TextView directionsText;
-        private final TextView formText;
-        private final TextView scheduledSummaryText;
-        private final TextView actualActionSummaryText;
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_GROUP) {
+            View v = inflater.inflate(R.layout.item_dose_group, parent, false);
+            return new GroupViewHolder(v);
+        } else {
+            View v = inflater.inflate(R.layout.medications_list_row, parent, false);
+            return new SingleViewHolder(v);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        DoseItem item = items.get(position);
+        if (holder instanceof GroupViewHolder) {
+            ((GroupViewHolder) holder).bind((DoseItem.Group) item, position);
+        } else {
+            ((SingleViewHolder) holder).bind((DoseItem.Single) item, position);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    // --- ViewHolders ---
+
+    class SingleViewHolder extends RecyclerView.ViewHolder {
+        private final TextView medNameText, strengthText, quantityText, timeText, directionsText, formText;
+        private final TextView scheduledSummaryText, actualActionSummaryText;
         private final View scheduledDetailsGroup;
-        private final AppCompatButton skipButton;
-        private final AppCompatButton rescheduleButton;
-        private final AppCompatButton takeButton;
-        private final AppCompatButton untakeButton;
-        private final android.widget.ImageView medIconImage;
-        private final android.widget.ImageView doneIconImage;
+        private final AppCompatButton skipButton, rescheduleButton, takeButton, untakeButton;
+        private final ImageView medIconImage, doneIconImage;
 
-        /**
-         * Finds and caches all sub-views for the row layout.
-         */
-        public ViewHolder(View view) {
+        SingleViewHolder(View view) {
             super(view);
             medNameText = view.findViewById(R.id.med_name);
             strengthText = view.findViewById(R.id.med_strength);
@@ -114,243 +120,233 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
             doneIconImage = view.findViewById(R.id.icon_done);
         }
 
-        public TextView getTxtScheduledSummary() { return scheduledSummaryText; }
-        public TextView getTxtActualActionSummary() { return actualActionSummaryText; }
-        public View getGroupScheduledDetails() { return scheduledDetailsGroup; }
-        public AppCompatButton getTakeButton() { return takeButton; }
-        public AppCompatButton getUntakeButton() { return untakeButton; }
+        void bind(DoseItem.Single single, int position) {
+            DoseInstanceEntity instance = single.entity;
+            medNameText.setText(instance.getMedicationName());
 
-        public android.widget.ImageView getIconDone() {
-            return doneIconImage;
-        }
-
-        public TextView getForm() {
-            return formText;
-        }
-
-        public android.widget.ImageView getMedIcon() {
-            return medIconImage;
-        }
-
-        public TextView getMedName() {
-            return medNameText;
-        }
-
-        public TextView getStrength() {
-            return strengthText;
-        }
-
-        public TextView getQuantity() {
-            return quantityText;
-        }
-
-        public TextView getTime() {
-            return timeText;
-        }
-
-        public TextView getDirections() {
-            return directionsText;
-        }
-
-        public AppCompatButton getSkip() {
-            return skipButton;
-        }
-
-        public AppCompatButton getReschedule() {
-            return rescheduleButton;
-        }
-    }
-
-
-    /**
-     * Inflates the M3 card layout for each medication row.
-     */
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.medications_list_row, viewGroup, false);
-
-        return new ViewHolder(view);
-    }
-
-    /**
-     * Binds data from a {@link DoseInstanceEntity} to the UI views.
-     * <p>
-     * Logic:
-     * 1. Smart Formatting: Truncates decimal zeros (e.g., 2.0 -> 2) for amount/strength.
-     * 2. Instruction Logic: Hides the directions field if "Does Not Matter" is selected.
-     * 3. State Management: Toggles between "Scheduled" views (buttons + quantity) and 
-     *    "Completed" views (Summaries + Done icon + Translucency).
-     * 4. Action Animations: Implements scale/fade for 'Take' and slide/fade for 'Skip'.
-     * </p>
-     */
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
-
-        final DoseInstanceEntity instance = doses.get(position);
-        viewHolder.getMedName().setText(instance.getMedicationName());
-
-        // Set icon based on form definition
-        int formIconRes = R.drawable.ic_med_pill; // Default
-        if (instance.getForm() != null) {
-            try {
-                com.robinzon.medicationwizard.entities.EForm form = com.robinzon.medicationwizard.entities.EForm.valueOf(instance.getForm());
-                formIconRes = switch (form) {
-                    case Drops -> R.drawable.ic_med_drops;
-                    case Injection -> R.drawable.ic_med_injection;
-                    case Solution -> R.drawable.ic_med_solution;
-                    case Inhaler -> R.drawable.ic_med_inhaler;
-                    case Powder -> R.drawable.ic_med_powder;
-                    case Other -> R.drawable.ic_med_other;
-                    case Pill -> R.drawable.ic_med_pill;
-                };
-            } catch (IllegalArgumentException ignored) {}
-        }
-        viewHolder.getMedIcon().setImageResource(formIconRes);
-
-        // 1. Smart Strength Formatting
-        if (instance.getStrength() <= 0) {
-            viewHolder.getStrength().setVisibility(View.GONE);
-        } else {
-            viewHolder.getStrength().setVisibility(View.VISIBLE);
-            String strengthStr = instance.getStrength() == (long) instance.getStrength() ?
-                    String.valueOf((long) instance.getStrength()) :
-                    String.valueOf(instance.getStrength());
-            viewHolder.getStrength().setText(strengthStr.concat(" ").concat(instance.getUnit() != null ? instance.getUnit() : ""));
-        }
-
-        // 2. Populate Quantity and Form (with simple pluralization)
-        String amountStr = instance.getAmount() == (long) instance.getAmount() ?
-                String.valueOf((long) instance.getAmount()) : String.valueOf(instance.getAmount());
-        viewHolder.getQuantity().setText(amountStr);
-
-        String formName = instance.getForm() != null ? instance.getForm() : "";
-        if (instance.getAmount() > 1 && !formName.isEmpty()) {
-            if (!formName.toLowerCase().endsWith("s")) formName += "s";
-        }
-        viewHolder.getForm().setText(formName);
-
-        // 3. Format Scheduled Time
-        java.text.SimpleDateFormat timeFmt = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
-        viewHolder.getTime().setText(timeFmt.format(new java.util.Date(instance.getScheduledTime())));
-
-        // 4. Smart Directions/Instructions Formatting
-        if (instance.getInstruction() == null ||
-                instance.getInstruction().equals("DOES_NOT_MATTER")) {
-            viewHolder.getDirections().setVisibility(View.GONE);
-        } else {
-            viewHolder.getDirections().setVisibility(View.VISIBLE);
-            try {
-                com.robinzon.medicationwizard.entities.EInstructions instr = com.robinzon.medicationwizard.entities.EInstructions.valueOf(instance.getInstruction());
-                viewHolder.getDirections().setText(instr.getDescription());
-            } catch (IllegalArgumentException e) {
-                viewHolder.getDirections().setText(instance.getInstruction());
+            // Icon logic
+            int icon = R.drawable.ic_med_pill;
+            if (instance.getForm() != null) {
+                try {
+                    EForm form = EForm.valueOf(instance.getForm());
+                    icon = switch (form) {
+                        case Drops -> R.drawable.ic_med_drops;
+                        case Injection -> R.drawable.ic_med_injection;
+                        case Solution -> R.drawable.ic_med_solution;
+                        case Inhaler -> R.drawable.ic_med_inhaler;
+                        case Powder -> R.drawable.ic_med_powder;
+                        case Other -> R.drawable.ic_med_other;
+                        case Pill -> R.drawable.ic_med_pill;
+                    };
+                } catch (Exception ignored) {}
             }
-        }
+            medIconImage.setImageResource(icon);
 
-        // 5. Handle Status UI (Scheduled vs. Completed)
-        boolean isActionable = "SCHEDULED".equals(instance.getStatus());
-        viewHolder.getTakeButton().setVisibility(isActionable ? View.VISIBLE : View.GONE);
-        viewHolder.getSkip().setVisibility(isActionable ? View.VISIBLE : View.GONE);
-        viewHolder.getReschedule().setVisibility(isActionable ? View.VISIBLE : View.GONE);
-        viewHolder.getIconDone().setVisibility(!isActionable ? View.VISIBLE : View.GONE);
+            // Formatting
+            String strength = instance.getStrength() > 0 ? (instance.getStrength() == (long) instance.getStrength() ? String.valueOf((long) instance.getStrength()) : String.valueOf(instance.getStrength())) : "";
+            strengthText.setText(strength + (instance.getUnit() != null ? " " + instance.getUnit() : ""));
+            strengthText.setVisibility(instance.getStrength() > 0 ? View.VISIBLE : View.GONE);
 
-        boolean isTaken = "TAKEN".equals(instance.getStatus());
-        boolean isSkipped = "SKIPPED".equals(instance.getStatus());
-        viewHolder.getUntakeButton().setVisibility((isTaken || isSkipped) ? View.VISIBLE : View.GONE);
-        if (isTaken || isSkipped) {
-            viewHolder.getUntakeButton().setText(isTaken ? R.string.button_untake : R.string.button_unskip);
-        }
-        
-        // Group visibility for "Take X At HH:MM" line
-        viewHolder.getGroupScheduledDetails().setVisibility(isActionable ? View.VISIBLE : View.GONE);
-        
-        if (!isActionable) {
-            // Visual feedback for completed tasks
-            viewHolder.itemView.setAlpha(0.6f);
+            String amount = instance.getAmount() == (long) instance.getAmount() ? String.valueOf((long) instance.getAmount()) : String.valueOf(instance.getAmount());
+            quantityText.setText(amount);
             
-            String scheduledTimeStr = timeFmt.format(new java.util.Date(instance.getScheduledTime()));
-            String actionTimeStr = instance.getActionTime() > 0 ? 
-                    timeFmt.format(new java.util.Date(instance.getActionTime())) : scheduledTimeStr;
+            String formName = instance.getForm() != null ? instance.getForm() : "";
+            if (instance.getAmount() > 1 && !formName.toLowerCase().endsWith("s")) formName += "s";
+            formText.setText(formName);
 
-            // Line 1: Summary of planned time
-            viewHolder.getTxtScheduledSummary().setText(viewHolder.itemView.getContext().getString(R.string.scheduled_for_format, scheduledTimeStr));
-            viewHolder.getTxtScheduledSummary().setVisibility(View.VISIBLE);
+            SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            timeText.setText(timeFmt.format(new Date(instance.getScheduledTime())));
 
-            // Line 2: Detailed summary of actual user action
-            if ("TAKEN".equals(instance.getStatus())) {
-                String pluralForm = instance.getForm() != null ? instance.getForm().toLowerCase() : "pill";
-                if (instance.getAmount() > 1 && !pluralForm.endsWith("s")) pluralForm += "s";
-                
-                viewHolder.getTxtActualActionSummary().setText(viewHolder.itemView.getContext().getString(R.string.took_format, amountStr, pluralForm, actionTimeStr));
+            if (instance.getInstruction() != null && !instance.getInstruction().equals("DOES_NOT_MATTER")) {
+                directionsText.setVisibility(View.VISIBLE);
+                try { directionsText.setText(EInstructions.valueOf(instance.getInstruction()).getDescription()); } 
+                catch (Exception e) { directionsText.setText(instance.getInstruction()); }
             } else {
-                viewHolder.getTxtActualActionSummary().setText(viewHolder.itemView.getContext().getString(R.string.skipped_at_format, actionTimeStr));
+                directionsText.setVisibility(View.GONE);
             }
-            viewHolder.getTxtActualActionSummary().setVisibility(View.VISIBLE);
+
+            // Status UI
+            boolean isScheduled = "SCHEDULED".equals(instance.getStatus());
+            boolean isTaken = "TAKEN".equals(instance.getStatus());
+            boolean isSkipped = "SKIPPED".equals(instance.getStatus());
+
+            takeButton.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
+            skipButton.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
+            rescheduleButton.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
+            doneIconImage.setVisibility(!isScheduled ? View.VISIBLE : View.GONE);
+            untakeButton.setVisibility(!isScheduled ? View.VISIBLE : View.GONE);
+            untakeButton.setText(isTaken ? R.string.button_untake : R.string.button_unskip);
             
-        } else {
-            // Restore default state for scheduled items
-            viewHolder.itemView.setAlpha(1.0f);
-            viewHolder.getTxtScheduledSummary().setVisibility(View.GONE);
-            viewHolder.getTxtActualActionSummary().setVisibility(View.GONE);
-        }
+            scheduledDetailsGroup.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
+            itemView.setAlpha(isScheduled ? 1.0f : 0.6f);
 
-        // 6. Interaction Listeners with M3-styled animations
-        viewHolder.getTakeButton().setOnClickListener(v -> {
-            if (actionListener != null) {
-                // Scale success animation
-                viewHolder.itemView.animate()
-                        .scaleX(1.05f)
-                        .scaleY(1.05f)
-                        .alpha(0f)
-                        .setDuration(300)
-                        .withEndAction(() -> {
-                            actionListener.onTake(instance, viewHolder.getBindingAdapterPosition());
-                            viewHolder.itemView.setScaleX(1f);
-                            viewHolder.itemView.setScaleY(1f);
-                            viewHolder.itemView.setAlpha(1f);
-                        }).start();
+            if (!isScheduled) {
+                scheduledSummaryText.setVisibility(View.VISIBLE);
+                actualActionSummaryText.setVisibility(View.VISIBLE);
+                scheduledSummaryText.setText(itemView.getContext().getString(R.string.scheduled_for_format, timeFmt.format(new Date(instance.getScheduledTime()))));
+                String actTime = timeFmt.format(new Date(instance.getActionTime() > 0 ? instance.getActionTime() : instance.getScheduledTime()));
+                if (isTaken) actualActionSummaryText.setText(itemView.getContext().getString(R.string.took_format, amount, formName.toLowerCase(), actTime));
+                else actualActionSummaryText.setText(itemView.getContext().getString(R.string.skipped_at_format, actTime));
+            } else {
+                scheduledSummaryText.setVisibility(View.GONE);
+                actualActionSummaryText.setVisibility(View.GONE);
             }
-        });
 
-        viewHolder.getSkip().setOnClickListener(v -> {
-            if (actionListener != null) {
-                // Slide dismiss animation
-                viewHolder.itemView.animate()
-                        .translationX(-viewHolder.itemView.getWidth())
-                        .alpha(0f)
-                        .setDuration(300)
-                        .withEndAction(() -> {
-                            actionListener.onSkip(instance, viewHolder.getBindingAdapterPosition());
-                            viewHolder.itemView.setTranslationX(0);
-                            viewHolder.itemView.setAlpha(1f);
-                        }).start();
-            }
-        });
-
-        viewHolder.getReschedule().setOnClickListener(v -> {
-            if (actionListener != null) {
-                actionListener.onReschedule(instance, viewHolder.getBindingAdapterPosition());
-            }
-        });
-
-        viewHolder.getUntakeButton().setOnClickListener(v -> {
-            if (actionListener != null) {
-                if ("TAKEN".equals(instance.getStatus())) {
-                    actionListener.onUntake(instance, viewHolder.getBindingAdapterPosition());
-                } else {
-                    actionListener.onUnskip(instance, viewHolder.getBindingAdapterPosition());
+            // Listeners
+            takeButton.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    itemView.animate().scaleX(1.05f).scaleY(1.05f).alpha(0f).setDuration(300).withEndAction(() -> {
+                        actionListener.onTake(instance, getBindingAdapterPosition());
+                        itemView.setScaleX(1f); itemView.setScaleY(1f); itemView.setAlpha(1f);
+                    }).start();
                 }
-            }
-        });
+            });
+            skipButton.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    itemView.animate().translationX(-itemView.getWidth()).alpha(0f).setDuration(300).withEndAction(() -> {
+                        actionListener.onSkip(instance, getBindingAdapterPosition());
+                        itemView.setTranslationX(0); itemView.setAlpha(1f);
+                    }).start();
+                }
+            });
+            rescheduleButton.setOnClickListener(v -> { if (actionListener != null) actionListener.onReschedule(instance, position); });
+            untakeButton.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    if (isTaken) actionListener.onUntake(instance, position);
+                    else actionListener.onUnskip(instance, position);
+                }
+            });
+        }
     }
 
-    /**
-     * @return Number of items in the filtered list.
-     */
-    @Override
-    public int getItemCount() {
-        return doses.size();
+    class GroupViewHolder extends RecyclerView.ViewHolder {
+        private final TextView timeText, statusSummaryText;
+        private final LinearLayout medNamesContainer;
+        private final ImageView doneIcon;
+        private final AppCompatButton takeAllBtn, skipAllBtn, rescheduleAllBtn, untakeAllBtn;
+
+        GroupViewHolder(View v) {
+            super(v);
+            timeText = v.findViewById(R.id.txt_group_time);
+            statusSummaryText = v.findViewById(R.id.txt_group_status_summary);
+            medNamesContainer = v.findViewById(R.id.container_med_names);
+            doneIcon = v.findViewById(R.id.icon_done);
+            takeAllBtn = v.findViewById(R.id.btn_take_all);
+            skipAllBtn = v.findViewById(R.id.btn_skip_all);
+            rescheduleAllBtn = v.findViewById(R.id.btn_reschedule_all);
+            untakeAllBtn = v.findViewById(R.id.btn_untake_all);
+        }
+
+        void bind(DoseItem.Group group, int position) {
+            SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            timeText.setText(itemView.getContext().getString(R.string.group_title_format, timeFmt.format(new Date(group.getScheduledTime()))));
+
+            medNamesContainer.removeAllViews();
+            for (DoseInstanceEntity d : group.doses) {
+                View rowView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_group_medication_row, medNamesContainer, false);
+                
+                TextView nameTxt = rowView.findViewById(R.id.med_name);
+                TextView statusTxt = rowView.findViewById(R.id.med_status);
+                ImageView iconImg = rowView.findViewById(R.id.med_icon);
+                ImageView doneImg = rowView.findViewById(R.id.icon_done);
+                AppCompatButton takeBtn = rowView.findViewById(R.id.btn_take);
+                AppCompatButton skipBtn = rowView.findViewById(R.id.btn_skip);
+                AppCompatButton reschedBtn = rowView.findViewById(R.id.btn_reschedule);
+                AppCompatButton untakeBtn = rowView.findViewById(R.id.btn_untake);
+                View divider = rowView.findViewById(R.id.divider);
+
+                nameTxt.setText(d.getMedicationName());
+                
+                // Icon logic
+                int icon = R.drawable.ic_med_pill;
+                if (d.getForm() != null) {
+                    try {
+                        EForm f = EForm.valueOf(d.getForm());
+                        icon = switch (f) {
+                            case Drops -> R.drawable.ic_med_drops;
+                            case Injection -> R.drawable.ic_med_injection;
+                            case Solution -> R.drawable.ic_med_solution;
+                            case Inhaler -> R.drawable.ic_med_inhaler;
+                            case Powder -> R.drawable.ic_med_powder;
+                            case Other -> R.drawable.ic_med_other;
+                            default -> R.drawable.ic_med_pill;
+                        };
+                    } catch (Exception ignored) {}
+                }
+                iconImg.setImageResource(icon);
+
+                boolean isScheduled = "SCHEDULED".equals(d.getStatus());
+                boolean isTaken = "TAKEN".equals(d.getStatus());
+                boolean isSkipped = "SKIPPED".equals(d.getStatus());
+
+                statusTxt.setText(isScheduled ? "" : d.getStatus().toLowerCase());
+                doneImg.setVisibility(isScheduled ? View.GONE : View.VISIBLE);
+                
+                takeBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
+                skipBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
+                reschedBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
+                untakeBtn.setVisibility(!isScheduled ? View.VISIBLE : View.GONE);
+                untakeBtn.setText(isTaken ? R.string.button_untake : R.string.button_unskip);
+
+                if (group.doses.indexOf(d) == group.doses.size() - 1) {
+                    divider.setVisibility(View.GONE);
+                }
+
+                takeBtn.setOnClickListener(v -> { if (actionListener != null) actionListener.onTake(d, position); });
+                skipBtn.setOnClickListener(v -> { if (actionListener != null) actionListener.onSkip(d, position); });
+                reschedBtn.setOnClickListener(v -> { if (actionListener != null) actionListener.onReschedule(d, position); });
+                untakeBtn.setOnClickListener(v -> {
+                    if (actionListener != null) {
+                        if (isTaken) actionListener.onUntake(d, position);
+                        else actionListener.onUnskip(d, position);
+                    }
+                });
+
+                medNamesContainer.addView(rowView);
+            }
+
+            String status = group.getStatus();
+            boolean isAllScheduled = "SCHEDULED".equals(status);
+            boolean isAllTaken = "TAKEN".equals(status);
+            boolean isAllSkipped = "SKIPPED".equals(status);
+
+            takeAllBtn.setVisibility(isAllScheduled ? View.VISIBLE : View.GONE);
+            skipAllBtn.setVisibility(isAllScheduled ? View.VISIBLE : View.GONE);
+            rescheduleAllBtn.setVisibility(isAllScheduled ? View.VISIBLE : View.GONE);
+            
+            untakeAllBtn.setVisibility(isAllScheduled ? View.GONE : View.VISIBLE);
+            if (!isAllScheduled) {
+                if (isAllTaken) untakeAllBtn.setText(R.string.button_untake_all);
+                else if (isAllSkipped) untakeAllBtn.setText(R.string.button_unskip_all);
+                else untakeAllBtn.setText(R.string.button_reset_all);
+            }
+            
+            doneIcon.setVisibility(isAllScheduled ? View.GONE : View.VISIBLE);
+            itemView.setAlpha(isAllScheduled ? 1.0f : 0.6f);
+
+            if (!isAllScheduled) {
+                statusSummaryText.setVisibility(View.VISIBLE);
+                if (isAllTaken) statusSummaryText.setText(R.string.group_status_taken);
+                else if (isAllSkipped) statusSummaryText.setText(R.string.group_status_skipped);
+                else statusSummaryText.setText(R.string.group_status_mixed);
+            } else {
+                statusSummaryText.setVisibility(View.GONE);
+            }
+
+            takeAllBtn.setOnClickListener(v -> {
+                if (actionListener != null) actionListener.onTakeGroup(group.doses, position);
+            });
+            skipAllBtn.setOnClickListener(v -> {
+                if (actionListener != null) actionListener.onSkipGroup(group.doses, position);
+            });
+            rescheduleAllBtn.setOnClickListener(v -> {
+                if (actionListener != null) actionListener.onRescheduleGroup(group.doses, position);
+            });
+            untakeAllBtn.setOnClickListener(v -> {
+                if (actionListener != null) {
+                    actionListener.onUntakeGroup(group.doses, position);
+                }
+            });
+        }
     }
 }

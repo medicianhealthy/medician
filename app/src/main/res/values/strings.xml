@@ -109,6 +109,16 @@
     <string name="button_snooze">Snooze</string>
     <string name="button_untake">Un-take</string>
     <string name="button_unskip">Un-skip</string>
+    <string name="button_take_all">Take All</string>
+    <string name="button_skip_all">Skip All</string>
+    <string name="button_reschedule_all">Reschedule</string>
+    <string name="button_untake_all">Un-take All</string>
+    <string name="button_unskip_all">Un-skip All</string>
+    <string name="button_reset_all">Reset All</string>
+    <string name="group_title_format">%1$s Reminders</string>
+    <string name="group_status_taken">All marked as taken</string>
+    <string name="group_status_skipped">All marked as skipped</string>
+    <string name="group_status_mixed">Mixed status</string>
     <string name="sort_scheduled">Scheduled</string>
     <string name="sort_name">Name</string>
     <string name="sort_action_time">Action Time</string>

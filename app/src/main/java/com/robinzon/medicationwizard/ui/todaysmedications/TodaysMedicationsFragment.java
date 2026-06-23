@@ -30,6 +30,9 @@ import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The primary dashboard fragment of the application. 
@@ -50,6 +53,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private FragmentTodaysMedicationsBinding mBinding;
     private TodaysMedicationsViewModel mViewModel;
     private MedicationsAdapter mAdapter;
+    private TodaysMedicationsViewModel.SortOrder mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.TIME;
     
     private final Handler mInactivityHandler = new Handler(Looper.getMainLooper());
     private Runnable mInactivityRunnable;
@@ -87,13 +91,44 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
         // Reactive observation: UI updates automatically when DB changes
         mViewModel.getTodaysMedications().observe(getViewLifecycleOwner(), instances -> {
-            mAdapter.setMedications(instances);
+            List<DoseItem> grouped = groupDoses(instances, mCurrentSortOrder);
+            mAdapter.setData(grouped);
             updateUiState(instances.isEmpty());
             mBinding.swipeRefresh.setRefreshing(false);
             
             // Engagement: Recalculate health streak on data changes
             updateStreakBadge();
         });
+    }
+
+    private List<DoseItem> groupDoses(List<DoseInstanceEntity> instances, TodaysMedicationsViewModel.SortOrder sortOrder) {
+        if (sortOrder != TodaysMedicationsViewModel.SortOrder.TIME || instances == null) {
+            List<DoseItem> result = new ArrayList<>();
+            if (instances != null) {
+                for (DoseInstanceEntity e : instances) result.add(new DoseItem.Single(e));
+            }
+            return result;
+        }
+
+        // Group by scheduled time
+        Map<Long, List<DoseInstanceEntity>> groupedMap = new LinkedHashMap<>();
+        for (DoseInstanceEntity e : instances) {
+            long time = e.getScheduledTime();
+            if (!groupedMap.containsKey(time)) {
+                groupedMap.put(time, new ArrayList<>());
+            }
+            groupedMap.get(time).add(e);
+        }
+
+        List<DoseItem> result = new ArrayList<>();
+        for (List<DoseInstanceEntity> group : groupedMap.values()) {
+            if (group.size() > 1) {
+                result.add(new DoseItem.Group(group));
+            } else {
+                result.add(new DoseItem.Single(group.get(0)));
+            }
+        }
+        return result;
     }
 
     /**
@@ -127,12 +162,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
             int checkedId = checkedIds.get(0);
             if (checkedId == R.id.chip_sort_time) {
-                mViewModel.setSortOrder(TodaysMedicationsViewModel.SortOrder.TIME);
+                mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.TIME;
             } else if (checkedId == R.id.chip_sort_name) {
-                mViewModel.setSortOrder(TodaysMedicationsViewModel.SortOrder.NAME);
+                mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.NAME;
             } else if (checkedId == R.id.chip_sort_action) {
-                mViewModel.setSortOrder(TodaysMedicationsViewModel.SortOrder.ACTION_TIME);
+                mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.ACTION_TIME;
             }
+            mViewModel.setSortOrder(mCurrentSortOrder);
         });
     }
 
@@ -165,6 +201,31 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             @Override
             public void onUnskip(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SCHEDULED");
+            }
+
+            @Override
+            public void onTakeGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "TAKEN");
+            }
+
+            @Override
+            public void onSkipGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "SKIPPED");
+            }
+
+            @Override
+            public void onRescheduleGroup(List<DoseInstanceEntity> doses, int position) {
+                showGroupReschedulePicker(doses);
+            }
+
+            @Override
+            public void onUntakeGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "SCHEDULED");
+            }
+
+            @Override
+            public void onUnskipGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "SCHEDULED");
             }
         });
         
@@ -290,6 +351,46 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         });
 
         picker.show(getChildFragmentManager(), "reschedule");
+    }
+
+    private void showGroupReschedulePicker(List<DoseInstanceEntity> doses) {
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(12)
+                .setMinute(0)
+                .setTitleText(R.string.button_reschedule_all)
+                .build();
+
+        final Context appContext = requireContext().getApplicationContext();
+
+        picker.addOnPositiveButtonClickListener(v -> {
+            java.util.Calendar now = java.util.Calendar.getInstance();
+            java.util.Calendar target = java.util.Calendar.getInstance();
+            target.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour());
+            target.set(java.util.Calendar.MINUTE, picker.getMinute());
+            target.set(java.util.Calendar.SECOND, 0);
+            target.set(java.util.Calendar.MILLISECOND, 0);
+
+            if (target.before(now)) target.add(java.util.Calendar.DAY_OF_YEAR, 1);
+
+            for (DoseInstanceEntity d : doses) {
+                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, d.getId());
+                d.setScheduledTime(target.getTimeInMillis());
+                d.setStatus("SCHEDULED");
+                d.setActionTime(0);
+            }
+
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                for (DoseInstanceEntity d : doses) {
+                    AppDatabase.getDatabase(appContext).doseInstanceDao().update(d);
+                    com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, d);
+                }
+            });
+
+            Snackbar.make(mBinding.getRoot(), R.string.button_reschedule_all, Snackbar.LENGTH_SHORT).show();
+        });
+
+        picker.show(getChildFragmentManager(), "reschedule_group");
     }
 
     private void updateUiState(boolean isEmpty) {
