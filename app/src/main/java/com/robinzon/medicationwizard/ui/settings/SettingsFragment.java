@@ -422,6 +422,9 @@ public class SettingsFragment extends MedicationWizardFragment {
             dialog.show();
         });
 
+        if (binding.btnSupport instanceof com.google.android.material.button.MaterialButton) {
+            ((com.google.android.material.button.MaterialButton) binding.btnSupport).setIconTint(null);
+        }
         binding.btnSupport.setOnClickListener(v -> {
             if (AppConfig.isPremium(requireContext())) {
                 showSupportOptionsDialog();

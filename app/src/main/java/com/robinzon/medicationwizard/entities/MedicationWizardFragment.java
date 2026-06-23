@@ -151,6 +151,56 @@ public class MedicationWizardFragment extends Fragment {
         }
     }
 
+    /**
+     * Interface for handling delayed status updates after user confirmation.
+     */
+    protected interface StatusUpdateCallback {
+        void onApply();
+    }
+
+    /**
+     * Validates if the user is taking a medication too early or too late based on 
+     * Remote Config thresholds. Shows a warning dialog if necessary.
+     *
+     * @param instance The dose being marked as taken.
+     * @param callback Logic to execute if the timing is valid or user confirms.
+     */
+    protected void checkAndClarifyTakeTiming(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback) {
+        long now = System.currentTimeMillis();
+        long scheduled = instance.getScheduledTime();
+        
+        // Difference in minutes: positive if late, negative if early
+        long diffMins = (now - scheduled) / 60000;
+
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = 
+                com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
+        
+        int earlyThreshold = rcm.getEarlyTakeThresholdMins();
+        int lateThreshold = rcm.getLateTakeThresholdMins();
+
+        // Fallback to defaults if values are not yet fetched or invalid
+        if (earlyThreshold <= 0) earlyThreshold = 60;
+        if (lateThreshold <= 0) lateThreshold = 180;
+
+        if (diffMins < -earlyThreshold) {
+            showTimingClarificationDialog(instance, callback, getString(R.string.take_early_warning));
+        } else if (diffMins > lateThreshold) {
+            showTimingClarificationDialog(instance, callback, getString(R.string.take_late_warning));
+        } else {
+            callback.onApply();
+        }
+    }
+
+    private void showTimingClarificationDialog(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback, String message) {
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = 
+                new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(instance.getMedicationName());
+        dialog.setMessage(message);
+        dialog.setPositiveButton(getString(R.string.button_sure), (d, which) -> callback.onApply());
+        dialog.setNegativeButton(getString(R.string.button_not_now), null);
+        dialog.show();
+    }
+
     @Override
     public void onDestroyView() {
         stopEmptyStateAnimations();

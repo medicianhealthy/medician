@@ -94,6 +94,7 @@
     <string name="button_skip">تخطي</string>
     <string name="button_snooze">غفوة</string>
     <string name="button_untake">إلغاء التناول</string>
+    <string name="button_unskip">إلغاء التخطي</string>
     <string name="sort_scheduled">حسب الوقت</string>
     <string name="sort_name">حسب الاسم</string>
     <string name="sort_action_time">حسب وقت الإجراء</string>

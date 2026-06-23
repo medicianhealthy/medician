@@ -37,8 +37,10 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         void onSkip(DoseInstanceEntity instance, int position);
         /** Called when the user clicks 'Reschedule'. */
         void onReschedule(DoseInstanceEntity instance, int position);
-        /** Called when the user clicks 'Un-take' on a completed item. */
+        /** Called when the user clicks 'Un-take' on a taken item. */
         void onUntake(DoseInstanceEntity instance, int position);
+        /** Called when the user clicks 'Un-skip' on a skipped item. */
+        void onUnskip(DoseInstanceEntity instance, int position);
     }
 
     /**
@@ -253,7 +255,13 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
         viewHolder.getSkip().setVisibility(isActionable ? View.VISIBLE : View.GONE);
         viewHolder.getReschedule().setVisibility(isActionable ? View.VISIBLE : View.GONE);
         viewHolder.getIconDone().setVisibility(!isActionable ? View.VISIBLE : View.GONE);
-        viewHolder.getUntakeButton().setVisibility("TAKEN".equals(instance.getStatus()) ? View.VISIBLE : View.GONE);
+
+        boolean isTaken = "TAKEN".equals(instance.getStatus());
+        boolean isSkipped = "SKIPPED".equals(instance.getStatus());
+        viewHolder.getUntakeButton().setVisibility((isTaken || isSkipped) ? View.VISIBLE : View.GONE);
+        if (isTaken || isSkipped) {
+            viewHolder.getUntakeButton().setText(isTaken ? R.string.button_untake : R.string.button_unskip);
+        }
         
         // Group visibility for "Take X At HH:MM" line
         viewHolder.getGroupScheduledDetails().setVisibility(isActionable ? View.VISIBLE : View.GONE);
@@ -329,7 +337,11 @@ public class MedicationsAdapter extends RecyclerView.Adapter<MedicationsAdapter.
 
         viewHolder.getUntakeButton().setOnClickListener(v -> {
             if (actionListener != null) {
-                actionListener.onUntake(instance, viewHolder.getBindingAdapterPosition());
+                if ("TAKEN".equals(instance.getStatus())) {
+                    actionListener.onUntake(instance, viewHolder.getBindingAdapterPosition());
+                } else {
+                    actionListener.onUnskip(instance, viewHolder.getBindingAdapterPosition());
+                }
             }
         });
     }

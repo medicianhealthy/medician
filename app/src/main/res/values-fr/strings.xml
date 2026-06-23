@@ -94,6 +94,7 @@
     <string name="button_skip">Passer</string>
     <string name="button_snooze">Rappel</string>
     <string name="button_untake">Annuler la prise</string>
+    <string name="button_unskip">Annuler l\'omission</string>
     <string name="sort_scheduled">Programmé</string>
     <string name="sort_name">Nom</string>
     <string name="sort_action_time">Heure d\'action</string>

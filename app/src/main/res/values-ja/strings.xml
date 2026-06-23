@@ -94,6 +94,7 @@
     <string name="button_skip">スキップ</string>
     <string name="button_snooze">スヌーズ</string>
     <string name="button_untake">服用取り消し</string>
+    <string name="button_unskip">スキップ取り消し</string>
     <string name="sort_scheduled">予定順</string>
     <string name="sort_name">名前順</string>
     <string name="sort_action_time">実行時間順</string>

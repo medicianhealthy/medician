@@ -157,6 +157,11 @@ public class HistoryFragment extends MedicationWizardFragment {
             public void onUntake(DoseInstanceEntity instance, int position) {
                 updateStatus(instance, "SCHEDULED");
             }
+
+            @Override
+            public void onUnskip(DoseInstanceEntity instance, int position) {
+                updateStatus(instance, "SCHEDULED");
+            }
         });
         binding.recyclerHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerHistory.setAdapter(adapter);
@@ -170,6 +175,14 @@ public class HistoryFragment extends MedicationWizardFragment {
      * @param status   The new status (TAKEN, SKIPPED, etc.).
      */
     private void updateStatus(DoseInstanceEntity instance, String status) {
+        if ("TAKEN".equals(status)) {
+            checkAndClarifyTakeTiming(instance, () -> applyStatusUpdate(instance, status));
+        } else {
+            applyStatusUpdate(instance, status);
+        }
+    }
+
+    private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
         instance.setStatus(status);
         if ("TAKEN".equals(status)) {
             instance.setActionTime(System.currentTimeMillis());

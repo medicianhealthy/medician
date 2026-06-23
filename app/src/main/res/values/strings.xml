@@ -108,6 +108,7 @@
     <string name="button_skip">Skip</string>
     <string name="button_snooze">Snooze</string>
     <string name="button_untake">Un-take</string>
+    <string name="button_unskip">Un-skip</string>
     <string name="sort_scheduled">Scheduled</string>
     <string name="sort_name">Name</string>
     <string name="sort_action_time">Action Time</string>

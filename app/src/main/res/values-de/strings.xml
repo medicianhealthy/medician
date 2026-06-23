@@ -94,6 +94,7 @@
     <string name="button_skip">Überspringen</string>
     <string name="button_snooze">Schlummern</string>
     <string name="button_untake">Einnahme rückgängig</string>
+    <string name="button_unskip">Überspringen rückgängig</string>
     <string name="sort_scheduled">Geplant</string>
     <string name="sort_name">Name</string>
     <string name="sort_action_time">Aktionszeit</string>

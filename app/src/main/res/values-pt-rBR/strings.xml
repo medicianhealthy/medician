@@ -94,6 +94,7 @@
     <string name="button_skip">Pular</string>
     <string name="button_snooze">Soneca</string>
     <string name="button_untake">Desfazer</string>
+    <string name="button_unskip">Desfazer pular</string>
     <string name="sort_scheduled">Agendado</string>
     <string name="sort_name">Nome</string>
     <string name="sort_action_time">Hora da ação</string>

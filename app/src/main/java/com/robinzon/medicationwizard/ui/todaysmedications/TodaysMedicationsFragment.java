@@ -161,6 +161,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             public void onUntake(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SCHEDULED");
             }
+
+            @Override
+            public void onUnskip(DoseInstanceEntity instance, int position) {
+                updateInstanceStatus(instance, "SCHEDULED");
+            }
         });
         
         int columns = getResources().getInteger(R.integer.medication_grid_columns);
@@ -183,48 +188,10 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
      */
     private void updateInstanceStatus(DoseInstanceEntity instance, String status) {
         if ("TAKEN".equals(status)) {
-            checkAndClarifyTakeTiming(instance, status);
+            checkAndClarifyTakeTiming(instance, () -> applyStatusUpdate(instance, status));
         } else {
             applyStatusUpdate(instance, status);
         }
-    }
-
-    private void checkAndClarifyTakeTiming(DoseInstanceEntity instance, String status) {
-        long now = System.currentTimeMillis();
-        long scheduled = instance.getScheduledTime();
-        
-        // Difference in minutes: positive if late, negative if early
-        long diffMins = (now - scheduled) / 60000;
-
-        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = 
-                com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
-        
-        int earlyThreshold = rcm.getEarlyTakeThresholdMins();
-        int lateThreshold = rcm.getLateTakeThresholdMins();
-
-        // Fallback to defaults if values are not yet fetched or invalid
-        if (earlyThreshold <= 0) earlyThreshold = 60;
-        if (lateThreshold <= 0) lateThreshold = 180;
-
-        if (diffMins < -earlyThreshold) {
-            // Taking too early
-            showTimingClarificationDialog(instance, status, getString(R.string.take_early_warning));
-        } else if (diffMins > lateThreshold) {
-            // Taking too late
-            showTimingClarificationDialog(instance, status, getString(R.string.take_late_warning));
-        } else {
-            applyStatusUpdate(instance, status);
-        }
-    }
-
-    private void showTimingClarificationDialog(DoseInstanceEntity instance, String status, String message) {
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = 
-                new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-        dialog.setTitle(instance.getMedicationName());
-        dialog.setMessage(message);
-        dialog.setPositiveButton(getString(R.string.button_sure), (d, which) -> applyStatusUpdate(instance, status));
-        dialog.setNegativeButton(getString(R.string.button_not_now), null);
-        dialog.show();
     }
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {

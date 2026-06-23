@@ -94,6 +94,7 @@
     <string name="button_skip">건너뛰기</string>
     <string name="button_snooze">다시 알림</string>
     <string name="button_untake">취소</string>
+    <string name="button_unskip">건너뛰기 취소</string>
     <string name="sort_scheduled">시간순</string>
     <string name="sort_name">이름순</string>
     <string name="sort_action_time">실행 시간순</string>

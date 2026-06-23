@@ -94,6 +94,7 @@
     <string name="button_skip">דלג</string>
     <string name="button_snooze">נודניק</string>
     <string name="button_untake">בטל לקיחה</string>
+    <string name="button_unskip">בטל דילוג</string>
     <string name="sort_scheduled">לפי זמן מתוכנן</string>
     <string name="sort_name">לפי שם</string>
     <string name="sort_action_time">לפי זמן פעולה</string>

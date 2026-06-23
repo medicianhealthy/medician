@@ -94,6 +94,7 @@
     <string name="button_skip">Saltar</string>
     <string name="button_snooze">Posponer</string>
     <string name="button_untake">Desmarcar</string>
+    <string name="button_unskip">Deshacer omitir</string>
     <string name="sort_scheduled">Programado</string>
     <string name="sort_name">Nombre</string>
     <string name="sort_action_time">Hora de acción</string>
