@@ -293,6 +293,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 statusTxt.setText(isScheduled ? "" : d.getStatus().toLowerCase());
                 doneImg.setVisibility(isScheduled ? View.GONE : View.VISIBLE);
+                rowView.setAlpha(isScheduled ? 1.0f : 0.6f);
                 
                 takeBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
                 skipBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
@@ -321,6 +322,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             boolean isAllScheduled = "SCHEDULED".equals(status);
             boolean isAllTaken = "TAKEN".equals(status);
             boolean isAllSkipped = "SKIPPED".equals(status);
+            
+            boolean anyScheduled = false;
+            for (DoseInstanceEntity d : group.doses) {
+                if ("SCHEDULED".equals(d.getStatus())) {
+                    anyScheduled = true;
+                    break;
+                }
+            }
 
             takeAllBtn.setVisibility(isAllScheduled ? View.VISIBLE : View.GONE);
             skipAllBtn.setVisibility(isAllScheduled ? View.VISIBLE : View.GONE);
@@ -333,8 +342,8 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 else untakeAllBtn.setText(R.string.button_reset_all);
             }
             
-            doneIcon.setVisibility(isAllScheduled ? View.GONE : View.VISIBLE);
-            itemView.setAlpha(isAllScheduled ? 1.0f : 0.6f);
+            doneIcon.setVisibility(anyScheduled ? View.GONE : View.VISIBLE);
+            itemView.setAlpha(anyScheduled ? 1.0f : 0.6f);
 
             if (!isAllScheduled) {
                 statusSummaryText.setVisibility(View.VISIBLE);
