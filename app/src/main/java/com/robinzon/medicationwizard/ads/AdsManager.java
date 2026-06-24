@@ -235,7 +235,8 @@ public class AdsManager implements OnAdActionListener{
         int minSessions = rcm.getMinSessionsAppOpen();
         int minUsageMins = rcm.getMinAppTimeAppOpenMins();
 
-        return sessionCount >= minSessions && totalUsageMinutes >= (float) minUsageMins;
+        // Standard Hybrid Trigger: Show if minimum session count OR total usage time is met
+        return sessionCount >= minSessions || totalUsageMinutes >= (float) minUsageMins;
     }
 
     @Override
