@@ -273,6 +273,17 @@
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
     <string name="take_early_warning">この薬を飲むには少し早すぎます。それでも服用しますか？</string>
     <string name="take_late_warning">この薬はもっと早い時間に予定されていました。今服用したものとして記録しますか？</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">マジックを解除</string>
+    <string name="premium_rational_btn_watch">ビデオを見る</string>
+    <string name="premium_rational_theme_msg">短いビデオを見て、次の1時間アプリのテーマをカスタマイズしましょう。</string>
+    <string name="premium_rational_support_msg">短いビデオを見て、1時間プレミアムサポートにアクセスしましょう。</string>
+    <string name="premium_rational_backup_msg">短いビデオを見て、1時間クラウドバックアップと復元を有効にしましょう。</string>
+    <string name="premium_rational_bypass_msg">短いビデオを見て、次の通知で音量のバイパスを有効にしましょう。</string>
+    <string name="premium_rational_quiet_hours_msg">短いビデオを見て、明日の朝まで静音時間を有効にしましょう。</string>
+    <string name="feature_active_label">有効</string>
+    <string name="feature_unlocked_toast">%1$s が解除されました！</string>
+
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">確認</string>
     <string name="button_delete">削除</string>

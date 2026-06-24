@@ -142,11 +142,24 @@
                                         android:text="@string/settings_bypass_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
                                     <ImageView
-                                        android:layout_width="20dp"
-                                        android:layout_height="20dp"
+                                        android:id="@+id/crown_bypass"
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
                                         android:layout_marginStart="8dp"
                                         app:srcCompat="@drawable/ic_crown"
                                         android:contentDescription="@null" />
+                                    <TextView
+                                        android:id="@+id/badge_active_bypass"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:background="@drawable/bg_feature_active_badge"
+                                        android:text="@string/feature_active_label"
+                                        android:textColor="?attr/colorOnTertiaryContainer"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold"
+                                        android:visibility="gone"
+                                        tools:visibility="visible" />
                                 </LinearLayout>
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -198,12 +211,25 @@
                                     android:text="@string/settings_quiet_hours_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
                                 <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
+                                    android:id="@+id/crown_quiet_hours"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
                                     android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
                                     android:contentDescription="@null" />
-                            </LinearLayout>
+                                <TextView
+                                    android:id="@+id/badge_active_quiet_hours"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_feature_active_badge"
+                                    android:text="@string/feature_active_label"
+                                    android:textColor="?attr/colorOnTertiaryContainer"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone"
+                                    tools:visibility="visible" />
+                                </LinearLayout>
                             <TextView
                                 android:id="@+id/txt_quiet_hours_desc"
                                 android:layout_width="wrap_content"
@@ -317,11 +343,24 @@
                                     android:text="@string/cloud_backup_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
                                 <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
+                                    android:id="@+id/crown_backup"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
                                     android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
                                     android:contentDescription="@null" />
+                                <TextView
+                                    android:id="@+id/badge_active_backup"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_feature_active_badge"
+                                    android:text="@string/feature_active_label"
+                                    android:textColor="?attr/colorOnTertiaryContainer"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone"
+                                    tools:visibility="visible" />
                             </LinearLayout>
                             <TextView
                                 android:id="@+id/txt_account_email"
@@ -451,123 +490,6 @@
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
 
-            <!-- 12h Magic Pass Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_magic_pass"
-                style="?attr/materialCardViewElevatedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="20dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="?attr/colorTertiaryContainer"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                tools:visibility="visible">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:clipChildren="false"
-                    android:clipToPadding="false">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="20dp"
-                        android:clickable="false"
-                        android:focusable="false">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            app:srcCompat="@drawable/ic_magic_wand"
-                            app:tint="?attr/colorOnTertiaryContainer"
-                            android:clickable="false"
-                            android:focusable="false" />
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="16dp"
-                            android:orientation="vertical"
-                            android:clickable="false"
-                            android:focusable="false">
-                            <TextView
-                                android:id="@+id/txt_magic_pass_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/premium_pass_title"
-                                android:textAppearance="?attr/textAppearanceTitleMedium"
-                                android:textColor="?attr/colorOnTertiaryContainer"
-                                android:clickable="false"
-                                android:focusable="false" />
-                            <TextView
-                                android:id="@+id/txt_magic_pass_summary"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/premium_pass_summary"
-                                android:textAppearance="?attr/textAppearanceBodySmall"
-                                android:textColor="?attr/colorOnTertiaryContainer"
-                                android:clickable="false"
-                                android:focusable="false" />
-                        </LinearLayout>
-                        <ImageView
-                            android:id="@+id/img_magic_pass_status"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            app:srcCompat="@drawable/ic_done_pill"
-                            app:tint="?attr/colorOnTertiaryContainer"
-                            android:clickable="false"
-                            android:focusable="false" />
-                    </LinearLayout>
-
-                    <!-- Magical Progress System -->
-                    <FrameLayout
-                        android:id="@+id/container_magic_progress"
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:layout_marginHorizontal="24dp"
-                        android:layout_marginBottom="24dp"
-                        android:layout_marginTop="4dp"
-                        android:clipChildren="false"
-                        android:clipToPadding="false">
-
-                        <!-- The Track (Empty state) -->
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/bg_magic_progress_track" />
-
-                        <!-- The Magic (Progress Fill) -->
-                        <com.google.android.material.progressindicator.LinearProgressIndicator
-                            android:id="@+id/magic_pass_progress"
-                            android:layout_width="match_parent"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            app:trackThickness="12dp"
-                            app:trackCornerRadius="6dp"
-                            app:indicatorColor="?attr/colorPrimary"
-                            app:trackColor="@android:color/transparent"
-                            tools:progress="60" />
-
-                        <!-- The Sparkle (Tip Follower) -->
-                        <ImageView
-                            android:id="@+id/img_magic_sparkle"
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_sparkle"
-                            app:tint="?attr/colorPrimary"
-                            android:elevation="4dp" />
-                    </FrameLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
@@ -580,21 +502,47 @@
                     android:layout_height="wrap_content"
                     android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/txt_theme_title"
+                    <LinearLayout
+                        android:id="@+id/layout_theme_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/settings_theme_title"
-                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
+                        <TextView
+                            android:id="@+id/txt_theme_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_theme_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium" />
+                        <ImageView
+                            android:id="@+id/crown_theme"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            app:srcCompat="@drawable/ic_crown"
+                            android:contentDescription="@null" />
+                        <TextView
+                            android:id="@+id/badge_active_theme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_feature_active_badge"
+                            android:text="@string/feature_active_label"
+                            android:textColor="?attr/colorOnTertiaryContainer"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
                         android:id="@+id/toggle_group_theme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        app:layout_constraintTop_toBottomOf="@id/txt_theme_title"
+                        app:layout_constraintTop_toBottomOf="@id/layout_theme_header"
                         app:selectionRequired="true"
                         app:singleSelection="true">
 
@@ -636,42 +584,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_constraintGuide_percent="0.666" />
-
-                    <TextView
-                        android:id="@+id/badge_ad_light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:background="@drawable/bg_ad_badge"
-                        android:elevation="4dp"
-                        android:paddingHorizontal="4dp"
-                        android:text="AD"
-                        android:textColor="#000000"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="@id/guideline_theme_33"
-                        app:layout_constraintTop_toTopOf="@id/toggle_group_theme"
-                        tools:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/badge_ad_dark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="2dp"
-                        android:background="@drawable/bg_ad_badge"
-                        android:elevation="4dp"
-                        android:paddingHorizontal="4dp"
-                        android:text="AD"
-                        android:textColor="#000000"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="@id/guideline_theme_66"
-                        app:layout_constraintTop_toTopOf="@id/toggle_group_theme"
-                        tools:visibility="visible" />
 
                     <View
                         android:id="@+id/divider_theme"
@@ -729,20 +641,46 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
                     <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_backup_title" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
                     <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_clear_data_title" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
-                    <com.google.android.material.button.MaterialButton
+                    <LinearLayout
                         android:id="@+id/btn_support"
-                        style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="start|center_vertical"
-                        android:paddingStart="12dp"
-                        android:text="@string/settings_support_title"
-                        app:icon="@drawable/ic_crown"
-                        app:iconGravity="textEnd"
-                        app:iconPadding="8dp"
-                        app:iconSize="20dp"
-                        app:iconTint="@null"
-                        tools:ignore="RtlSymmetry" />
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_support_title"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <ImageView
+                            android:id="@+id/crown_support"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="8dp"
+                            app:srcCompat="@drawable/ic_crown"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:id="@+id/badge_active_support"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_feature_active_badge"
+                            android:text="@string/feature_active_label"
+                            android:textColor="?attr/colorOnTertiaryContainer"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -751,10 +689,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingVertical="24dp"
+                android:padding="32dp"
                 tools:text="Version 1.0"
                 android:textAppearance="?attr/textAppearanceBodySmall" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

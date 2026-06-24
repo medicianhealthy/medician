@@ -163,6 +163,9 @@ public class HistoryFragment extends MedicationWizardFragment {
     }
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).addInteractionScore(1.5f);
+        }
         instance.setStatus(status);
         if ("TAKEN".equals(status)) {
             instance.setActionTime(System.currentTimeMillis());

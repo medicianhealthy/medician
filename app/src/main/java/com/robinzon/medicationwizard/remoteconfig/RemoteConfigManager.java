@@ -202,6 +202,18 @@ public class RemoteConfigManager {
         return getBooleanValue(RemoteConfigKeysAndDefaults.AD_SHOULD_SHOW_APP_OPEN);
     }
 
+    public double getDoubleValue(final @NonNull String configKey) {
+        final Map<String, FirebaseRemoteConfigValue> remoteConfigValues = getFirebaseValues();
+        if (remoteConfigValues != null && remoteConfigValues.containsKey(configKey)) {
+            FirebaseRemoteConfigValue remoteValue = remoteConfigValues.get(configKey);
+            if (remoteValue != null && remoteValue.getSource() != FirebaseRemoteConfig.VALUE_SOURCE_STATIC) {
+                return remoteValue.asDouble();
+            }
+        }
+        Object defaultValue = RemoteConfigKeysAndDefaults.VALUES.get(configKey);
+        return defaultValue instanceof Double ? (Double) defaultValue : 0.0;
+    }
+
     // --- Semantic Getters ---
 
     public int getMinSessionsForInterstitial() {

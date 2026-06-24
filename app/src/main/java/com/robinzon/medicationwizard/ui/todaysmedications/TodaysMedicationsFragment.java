@@ -266,6 +266,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).addInteractionScore(1.5f);
+        }
         instance.setStatus(status);
         // Record the time of the action for the "Took at HH:mm" summary
         instance.setActionTime(System.currentTimeMillis());

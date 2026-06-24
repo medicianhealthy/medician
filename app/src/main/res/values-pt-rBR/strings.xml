@@ -273,6 +273,17 @@
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
     <string name="take_early_warning">Está um pouco cedo para esta dose. Tomar mesmo assim?</string>
     <string name="take_late_warning">Esta dose estava agendada para mais cedo. Marcar como tomada agora?</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">Desbloquear Magia</string>
+    <string name="premium_rational_btn_watch">Assistir Vídeo</string>
+    <string name="premium_rational_theme_msg">Assista a um vídeo curto para personalizar o tema do aplicativo pela próxima 1 hora.</string>
+    <string name="premium_rational_support_msg">Assista a um vídeo curto para acessar o Suporte Premium por 1 hora.</string>
+    <string name="premium_rational_backup_msg">Assista a um vídeo curto para ativar o Backup e Restauração em nuvem por 1 hora.</string>
+    <string name="premium_rational_bypass_msg">Assista a um vídeo curto para ativar o Volume Ignorado para o seu próximo lembrete.</string>
+    <string name="premium_rational_quiet_hours_msg">Assista a um vídeo curto para ativar o Horário de Silêncio até amanhã de manhã.</string>
+    <string name="feature_active_label">Ativo</string>
+    <string name="feature_unlocked_toast">%1$s desbloqueado!</string>
+
     <string name="button_cancel">Cancelar</string>
     <string name="button_confirm">Confirmar</string>
     <string name="button_delete">Excluir</string>

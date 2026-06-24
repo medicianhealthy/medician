@@ -56,8 +56,11 @@ public class ReminderReceiver extends BroadcastReceiver {
             com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Alarm fired for: " + medName);
             
             SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+            
+            // Check for Quiet Hours entitlement (Purchase or Pass)
+            boolean unlockedQuietHours = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.QUIET_HOURS);
             boolean quietHoursEnabled = sp.getBoolean(SettingsViewModel.KEY_QUIET_HOURS_ENABLED, false);
-            boolean inQuietHours = quietHoursEnabled && isInQuietHours(sp);
+            boolean inQuietHours = unlockedQuietHours && quietHoursEnabled && isInQuietHours(sp);
 
             showNotification(context, medName, amount, form, instanceId);
             
@@ -197,8 +200,18 @@ public class ReminderReceiver extends BroadcastReceiver {
     private void playAlertSound(Context context) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         String uriStr = sp.getString(SettingsViewModel.KEY_NOTIF_SOUND_URI, "");
-        boolean bypass = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
+        
+        // Check for Bypass Volume entitlement (Purchase or Pass)
+        boolean unlockedBypass = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.BYPASS_VOLUME);
+        boolean bypassPref = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
+        boolean useBypass = unlockedBypass && bypassPref;
+        
         int volumePercent = sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
+
+        // Consume any "Next Reminder" temporary passes
+        if (!com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(context)) {
+            com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
+        }
 
         Uri uri;
         if (uriStr.isEmpty()) {
@@ -217,7 +230,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                 MediaPlayer player = new MediaPlayer();
                 player.setDataSource(context, uri);
 
-                if (bypass) {
+                if (useBypass) {
                     player.setAudioAttributes(new AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
                             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)

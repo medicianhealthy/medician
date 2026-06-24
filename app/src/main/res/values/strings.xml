@@ -294,6 +294,36 @@
     <string name="alarm_permission_message">To ensure your medication reminders fire at the exact minute, please allow the app to schedule exact alarms.</string>
     <string name="take_early_warning">It\'s a bit early for this dose. Take anyway?</string>
     <string name="take_late_warning">This dose was scheduled for earlier. Marking as taken now?</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">Unlock Magic</string>
+    <string name="premium_rational_btn_watch">Watch Video</string>
+    <string name="premium_rational_theme_msg">Watch a short video to customize your app theme for the next 1 hour. Reverts to system after time is up.</string>
+    <string name="premium_rational_support_msg">Watch a short video to access Premium Support for 1 hour.</string>
+    <string name="premium_rational_backup_msg">Watch a short video to enable Cloud Backup and Restore for 1 hour.</string>
+    <string name="premium_rational_bypass_msg">Watch a short video to enable Bypass Volume for your next scheduled reminder only.</string>
+    <string name="premium_rational_vibration_msg">Watch a short video to enable custom vibration and flash alerts for your next reminder only.</string>
+    <string name="premium_rational_sticky_msg">Watch a short video to make your next reminder only "Sticky" until you take action.</string>
+    <string name="premium_rational_dose_window_msg">Watch a short video to customize your Early and Late take warning thresholds for 1 hour.</string>
+    <string name="premium_rational_quiet_hours_msg">Watch a short video to enable Quiet Hours until 08:00 tomorrow morning.</string>
+
+    <string name="settings_category_advanced">Precision Control</string>
+    <string name="settings_vibration_title">Vibration &amp; Flash</string>
+    <string name="settings_vibration_summary">Pulse the phone and blink lights when it\'s time.</string>
+    <string name="settings_vibration_pattern_title">Vibration Pattern</string>
+    <string name="settings_flash_pattern_title">Flash Pattern</string>
+
+    <string name="settings_sticky_title">Sticky Reminders</string>
+    <string name="settings_sticky_summary">Reminder stays active until you explicitly log the dose.</string>
+
+    <string name="settings_dose_window_title">Dose Window Tuning</string>
+    <string name="settings_dose_window_summary">Adjust how early or late you can take meds without a warning.</string>
+    <string name="settings_early_threshold_title">Early Take Warning</string>
+    <string name="settings_late_threshold_title">Late Take Warning</string>
+    <string name="settings_threshold_format">%1$d minutes</string>
+
+    <string name="feature_active_label">Active</string>
+    <string name="feature_unlocked_toast">%1$s unlocked!</string>
+
     <string name="button_cancel">Cancel</string>
     <string name="button_confirm">Confirm</string>
     <string name="button_delete">Delete</string>

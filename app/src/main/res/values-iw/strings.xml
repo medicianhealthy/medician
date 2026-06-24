@@ -272,6 +272,36 @@
     <string name="alarm_permission_message">כדי להבטיח שתזכורות התרופות שלך יופעלו בדקה המדויקת, אנא אפשר לאפליקציה לתזמן התראות מדויקות.</string>
     <string name="take_early_warning">זה קצת מוקדם למנה זו. לקחת בכל זאת?</string>
     <string name="take_late_warning">מנה זו תוכננה למועד מוקדם יותר. לסמן כנלקחה עכשיו?</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">פתיחת קסם</string>
+    <string name="premium_rational_btn_watch">צפייה בסרטון</string>
+    <string name="premium_rational_theme_msg">צפה בסרטון קצר כדי לעצב את ערכת הנושא של האפליקציה לשעה הקרובה. יחזור לברירת המחדל של המערכת לאחר סיום הזמן.</string>
+    <string name="premium_rational_support_msg">צפה בסרטון קצר כדי לקבל גישה לתמיכה מובחרת לשעה הקרובה.</string>
+    <string name="premium_rational_backup_msg">צפה בסרטון קצר כדי לאפשר גיבוי ושחזור בענן לשעה הקרובה.</string>
+    <string name="premium_rational_bypass_msg">צפה בסרטון קצר כדי לאפשר עקיפת עוצמת קול עבור התזכורת הבאה שלך בלבד.</string>
+    <string name="premium_rational_vibration_msg">צפה בסרטון קצר כדי לאפשר רטט והתראות פלאש מותאמות אישית עבור התזכורת הבאה שלך בלבד.</string>
+    <string name="premium_rational_sticky_msg">צפה בסרטון קצר כדי להפוך את התזכורת הבאה שלך בלבד ל"דביקה" עד שתבצע פעולה.</string>
+    <string name="premium_rational_dose_window_msg">צפה בסרטון קצר כדי להתאים אישית את ספי אזהרת הלקיחה המוקדמת והמאוחרת שלך למשך שעה אחת.</string>
+    <string name="premium_rational_quiet_hours_msg">צפה בסרטון קצר כדי לאפשר שעות שקט עד 08:00 מחר בבוקר.</string>
+
+    <string name="settings_category_advanced">שליטה מתקדמת</string>
+    <string name="settings_vibration_title">רטט ופלאש</string>
+    <string name="settings_vibration_summary">הרטט את הטלפון והבהוב אורות כשיגיע הזמן.</string>
+    <string name="settings_vibration_pattern_title">תבנית רטט</string>
+    <string name="settings_flash_pattern_title">תבנית פלאש</string>
+
+    <string name="settings_sticky_title">תזכורות דביקות</string>
+    <string name="settings_sticky_summary">התזכורת נשארת פעילה עד שתתעד במפורש את המנה.</string>
+
+    <string name="settings_dose_window_title">כיוונון חלון המנה</string>
+    <string name="settings_dose_window_summary">התאם כמה מוקדם או מאוחר ניתן לקחת תרופות ללא אזהרה.</string>
+    <string name="settings_early_threshold_title">אזהרת לקיחה מוקדמת</string>
+    <string name="settings_late_threshold_title">אזהרת לקיחה מאוחרת</string>
+    <string name="settings_threshold_format">%1$d דקות</string>
+
+    <string name="feature_active_label">פעיל</string>
+    <string name="feature_unlocked_toast">%1$s נפתח!</string>
+
     <string name="button_cancel">ביטול</string>
     <string name="button_confirm">אישור</string>
     <string name="button_delete">מחיקה</string>

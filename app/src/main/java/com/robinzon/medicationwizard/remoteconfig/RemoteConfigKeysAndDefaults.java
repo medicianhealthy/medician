@@ -25,13 +25,14 @@ public class RemoteConfigKeysAndDefaults {
             Map.entry(AD_INTERSTITIAL_COOL_DOWN_SECONDS, 60),
             Map.entry(MIN_SESSIONS_INTERSTITIAL, 2),
             Map.entry(MIN_SESSIONS_APP_OPEN, 3),
-            Map.entry(MIN_APP_TIME_INTERSTITIAL_MINS, 2),
+            Map.entry(MIN_APP_TIME_INTERSTITIAL_MINS, 1),
             Map.entry(MIN_APP_TIME_APP_OPEN_MINS, 2),
-            Map.entry(MIN_APP_TIME_BANNER_MINS, 2),
+            Map.entry(MIN_APP_TIME_BANNER_MINS, 1),
             Map.entry(MAGIC_PASS_DURATION_HOURS, 8),
             Map.entry(HISTORY_RETENTION_DAYS, 30),
             Map.entry(EARLY_TAKE_THRESHOLD_MINS, 60),
             Map.entry(LATE_TAKE_THRESHOLD_MINS, 180),
-            Map.entry(ACTIONS_PER_INTERSTITIAL, 3)
+            Map.entry(ACTIONS_PER_INTERSTITIAL, 3),
+            Map.entry("interstitial_score_threshold", 4.0)
     );
 }

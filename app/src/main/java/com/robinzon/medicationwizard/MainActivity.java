@@ -210,6 +210,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return adsManager;
     }
 
+    public void addInteractionScore(float score) {
+        if (com.robinzon.medicationwizard.utils.Statisticator.addInteractionScoreAndCheck(this, score)) {
+            // Threshold met, trigger interstitial show
+            adsManager.showInterstitialAd();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

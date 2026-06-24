@@ -102,7 +102,14 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
         builder.append("Session Count: ").append(com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(requireContext())).append("\n");
         builder.append("Actions Counter: ").append(com.robinzon.medicationwizard.utils.Statisticator.getActionsForInterstitialCount(requireContext())).append("\n");
         builder.append("Total Usage: ").append(String.format(locale, "%.2fm", com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(requireContext()))).append("\n");
-        builder.append("Usage since last FSA: ").append(String.format(locale, "%.2fm", com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(requireContext())));
+        builder.append("Usage since last FSA: ").append(String.format(locale, "%.2fm", com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(requireContext()))).append("\n\n");
+
+        builder.append("--- Feature Passes (Active?) ---\n");
+        builder.append("Theme: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.THEME)).append("\n");
+        builder.append("Support: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.SUPPORT)).append("\n");
+        builder.append("Backup: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)).append("\n");
+        builder.append("Quiet Hours: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.QUIET_HOURS)).append("\n");
+        builder.append("Bypass Vol: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BYPASS_VOLUME));
 
         textView.setText(builder.toString());
     }

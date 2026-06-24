@@ -32,6 +32,8 @@ public class SettingsViewModel extends AndroidViewModel {
     public static final String KEY_SNOOZE_DURATION_MINS = "snooze_duration_mins";
     public static final String KEY_MAX_SNOOZES = "max_snoozes";
     public static final String KEY_APP_LANGUAGE = "app_language";
+    public static final String KEY_VIBRATION_ENABLED = "vibration_enabled";
+    public static final String KEY_STICKY_NOTIF_ENABLED = "sticky_notif_enabled";
 
     // Theme Constants
     public static final int THEME_SYSTEM = 0;
@@ -48,37 +50,62 @@ public class SettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mSnoozeDuration = new MutableLiveData<>();
     private final MutableLiveData<Integer> mMaxSnoozes = new MutableLiveData<>();
     private final MutableLiveData<String> mLanguageCode = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mVibration = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mStickyNotif = new MutableLiveData<>();
 
     /**
      * Constructs the ViewModel and loads current preferences from disk.
      */
     public SettingsViewModel(@NonNull Application application) {
         super(application);
-        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(application);
+        refreshSettings();
+    }
+
+    /**
+     * Re-scans all preferences to ensure the UI is in sync with feature pass consumption.
+     */
+    public void refreshSettings() {
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(getApplication());
         
         int savedTheme = sp.getInt(KEY_APP_THEME, THEME_SYSTEM);
         
-        // Auto-reversion: If the theme is restricted but the user is no longer premium, revert to System.
-        if (savedTheme != THEME_SYSTEM && !com.robinzon.medicationwizard.AppConfig.isPremium(application)) {
-            savedTheme = THEME_SYSTEM;
-            sp.setInt(KEY_APP_THEME, THEME_SYSTEM);
-            // Note: We don't call applyTheme here to avoid configuration change loops during init.
+        // Entitlement Enforcement: Revert restricted features if pass expired
+        if (!com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(getApplication())) {
+            // 1. Theme Check
+            if (savedTheme != THEME_SYSTEM && !com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.THEME)) {
+                savedTheme = THEME_SYSTEM;
+                sp.setInt(KEY_APP_THEME, THEME_SYSTEM);
+                applyTheme(THEME_SYSTEM);
+            }
+            
+            // 2. Volume Check
+            if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.BYPASS_VOLUME)) {
+                sp.setBoolean(KEY_BYPASS_SYSTEM_VOLUME, false);
+            }
+            
+            // 3. Precision Checks
+            if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.VIBRATION)) {
+                sp.setBoolean(KEY_VIBRATION_ENABLED, false);
+            }
+            if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.STICKY_NOTIF)) {
+                sp.setBoolean(KEY_STICKY_NOTIF_ENABLED, false);
+            }
         }
 
         mTheme.setValue(savedTheme);
+        mVibration.setValue(sp.getBoolean(KEY_VIBRATION_ENABLED, false));
+        mStickyNotif.setValue(sp.getBoolean(KEY_STICKY_NOTIF_ENABLED, false));
+        mBypassVolume.setValue(sp.getBoolean(KEY_BYPASS_SYSTEM_VOLUME, false));
 
         String start = sp.getString(KEY_QUIET_HOURS_START, "23:00");
         String end = sp.getString(KEY_QUIET_HOURS_END, "07:00");
         mQuietHoursRange.setValue(start + " - " + end);
 
-        mBypassVolume.setValue(sp.getBoolean(KEY_BYPASS_SYSTEM_VOLUME, false));
         mNotifVolume.setValue(sp.getInt(KEY_NOTIF_VOLUME, 70));
         mSoundName.setValue(sp.getString(KEY_NOTIF_SOUND_NAME, "Default"));
         mSoundUri.setValue(sp.getString(KEY_NOTIF_SOUND_URI, ""));
-        
         mSnoozeDuration.setValue(sp.getInt(KEY_SNOOZE_DURATION_MINS, 10));
         mMaxSnoozes.setValue(sp.getInt(KEY_MAX_SNOOZES, 3));
-        
         mLanguageCode.setValue(sp.getString(KEY_APP_LANGUAGE, "en"));
     }
 
@@ -91,6 +118,18 @@ public class SettingsViewModel extends AndroidViewModel {
     public LiveData<Integer> getSnoozeDuration() { return mSnoozeDuration; }
     public LiveData<Integer> getMaxSnoozes() { return mMaxSnoozes; }
     public LiveData<String> getLanguageCode() { return mLanguageCode; }
+    public LiveData<Boolean> getVibration() { return mVibration; }
+    public LiveData<Boolean> getStickyNotif() { return mStickyNotif; }
+
+    public void setVibration(boolean enabled) {
+        mVibration.setValue(enabled);
+        SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_VIBRATION_ENABLED, enabled);
+    }
+
+    public void setStickyNotif(boolean enabled) {
+        mStickyNotif.setValue(enabled);
+        SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_STICKY_NOTIF_ENABLED, enabled);
+    }
 
     public void setLanguage(String langCode) {
         if (langCode.equals(mLanguageCode.getValue())) return;
