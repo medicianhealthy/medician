@@ -276,11 +276,26 @@
     <!-- Feature Specific Passes -->
     <string name="premium_rational_title">Desbloquear Magia</string>
     <string name="premium_rational_btn_watch">Ver Video</string>
-    <string name="premium_rational_theme_msg">Mira un video corto para personalizar el tema de la aplicación durante la próxima 1 hora.</string>
+    <string name="premium_rational_theme_msg">Mira un video corto para personalizar el tema de la aplicación durante la próxima 1 hora. Se restablece al sistema después de que el tiempo se agote.</string>
     <string name="premium_rational_support_msg">Mira un video corto para acceder al Soporte Premium por 1 hora.</string>
     <string name="premium_rational_backup_msg">Mira un video corto para habilitar el Respaldo y Restauración en la nube por 1 hora.</string>
-    <string name="premium_rational_bypass_msg">Mira un video corto para habilitar el Volumen Ignorado para tu próximo recordatorio.</string>
-    <string name="premium_rational_quiet_hours_msg">Mira un video corto para habilitar las Horas de Silencio hasta mañana por la mañana.</string>
+    <string name="premium_rational_bypass_msg">Mira un video corto para habilitar el Volumen Ignorado solo para tu próximo recordatorio programado.</string>
+    <string name="premium_rational_vibration_msg">Mira un video corto para habilitar la vibración personalizada y alertas de flash solo para tu próximo recordatorio.</string>
+    <string name="premium_rational_sticky_msg">Mira un video corto para hacer que tu próximo recordatorio sea "Sticky" hasta que tomes una acción.</string>
+    <string name="premium_rational_dose_window_msg">Mira un video corto para personalizar tus límites de aviso de toma Temprana y Tardía por 1 hora.</string>
+    <string name="premium_rational_quiet_hours_msg">Mira un video corto para habilitar las Horas de Silencio hasta las 08:00 de mañana por la mañana.</string>
+    <string name="settings_category_advanced">Control de Precisión</string>
+    <string name="settings_vibration_title">Vibración y Flash</string>
+    <string name="settings_vibration_summary">Pulsa el teléfono y parpadea luces cuando sea el momento.</string>
+    <string name="settings_vibration_pattern_title">Patrón de Vibración</string>
+    <string name="settings_flash_pattern_title">Patrón de Flash</string>
+    <string name="settings_sticky_title">Recordatorios Persistentes</string>
+    <string name="settings_sticky_summary">El recordatorio permanece activo hasta que registres explícitamente la dosis.</string>
+    <string name="settings_dose_window_title">Ajuste de Ventana de Dosis</string>
+    <string name="settings_dose_window_summary">Ajusta qué tan temprano o tarde puedes tomar las medicinas sin un aviso.</string>
+    <string name="settings_early_threshold_title">Aviso de Toma Temprana</string>
+    <string name="settings_late_threshold_title">Aviso de Toma Tardía</string>
+    <string name="settings_threshold_format">%1$d minutos</string>
     <string name="feature_active_label">Activo</string>
     <string name="feature_unlocked_toast">¡%1$s desbloqueado!</string>
 

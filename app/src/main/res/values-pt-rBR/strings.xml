@@ -276,11 +276,26 @@
     <!-- Feature Specific Passes -->
     <string name="premium_rational_title">Desbloquear Magia</string>
     <string name="premium_rational_btn_watch">Assistir Vídeo</string>
-    <string name="premium_rational_theme_msg">Assista a um vídeo curto para personalizar o tema do aplicativo pela próxima 1 hora.</string>
+    <string name="premium_rational_theme_msg">Assista a um vídeo curto para personalizar o tema do aplicativo pela próxima 1 hora. Volta ao padrão após o tempo acabar.</string>
     <string name="premium_rational_support_msg">Assista a um vídeo curto para acessar o Suporte Premium por 1 hora.</string>
     <string name="premium_rational_backup_msg">Assista a um vídeo curto para ativar o Backup e Restauração em nuvem por 1 hora.</string>
-    <string name="premium_rational_bypass_msg">Assista a um vídeo curto para ativar o Volume Ignorado para o seu próximo lembrete.</string>
-    <string name="premium_rational_quiet_hours_msg">Assista a um vídeo curto para ativar o Horário de Silêncio até amanhã de manhã.</string>
+    <string name="premium_rational_bypass_msg">Assista a um vídeo curto para ativar o Volume Ignorado apenas para o seu próximo lembrete agendado.</string>
+    <string name="premium_rational_vibration_msg">Assista a um vídeo curto para ativar vibração personalizada e alertas de flash apenas para o seu próximo lembrete.</string>
+    <string name="premium_rational_sticky_msg">Assista a um vídeo curto para tornar o seu próximo lembrete "Sticky" até que você tome uma ação.</string>
+    <string name="premium_rational_dose_window_msg">Assista a um vídeo curto para personalizar seus limites de aviso de tomada Antecipada e Atrasada por 1 hora.</string>
+    <string name="premium_rational_quiet_hours_msg">Assista a um vídeo curto para ativar as Horas de Silêncio até as 08:00 de amanhã de manhã.</string>
+    <string name="settings_category_advanced">Controle de Precisão</string>
+    <string name="settings_vibration_title">Vibração e Flash</string>
+    <string name="settings_vibration_summary">Vibrar o celular e piscar luzes quando chegar a hora.</string>
+    <string name="settings_vibration_pattern_title">Padrão de Vibração</string>
+    <string name="settings_flash_pattern_title">Padrão de Flash</string>
+    <string name="settings_sticky_title">Lembretes Persistentes</string>
+    <string name="settings_sticky_summary">O lembrete continua ativo até você registrar explicitamente a dose.</string>
+    <string name="settings_dose_window_title">Ajuste da Janela de Dose</string>
+    <string name="settings_dose_window_summary">Ajuste quanto tempo antes ou depois você pode tomar os remédios sem aviso.</string>
+    <string name="settings_early_threshold_title">Aviso de Tomada Antecipada</string>
+    <string name="settings_late_threshold_title">Aviso de Tomada Atrasada</string>
+    <string name="settings_threshold_format">%1$d minutos</string>
     <string name="feature_active_label">Ativo</string>
     <string name="feature_unlocked_toast">%1$s desbloqueado!</string>
 

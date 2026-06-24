@@ -276,11 +276,26 @@
     <!-- Feature Specific Passes -->
     <string name="premium_rational_title">Magie freischalten</string>
     <string name="premium_rational_btn_watch">Video ansehen</string>
-    <string name="premium_rational_theme_msg">Sieh dir ein kurzes Video an, um dein App-Design für die nächste Stunde anzupassen.</string>
-    <string name="premium_rational_support_msg">Sieh dir ein kurzes Video an, um 1 Stunde lang auf den Premium-Support zuzugreifen.</string>
-    <string name="premium_rational_backup_msg">Sieh dir ein kurzes Video an, um die Cloud-Sicherung und -Wiederherstellung für 1 Stunde zu aktivieren.</string>
-    <string name="premium_rational_bypass_msg">Sieh dir ein kurzes Video an, um die Lautstärkeumgehung für deine nächste Erinnerung zu aktivieren.</string>
-    <string name="premium_rational_quiet_hours_msg">Sieh dir ein kurzes Video an, um die Ruhezeiten bis morgen früh zu aktivieren.</string>
+    <string name="premium_rational_theme_msg">Schau dir ein kurzes Video an, um dein App-Design für die nächste Stunde anzupassen. Kehrt nach Ablauf der Zeit zum Standard zurück.</string>
+    <string name="premium_rational_support_msg">Schau dir ein kurzes Video an, um 1 Stunde lang auf den Premium-Support zuzugreifen.</string>
+    <string name="premium_rational_backup_msg">Schau dir ein kurzes Video an, um die Cloud-Sicherung und -Wiederherstellung für 1 Stunde zu aktivieren.</string>
+    <string name="premium_rational_bypass_msg">Schau dir ein kurzes Video an, um die Lautstärkeumgehung nur für deine nächste geplante Erinnerung zu aktivieren.</string>
+    <string name="premium_rational_vibration_msg">Schau dir ein kurzes Video an, um benutzerdefinierte Vibrations- und Flash-Alarme nur für deine nächste Erinnerung zu aktivieren.</string>
+    <string name="premium_rational_sticky_msg">Schau dir ein kurzes Video an, um deine nächste Erinnerung "Sticky" zu machen, bis du eine Aktion ausführst.</string>
+    <string name="premium_rational_dose_window_msg">Schau dir ein kurzes Video an, um deine Warnschwellen für die frühzeitige und späte Einnahme für 1 Stunde anzupassen.</string>
+    <string name="premium_rational_quiet_hours_msg">Schau dir ein kurzes Video an, um die Ruhezeiten bis morgen früh um 08:00 Uhr zu aktivieren.</string>
+    <string name="settings_category_advanced">Präzisionssteuerung</string>
+    <string name="settings_vibration_title">Vibration \u0026 Flash</string>
+    <string name="settings_vibration_summary">Das Telefon pulsieren lassen und Lichter blinken lassen, wenn es Zeit ist.</string>
+    <string name="settings_vibration_pattern_title">Vibrationsmuster</string>
+    <string name="settings_flash_pattern_title">Flash-Muster</string>
+    <string name="settings_sticky_title">Persistente Erinnerungen</string>
+    <string name="settings_sticky_summary">Die Erinnerung bleibt aktiv, bis du die Dosis explizit protokollierst.</string>
+    <string name="settings_dose_window_title">Dosis-Fenster-Tuning</string>
+    <string name="settings_dose_window_summary">Passen Sie an, wie früh oder spät Sie Medikamente ohne Warnung einnehmen können.</string>
+    <string name="settings_early_threshold_title">Warnung bei früher Einnahme</string>
+    <string name="settings_late_threshold_title">Warnung bei später Einnahme</string>
+    <string name="settings_threshold_format">%1$d Minuten</string>
     <string name="feature_active_label">Aktiv</string>
     <string name="feature_unlocked_toast">%1$s freigeschaltet!</string>
 

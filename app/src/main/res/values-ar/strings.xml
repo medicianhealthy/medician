@@ -264,22 +264,29 @@
     <!-- Feature Specific Passes -->
     <string name="premium_rational_title">فتح السحر</string>
     <string name="premium_rational_btn_watch">مشاهدة الفيديو</string>
-    <string name="premium_rational_theme_msg">شاهد فيديو قصير لتخصيص سمة التطبيق للساعة القادمة.</string>
+    <string name="premium_rational_theme_msg">شاهد فيديو قصير لتخصيص سمة التطبيق للساعة القادمة. ستعود للافتراضي بعد انتهاء الوقت.</string>
     <string name="premium_rational_support_msg">شاهد فيديو قصير للوصول إلى الدعم المميز لمدة ساعة واحدة.</string>
     <string name="premium_rational_backup_msg">شاهد فيديو قصير لتمكين النسخ الاحتياطي والاستعادة السحابية لمدة ساعة واحدة.</string>
-    <string name="premium_rational_bypass_msg">شاهد فيديو قصير لتمكين تجاوز مستوى الصوت للتذكير القادم.</string>
-    <string name="premium_rational_vibration_msg">شاهد فيديو قصير لتمكين تنبيهات الاهتزاز والفلاش المخصصة للتذكير القادم.</string>
-    <string name="premium_rational_sticky_msg">شاهد فيديو قصير لجعل تذكيرك القادم "لزجًا" حتى تتخذ إجراءً.</string>
-    <string name="premium_rational_insights_msg">شاهد فيديو قصير لفتح التقارير الصحية المتقدمة وتصدير السجل لمدة ساعة واحدة.</string>
-    <string name="premium_rational_quiet_hours_msg">شاهد فيديو قصير لتمكين ساعات الهدوء حتى صباح الغد.</string>
+    <string name="premium_rational_bypass_msg">شاهد فيديو قصير لتمكين تجاوز مستوى الصوت للتذكير المجدول القادم فقط.</string>
+    <string name="premium_rational_vibration_msg">شاهد فيديو قصير لتمكين تنبيهات الاهتزاز والفلاش المخصصة للتذكير القادم فقط.</string>
+    <string name="premium_rational_sticky_msg">شاهد فيديو قصير لجعل تذكيرك القادم فقط "لزجًا" حتى تتخذ إجراءً.</string>
+    <string name="premium_rational_dose_window_msg">شاهد فيديو قصير لتخصيص حدود تنبيه تناول الدواء المبكر والمتأخر لمدة ساعة واحدة.</string>
+    <string name="premium_rational_quiet_hours_msg">شاهد فيديو قصير لتمكين ساعات الهدوء حتى الساعة 08:00 صباح الغد.</string>
 
     <string name="settings_category_advanced">التحكم الدقيق</string>
     <string name="settings_vibration_title">الاهتزاز والفلاش</string>
     <string name="settings_vibration_summary">نبض الهاتف وميض الأضواء عندما يحين الوقت.</string>
-    <string name="settings_sticky_title">تذكيرات لزجة</string>
+    <string name="settings_vibration_pattern_title">نمط الاهتزاز</string>
+    <string name="settings_flash_pattern_title">نمط الفلاش</string>
+
+    <string name="settings_sticky_title">التذكيرات اللزجة</string>
     <string name="settings_sticky_summary">يبقى التذكير نشطًا حتى تقوم بتسجيل الجرعة صراحةً.</string>
-    <string name="settings_insights_title">التقارير الصحية</string>
-    <string name="settings_insights_summary">تحليل الامتثال وتصدير البيانات لطبيبك.</string>
+
+    <string name="settings_dose_window_title">ضبط نافذة الجرعة</string>
+    <string name="settings_dose_window_summary">اضبط الوقت المسموح به قبل أو بعد الموعد دون ظهور تنبيه.</string>
+    <string name="settings_early_threshold_title">تنبيه التناول المبكر</string>
+    <string name="settings_late_threshold_title">تنبيه التناول المتأخر</string>
+    <string name="settings_threshold_format">%1$d دقيقة</string>
 
     <string name="feature_active_label">نشط</string>
     <string name="feature_unlocked_toast">تم فتح %1$s!</string>

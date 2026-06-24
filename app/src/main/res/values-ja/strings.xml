@@ -276,11 +276,26 @@
     <!-- Feature Specific Passes -->
     <string name="premium_rational_title">マジックを解除</string>
     <string name="premium_rational_btn_watch">ビデオを見る</string>
-    <string name="premium_rational_theme_msg">短いビデオを見て、次の1時間アプリのテーマをカスタマイズしましょう。</string>
+    <string name="premium_rational_theme_msg">短いビデオを見て、次の1時間アプリのテーマをカスタマイズしましょう。時間が経過するとシステム設定に戻ります。</string>
     <string name="premium_rational_support_msg">短いビデオを見て、1時間プレミアムサポートにアクセスしましょう。</string>
     <string name="premium_rational_backup_msg">短いビデオを見て、1時間クラウドバックアップと復元を有効にしましょう。</string>
-    <string name="premium_rational_bypass_msg">短いビデオを見て、次の通知で音量のバイパスを有効にしましょう。</string>
-    <string name="premium_rational_quiet_hours_msg">短いビデオを見て、明日の朝まで静音時間を有効にしましょう。</string>
+    <string name="premium_rational_bypass_msg">短いビデオを見て、次回の服用リマインダー限定で音量のバイパスを有効にしましょう。</string>
+    <string name="premium_rational_vibration_msg">短いビデオを見て、次回のリマインダー限定でカスタムバイブレーションとフラッシュアラートを有効にしましょう。</string>
+    <string name="premium_rational_sticky_msg">短いビデオを見て、アクションを起こすまで次回のリマインダーを固定通知（Sticky）にしましょう。</string>
+    <string name="premium_rational_dose_window_msg">短いビデオを見て、早め・遅めの服用警告しきい値を1時間カスタマイズしましょう。</string>
+    <string name="premium_rational_quiet_hours_msg">短いビデオを見て、明日の朝08:00までおやすみ時間を有効にしましょう。</string>
+    <string name="settings_category_advanced">精密コントロール</string>
+    <string name="settings_vibration_title">バイブレーションとフラッシュ</string>
+    <string name="settings_vibration_summary">時間になったらバイブレーションとライトの点滅でお知らせします。</string>
+    <string name="settings_vibration_pattern_title">バイブレーションパターン</string>
+    <string name="settings_flash_pattern_title">フラッシュパターン</string>
+    <string name="settings_sticky_title">固定通知リマインダー</string>
+    <string name="settings_sticky_summary">服用を記録するまで通知が残り続けます。</string>
+    <string name="settings_dose_window_title">服用ウィンドウ調整</string>
+    <string name="settings_dose_window_summary">警告なしで服用できる許容時間を調整します。</string>
+    <string name="settings_early_threshold_title">早めの服用警告</string>
+    <string name="settings_late_threshold_title">遅めの服用警告</string>
+    <string name="settings_threshold_format">%1$d 分</string>
     <string name="feature_active_label">有効</string>
     <string name="feature_unlocked_toast">%1$s が解除されました！</string>
 
