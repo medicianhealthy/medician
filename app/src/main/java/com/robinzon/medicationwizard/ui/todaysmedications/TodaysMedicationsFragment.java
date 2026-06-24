@@ -183,11 +183,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             @Override
             public void onTake(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "TAKEN");
+                triggerAdIfEligible();
             }
 
             @Override
             public void onSkip(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SKIPPED");
+                triggerAdIfEligible();
             }
 
             @Override
@@ -198,21 +200,25 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             @Override
             public void onUntake(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SCHEDULED");
+                triggerAdIfEligible();
             }
 
             @Override
             public void onUnskip(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SCHEDULED");
+                triggerAdIfEligible();
             }
 
             @Override
             public void onTakeGroup(List<DoseInstanceEntity> doses, int position) {
                 for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "TAKEN");
+                triggerAdForGroupAction(doses.size());
             }
 
             @Override
             public void onSkipGroup(List<DoseInstanceEntity> doses, int position) {
                 for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "SKIPPED");
+                triggerAdForGroupAction(doses.size());
             }
 
             @Override
@@ -223,11 +229,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             @Override
             public void onUntakeGroup(List<DoseInstanceEntity> doses, int position) {
                 for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "SCHEDULED");
+                triggerAdForGroupAction(doses.size());
             }
 
             @Override
             public void onUnskipGroup(List<DoseInstanceEntity> doses, int position) {
                 for (DoseInstanceEntity d : doses) updateInstanceStatus(d, "SCHEDULED");
+                triggerAdForGroupAction(doses.size());
             }
         });
         
@@ -288,15 +296,31 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                     });
                 }).show();
         
-        // Monetization: Show interstitial ad after completing a task (Take/Skip)
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).getAdsManager().showInterstitialAd();
-            
-            // Satisfaction Check: Ask for review after logging a dose if user is happy
-            final android.app.Activity activity = getActivity();
+        // Satisfaction Check: Ask for review after logging a dose if user is happy
+        final android.app.Activity activity = getActivity();
+        if (activity != null) {
             new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
                 com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(activity);
             }, 1000L);
+        }
+    }
+
+    private void triggerAdIfEligible() {
+        if (getActivity() instanceof MainActivity) {
+            MainActivity main = (MainActivity) getActivity();
+            if (com.robinzon.medicationwizard.utils.Statisticator.incrementActionsAndCheckAdEligibility(requireContext())) {
+                main.getAdsManager().showInterstitialAdWithCooldownOnly();
+            }
+        }
+    }
+
+    private void triggerAdForGroupAction(int groupSize) {
+        if (getActivity() instanceof MainActivity) {
+            MainActivity main = (MainActivity) getActivity();
+            int threshold = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getActionsPerInterstitial();
+            if (groupSize >= threshold) {
+                main.getAdsManager().showInterstitialAdWithCooldownOnly();
+            }
         }
     }
 

@@ -33,7 +33,6 @@ import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
-import com.robinzon.medicationwizard.utils.Statisticator;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -259,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (null != getAdsManager()) {
             getAdsManager().onResume();
         }
-        Statisticator.onMoveToForeground(this);
         startAdCheckTimer();
     }
 
@@ -278,7 +276,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (null != getAdsManager()) {
             getAdsManager().onPause();
         }
-        Statisticator.onMoveToBackground(this);
         stopAdCheckTimer();
     }
 

@@ -94,10 +94,12 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
         builder.append("Magic Pass Duration: ").append(remoteConfigManager.getMagicPassDurationHours()).append("h\n");
         builder.append("History Retention: ").append(remoteConfigManager.getHistoryRetentionDays()).append("d\n");
         builder.append("Early Take: ").append(remoteConfigManager.getEarlyTakeThresholdMins()).append("m\n");
-        builder.append("Late Take: ").append(remoteConfigManager.getLateTakeThresholdMins()).append("m\n\n");
+        builder.append("Late Take: ").append(remoteConfigManager.getLateTakeThresholdMins()).append("m\n");
+        builder.append("Actions per Inter: ").append(remoteConfigManager.getActionsPerInterstitial()).append("\n\n");
 
         builder.append("--- Live Usage Statistics ---\n");
         builder.append("Session Count: ").append(com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(requireContext())).append("\n");
+        builder.append("Actions Counter: ").append(com.robinzon.medicationwizard.utils.Statisticator.getActionsForInterstitialCount(requireContext())).append("\n");
         builder.append("Total Usage: ").append(String.format(locale, "%.2fm", com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(requireContext()))).append("\n");
         builder.append("Usage since last FSA: ").append(String.format(locale, "%.2fm", com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(requireContext())));
 

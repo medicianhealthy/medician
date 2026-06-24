@@ -177,6 +177,18 @@ public class AdsManager implements OnAdActionListener{
         }
     }
 
+    /**
+     * Shows an interstitial ad bypassing the minimum session/usage barriers,
+     * but still strictly respecting the time-based cooldown.
+     */
+    public void showInterstitialAdWithCooldownOnly() {
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
+
+        if (null != mainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
+            mainInterstitial.show();
+        }
+    }
+
     private boolean shouldShowInterstitialBasedOnUsage() {
         final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
         final float usageMinutesForAds = com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(activity);

@@ -16,6 +16,7 @@ public class RemoteConfigKeysAndDefaults {
     public static final String HISTORY_RETENTION_DAYS = "history_retention_days";
     public static final String EARLY_TAKE_THRESHOLD_MINS = "early_take_threshold_mins";
     public static final String LATE_TAKE_THRESHOLD_MINS = "late_take_threshold_mins";
+    public static final String ACTIONS_PER_INTERSTITIAL = "actions_per_interstitial";
 
     public static final Map<String, Object> VALUES = Map.ofEntries(
             Map.entry(NUM_OF_MEDS_TO_SHOW_RV, 3),
@@ -24,10 +25,11 @@ public class RemoteConfigKeysAndDefaults {
             Map.entry(MIN_SESSIONS_INTERSTITIAL, 2),
             Map.entry(MIN_SESSIONS_APP_OPEN, 3),
             Map.entry(MIN_APP_TIME_INTERSTITIAL_MINS, 2),
-            Map.entry(MIN_APP_TIME_BANNER_MINS, 1),
+            Map.entry(MIN_APP_TIME_BANNER_MINS, 2),
             Map.entry(MAGIC_PASS_DURATION_HOURS, 8),
             Map.entry(HISTORY_RETENTION_DAYS, 30),
             Map.entry(EARLY_TAKE_THRESHOLD_MINS, 60),
-            Map.entry(LATE_TAKE_THRESHOLD_MINS, 180)
+            Map.entry(LATE_TAKE_THRESHOLD_MINS, 180),
+            Map.entry(ACTIONS_PER_INTERSTITIAL, 3)
     );
 }

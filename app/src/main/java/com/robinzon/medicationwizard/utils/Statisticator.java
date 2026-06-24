@@ -16,6 +16,7 @@ public class Statisticator {
     private static final String SPK_SESSION_TIME_MINUTES = "spk_session_time_minutes";
     private static final String SPK_USAGE_MINUTES_FOR_ADS = "spk_usage_minutes_for_ads";
     private static final String SPK_TOTAL_DOSES_LOGGED = "spk_total_doses_logged";
+    private static final String SPK_ACTIONS_FOR_INTERSTITIAL = "spk_actions_for_interstitial";
     
     /** Anchor for total usage calculation in the current foreground session. */
     private static long mStartUserActive;
@@ -75,6 +76,28 @@ public class Statisticator {
      */
     public static int getTotalDosesLogged(Context context) {
         return SharedPreferencesManager.getInstance(context).getInt(SPK_TOTAL_DOSES_LOGGED, 0);
+    }
+
+    public static int getActionsForInterstitialCount(Context context) {
+        return SharedPreferencesManager.getInstance(context).getInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0);
+    }
+
+    /**
+     * Increments the persistent action counter and checks if an interstitial should be triggered.
+     * Logic: Returns true every N actions (defined by Remote Config).
+     */
+    public static boolean incrementActionsAndCheckAdEligibility(Context context) {
+        SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
+        int currentActions = prefs.getInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0) + 1;
+        int threshold = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getActionsPerInterstitial();
+        
+        if (currentActions >= threshold) {
+            prefs.setInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0);
+            return true;
+        } else {
+            prefs.setInt(SPK_ACTIONS_FOR_INTERSTITIAL, currentActions);
+            return false;
+        }
     }
 
     /**

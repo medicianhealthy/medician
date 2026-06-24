@@ -220,6 +220,10 @@ public class RemoteConfigManager {
         return getIntValue(RemoteConfigKeysAndDefaults.MAGIC_PASS_DURATION_HOURS);
     }
 
+    public int getActionsPerInterstitial() {
+        return getIntValue(RemoteConfigKeysAndDefaults.ACTIONS_PER_INTERSTITIAL);
+    }
+
     public int getHistoryRetentionDays() {
         return getIntValue(RemoteConfigKeysAndDefaults.HISTORY_RETENTION_DAYS);
     }
