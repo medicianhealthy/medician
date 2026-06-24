@@ -11,6 +11,7 @@ public class RemoteConfigKeysAndDefaults {
     public static final String MIN_SESSIONS_INTERSTITIAL = "min_sessions_interstitial";
     public static final String MIN_SESSIONS_APP_OPEN = "min_sessions_app_open";
     public static final String MIN_APP_TIME_INTERSTITIAL_MINS = "min_app_time_interstitial_mins";
+    public static final String MIN_APP_TIME_APP_OPEN_MINS="min_app_app_open_mins";
     public static final String MIN_APP_TIME_BANNER_MINS = "min_app_time_banner_mins";
     public static final String MAGIC_PASS_DURATION_HOURS = "magic_pass_duration_hours";
     public static final String HISTORY_RETENTION_DAYS = "history_retention_days";
@@ -25,6 +26,7 @@ public class RemoteConfigKeysAndDefaults {
             Map.entry(MIN_SESSIONS_INTERSTITIAL, 2),
             Map.entry(MIN_SESSIONS_APP_OPEN, 3),
             Map.entry(MIN_APP_TIME_INTERSTITIAL_MINS, 2),
+            Map.entry(MIN_APP_TIME_APP_OPEN_MINS, 2),
             Map.entry(MIN_APP_TIME_BANNER_MINS, 2),
             Map.entry(MAGIC_PASS_DURATION_HOURS, 8),
             Map.entry(HISTORY_RETENTION_DAYS, 30),

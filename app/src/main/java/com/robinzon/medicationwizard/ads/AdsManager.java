@@ -218,13 +218,24 @@ public class AdsManager implements OnAdActionListener{
         if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
 
         if (null != appOpenAd && hasCoolDownForFullScreenNonUserInitiatedAd()) {
-            final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
-            final int minSessions = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getMinSessionsAppOpen();
-            
-            if (sessionCount >= minSessions) {
+            if (shouldShowAppOpenBasedOnUsage()) {
                 appOpenAd.show();
             }
         }
+    }
+
+    private boolean shouldShowAppOpenBasedOnUsage() {
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
+        
+        if (!rcm.shouldShowAppOpen()) return false;
+
+        final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
+        final float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(activity);
+        
+        int minSessions = rcm.getMinSessionsAppOpen();
+        int minUsageMins = rcm.getMinAppTimeAppOpenMins();
+
+        return sessionCount >= minSessions && totalUsageMinutes >= (float) minUsageMins;
     }
 
     @Override

@@ -89,6 +89,7 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
         builder.append("Int. Cooldown: ").append(remoteConfigManager.getAdInterstitialCoolDownSeconds()).append("s\n");
         builder.append("Min Sessions (Int): ").append(remoteConfigManager.getMinSessionsForInterstitial()).append("\n");
         builder.append("Min Sessions (AppOpen): ").append(remoteConfigManager.getMinSessionsAppOpen()).append("\n");
+        builder.append("Min Usage (AppOpen): ").append(remoteConfigManager.getMinAppTimeAppOpenMins()).append("m\n");
         builder.append("Min Usage (Int): ").append(remoteConfigManager.getMinAppTimeForInterstitialMins()).append("m\n");
         builder.append("Min Usage (Banner): ").append(remoteConfigManager.getMinAppTimeForBannerMins()).append("m\n");
         builder.append("Magic Pass Duration: ").append(remoteConfigManager.getMagicPassDurationHours()).append("h\n");

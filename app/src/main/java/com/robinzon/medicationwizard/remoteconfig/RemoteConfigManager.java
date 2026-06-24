@@ -198,6 +198,10 @@ public class RemoteConfigManager {
         return defaultValue != null ? defaultValue.toString() : "";
     }
 
+    public boolean shouldShowAppOpen() {
+        return getBooleanValue(RemoteConfigKeysAndDefaults.AD_SHOULD_SHOW_APP_OPEN);
+    }
+
     // --- Semantic Getters ---
 
     public int getMinSessionsForInterstitial() {
@@ -206,6 +210,10 @@ public class RemoteConfigManager {
 
     public int getMinSessionsAppOpen() {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_SESSIONS_APP_OPEN);
+    }
+
+    public int getMinAppTimeAppOpenMins() {
+        return getIntValue(RemoteConfigKeysAndDefaults.MIN_APP_TIME_APP_OPEN_MINS);
     }
 
     public int getMinAppTimeForInterstitialMins() {
@@ -238,10 +246,6 @@ public class RemoteConfigManager {
 
     public int getNumOfMedsToShowRv() {
         return getIntValue(RemoteConfigKeysAndDefaults.NUM_OF_MEDS_TO_SHOW_RV);
-    }
-
-    public boolean shouldShowAppOpen() {
-        return getBooleanValue(RemoteConfigKeysAndDefaults.AD_SHOULD_SHOW_APP_OPEN);
     }
 
     public int getAdInterstitialCoolDownSeconds() {
