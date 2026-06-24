@@ -2,6 +2,9 @@ package com.robinzon.medicationwizard.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
+
+import com.robinzon.medicationwizard.BuildConfig;
 
 /**
  * Utility class for tracking application usage statistics.
@@ -88,15 +91,22 @@ public class Statisticator {
      * Logic: Returns true every N actions (defined by Remote Config).
      */
     public static boolean incrementActionsAndCheckAdEligibility(Context context) {
+        if (context == null) return false;
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
         int currentActions = prefs.getInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0) + 1;
         int threshold = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getActionsPerInterstitial();
         
         if (currentActions >= threshold) {
             prefs.setInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0);
+            if (BuildConfig.DEBUG) {
+                Toast.makeText(context, "Action " + threshold + "/" + threshold + " reached, triggering ad", Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else {
             prefs.setInt(SPK_ACTIONS_FOR_INTERSTITIAL, currentActions);
+            if (BuildConfig.DEBUG) {
+                Toast.makeText(context, "Action " + currentActions + "/" + threshold + " reached", Toast.LENGTH_SHORT).show();
+            }
             return false;
         }
     }
@@ -106,6 +116,7 @@ public class Statisticator {
      * Main items add 1.5, sub-items add 1.0.
      */
     public static boolean addInteractionScoreAndCheck(Context context, float scoreToAdd) {
+        if (context == null) return false;
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
         float currentScore = prefs.getFloat(SPK_INTERSTITIAL_SCORE, 0.0f) + scoreToAdd;
         
@@ -113,10 +124,17 @@ public class Statisticator {
         if (threshold <= 0) threshold = 4.0; // Fallback
 
         if (currentScore >= threshold) {
-            prefs.setFloat(SPK_INTERSTITIAL_SCORE, (float) (currentScore - (float)threshold));
+            float remainder = (float) (currentScore - (float)threshold);
+            prefs.setFloat(SPK_INTERSTITIAL_SCORE, remainder);
+            if (BuildConfig.DEBUG && scoreToAdd > 0) {
+                Toast.makeText(context, "Added " + scoreToAdd + " points, reached " + threshold + ", total is " + remainder, Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else {
             prefs.setFloat(SPK_INTERSTITIAL_SCORE, currentScore);
+            if (BuildConfig.DEBUG && scoreToAdd > 0) {
+                Toast.makeText(context, "Added " + scoreToAdd + " points, total is " + currentScore, Toast.LENGTH_SHORT).show();
+            }
             return false;
         }
     }

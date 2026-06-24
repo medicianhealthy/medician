@@ -182,8 +182,10 @@ public class SettingsFragment extends MedicationWizardFragment {
                 return;
             }
             int theme = (checkedId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : (checkedId == R.id.btn_theme_dark) ? SettingsViewModel.THEME_DARK : SettingsViewModel.THEME_SYSTEM;
-            viewModel.setTheme(theme);
-            if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+            if (!java.util.Objects.equals(theme, viewModel.getTheme().getValue())) {
+                viewModel.setTheme(theme);
+                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+            }
         });
 
         binding.btnLanguage.setOnClickListener(v -> showLanguageDialog());
