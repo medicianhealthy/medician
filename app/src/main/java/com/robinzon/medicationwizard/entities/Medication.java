@@ -359,26 +359,47 @@ public class Medication implements Comparable<Medication> {
         }
     }
 
+    /** @return The unique identifier of the medication. */
     public String getId() { return id; }
+    /** @param id The unique identifier of the medication. */
     public void setId(String id) { this.id = id; }
+    /** @return The commercial display name. */
     public String getCommercialName() { return commercialName; }
+    /** @param commercialName The commercial display name. */
     public void setCommercialName(String commercialName) { this.commercialName = commercialName; }
+    /** @return The amount per dose. */
     public float getAmount() { return amount; }
+    /** @param amount The amount per dose. */
     public void setAmount(float amount) { this.amount = amount; }
+    /** @return The delivery form (e.g., Pill, Drops). */
     public EForm getForm() { return form; }
+    /** @param form The delivery form (e.g., Pill, Drops). */
     public void setForm(EForm form) { this.form = form; }
+    /** @return The strength value (e.g., 500). */
     public float getStrength() { return strength; }
+    /** @param strength The strength value (e.g., 500). */
     public void setStrength(float strength) { this.strength = strength; }
+    /** @return The medical condition being treated. */
     public String getMedicalCondition() { return medicalCondition; }
+    /** @param medicalCondition The medical condition being treated. */
     public void setMedicalCondition(String medicalCondition) { this.medicalCondition = medicalCondition; }
+    /** @return The list of daily timestamps. */
     public List<Long> getDailySchedule() { return dailySchedule; }
+    /** @param dailySchedule The list of daily timestamps. */
     public void setDailySchedule(List<Long> dailySchedule) { this.dailySchedule = dailySchedule; }
+    /** @return The measurement unit (e.g., mg, ml). */
     public EMeasurementUnit getMeasurementUnit() { return measurementUnit; }
+    /** @param measurementUnit The measurement unit (e.g., mg, ml). */
     public void setMeasurementUnit(EMeasurementUnit measurementUnit) { this.measurementUnit = measurementUnit; }
+    /** @return The count of remaining doses in the pack. */
     public int getAmountLeft() { return amountLeft; }
+    /** @param amountLeft The count of remaining doses in the pack. */
     public void setAmountLeft(int amountLeft) { this.amountLeft = amountLeft; }
+    /** @return Map of daily dose indices to times. */
     public SparseArray<SimpleDayTime> getTimesADay() { return timesADay; }
+    /** @return Instructions for taking (e.g., Before Food). */
     public EInstructions getInstruction() { return instruction; }
+    /** @param instruction Instructions for taking (e.g., Before Food). */
     public void setInstruction(EInstructions instruction) { this.instruction = instruction; }
 
     @Override

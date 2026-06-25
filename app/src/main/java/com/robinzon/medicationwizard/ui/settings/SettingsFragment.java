@@ -120,12 +120,16 @@ public class SettingsFragment extends MedicationWizardFragment {
         updateFeatureEntitlements();
     }
 
+    /**
+     * Initializes the settings UI components, observers, and listeners.
+     */
     private void setupSettings() {
+        if (binding == null) return;
         binding.txtVersion.setText(getString(R.string.settings_version_summary, BuildConfig.VERSION_NAME));
         updateNotificationStatus();
         
         binding.btnNotifications.setOnClickListener(v -> {
-            if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+            if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             NotificationManager nm = NotificationManager.getInstance(requireActivity());
             if (!nm.hasPermission()) { nm.showInvitationDialog(); } 
             else {
@@ -138,18 +142,22 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
         });
 
-        viewModel.getSoundName().observe(getViewLifecycleOwner(), name -> binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name)));
+        viewModel.getSoundName().observe(getViewLifecycleOwner(), name -> {
+            if (binding != null) binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name));
+        });
+        
         binding.btnNotifSound.setOnClickListener(v -> {
             SoundPickerBottomSheet picker = new SoundPickerBottomSheet();
             picker.setCurrentSoundUri(viewModel.getSoundUri().getValue());
             picker.setOnSoundSelectedListener((name, uri) -> {
                 viewModel.setSound(name, uri);
-                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+                if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             });
             picker.show(getChildFragmentManager(), "SoundPicker");
         });
 
         viewModel.getBypassVolume().observe(getViewLifecycleOwner(), bypass -> {
+            if (binding == null) return;
             binding.switchBypass.setChecked(bypass);
             binding.layoutVolume.setVisibility(bypass ? View.VISIBLE : View.GONE);
         });
@@ -157,14 +165,20 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnBypassVolume.setOnClickListener(v -> {
             if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BYPASS_VOLUME)) {
                 viewModel.setBypassVolume(!java.util.Objects.equals(Boolean.TRUE, viewModel.getBypassVolume().getValue()));
-                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+                if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             } else { showRational(AppConfig.FeaturePassType.BYPASS_VOLUME); }
         });
 
-        viewModel.getNotifVolume().observe(getViewLifecycleOwner(), volume -> binding.sliderVolume.setValue(volume));
-        binding.sliderVolume.addOnChangeListener((slider, value, fromUser) -> { if (fromUser) viewModel.setNotifVolume((int) value); });
+        viewModel.getNotifVolume().observe(getViewLifecycleOwner(), volume -> {
+            if (binding != null) binding.sliderVolume.setValue(volume);
+        });
+        
+        binding.sliderVolume.addOnChangeListener((slider, value, fromUser) -> { 
+            if (fromUser) viewModel.setNotifVolume((int) value); 
+        });
 
         viewModel.getTheme().observe(getViewLifecycleOwner(), theme -> {
+            if (binding == null) return;
             int id = (theme == SettingsViewModel.THEME_LIGHT) ? R.id.btn_theme_light : (theme == SettingsViewModel.THEME_DARK) ? R.id.btn_theme_dark : R.id.btn_theme_system;
             binding.toggleGroupTheme.check(id);
         });
@@ -184,14 +198,17 @@ public class SettingsFragment extends MedicationWizardFragment {
             int theme = (checkedId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : (checkedId == R.id.btn_theme_dark) ? SettingsViewModel.THEME_DARK : SettingsViewModel.THEME_SYSTEM;
             if (!java.util.Objects.equals(theme, viewModel.getTheme().getValue())) {
                 viewModel.setTheme(theme);
-                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+                if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             }
         });
 
         binding.btnLanguage.setOnClickListener(v -> showLanguageDialog());
         binding.txtVersion.setOnClickListener(v -> {
             cheatTapCount++;
-            if (cheatTapCount >= 10) { cheatTapCount = 0; showCheatPasswordDialog(); }
+            if (cheatTapCount >= 10) { 
+                cheatTapCount = 0; 
+                showCheatPasswordDialog(); 
+            }
         });
 
         binding.btnBackup.setOnClickListener(v -> {
@@ -205,7 +222,10 @@ public class SettingsFragment extends MedicationWizardFragment {
             else { showRational(AppConfig.FeaturePassType.SUPPORT); }
         });
         
-        viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range)));
+        viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> {
+            if (binding != null) binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range));
+        });
+        
         binding.btnQuietHours.setOnClickListener(v -> {
             if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.QUIET_HOURS)) { showQuietHoursPickers(); } 
             else { showRational(AppConfig.FeaturePassType.QUIET_HOURS); }
@@ -214,11 +234,13 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnSnoozeDuration.setOnClickListener(v -> showSnoozeDurationDialog());
         binding.btnMaxSnoozes.setOnClickListener(v -> showMaxSnoozesDialog());
         viewModel.getMaxSnoozes().observe(getViewLifecycleOwner(), max -> {
+            if (binding == null) return;
             if (max != null && max == -1) binding.txtMaxSnoozesDesc.setText(R.string.settings_max_snoozes_unlimited_summary);
             else binding.txtMaxSnoozesDesc.setText(getString(R.string.settings_max_snoozes_summary, String.valueOf(max)));
         });
 
         viewModel.getVibration().observe(getViewLifecycleOwner(), enabled -> {
+            if (binding == null) return;
             binding.switchVibration.setChecked(enabled);
             binding.containerVibrationDetails.setVisibility(enabled ? View.VISIBLE : View.GONE);
         });
@@ -226,28 +248,34 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnVibration.setOnClickListener(v -> {
             if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.VIBRATION)) {
                 viewModel.setVibration(!java.util.Objects.equals(Boolean.TRUE, viewModel.getVibration().getValue()));
-                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+                if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             } else { showRational(AppConfig.FeaturePassType.VIBRATION); }
         });
 
         binding.btnVibrationPattern.setOnClickListener(v -> showVibrationPatternPicker());
         binding.btnFlashPattern.setOnClickListener(v -> showFlashPatternPicker());
 
-        viewModel.getStickyNotif().observe(getViewLifecycleOwner(), enabled -> binding.switchSticky.setChecked(enabled));
+        viewModel.getStickyNotif().observe(getViewLifecycleOwner(), enabled -> {
+            if (binding != null) binding.switchSticky.setChecked(enabled);
+        });
+        
         binding.btnSticky.setOnClickListener(v -> {
             if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.STICKY_NOTIF)) {
                 viewModel.setStickyNotif(!java.util.Objects.equals(Boolean.TRUE, viewModel.getStickyNotif().getValue()));
-                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+                if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             } else { showRational(AppConfig.FeaturePassType.STICKY_NOTIF); }
         });
 
         binding.btnDoseWindow.setOnClickListener(v -> {
+            if (binding == null || binding.containerDoseWindowDetails == null) return;
             if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.DOSE_WINDOW)) {
-                binding.containerDoseWindowDetails.setVisibility(binding.containerDoseWindowDetails.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            } else { showRational(AppConfig.FeaturePassType.DOSE_WINDOW); }
+                int visibility = (binding.containerDoseWindowDetails.getVisibility() == View.VISIBLE) ? View.GONE : View.VISIBLE;
+                binding.containerDoseWindowDetails.setVisibility(visibility);
+            } else { 
+                showRational(AppConfig.FeaturePassType.DOSE_WINDOW); 
+            }
         });
         
-        // Threshold displays for Dose Window
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
         binding.txtEarlyThresholdDesc.setText(getString(R.string.settings_threshold_format, rcm.getEarlyTakeThresholdMins()));
         binding.txtLateThresholdDesc.setText(getString(R.string.settings_threshold_format, rcm.getLateTakeThresholdMins()));

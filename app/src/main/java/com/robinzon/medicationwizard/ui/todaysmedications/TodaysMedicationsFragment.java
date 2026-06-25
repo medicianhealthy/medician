@@ -101,6 +101,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         });
     }
 
+    /**
+     * Groups individual dose instances by their scheduled time to create higher-density cards.
+     *
+     * @param instances The list of dose entities to group.
+     * @param sortOrder The current sorting strategy.
+     * @return A list of DoseItem (Single or Group) for the adapter.
+     */
     private List<DoseItem> groupDoses(List<DoseInstanceEntity> instances, TodaysMedicationsViewModel.SortOrder sortOrder) {
         if (sortOrder != TodaysMedicationsViewModel.SortOrder.TIME || instances == null) {
             List<DoseItem> result = new ArrayList<>();
@@ -299,27 +306,39 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                     });
                 }).show();
         
-        // Satisfaction Check: Ask for review after logging a dose if user is happy
+        requestReviewIfEligible();
+    }
+
+    /**
+     * Automatically triggers an in-app review request if the user has reached success milestones.
+     */
+    private void requestReviewIfEligible() {
         final android.app.Activity activity = getActivity();
         if (activity != null) {
-            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-                com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(activity);
-            }, 1000L);
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> 
+                com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(activity), 1000L);
         }
     }
 
+    /**
+     * Determines if an interstitial ad should be triggered after a single medication action.
+     * Checks persistent action count against Remote Config thresholds.
+     */
     private void triggerAdIfEligible() {
-        if (getActivity() instanceof MainActivity) {
-            MainActivity main = (MainActivity) getActivity();
+        if (getActivity() instanceof MainActivity main) {
             if (com.robinzon.medicationwizard.utils.Statisticator.incrementActionsAndCheckAdEligibility(requireContext())) {
                 main.getAdsManager().showInterstitialAdWithCooldownOnly();
             }
         }
     }
 
+    /**
+     * Triggers an interstitial ad immediately if a bulk group action exceeds the threshold.
+     *
+     * @param groupSize The number of medications acted upon in this group action.
+     */
     private void triggerAdForGroupAction(int groupSize) {
-        if (getActivity() instanceof MainActivity) {
-            MainActivity main = (MainActivity) getActivity();
+        if (getActivity() instanceof MainActivity main) {
             int threshold = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getActionsPerInterstitial();
             if (groupSize >= threshold) {
                 main.getAdsManager().showInterstitialAdWithCooldownOnly();

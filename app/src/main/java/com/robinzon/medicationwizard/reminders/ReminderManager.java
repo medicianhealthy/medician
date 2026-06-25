@@ -27,6 +27,9 @@ public class ReminderManager {
      * @param context   The application context.
      * @param instances The list of dose entities to schedule.
      */
+    /**
+     * Helper to batch-schedule multiple medication dose alarms.
+     */
     public static void scheduleReminders(Context context, List<DoseInstanceEntity> instances) {
         if (instances == null) return;
         for (DoseInstanceEntity instance : instances) {
@@ -46,6 +49,13 @@ public class ReminderManager {
      *
      * @param context  The application context.
      * @param instance The specific dose record to schedule.
+     */
+    /**
+     * Schedules a precise system alarm for a single medication dose.
+     * Use {@link android.app.AlarmManager} to trigger {@link ReminderReceiver} at the exact minute.
+     *
+     * @param context  Application context.
+     * @param instance The dose instance defining the name and target time.
      */
     public static void scheduleReminder(Context context, DoseInstanceEntity instance) {
         if (instance == null || !"SCHEDULED".equals(instance.getStatus())) return;
@@ -99,6 +109,12 @@ public class ReminderManager {
      *
      * @param context    The application context.
      * @param instanceId The unique ID of the dose instance (matches the requestCode).
+     */
+    /**
+     * Cancels a previously scheduled alarm for a medication dose.
+     *
+     * @param context    Application context.
+     * @param instanceId The unique ID of the dose instance.
      */
     public static void cancelReminder(Context context, int instanceId) {
         Context appContext = context.getApplicationContext();

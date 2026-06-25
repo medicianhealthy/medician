@@ -109,28 +109,51 @@ public class SettingsViewModel extends AndroidViewModel {
         mLanguageCode.setValue(sp.getString(KEY_APP_LANGUAGE, "en"));
     }
 
+    /** @return Observable LiveData for the current app theme ID. */
     public LiveData<Integer> getTheme() { return mTheme; }
+    /** @return Observable LiveData for the formatted Quiet Hours range string. */
     public LiveData<String> getQuietHoursRange() { return mQuietHoursRange; }
+    /** @return Observable LiveData for the Bypass System Volume status. */
     public LiveData<Boolean> getBypassVolume() { return mBypassVolume; }
+    /** @return Observable LiveData for the notification volume level. */
     public LiveData<Integer> getNotifVolume() { return mNotifVolume; }
+    /** @return Observable LiveData for the current notification sound name. */
     public LiveData<String> getSoundName() { return mSoundName; }
+    /** @return Observable LiveData for the current notification sound URI. */
     public LiveData<String> getSoundUri() { return mSoundUri; }
+    /** @return Observable LiveData for the snooze interval in minutes. */
     public LiveData<Integer> getSnoozeDuration() { return mSnoozeDuration; }
+    /** @return Observable LiveData for the maximum allowed snoozes (-1 for unlimited). */
     public LiveData<Integer> getMaxSnoozes() { return mMaxSnoozes; }
+    /** @return Observable LiveData for the current application language code. */
     public LiveData<String> getLanguageCode() { return mLanguageCode; }
+    /** @return Observable LiveData for the custom vibration status. */
     public LiveData<Boolean> getVibration() { return mVibration; }
+    /** @return Observable LiveData for the sticky notification status. */
     public LiveData<Boolean> getStickyNotif() { return mStickyNotif; }
 
+    /**
+     * Updates and persists the custom vibration preference.
+     * @param enabled True to enable custom vibration patterns.
+     */
     public void setVibration(boolean enabled) {
         mVibration.setValue(enabled);
         SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_VIBRATION_ENABLED, enabled);
     }
 
+    /**
+     * Updates and persists the sticky notification preference.
+     * @param enabled True to prevent notifications from being swiped away.
+     */
     public void setStickyNotif(boolean enabled) {
         mStickyNotif.setValue(enabled);
         SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_STICKY_NOTIF_ENABLED, enabled);
     }
 
+    /**
+     * Updates the application language and applies the change globally.
+     * @param langCode The new ISO language code (e.g., "en", "iw").
+     */
     public void setLanguage(String langCode) {
         if (langCode.equals(mLanguageCode.getValue())) return;
         
@@ -139,14 +162,22 @@ public class SettingsViewModel extends AndroidViewModel {
         
         // Apply the language change
         androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
-        AppCompatDelegate.setApplicationLocales(locales);
+        androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(locales);
     }
 
+    /**
+     * Updates and persists the snooze duration.
+     * @param mins The number of minutes for each snooze.
+     */
     public void setSnoozeDuration(int mins) {
         mSnoozeDuration.setValue(mins);
         SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_SNOOZE_DURATION_MINS, mins);
     }
 
+    /**
+     * Updates and persists the maximum number of snoozes.
+     * @param max The limit, or -1 for unlimited.
+     */
     public void setMaxSnoozes(int max) {
         mMaxSnoozes.setValue(max);
         SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_MAX_SNOOZES, max);
@@ -193,7 +224,7 @@ public class SettingsViewModel extends AndroidViewModel {
 
     /**
      * Updates the application theme globally.
-     * This method triggers {@link AppCompatDelegate} to immediately re-draw the app
+     * This method triggers {@link androidx.appcompat.app.AppCompatDelegate} to immediately re-draw the app
      * in the selected mode.
      *
      * @param theme One of {@link #THEME_LIGHT}, {@link #THEME_DARK}, or {@link #THEME_SYSTEM}.
@@ -211,9 +242,9 @@ public class SettingsViewModel extends AndroidViewModel {
      */
     private void applyTheme(int theme) {
         switch (theme) {
-            case THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            case THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            default -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            case THEME_LIGHT -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO);
+            case THEME_DARK -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
+            default -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
     }
 }

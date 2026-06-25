@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         checkExactAlarmPermission();
     }
 
+    /**
+     * Periodically checks for ad availability and eligibility.
+     */
     private void startAdCheckTimer() {
         if (adCheckTimer != null) adCheckTimer.cancel();
         adCheckTimer = new Timer();
@@ -150,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    /**
+     * Refreshes the navigation drawer header with the current user's profile info.
+     */
     public void refreshNavHeader() {
         final NavigationView navigationView = findViewById(R.id.nav_view);
         if (navigationView != null) {
@@ -157,6 +163,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    /**
+     * Checks if the app has permission to schedule exact alarms (required for Android 12+).
+     */
     private void checkExactAlarmPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             android.app.AlarmManager alarmManager = getSystemService(android.app.AlarmManager.class);
@@ -210,6 +219,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return adsManager;
     }
 
+    /**
+     * Increments the global interaction score and triggers an interstitial if the threshold is met.
+     *
+     * @param score The amount of points to add (e.g., 1.5 for main items, 1.0 for sub-items).
+     */
     public void addInteractionScore(float score) {
         if (com.robinzon.medicationwizard.utils.Statisticator.addInteractionScoreAndCheck(this, score)) {
             // Threshold met, trigger interstitial show

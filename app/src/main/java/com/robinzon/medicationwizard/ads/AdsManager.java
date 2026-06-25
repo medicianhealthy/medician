@@ -55,15 +55,24 @@ public class AdsManager implements OnAdActionListener{
         });
     }
 
+    /**
+     * @return The currently active Activity context.
+     */
     public Activity getActivity() {
         return activity;
     }
 
+    /**
+     * Performs one-time setup of ad units and initiates the first load requests.
+     */
     public void initializeAds() {
         createAds();
         loadAds();
     }
 
+    /**
+     * Instantiates the AdMob wrapper classes for each placement.
+     */
     private void createAds() {
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             if (null == mainBanner) {
@@ -94,6 +103,9 @@ public class AdsManager implements OnAdActionListener{
         }
     }
 
+    /**
+     * @return The internal list of managed ad wrappers.
+     */
     public ArrayList<AdMobAd> getAdsCollection() {
         if (null == adsCollection) {
             adsCollection = new ArrayList<>();
@@ -101,6 +113,9 @@ public class AdsManager implements OnAdActionListener{
         return adsCollection;
     }
 
+    /**
+     * Initiates load requests for all ad units, subject to usage thresholds for banners.
+     */
     public void loadAds() {
         if (null != mainBanner && !mainBanner.isLoaded()) {
             float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(activity);
@@ -167,6 +182,9 @@ public class AdsManager implements OnAdActionListener{
     }
 
     /** @noinspection unused*/
+    /**
+     * Triggers a full-screen interstitial ad if both usage and time-based cooldowns are satisfied.
+     */
     public void showInterstitialAd() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
 
@@ -189,6 +207,10 @@ public class AdsManager implements OnAdActionListener{
         }
     }
 
+    /**
+     * Determines if the user has reached the minimum activity levels required for interstitials.
+     * Checks session count and ad-specific usage minutes.
+     */
     private boolean shouldShowInterstitialBasedOnUsage() {
         final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
         final float usageMinutesForAds = com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(activity);
@@ -201,6 +223,11 @@ public class AdsManager implements OnAdActionListener{
         return sessionCount >= minimumSessionsThreshold || usageMinutesForAds >= (float) minimumMinutesThreshold;
     }
     /** @noinspection unused*/
+    /**
+     * Displays a rewarded video ad to the user.
+     *
+     * @param listener Callback to receive the result of the reward event.
+     */
     public void showRewarded(OnRewardedFinishedListener listener) {
         if (null != mainRewarded) {
             mainRewarded.setRewardedFinishedListener(listener);
@@ -210,10 +237,16 @@ public class AdsManager implements OnAdActionListener{
         }
     }
 
+    /**
+     * @return True if a rewarded video ad is currently loaded and ready to play.
+     */
     public boolean isRewardedLoaded() {
         return mainRewarded != null && mainRewarded.isLoaded();
     }
 
+    /**
+     * Attempts to display an App Open ad, checking for usage thresholds and cooldowns.
+     */
     public void showAppOpenAd() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
 

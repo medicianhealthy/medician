@@ -60,9 +60,15 @@ public interface DoseInstanceDao {
     @Query("SELECT * FROM dose_instances WHERE id = :instanceId")
     DoseInstanceEntity getInstanceById(int instanceId);
 
+    /**
+     * @return Observable list of all historical and future dose instances.
+     */
     @Query("SELECT * FROM dose_instances ORDER BY scheduledTime ASC")
     LiveData<List<DoseInstanceEntity>> getAllInstances();
 
+    /**
+     * Synchronously returns all dose instances.
+     */
     @Query("SELECT * FROM dose_instances ORDER BY scheduledTime ASC")
     List<DoseInstanceEntity> getAllInstancesInternal();
 

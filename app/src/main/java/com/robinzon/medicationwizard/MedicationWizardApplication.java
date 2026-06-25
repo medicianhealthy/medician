@@ -7,9 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -23,16 +22,23 @@ import com.robinzon.medicationwizard.workers.HistoryCleanupWorker;
 
 import java.util.concurrent.TimeUnit;
 
-public class MedicationWizardApplication extends Application
-        implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
-    private static android.content.Context sContext;
+public class MedicationWizardApplication extends Application
+        implements Application.ActivityLifecycleCallbacks, DefaultLifecycleObserver {
+
+    private static MedicationWizardApplication sInstance;
     private Activity mCurrentActivity;
 
+    /**
+     * Initializes the notification channel and default app settings on startup.
+     */
     @Override
     public void onCreate() {
         super.onCreate();
-        sContext = getApplicationContext();
+        sInstance = this;
         this.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         
@@ -43,12 +49,18 @@ public class MedicationWizardApplication extends Application
         BillingManager.getInstance(this); // Initialize billing and check entitlements
     }
 
+    /**
+     * Re-applies the saved language preference to the current application context.
+     */
     private void applyLanguage() {
         String langCode = SharedPreferencesManager.getInstance(this).getString(SettingsViewModel.KEY_APP_LANGUAGE, "en");
         androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
         AppCompatDelegate.setApplicationLocales(locales);
     }
 
+    /**
+     * Enqueues a periodic WorkManager task to clean up old medication history.
+     */
     private void scheduleHistoryCleanup() {
         PeriodicWorkRequest cleanupRequest = new PeriodicWorkRequest.Builder(
                 HistoryCleanupWorker.class,
@@ -61,6 +73,9 @@ public class MedicationWizardApplication extends Application
                 cleanupRequest);
     }
 
+    /**
+     * Re-applies the saved theme preference (Light, Dark, or System) globally.
+     */
     private void applyTheme() {
         int theme = SharedPreferencesManager.getInstance(this).getInt(SettingsViewModel.KEY_APP_THEME, SettingsViewModel.THEME_SYSTEM);
         switch (theme) {
@@ -110,13 +125,19 @@ public class MedicationWizardApplication extends Application
         }
     }
 
+    /**
+     * @return The global application context.
+     */
     public static android.content.Context getContext() {
-        return sContext;
+        return sInstance.getApplicationContext();
     }
 
-    /** LifecycleObserver method that shows the app open ad when the app moves to foreground. */
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    protected void onMoveToForeground() {
+    /**
+     * Called when the application process moves to the foreground.
+     * Triggers usage tracking and displays App Open ads if eligible.
+     */
+    @Override
+    public void onStart(@NonNull LifecycleOwner owner) {
         // Start usage tracking
         com.robinzon.medicationwizard.utils.Statisticator.onMoveToForeground(this);
         
@@ -124,14 +145,17 @@ public class MedicationWizardApplication extends Application
         com.robinzon.medicationwizard.utils.Statisticator.onSessionStarted(this);
 
         // Show the ad (if available) when the app moves to foreground.
-        if (mCurrentActivity instanceof MainActivity) {
-            ((MainActivity) mCurrentActivity).onMoveToForeground();
+        if (mCurrentActivity instanceof MainActivity main) {
+            main.onMoveToForeground();
         }
     }
 
-    /** LifecycleObserver method that handles cleanup when app moves to background. */
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    protected void onMoveToBackground() {
+    /**
+     * Called when the application process moves to the background.
+     * Finalizes and persists usage statistics.
+     */
+    @Override
+    public void onStop(@NonNull LifecycleOwner owner) {
         // Finalize and persist usage time
         com.robinzon.medicationwizard.utils.Statisticator.onMoveToBackground(this);
     }

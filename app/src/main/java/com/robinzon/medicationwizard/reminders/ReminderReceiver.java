@@ -77,6 +77,12 @@ public class ReminderReceiver extends BroadcastReceiver {
     /**
      * Checks if the current time falls within the user-defined Quiet Hours.
      */
+    /**
+     * Checks if the current system time falls within the user-defined Quiet Hours.
+     *
+     * @param sp The SharedPreferences manager to read start/end times.
+     * @return True if alerts should be suppressed.
+     */
     private boolean isInQuietHours(SharedPreferencesManager sp) {
         String startStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_START, "23:00");
         String endStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_END, "07:00");
@@ -118,6 +124,10 @@ public class ReminderReceiver extends BroadcastReceiver {
      * - Tapping the notification opens the main app screen.
      * - Uses the dedicated "Medication Reminders" notification channel.
      * </p>
+     */
+    /**
+     * Builds and displays a system notification for the due medication.
+     * Includes action buttons for Take, Skip, and Snooze.
      */
     private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
@@ -196,6 +206,10 @@ public class ReminderReceiver extends BroadcastReceiver {
      *    ALARM stream and ignores the device's ringer mode.
      * 3. Scales the volume based on the user's preference (0-100%).
      * </p>
+     */
+    /**
+     * Plays the custom or default notification sound, potentially bypassing system volume
+     * if the premium feature is active.
      */
     private void playAlertSound(Context context) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);

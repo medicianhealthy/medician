@@ -24,6 +24,9 @@ public abstract class AppDatabase extends RoomDatabase {
     /**
      * @return The DAO for interacting with dose instances.
      */
+    /**
+     * @return The Data Access Object for dose instances.
+     */
     public abstract DoseInstanceDao doseInstanceDao();
 
     private static volatile AppDatabase INSTANCE;
@@ -41,6 +44,12 @@ public abstract class AppDatabase extends RoomDatabase {
      *
      * @param context The application context.
      * @return The active AppDatabase instance.
+     */
+    /**
+     * Retrieves the singleton database instance, creating it if necessary.
+     *
+     * @param context Application context.
+     * @return The shared AppDatabase instance.
      */
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

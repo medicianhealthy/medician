@@ -216,42 +216,72 @@ public class RemoteConfigManager {
 
     // --- Semantic Getters ---
 
+    /**
+     * @return The minimum number of application sessions required before showing interstitials.
+     */
     public int getMinSessionsForInterstitial() {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_SESSIONS_INTERSTITIAL);
     }
 
+    /**
+     * @return The minimum number of application sessions required before showing App Open ads.
+     */
     public int getMinSessionsAppOpen() {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_SESSIONS_APP_OPEN);
     }
 
+    /**
+     * @return Minimum app usage time (minutes) required for App Open ad eligibility.
+     */
     public int getMinAppTimeAppOpenMins() {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_APP_TIME_APP_OPEN_MINS);
     }
 
+    /**
+     * @return Minimum app usage time (minutes) required for Interstitial ad eligibility.
+     */
     public int getMinAppTimeForInterstitialMins() {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_APP_TIME_INTERSTITIAL_MINS);
     }
 
+    /**
+     * @return Minimum app usage time (minutes) required for Banner ad visibility.
+     */
     public int getMinAppTimeForBannerMins() {
         return getIntValue(RemoteConfigKeysAndDefaults.MIN_APP_TIME_BANNER_MINS);
     }
 
+    /**
+     * @return Duration in hours for a temporary Magic Pass.
+     */
     public int getMagicPassDurationHours() {
         return getIntValue(RemoteConfigKeysAndDefaults.MAGIC_PASS_DURATION_HOURS);
     }
 
+    /**
+     * @return Number of user actions required between Interstitial ads.
+     */
     public int getActionsPerInterstitial() {
         return getIntValue(RemoteConfigKeysAndDefaults.ACTIONS_PER_INTERSTITIAL);
     }
 
+    /**
+     * @return Maximum number of days to retain medication history in the database.
+     */
     public int getHistoryRetentionDays() {
         return getIntValue(RemoteConfigKeysAndDefaults.HISTORY_RETENTION_DAYS);
     }
 
+    /**
+     * @return Minutes before scheduled time when a "Take" is considered early.
+     */
     public int getEarlyTakeThresholdMins() {
         return getIntValue(RemoteConfigKeysAndDefaults.EARLY_TAKE_THRESHOLD_MINS);
     }
 
+    /**
+     * @return Minutes after scheduled time when a "Take" is considered late.
+     */
     public int getLateTakeThresholdMins() {
         return getIntValue(RemoteConfigKeysAndDefaults.LATE_TAKE_THRESHOLD_MINS);
     }

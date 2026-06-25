@@ -85,10 +85,16 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return NotificationManagerCompat.from(activity.getApplicationContext());
     }
 
+    /**
+     * @return True if the application has the POST_NOTIFICATIONS permission granted.
+     */
     public boolean hasPermission() {
         return !notificationsAreDisabled();
     }
 
+    /**
+     * Retrieves the singleton NotificationManager instance for the current activity.
+     */
     public static NotificationManager getInstance(final Activity activity) {
         if (null == singletonInstance || null == singletonInstance.get()) {
             singletonInstance = new WeakReference<>(new NotificationManager(activity));
@@ -135,6 +141,10 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return PermissionManager.shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS);
     }
 
+    /**
+     * Displays a dialog inviting the user to enable notifications.
+     * Guides them to system settings if they have previously denied the permission.
+     */
     public void showInvitationDialog() {
         // If we can show the system dialog, do that. Otherwise, we must guide them to settings.
         boolean mustGoToSettings = !shouldShowRationalInnerDialog() && getHasDeniedPermission();
@@ -229,7 +239,11 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return SharedPreferencesManager.getInstance(activity).getBoolean(PREF_KEY_HAS_DENIED_NOTIFICATION_PERMISSION, false);
     }
 
+    /**
+     * Opens the system application details settings screen.
+     */
     public void openNotificationAppSettings(final Context context) {
+        if (context == null) return;
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + context.getPackageName()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

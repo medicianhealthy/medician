@@ -82,6 +82,10 @@ public class Statisticator {
         return SharedPreferencesManager.getInstance(context).getInt(SPK_TOTAL_DOSES_LOGGED, 0);
     }
 
+    /**
+     * @param context Application context.
+     * @return The number of actions performed since the last interstitial reset.
+     */
     public static int getActionsForInterstitialCount(Context context) {
         return SharedPreferencesManager.getInstance(context).getInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0);
     }

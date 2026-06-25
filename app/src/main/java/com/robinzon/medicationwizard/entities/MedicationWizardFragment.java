@@ -40,6 +40,9 @@ public class MedicationWizardFragment extends Fragment {
      *
      * @param root The root view of the fragment to search for animated subviews.
      */
+    /**
+     * Animates the empty state UI with breathing and mascot rotations.
+     */
     protected void startEmptyStateAnimations(View root) {
         if (root == null || !mActiveAnimators.isEmpty()) return;
         
@@ -165,6 +168,12 @@ public class MedicationWizardFragment extends Fragment {
      * @param instance The dose being marked as taken.
      * @param callback Logic to execute if the timing is valid or user confirms.
      */
+    /**
+     * Checks if a "Take" action is significantly early or late and prompts for confirmation.
+     *
+     * @param instance The dose instance being taken.
+     * @param callback Logic to execute if confirmed.
+     */
     protected void checkAndClarifyTakeTiming(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback) {
         long now = System.currentTimeMillis();
         long scheduled = instance.getScheduledTime();
@@ -215,6 +224,9 @@ public class MedicationWizardFragment extends Fragment {
      * </p>
      *
      * @param rootView The view to apply padding to (usually a RecyclerView).
+     */
+    /**
+     * Applies standard bottom padding to a view to prevent clipping with the bottom navigation bar.
      */
     protected void setPaddingForRecyclerView(@NonNull final View rootView) {
         setPaddingForRecyclerView(rootView, true);

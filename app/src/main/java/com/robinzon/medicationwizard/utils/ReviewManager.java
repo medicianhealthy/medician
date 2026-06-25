@@ -22,6 +22,12 @@ public class ReviewManager {
     /**
      * Potentially triggers the in-app review flow based on user activity.
      */
+    /**
+     * Checks if the user meets the engagement criteria (sessions, doses, usage time) 
+     * and triggers the official Google Play In-App Review flow if they do.
+     *
+     * @param activity The currently foregrounded activity.
+     */
     public static void requestReviewIfEligible(Activity activity) {
         if (activity == null) return;
 
