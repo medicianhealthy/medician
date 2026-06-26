@@ -22,7 +22,7 @@ public class DoseInstanceEntity {
 
     /** Unique primary key for the database record. */
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private Integer id;
 
     /** Unique ID of the parent medication (from SharedPreferences). */
     private String medicationId;
@@ -83,8 +83,8 @@ public class DoseInstanceEntity {
         return entity;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public String getMedicationId() { return medicationId; }
     public void setMedicationId(String medicationId) { this.medicationId = medicationId; }

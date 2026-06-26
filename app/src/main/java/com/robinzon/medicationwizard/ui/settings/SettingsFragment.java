@@ -143,7 +143,9 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         viewModel.getSoundName().observe(getViewLifecycleOwner(), name -> {
-            if (binding != null) binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name));
+            if (binding != null && binding.txtSoundDesc != null) {
+                binding.txtSoundDesc.setText(getString(R.string.settings_sound_summary, name));
+            }
         });
         
         binding.btnNotifSound.setOnClickListener(v -> {
@@ -223,7 +225,9 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
         
         viewModel.getQuietHoursRange().observe(getViewLifecycleOwner(), range -> {
-            if (binding != null) binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range));
+            if (binding != null && binding.txtQuietHoursDesc != null) {
+                binding.txtQuietHoursDesc.setText(getString(R.string.settings_quiet_hours_format, range));
+            }
         });
         
         binding.btnQuietHours.setOnClickListener(v -> {
@@ -234,15 +238,17 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnSnoozeDuration.setOnClickListener(v -> showSnoozeDurationDialog());
         binding.btnMaxSnoozes.setOnClickListener(v -> showMaxSnoozesDialog());
         viewModel.getMaxSnoozes().observe(getViewLifecycleOwner(), max -> {
-            if (binding == null) return;
-            if (max != null && max == -1) binding.txtMaxSnoozesDesc.setText(R.string.settings_max_snoozes_unlimited_summary);
-            else binding.txtMaxSnoozesDesc.setText(getString(R.string.settings_max_snoozes_summary, String.valueOf(max)));
+            if (binding != null && binding.txtMaxSnoozesDesc != null) {
+                if (max != null && max == -1) binding.txtMaxSnoozesDesc.setText(R.string.settings_max_snoozes_unlimited_summary);
+                else binding.txtMaxSnoozesDesc.setText(getString(R.string.settings_max_snoozes_summary, String.valueOf(max)));
+            }
         });
 
         viewModel.getVibration().observe(getViewLifecycleOwner(), enabled -> {
-            if (binding == null) return;
-            binding.switchVibration.setChecked(enabled);
-            binding.containerVibrationDetails.setVisibility(enabled ? View.VISIBLE : View.GONE);
+            if (binding != null && binding.switchVibration != null && binding.containerVibrationDetails != null) {
+                binding.switchVibration.setChecked(enabled);
+                binding.containerVibrationDetails.setVisibility(enabled ? View.VISIBLE : View.GONE);
+            }
         });
         
         binding.btnVibration.setOnClickListener(v -> {
@@ -256,7 +262,9 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnFlashPattern.setOnClickListener(v -> showFlashPatternPicker());
 
         viewModel.getStickyNotif().observe(getViewLifecycleOwner(), enabled -> {
-            if (binding != null) binding.switchSticky.setChecked(enabled);
+            if (binding != null && binding.switchSticky != null) {
+                binding.switchSticky.setChecked(enabled);
+            }
         });
         
         binding.btnSticky.setOnClickListener(v -> {

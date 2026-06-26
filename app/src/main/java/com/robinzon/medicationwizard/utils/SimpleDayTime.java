@@ -106,7 +106,9 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
      */
     @Override
     public String toString() {
-        return String.format(java.util.Locale.getDefault(), "%02d:%02d", hour, minute);
+        // ALWAYS use Locale.US for serialization to ensure ASCII digits are used.
+        // Localized digits (e.g. Arabic-Indic) break Integer/Byte parsing.
+        return String.format(java.util.Locale.US, "%02d:%02d", hour, minute);
     }
 
     /**

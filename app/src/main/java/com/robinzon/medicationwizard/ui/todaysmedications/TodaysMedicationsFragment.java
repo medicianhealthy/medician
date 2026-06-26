@@ -82,8 +82,14 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         com.robinzon.medicationwizard.utils.Logger.log("TodaysMedicationsFragment", "onViewCreated");
-        setPaddingForRecyclerView(mBinding.recyclerView);
-        setPaddingForRecyclerView(mBinding.emptyLayout.emptyStateContainer);
+        
+        if (mBinding != null) {
+            if (mBinding.recyclerView != null) setPaddingForRecyclerView(mBinding.recyclerView);
+            if (mBinding.emptyLayout != null && mBinding.emptyLayout.emptyStateContainer != null) {
+                setPaddingForRecyclerView(mBinding.emptyLayout.emptyStateContainer);
+            }
+        }
+        
         setupSwipeRefresh();
         setupEmptyView();
         setupRecyclerView();
@@ -91,6 +97,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
         // Reactive observation: UI updates automatically when DB changes
         mViewModel.getTodaysMedications().observe(getViewLifecycleOwner(), instances -> {
+            if (mBinding == null) return;
             List<DoseItem> grouped = groupDoses(instances, mCurrentSortOrder);
             mAdapter.setData(grouped);
             updateUiState(instances.isEmpty());
@@ -148,9 +155,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
      * </p>
      */
     private void updateStreakBadge() {
+        if (mBinding == null) return;
         com.robinzon.medicationwizard.utils.StreakManager.calculateCurrentStreak(requireContext(), streakCount -> {
             if (getActivity() == null) return;
             getActivity().runOnUiThread(() -> {
+                if (mBinding == null) return;
                 if (streakCount >= 2) {
                     mBinding.cardStreak.setVisibility(View.VISIBLE);
                     mBinding.txtStreak.setText(getString(R.string.streak_format, streakCount));
@@ -442,20 +451,27 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     private void updateUiState(boolean isEmpty) {
-        mBinding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        mBinding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        if (mBinding == null) return;
+        
+        if (mBinding.emptyLayout != null && mBinding.emptyLayout.emptyView != null) {
+            mBinding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        }
+        
+        if (mBinding.recyclerView != null) {
+            mBinding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        }
         
         boolean hasAnyMeds = com.robinzon.medicationwizard.entities.Medication.hasMedications(requireContext());
 
-        if (isEmpty) {
+        if (isEmpty && mBinding.emptyLayout != null) {
             if (hasAnyMeds) {
-                mBinding.emptyLayout.emptyTitle.setText(R.string.history_empty);
-                mBinding.emptyLayout.emptySubtitle.setText(R.string.history_empty_subtitle);
-                mBinding.emptyLayout.btnEmptyAction.setVisibility(View.GONE);
+                if (mBinding.emptyLayout.emptyTitle != null) mBinding.emptyLayout.emptyTitle.setText(R.string.history_empty);
+                if (mBinding.emptyLayout.emptySubtitle != null) mBinding.emptyLayout.emptySubtitle.setText(R.string.history_empty_subtitle);
+                if (mBinding.emptyLayout.btnEmptyAction != null) mBinding.emptyLayout.btnEmptyAction.setVisibility(View.GONE);
             } else {
-                mBinding.emptyLayout.emptyTitle.setText(R.string.empty_meds_title);
-                mBinding.emptyLayout.emptySubtitle.setText(R.string.empty_meds_subtitle);
-                mBinding.emptyLayout.btnEmptyAction.setVisibility(View.VISIBLE);
+                if (mBinding.emptyLayout.emptyTitle != null) mBinding.emptyLayout.emptyTitle.setText(R.string.empty_meds_title);
+                if (mBinding.emptyLayout.emptySubtitle != null) mBinding.emptyLayout.emptySubtitle.setText(R.string.empty_meds_subtitle);
+                if (mBinding.emptyLayout.btnEmptyAction != null) mBinding.emptyLayout.btnEmptyAction.setVisibility(View.VISIBLE);
             }
 
             startEmptyStateAnimations(mBinding.getRoot());
@@ -466,9 +482,8 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         }
 
         // Hide/Show FAB based on empty state for cleaner M3 aesthetics.
-        // We only hide the FAB if the entire library is empty to focus on the center "hero" button.
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setFabVisible(!isEmpty || hasAnyMeds);
+        if (getActivity() instanceof MainActivity main) {
+            main.setFabVisible(!isEmpty || hasAnyMeds);
         }
     }
 
