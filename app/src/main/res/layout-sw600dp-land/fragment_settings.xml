@@ -796,7 +796,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/settings_vibration_pattern_title"
-                                android:textAppearance="?attr/textAppearanceBodyMedium" />
+                                android:textAppearance="?attr/textAppearanceTitleSmall" />
                             <TextView
                                 android:id="@+id/txt_vibration_pattern_desc"
                                 android:layout_width="wrap_content"
@@ -820,7 +820,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/settings_flash_pattern_title"
-                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                android:textAppearance="?attr/textAppearanceTitleSmall" />
                             <TextView
                                 android:id="@+id/txt_flash_pattern_desc"
                                 android:layout_width="wrap_content"
@@ -965,7 +965,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/settings_early_threshold_title"
-                                android:textAppearance="?attr/textAppearanceBodyMedium" />
+                                android:textAppearance="?attr/textAppearanceTitleSmall" />
                             <TextView
                                 android:id="@+id/txt_early_threshold_desc"
                                 android:layout_width="wrap_content"
@@ -988,7 +988,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/settings_late_threshold_title"
-                                android:textAppearance="?attr/textAppearanceBodyMedium" />
+                                android:textAppearance="?attr/textAppearanceTitleSmall" />
                             <TextView
                                 android:id="@+id/txt_late_threshold_desc"
                                 android:layout_width="wrap_content"

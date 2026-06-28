@@ -8,4 +8,5 @@
     <!-- Mascot Sizes -->
     <dimen name="empty_state_mascot_size">240dp</dimen>
     <dimen name="dashboard_mascot_size">200dp</dimen>
+    <dimen name="bottom_sheet_max_width">660dp</dimen>
 </resources>
