@@ -22,6 +22,12 @@ public class CheatsBottomSheet extends BottomSheetDialogFragment {
     private final android.os.Handler updateHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable updateRunnable;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialog);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

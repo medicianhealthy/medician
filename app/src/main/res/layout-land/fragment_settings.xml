@@ -771,6 +771,64 @@
                                 android:focusable="false" />
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:id="@+id/container_vibration_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+
+                            <LinearLayout
+                                android:id="@+id/btn_vibration_pattern"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:orientation="vertical"
+                                android:paddingVertical="12dp"
+                                android:paddingStart="44dp"
+                                android:paddingEnd="20dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_vibration_pattern_title"
+                                    android:textAppearance="?attr/textAppearanceTitleSmall" />
+                                <TextView
+                                    android:id="@+id/txt_vibration_pattern_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="Standard"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/btn_flash_pattern"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:orientation="vertical"
+                                android:paddingVertical="12dp"
+                                android:paddingStart="44dp"
+                                android:paddingEnd="20dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_flash_pattern_title"
+                                    android:textAppearance="?attr/textAppearanceTitleSmall" />
+                                <TextView
+                                    android:id="@+id/txt_flash_pattern_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="None"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                            </LinearLayout>
+                        </LinearLayout>
+
                         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
 
                         <LinearLayout
@@ -832,6 +890,111 @@
                                 android:layout_marginStart="8dp"
                                 android:clickable="false"
                                 android:focusable="false" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+
+                        <LinearLayout
+                            android:id="@+id/btn_dose_window"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_dose_window_title"
+                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                <ImageView
+                                    android:id="@+id/crown_dose_window"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_marginStart="8dp"
+                                    app:srcCompat="@drawable/ic_crown"
+                                    android:contentDescription="@null" />
+                                <TextView
+                                    android:id="@+id/badge_active_dose_window"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_feature_active_badge"
+                                    android:text="@string/feature_active_label"
+                                    android:textColor="?attr/colorOnTertiaryContainer"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone"
+                                    tools:visibility="visible" />
+                            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_dose_window_summary"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/container_dose_window_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+                            <LinearLayout
+                                android:id="@+id/btn_early_threshold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:orientation="vertical"
+                                android:paddingVertical="12dp"
+                                android:paddingStart="44dp"
+                                android:paddingEnd="20dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_early_threshold_title"
+                                    android:textAppearance="?attr/textAppearanceTitleSmall" />
+                                <TextView
+                                    android:id="@+id/txt_early_threshold_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="60 minutes"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/btn_late_threshold"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="?attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:orientation="vertical"
+                                android:paddingVertical="12dp"
+                                android:paddingStart="44dp"
+                                android:paddingEnd="20dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/settings_late_threshold_title"
+                                    android:textAppearance="?attr/textAppearanceTitleSmall" />
+                                <TextView
+                                    android:id="@+id/txt_late_threshold_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    tools:text="180 minutes"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                            </LinearLayout>
                         </LinearLayout>
 
                     </LinearLayout>
