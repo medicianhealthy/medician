@@ -364,12 +364,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         setUnitDropDown(view);
         
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
-        // Explicitly hide keyboard when clicking the frequency dropdown
-        dropdownFrequency.setOnTouchListener((v, event) -> {
-            hideKeyboard(v);
-            return false;
-        });
-
         String[] frequencies = new String[]{
                 getString(R.string.frequency_once),
                 getString(R.string.frequency_twice),
@@ -377,10 +371,11 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 getString(R.string.frequency_4_times),
                 getString(R.string.frequency_5_times)
         };
-        ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, frequencies);
+        ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_menu, frequencies);
         dropdownFrequency.setAdapter(freqAdapter);
         dropdownFrequency.setThreshold(Integer.MAX_VALUE); // Disable filtering
 
+        dropdownFrequency.setOnClickListener(v -> dropdownFrequency.showDropDown());
         dropdownFrequency.setOnItemClickListener((parent, itemView, position, itemId) -> {
             hideKeyboard(dropdownFrequency);
             int timesPerDay = position + 1;
@@ -569,7 +564,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
 
         // Use a standard layout and disable filtering to prevent hint/text clearance issues
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), 
-                android.R.layout.simple_dropdown_item_1line, forms);
+                R.layout.item_dropdown_menu, forms);
         dropdownForm.setAdapter(adapter);
         dropdownForm.setThreshold(Integer.MAX_VALUE); // Disable filtering by typing
         
@@ -581,6 +576,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         final TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
         if (null == layoutForm) return;
 
+        dropdownForm.setOnClickListener(v -> dropdownForm.showDropDown());
         dropdownForm.setOnItemClickListener((parent, itemView, position, itemId) -> {
             hideKeyboard(dropdownForm);
             final EForm selectedForm = EForm.values()[position];
@@ -616,11 +612,8 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
         
         if (null != dropdownUnit) {
-            dropdownUnit.setOnTouchListener((v, event) -> {
-                hideKeyboard(v);
-                return false;
-            });
-            dropdownUnit.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, measurementUnits));
+            dropdownUnit.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_menu, measurementUnits));
+            dropdownUnit.setOnClickListener(v -> dropdownUnit.showDropDown());
             dropdownUnit.setOnItemClickListener((parent, itemView, position, itemId) -> {
                 hideKeyboard(dropdownUnit);
                 medication.setMeasurementUnit(EMeasurementUnit.values()[position]);

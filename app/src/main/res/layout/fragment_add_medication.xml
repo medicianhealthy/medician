@@ -78,9 +78,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:clickable="true" />
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:popupBackground="@drawable/bg_dropdown_popup" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -95,9 +95,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:clickable="true" />
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:popupBackground="@drawable/bg_dropdown_popup" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -165,9 +165,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:clickable="true" />
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:popupBackground="@drawable/bg_dropdown_popup" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
