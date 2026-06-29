@@ -325,6 +325,17 @@ public class SettingsFragment extends MedicationWizardFragment {
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.VIBRATION, binding.crownVibration, binding.badgeActiveVibration);
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.STICKY_NOTIF, binding.crownSticky, binding.badgeActiveSticky);
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.DOSE_WINDOW, binding.crownDoseWindow, binding.badgeActiveDoseWindow);
+        
+        // Listeners for crowns to show premium dialog
+        View.OnClickListener showPremium = v -> new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumSettings");
+        if (binding.crownTheme != null) binding.crownTheme.setOnClickListener(showPremium);
+        if (binding.crownBackup != null) binding.crownBackup.setOnClickListener(showPremium);
+        if (binding.crownBypass != null) binding.crownBypass.setOnClickListener(showPremium);
+        if (binding.crownQuietHours != null) binding.crownQuietHours.setOnClickListener(showPremium);
+        if (binding.crownSupport != null) binding.crownSupport.setOnClickListener(showPremium);
+        if (binding.crownVibration != null) binding.crownVibration.setOnClickListener(showPremium);
+        if (binding.crownSticky != null) binding.crownSticky.setOnClickListener(showPremium);
+        if (binding.crownDoseWindow != null) binding.crownDoseWindow.setOnClickListener(showPremium);
     }
 
     private void updateRowEntitlement(boolean purchased, AppConfig.FeaturePassType type, @Nullable View crown, @Nullable View badge) {

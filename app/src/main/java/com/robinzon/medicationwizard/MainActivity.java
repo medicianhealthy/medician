@@ -264,14 +264,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
-        // Standard NavigationUI handling for items matching destination IDs (like nav_settings)
-        if (NavigationUI.onNavDestinationSelected(item, navController)) {
-            return true;
-        }
-
         int itemId = item.getItemId();
         if (itemId == R.id.action_premium) {
             new com.robinzon.medicationwizard.ui.settings.PremiumBottomSheet().show(getSupportFragmentManager(), "PremiumMain");
+            return true;
+        }
+
+        // Standard NavigationUI handling for items matching destination IDs (like nav_settings)
+        if (NavigationUI.onNavDestinationSelected(item, navController)) {
             return true;
         }
 

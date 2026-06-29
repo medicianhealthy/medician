@@ -1,111 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_premium_sheet"
     android:orientation="vertical">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/drag_handle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tint="#80FFFFFF" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:paddingHorizontal="24dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="24dp">
+            android:paddingBottom="24dp"
+            android:baselineAligned="false">
 
-            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-                android:id="@+id/drag_handle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Mascot container aligned to the top of the text content -->
-            <FrameLayout
-                android:id="@+id/container_icon"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/layout_content">
-
-                <View
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:alpha="0.1"
-                    android:background="@drawable/ic_wizard_background"
-                    android:scaleX="1.4"
-                    android:scaleY="1.4" />
-
-                <ImageView
-                    android:id="@+id/img_premium_mascot"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_wizard_high_def"
-                    tools:ignore="ContentDescription" />
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="bottom|end"
-                    android:elevation="10dp"
-                    android:src="@drawable/ic_crown"
-                    tools:ignore="ContentDescription" />
-            </FrameLayout>
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/benefit_pager"
+                android:layout_width="0dp"
+                android:layout_height="320dp"
+                android:layout_weight="1.2"
+                android:layout_marginTop="8dp" />
 
             <LinearLayout
-                android:id="@+id/layout_content"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_weight="1"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/container_icon"
-                app:layout_constraintTop_toBottomOf="@id/drag_handle"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txt_premium_title"
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_indicator"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/premium_title"
-                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_premium_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/premium_description"
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    app:tabBackground="@drawable/dot_indicator"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabMaxWidth="12dp"
+                    app:tabRippleColor="@null"
+                    app:tabPaddingStart="8dp"
+                    app:tabPaddingEnd="8dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_upgrade"
                     style="@style/Widget.Material3.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/premium_upgrade_button" />
+                    android:layout_marginTop="24dp"
+                    android:padding="16dp"
+                    android:text="@string/premium_upgrade_button"
+                    app:backgroundTint="#FFD700"
+                    app:rippleColor="#40000000"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_maybe_later"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/premium_maybe_later" />
+                    android:layout_marginTop="8dp"
+                    android:text="@string/premium_maybe_later"
+                    android:textColor="#CCFFFFFF" />
             </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <include layout="@layout/layout_ad_container" />
