@@ -159,6 +159,14 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
         List<SoundItem> list = new ArrayList<>();
         RingtoneManager manager = new RingtoneManager(requireContext());
         manager.setType(RingtoneManager.TYPE_NOTIFICATION | RingtoneManager.TYPE_ALARM);
+
+        // Standard: If current URI is empty/null, find the system default to ensure it's marked
+        if (android.text.TextUtils.isEmpty(selectedSoundUri)) {
+            Uri defaultUri = RingtoneManager.getActualDefaultRingtoneUri(requireContext(), RingtoneManager.TYPE_NOTIFICATION);
+            if (defaultUri != null) {
+                selectedSoundUri = defaultUri.toString();
+            }
+        }
         
         Cursor cursor = manager.getCursor();
         while (cursor.moveToNext()) {
