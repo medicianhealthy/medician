@@ -10,14 +10,14 @@ import androidx.annotation.Nullable;
 
 import android.widget.TextView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
-public class CheatsBottomSheet extends BottomSheetDialogFragment {
+public class CheatsBottomSheet extends MedicationWizardBottomSheet {
 
     private final android.os.Handler updateHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable updateRunnable;

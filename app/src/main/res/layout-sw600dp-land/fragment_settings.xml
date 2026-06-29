@@ -326,17 +326,10 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="20dp">
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/img_user_profile"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                            app:srcCompat="@mipmap/ic_launcher" />
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="16dp"
                             android:orientation="vertical">
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -646,7 +639,7 @@
                 android:layout_marginHorizontal="16dp">
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_backup_title" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                    <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_backup_title" android:textColor="?attr/colorOnSurface" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
                     <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_clear_data_title" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
                     <LinearLayout
                         android:id="@+id/btn_support"
@@ -657,14 +650,14 @@
                         android:focusable="true"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="20dp"
+                        android:paddingHorizontal="12dp"
                         android:paddingVertical="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/settings_support_title"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textAppearance="?attr/textAppearanceTitleSmall"
                             android:textColor="?attr/colorOnSurface" />
 
                         <ImageView

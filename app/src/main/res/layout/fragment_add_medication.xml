@@ -1,213 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="16dp"
-    android:paddingBottom="16dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-            android:id="@+id/drag_handle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/title_fragment_add_med"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/fragment_add_med_title"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:layout_marginBottom="16dp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_med_name"
-            android:layout_marginBottom="12dp">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/med_name_fragment_add_med"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords" />
-        </com.google.android.material.textfield.TextInputLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:orientation="vertical">
+
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/drag_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/title_fragment_add_med"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_add_med_title"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:layout_marginBottom="16dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_amount"
-                android:layout_marginEnd="8dp">
+                android:hint="@string/hint_med_name"
+                android:layout_marginBottom="12dp">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/med_amount"
+                    android:id="@+id/med_name_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_med_form"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
-                android:layout_weight="1.5"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_form"
-                app:hintEnabled="true"
-                app:startIconDrawable="@drawable/baseline_medication_24"
-                app:startIconTint="?attr/colorOnSurface">
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_amount"
+                    android:layout_marginEnd="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/med_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_med_form"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_form"
+                    app:hintEnabled="true"
+                    app:startIconDrawable="@drawable/baseline_medication_24"
+                    app:startIconTint="?attr/colorOnSurface">
+                    <AutoCompleteTextView
+                        android:id="@+id/med_form_fragment_add_med"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:clickable="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_frequency"
+                android:layout_marginBottom="12dp">
                 <AutoCompleteTextView
-                    android:id="@+id/med_form_fragment_add_med"
+                    android:id="@+id/med_frequency_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
                     android:focusable="false"
                     android:clickable="true" />
             </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_frequency"
-            android:layout_marginBottom="12dp">
-            <AutoCompleteTextView
-                android:id="@+id/med_frequency_fragment_add_med"
+            <LinearLayout
+                android:id="@+id/times_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp" />
 
-        <LinearLayout
-            android:id="@+id/times_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp" />
+            <!-- Optional Separator -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorOutlineVariant" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/extra_details_label"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginHorizontal="12dp" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="?attr/colorOutlineVariant" />
+            </LinearLayout>
 
-        <!-- Optional Separator -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp">
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="?attr/colorOutlineVariant" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_strength"
+                    android:layout_marginEnd="8dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/medication_strength"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_unit">
+                    <AutoCompleteTextView
+                        android:id="@+id/dropdown_unit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:clickable="true" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/extra_details_label"
-                android:textAppearance="?attr/textAppearanceLabelLarge"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_marginHorizontal="12dp" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="?attr/colorOutlineVariant" />
-        </LinearLayout>
+                android:text="@string/instructions_label"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:layout_marginBottom="8dp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_instructions"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_strength"
-                android:layout_marginEnd="8dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/medication_strength"
-                    android:layout_width="match_parent"
+                app:singleSelection="true"
+                android:layout_marginBottom="24dp">
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_before_eating"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_unit">
-                <AutoCompleteTextView
-                    android:id="@+id/dropdown_unit"
-                    android:layout_width="match_parent"
+                    android:text="@string/instruction_before_eating" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_after_eating"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="@string/instruction_after_eating" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_while_eating"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_while_eating" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_before_sleep"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_before_sleep" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_does_not_matter"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_no_preference" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/button_save_medication" />
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/instructions_label"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:layout_marginBottom="8dp"/>
+    <include layout="@layout/layout_ad_container" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group_instructions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            android:layout_marginBottom="24dp">
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_before_eating"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/instruction_before_eating" />
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_after_eating"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/instruction_after_eating" />
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_while_eating"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/instruction_while_eating" />
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_before_sleep"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/instruction_before_sleep" />
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_does_not_matter"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/instruction_no_preference" />
-        </com.google.android.material.chip.ChipGroup>
-
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="@string/button_save_medication" />
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>

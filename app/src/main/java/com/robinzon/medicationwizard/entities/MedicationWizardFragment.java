@@ -206,7 +206,11 @@ public class MedicationWizardFragment extends Fragment {
         dialog.setTitle(instance.getMedicationName());
         dialog.setMessage(message);
         dialog.setPositiveButton(getString(R.string.button_sure), (d, which) -> callback.onApply());
-        dialog.setNegativeButton(getString(R.string.button_not_now), null);
+        dialog.setNegativeButton(getString(R.string.button_not_now), (d, which) -> {
+            if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity main) {
+                main.addInteractionScore(1.0f);
+            }
+        });
         dialog.show();
     }
 

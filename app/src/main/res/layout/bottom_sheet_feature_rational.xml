@@ -1,112 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="32dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-            android:id="@+id/drag_handle"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:paddingHorizontal="24dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="32dp">
 
-        <FrameLayout
-            android:id="@+id/container_icon"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/drag_handle">
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/drag_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/mascot_glow"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:alpha="0.2"
-                android:background="@drawable/soft_glow"
-                android:scaleX="1.6"
-                android:scaleY="1.6" />
+            <FrameLayout
+                android:id="@+id/container_icon"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/drag_handle">
 
-            <ImageView
-                android:id="@+id/img_feature_icon"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:padding="8dp"
-                app:srcCompat="@drawable/ic_magic_wand" />
+                <View
+                    android:id="@+id/mascot_glow"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:alpha="0.2"
+                    android:background="@drawable/soft_glow"
+                    android:scaleX="1.6"
+                    android:scaleY="1.6" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|end"
-                android:elevation="10dp"
-                android:src="@drawable/ic_crown" />
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/img_feature_icon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/ic_magic_wand" />
 
-        <TextView
-            android:id="@+id/txt_rational_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/premium_rational_title"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/container_icon" />
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom|end"
+                    android:elevation="10dp"
+                    android:src="@drawable/ic_crown" />
+            </FrameLayout>
 
-        <TextView
-            android:id="@+id/txt_rational_desc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_rational_title"
-            tools:text="Watch a video to unlock this feature." />
+            <TextView
+                android:id="@+id/txt_rational_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/premium_rational_title"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/container_icon" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_watch_video"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:padding="16dp"
-            android:text="@string/premium_rational_btn_watch"
-            app:icon="@drawable/ic_magic_wand"
-            app:layout_constraintTop_toBottomOf="@id/txt_rational_desc" />
+            <TextView
+                android:id="@+id/txt_rational_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txt_rational_title"
+                tools:text="Watch a video to unlock this feature." />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_go_premium"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/premium_upgrade_button"
-            app:layout_constraintTop_toBottomOf="@id/btn_watch_video" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_watch_video"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:padding="16dp"
+                android:text="@string/premium_rational_btn_watch"
+                app:icon="@drawable/ic_magic_wand"
+                app:layout_constraintTop_toBottomOf="@id/txt_rational_desc" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_cancel"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/button_cancel"
-            app:layout_constraintTop_toBottomOf="@id/btn_go_premium" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_go_premium"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/premium_upgrade_button"
+                app:layout_constraintTop_toBottomOf="@id/btn_watch_video" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/button_cancel"
+                app:layout_constraintTop_toBottomOf="@id/btn_go_premium" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/layout_ad_container" />
+
+</LinearLayout>

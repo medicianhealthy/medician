@@ -27,7 +27,6 @@ public class AdMobBanner extends AdMobAd {
     private final AdView mAdView;
     private AdListener mAdListener;
     private FrameLayout mAdContainerView;
-    private boolean mIsViewAdded = false;
 
     public AdMobBanner(final @NonNull String adUnitId,
                        final @NonNull AdsManager adsManager,
@@ -45,15 +44,28 @@ public class AdMobBanner extends AdMobAd {
         getAdsManager().onAdAction(this, AdAction.Created);
     }
 
-    private void attachToContainer() {
-        final FrameLayout adContainerView = getAdContainerView();
-        if (null != adContainerView && !mIsViewAdded) {
+    public void attachToContainer() {
+        if (mAdContainerView == null) {
+            mAdContainerView = getActivity().findViewById(R.id.ad_container);
+        }
+        attachToContainer(mAdContainerView);
+    }
+
+    public void attachToContainer(@Nullable FrameLayout container) {
+        if (null != container) {
+            if (mAdView.getParent() == container) return;
+            
             if (mAdView.getParent() != null) {
                 ((ViewGroup) mAdView.getParent()).removeView(mAdView);
             }
-            adContainerView.addView(mAdView);
-            mIsViewAdded = true;
+            container.addView(mAdView);
+            mAdContainerView = container;
         }
+    }
+
+    public void resetContainer() {
+        mAdContainerView = null;
+        attachToContainer();
     }
 
     private void addBannerHeightListener() {
@@ -139,13 +151,6 @@ public class AdMobBanner extends AdMobAd {
     @Override
     public AdType getAdType() {
         return AdType.AdaptiveBanner;
-    }
-
-    public @Nullable FrameLayout getAdContainerView() {
-        if(null == mAdContainerView){
-            mAdContainerView = getActivity().findViewById(R.id.ad_container);
-        }
-        return mAdContainerView;
     }
 
     @Override

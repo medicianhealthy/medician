@@ -1,56 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cheats_title"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:layout_marginBottom="16dp" />
-
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/check_premium"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cheats_is_premium" />
+            android:orientation="vertical"
+            android:padding="24dp">
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/check_show_ads"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/cheats_show_ads" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cheats_title"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:layout_marginBottom="16dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_apply"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/cheats_apply_restart" />
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/check_premium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cheats_is_premium" />
 
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginVertical="24dp" />
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/check_show_ads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cheats_show_ads" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Current Remote Config Values"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:layout_marginBottom="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_apply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/cheats_apply_restart" />
 
-        <TextView
-            android:id="@+id/txt_config_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:lineSpacingExtra="4dp" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginVertical="24dp" />
 
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Remote Config Values"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/txt_config_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/layout_ad_container" />
+
+</LinearLayout>

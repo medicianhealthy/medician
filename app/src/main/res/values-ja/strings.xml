@@ -302,4 +302,15 @@
     <string name="button_cancel">キャンセル</string>
     <string name="button_confirm">確認</string>
     <string name="button_delete">削除</string>
+    <string name="medication_delete_warning">これにより、この薬とそのすべての履歴が完全に削除されます。この操作は取り消せません。よろしいですか？</string>
+    <string name="snooze_5_min">5 分</string>
+    <string name="snooze_10_min">10 分</string>
+    <string name="snooze_15_min">15 分</string>
+    <string name="snooze_20_min">20 分</string>
+    <string name="snooze_30_min">30 分</string>
+    <string name="snooze_1_time">1 回</string>
+    <string name="snooze_2_times">2 回</string>
+    <string name="snooze_3_times">3 回</string>
+    <string name="snooze_5_times">5 回</string>
+    <string name="snooze_unlimited">無制限</string>
 </resources>

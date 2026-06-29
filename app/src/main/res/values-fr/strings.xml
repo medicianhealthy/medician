@@ -310,4 +310,15 @@
     <string name="button_cancel">Annuler</string>
     <string name="button_confirm">Confirmer</string>
     <string name="button_delete">Supprimer</string>
+    <string name="medication_delete_warning">Cela supprimera définitivement ce médicament et tout son historique. Cela ne peut pas être annulé. Es-tu sûr ?</string>
+    <string name="snooze_5_min">5 minutes</string>
+    <string name="snooze_10_min">10 minutes</string>
+    <string name="snooze_15_min">15 minutes</string>
+    <string name="snooze_20_min">20 minutes</string>
+    <string name="snooze_30_min">30 minutes</string>
+    <string name="snooze_1_time">1 fois</string>
+    <string name="snooze_2_times">2 fois</string>
+    <string name="snooze_3_times">3 fois</string>
+    <string name="snooze_5_times">5 fois</string>
+    <string name="snooze_unlimited">Illimité</string>
 </resources>

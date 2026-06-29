@@ -69,6 +69,7 @@
     <string name="backup_export">ייצוא נתונים</string>
     <string name="backup_import">ייבוא נתונים</string>
     <string name="backup_restore_warning">שחזור גיבוי ימחק את כל התרופות וההיסטוריה הנוכחיים שלך. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
+    <string name="medication_delete_warning">פעולה זו תמחק לצמיתות את התרופה ואת כל ההיסטוריה שלה. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
 
     <string name="settings_clear_data_title">התחלה מחדש</string>
     <string name="settings_clear_data_message">פעולה זו תמחק לצמיתות את כל התרופות, ההיסטוריה וכל גיבוי בענן. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
@@ -305,4 +306,14 @@
     <string name="button_cancel">ביטול</string>
     <string name="button_confirm">אישור</string>
     <string name="button_delete">מחיקה</string>
+    <string name="snooze_5_min">5 דקות</string>
+    <string name="snooze_10_min">10 דקות</string>
+    <string name="snooze_15_min">15 דקות</string>
+    <string name="snooze_20_min">20 דקות</string>
+    <string name="snooze_30_min">30 דקות</string>
+    <string name="snooze_1_time">פעם אחת</string>
+    <string name="snooze_2_times">פעמיים</string>
+    <string name="snooze_3_times">3 פעמים</string>
+    <string name="snooze_5_times">5 פעמים</string>
+    <string name="snooze_unlimited">ללא הגבלה</string>
 </resources>

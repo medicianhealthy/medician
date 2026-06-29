@@ -33,6 +33,8 @@ public class SettingsViewModel extends AndroidViewModel {
     public static final String KEY_MAX_SNOOZES = "max_snoozes";
     public static final String KEY_APP_LANGUAGE = "app_language";
     public static final String KEY_VIBRATION_ENABLED = "vibration_enabled";
+    public static final String KEY_VIBRATION_PATTERN = "vibration_pattern";
+    public static final String KEY_FLASH_PATTERN = "flash_pattern";
     public static final String KEY_STICKY_NOTIF_ENABLED = "sticky_notif_enabled";
 
     // Theme Constants
@@ -51,6 +53,8 @@ public class SettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<Integer> mMaxSnoozes = new MutableLiveData<>();
     private final MutableLiveData<String> mLanguageCode = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mVibration = new MutableLiveData<>();
+    private final MutableLiveData<String> mVibrationPattern = new MutableLiveData<>();
+    private final MutableLiveData<String> mFlashPattern = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mStickyNotif = new MutableLiveData<>();
 
     /**
@@ -104,6 +108,8 @@ public class SettingsViewModel extends AndroidViewModel {
         mNotifVolume.setValue(sp.getInt(KEY_NOTIF_VOLUME, 70));
         mSoundName.setValue(sp.getString(KEY_NOTIF_SOUND_NAME, "Default"));
         mSoundUri.setValue(sp.getString(KEY_NOTIF_SOUND_URI, ""));
+        mVibrationPattern.setValue(sp.getString(KEY_VIBRATION_PATTERN, "Standard"));
+        mFlashPattern.setValue(sp.getString(KEY_FLASH_PATTERN, "None"));
         mSnoozeDuration.setValue(sp.getInt(KEY_SNOOZE_DURATION_MINS, 10));
         mMaxSnoozes.setValue(sp.getInt(KEY_MAX_SNOOZES, 3));
         mLanguageCode.setValue(sp.getString(KEY_APP_LANGUAGE, "en"));
@@ -131,6 +137,8 @@ public class SettingsViewModel extends AndroidViewModel {
     public LiveData<Boolean> getVibration() { return mVibration; }
     /** @return Observable LiveData for the sticky notification status. */
     public LiveData<Boolean> getStickyNotif() { return mStickyNotif; }
+    public LiveData<String> getVibrationPattern() { return mVibrationPattern; }
+    public LiveData<String> getFlashPattern() { return mFlashPattern; }
 
     /**
      * Updates and persists the custom vibration preference.
@@ -139,6 +147,16 @@ public class SettingsViewModel extends AndroidViewModel {
     public void setVibration(boolean enabled) {
         mVibration.setValue(enabled);
         SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_VIBRATION_ENABLED, enabled);
+    }
+
+    public void setVibrationPattern(String pattern) {
+        mVibrationPattern.setValue(pattern);
+        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_VIBRATION_PATTERN, pattern);
+    }
+
+    public void setFlashPattern(String pattern) {
+        mFlashPattern.setValue(pattern);
+        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_FLASH_PATTERN, pattern);
     }
 
     /**

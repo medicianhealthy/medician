@@ -302,4 +302,15 @@
     <string name="button_cancel">Abbrechen</string>
     <string name="button_confirm">Bestätigen</string>
     <string name="button_delete">Löschen</string>
+    <string name="medication_delete_warning">Dies wird dieses Medikament und seinen gesamten Verlauf dauerhaft löschen. Dies kann nicht rückgängig gemacht werden. Bist du sicher?</string>
+    <string name="snooze_5_min">5 Minuten</string>
+    <string name="snooze_10_min">10 Minuten</string>
+    <string name="snooze_15_min">15 Minuten</string>
+    <string name="snooze_20_min">20 Minuten</string>
+    <string name="snooze_30_min">30 Minuten</string>
+    <string name="snooze_1_time">1 Mal</string>
+    <string name="snooze_2_times">2 Mal</string>
+    <string name="snooze_3_times">3 Mal</string>
+    <string name="snooze_5_times">5 Mal</string>
+    <string name="snooze_unlimited">Unbegrenzt</string>
 </resources>

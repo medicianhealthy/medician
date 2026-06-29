@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
@@ -60,7 +59,7 @@ import java.util.Set;
  * card look that opens fully on all devices.
  * </p>
  */
-public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
+public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
 
     /**
      * Standard lifecycle method to define the dialog's visual style.
@@ -365,6 +364,12 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         setUnitDropDown(view);
         
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
+        // Explicitly hide keyboard when clicking the frequency dropdown
+        dropdownFrequency.setOnTouchListener((v, event) -> {
+            hideKeyboard(v);
+            return false;
+        });
+
         String[] frequencies = new String[]{
                 getString(R.string.frequency_once),
                 getString(R.string.frequency_twice),
@@ -376,12 +381,21 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         dropdownFrequency.setAdapter(freqAdapter);
         dropdownFrequency.setThreshold(Integer.MAX_VALUE); // Disable filtering
 
-        // When Frequency changes, we must regenerate the specific time picker buttons
         dropdownFrequency.setOnItemClickListener((parent, itemView, position, itemId) -> {
+            hideKeyboard(dropdownFrequency);
             int timesPerDay = position + 1;
             medication.setDailyFrequency(timesPerDay);
             generateTimePickers(timesPerDay);
         });
+    }
+
+    private void hideKeyboard(View view) {
+        if (view != null) {
+            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
     }
 
     /**
@@ -528,6 +542,11 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         final AutoCompleteTextView dropdownForm = view.findViewById(R.id.med_form_fragment_add_med);
         if (null == dropdownForm) return;
 
+        dropdownForm.setOnTouchListener((v, event) -> {
+            hideKeyboard(v);
+            return false;
+        });
+
         String[] forms = new String[]{
                 getString(R.string.form_pill),
                 getString(R.string.form_solution),
@@ -553,6 +572,7 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         if (null == layoutForm) return;
 
         dropdownForm.setOnItemClickListener((parent, itemView, position, itemId) -> {
+            hideKeyboard(dropdownForm);
             final EForm selectedForm = EForm.values()[position];
             medication.setForm(selectedForm);
             int icon = switch (selectedForm) {
@@ -581,8 +601,13 @@ public class AddMedicationBottomSheet extends BottomSheetDialogFragment {
         }
         
         if (null != dropdownUnit) {
+            dropdownUnit.setOnTouchListener((v, event) -> {
+                hideKeyboard(v);
+                return false;
+            });
             dropdownUnit.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, measurementUnits));
             dropdownUnit.setOnItemClickListener((parent, itemView, position, itemId) -> {
+                hideKeyboard(dropdownUnit);
                 medication.setMeasurementUnit(EMeasurementUnit.values()[position]);
             });
         }

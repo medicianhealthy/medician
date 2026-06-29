@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.billing.BillingManager;
+import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 
 /**
  * A specialized BottomSheet for promoting and handling Premium upgrades.
@@ -21,7 +21,7 @@ import com.robinzon.medicationwizard.billing.BillingManager;
  * to ensure smooth rendering and a distinct visual hierarchy.
  * </p>
  */
-public class PremiumBottomSheet extends BottomSheetDialogFragment {
+public class PremiumBottomSheet extends MedicationWizardBottomSheet {
 
     /**
      * Standard lifecycle method to define the dialog's visual style.

@@ -17,8 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
  * Performance: Optimized for quick expansion and centered display on larger screens.
  * </p>
  */
-public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
+public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
 
     /**
      * Standard lifecycle method to define the dialog's visual style.
@@ -113,15 +113,34 @@ public class SoundPickerBottomSheet extends BottomSheetDialogFragment {
         
         List<SoundItem> sounds = fetchAvailableSounds();
         
-        // Match the current sound URI to its title
-        for (SoundItem s : sounds) {
-            if (s.uri.equals(selectedSoundUri)) {
-                selectedSoundName = s.name;
+        int selectedPos = -1;
+        for (int i = 0; i < sounds.size(); i++) {
+            if (sounds.get(i).uri.equals(selectedSoundUri)) {
+                selectedSoundName = sounds.get(i).name;
+                selectedPos = i;
                 break;
             }
         }
 
         recyclerView.setAdapter(new SoundAdapter(sounds));
+        
+        if (selectedPos != -1) {
+            final int finalPos = selectedPos;
+            // Longer delay to ensure layout stability on tablets and make animation visible
+            recyclerView.postDelayed(() -> {
+                if (isAdded() && recyclerView.getLayoutManager() != null) {
+                    androidx.recyclerview.widget.LinearSmoothScroller smoothScroller = 
+                        new androidx.recyclerview.widget.LinearSmoothScroller(requireContext()) {
+                            @Override
+                            protected int getVerticalSnapPreference() {
+                                return androidx.recyclerview.widget.LinearSmoothScroller.SNAP_TO_START;
+                            }
+                        };
+                    smoothScroller.setTargetPosition(finalPos);
+                    recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
+                }
+            }, 600);
+        }
 
         view.findViewById(R.id.btn_confirm_sound).setOnClickListener(v -> {
             if (listener != null && selectedSoundUri != null) {

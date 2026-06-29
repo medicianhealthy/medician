@@ -199,13 +199,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             @Override
             public void onTake(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "TAKEN");
-                triggerAdIfEligible();
             }
 
             @Override
             public void onSkip(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SKIPPED");
-                triggerAdIfEligible();
             }
 
             @Override
@@ -216,13 +214,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             @Override
             public void onUntake(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SCHEDULED");
-                triggerAdIfEligible();
             }
 
             @Override
             public void onUnskip(DoseInstanceEntity instance, int position) {
                 updateInstanceStatus(instance, "SCHEDULED");
-                triggerAdIfEligible();
             }
 
             @Override
@@ -275,9 +271,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
      */
     private void updateInstanceStatus(DoseInstanceEntity instance, String status) {
         if ("TAKEN".equals(status)) {
-            checkAndClarifyTakeTiming(instance, () -> applyStatusUpdate(instance, status));
+            checkAndClarifyTakeTiming(instance, () -> {
+                applyStatusUpdate(instance, status);
+                triggerAdIfEligible();
+            });
         } else {
             applyStatusUpdate(instance, status);
+            triggerAdIfEligible();
         }
     }
 

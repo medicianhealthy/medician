@@ -116,13 +116,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         adsManager = new AdsManager(this);
         
-        ConsentManager.gatherConsent(this, () -> RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
-            @Override
-            public void onFetchCompleted(boolean isSuccessFull) {
-                getAdsManager().initializeAds();
-                startAdCheckTimer();
-            }
-        }));
+        ConsentManager.gatherConsent(this, () -> {
+            Logger.log("Ads", "Consent gathered, fetching Remote Config");
+            RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
+                @Override
+                public void onFetchCompleted(boolean isSuccessFull) {
+                    Logger.log("Ads", "Remote Config fetch completed. Success: %b", isSuccessFull);
+                    getAdsManager().initializeAds();
+                    startAdCheckTimer();
+                }
+            });
+        });
 
         isInitialLaunch = true;
         checkExactAlarmPermission();
@@ -227,6 +231,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public void addInteractionScore(float score) {
         if (com.robinzon.medicationwizard.utils.Statisticator.addInteractionScoreAndCheck(this, score)) {
             // Threshold met, trigger interstitial show
+            Logger.log("Ads", "Score threshold reached, requesting interstitial");
             adsManager.showInterstitialAd();
         }
     }

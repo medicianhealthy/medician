@@ -302,4 +302,15 @@
     <string name="button_cancel">취소</string>
     <string name="button_confirm">확인</string>
     <string name="button_delete">삭제</string>
+    <string name="medication_delete_warning">이 약물과 모든 기록이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다. 계속하시겠습니까?</string>
+    <string name="snooze_5_min">5분</string>
+    <string name="snooze_10_min">10분</string>
+    <string name="snooze_15_min">15분</string>
+    <string name="snooze_20_min">20분</string>
+    <string name="snooze_30_min">30분</string>
+    <string name="snooze_1_time">1회</string>
+    <string name="snooze_2_times">2회</string>
+    <string name="snooze_3_times">3회</string>
+    <string name="snooze_5_times">5회</string>
+    <string name="snooze_unlimited">무제한</string>
 </resources>

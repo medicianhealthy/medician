@@ -13,18 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.billing.BillingManager;
 import com.robinzon.medicationwizard.managers.FeaturePassManager;
+import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 
 /**
  * A contextual dialog to prompt users to unlock specific premium features 
  * by watching a Rewarded Video.
  */
-public class FeatureRationalBottomSheet extends BottomSheetDialogFragment {
+public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
 
     private static final String ARG_FEATURE_TYPE = "arg_feature_type";
     private AppConfig.FeaturePassType featureType;

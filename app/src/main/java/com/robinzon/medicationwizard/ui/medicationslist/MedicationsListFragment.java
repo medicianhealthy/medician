@@ -11,13 +11,24 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.backup.CloudBackupManager;
+import com.robinzon.medicationwizard.backup.DriveServiceHelper;
 import com.robinzon.medicationwizard.databinding.FragmentMedicationsListBinding;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
+
+import java.util.Collections;
 
 /**
  * A fragment that displays the master list of all defined medications.
@@ -180,11 +191,22 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(R.string.delete));
-        dialog.setMessage(getString(R.string.backup_restore_warning));
+        dialog.setMessage(getString(R.string.medication_delete_warning));
         dialog.setPositiveButton(getString(R.string.button_delete), (d, which) -> {
             Medication.deleteMedication(requireContext(), medication.getId());
             adapter.removeItem(position);
             updateUiState(adapter.getItemCount() == 0);
+            
+            // Sync to Google Drive if signed in and premium
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
+            if (account != null && com.robinzon.medicationwizard.AppConfig.isPremium(requireContext())) {
+                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(requireContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+                credential.setSelectedAccount(account.getAccount());
+                Drive service = new Drive.Builder(new NetHttpTransport(), new GsonFactory(), credential).setApplicationName("Medication Wizard").build();
+                CloudBackupManager manager = new CloudBackupManager(requireContext(), new DriveServiceHelper(service));
+                manager.backupToCloud();
+            }
+
             Snackbar.make(binding.getRoot(), message, SNACKBAR_DURATION_MS)
                     .setAction(R.string.button_undo, v -> medication.addToMedicationList(requireContext()))
                     .show();

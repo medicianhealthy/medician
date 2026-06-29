@@ -129,14 +129,17 @@ public class SettingsFragment extends MedicationWizardFragment {
         updateNotificationStatus();
         
         binding.btnNotifications.setOnClickListener(v -> {
-            if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             NotificationManager nm = NotificationManager.getInstance(requireActivity());
-            if (!nm.hasPermission()) { nm.showInvitationDialog(); } 
+            if (!nm.hasPermission()) { 
+                nm.showInvitationDialog(); 
+            } 
             else {
                 com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
                 dialog.setTitle(getString(R.string.settings_notifications_title));
                 dialog.setMessage(getString(R.string.settings_notifications_manage_prompt));
-                dialog.setPositiveButton(getString(R.string.action_settings), (d, w) -> nm.openNotificationAppSettings(requireContext()));
+                dialog.setPositiveButton(getString(R.string.action_settings), (d, w) -> {
+                    nm.openNotificationAppSettings(requireContext());
+                });
                 dialog.setNegativeButton(getString(android.R.string.cancel), null);
                 dialog.show();
             }
@@ -200,6 +203,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             int theme = (checkedId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : (checkedId == R.id.btn_theme_dark) ? SettingsViewModel.THEME_DARK : SettingsViewModel.THEME_SYSTEM;
             if (!java.util.Objects.equals(theme, viewModel.getTheme().getValue())) {
                 viewModel.setTheme(theme);
+                // Move ad scoring to here, after selection is applied
                 if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             }
         });
@@ -236,6 +240,12 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnSnoozeDuration.setOnClickListener(v -> showSnoozeDurationDialog());
+        viewModel.getSnoozeDuration().observe(getViewLifecycleOwner(), duration -> {
+            if (binding != null && binding.txtSnoozeDurationDesc != null) {
+                binding.txtSnoozeDurationDesc.setText(getString(R.string.settings_snooze_duration_summary, duration));
+            }
+        });
+
         binding.btnMaxSnoozes.setOnClickListener(v -> showMaxSnoozesDialog());
         viewModel.getMaxSnoozes().observe(getViewLifecycleOwner(), max -> {
             if (binding != null && binding.txtMaxSnoozesDesc != null) {
@@ -256,6 +266,18 @@ public class SettingsFragment extends MedicationWizardFragment {
                 viewModel.setVibration(!java.util.Objects.equals(Boolean.TRUE, viewModel.getVibration().getValue()));
                 if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
             } else { showRational(AppConfig.FeaturePassType.VIBRATION); }
+        });
+
+        viewModel.getVibrationPattern().observe(getViewLifecycleOwner(), pattern -> {
+            if (binding != null && binding.txtVibrationPatternDesc != null) {
+                binding.txtVibrationPatternDesc.setText(pattern);
+            }
+        });
+
+        viewModel.getFlashPattern().observe(getViewLifecycleOwner(), pattern -> {
+            if (binding != null && binding.txtFlashPatternDesc != null) {
+                binding.txtFlashPatternDesc.setText(pattern);
+            }
         });
 
         binding.btnVibrationPattern.setOnClickListener(v -> showVibrationPatternPicker());
@@ -334,39 +356,53 @@ public class SettingsFragment extends MedicationWizardFragment {
     private void showThresholdPicker(boolean isEarly) {
         String[] opts = {"15 min", "30 min", "45 min", "60 min", "90 min", "120 min", "180 min"};
         int[] vals = {15, 30, 45, 60, 90, 120, 180};
+        
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
+        int currentVal = isEarly ? rcm.getEarlyTakeThresholdMins() : rcm.getLateTakeThresholdMins();
+        int checkedItemIdx = 3; // Default 60
+        for (int i = 0; i < vals.length; i++) { if (vals[i] == currentVal) { checkedItemIdx = i; break; } }
+
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         d.setTitle(getString(isEarly ? R.string.settings_early_threshold_title : R.string.settings_late_threshold_title));
-        d.setItems(opts, (dialog, i) -> {
+        d.setSingleChoiceItems(opts, checkedItemIdx, (dialog, i) -> {
             // Future logic to save custom thresholds. Currently placeholders.
-            Toast.makeText(requireContext(), "Threshold set to " + opts[i], Toast.LENGTH_SHORT).show();
             if (isEarly) binding.txtEarlyThresholdDesc.setText(opts[i]);
             else binding.txtLateThresholdDesc.setText(opts[i]);
             
             if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.0f);
+            dialog.dismiss();
         });
         d.show();
     }
 
     private void showFlashPatternPicker() {
         String[] opts = {"None", "Single Blink", "Double Pulse", "Strobe"};
+        String current = viewModel.getFlashPattern().getValue();
+        int checkedItemIdxFlash = 0;
+        for (int i = 0; i < opts.length; i++) { if (opts[i].equalsIgnoreCase(current)) { checkedItemIdxFlash = i; break; } }
+
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         d.setTitle(getString(R.string.settings_flash_pattern_title));
-        d.setItems(opts, (dialog, i) -> {
-            binding.txtFlashPatternDesc.setText(opts[i]);
-            // Persistence for flash pattern would go here
+        d.setSingleChoiceItems(opts, checkedItemIdxFlash, (dialog, i) -> {
+            viewModel.setFlashPattern(opts[i]);
             if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.0f);
+            dialog.dismiss();
         });
         d.show();
     }
 
     private void showVibrationPatternPicker() {
         String[] opts = {"Standard", "Heartbeat", "SOS", "Long Pulse"};
+        String current = viewModel.getVibrationPattern().getValue();
+        int checkedItemIdxVib = 0;
+        for (int i = 0; i < opts.length; i++) { if (opts[i].equalsIgnoreCase(current)) { checkedItemIdxVib = i; break; } }
+
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         d.setTitle(getString(R.string.settings_vibration_pattern_title));
-        d.setItems(opts, (dialog, i) -> {
-            binding.txtVibrationPatternDesc.setText(opts[i]);
-            // Persistence for vibration pattern would go here
+        d.setSingleChoiceItems(opts, checkedItemIdxVib, (dialog, i) -> {
+            viewModel.setVibrationPattern(opts[i]);
             if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.0f);
+            dialog.dismiss();
         });
         d.show();
     }
@@ -393,17 +429,20 @@ public class SettingsFragment extends MedicationWizardFragment {
         CloudBackupManager manager = new CloudBackupManager(requireContext(), new DriveServiceHelper(service));
         if (isBackup) {
             Snackbar.make(binding.getRoot(), R.string.backing_up_drive, Snackbar.LENGTH_SHORT).show();
-            if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
-            manager.backupToCloud().addOnSuccessListener(aVoid -> Snackbar.make(binding.getRoot(), R.string.cloud_backup_success, Snackbar.LENGTH_SHORT).show()).addOnFailureListener(e -> Snackbar.make(binding.getRoot(), R.string.cloud_backup_failed, Snackbar.LENGTH_SHORT).show());
+            manager.backupToCloud().addOnSuccessListener(aVoid -> {
+                Snackbar.make(binding.getRoot(), R.string.cloud_backup_success, Snackbar.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> Snackbar.make(binding.getRoot(), R.string.cloud_backup_failed, Snackbar.LENGTH_SHORT).show());
         } else {
             com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
             dialog.setTitle(getString(R.string.cloud_restore_title));
             dialog.setMessage(getString(R.string.cloud_restore_message));
             dialog.setPositiveButton(getString(R.string.button_restore), (restoreDialog, index) -> {
                 Snackbar.make(binding.getRoot(), R.string.restoring_cloud, Snackbar.LENGTH_SHORT).show();
-                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
                 manager.restoreFromCloud().addOnSuccessListener(success -> {
-                    if (success) { Snackbar.make(binding.getRoot(), R.string.restore_success, Snackbar.LENGTH_LONG).show(); if (getActivity() != null) getActivity().recreate(); }
+                    if (success) { 
+                        Snackbar.make(binding.getRoot(), R.string.restore_success, Snackbar.LENGTH_LONG).show(); 
+                        if (getActivity() != null) getActivity().recreate(); 
+                    }
                     else { Snackbar.make(binding.getRoot(), R.string.no_backup_found, Snackbar.LENGTH_SHORT).show(); }
                 }).addOnFailureListener(e -> Snackbar.make(binding.getRoot(), getString(R.string.restore_failed_format, e.getMessage()), Snackbar.LENGTH_SHORT).show());
             });
@@ -468,14 +507,13 @@ public class SettingsFragment extends MedicationWizardFragment {
         CloudBackupSettings cs = CloudBackupSettings.getInstance(requireContext());
         updateCloudUi(am, cs);
         View.OnClickListener sl = v -> { 
-            if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
             if (!AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)) { showRational(AppConfig.FeaturePassType.BACKUP); return; } 
             if (!am.isSignedIn()) googleSignInLauncher.launch(googleSignInClient.getSignInIntent()); 
         };
         binding.btnGoogleSignin.setOnClickListener(sl); binding.btnGoogleSigninAction.setOnClickListener(sl);
         binding.btnSignOut.setOnClickListener(v -> googleSignInClient.signOut().addOnCompleteListener(t -> { am.clearAccountInfo(); updateCloudUi(am, cs); if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).refreshNavHeader(); }));
-        binding.btnAutoBackup.setOnClickListener(v -> { if (!AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)) { showRational(AppConfig.FeaturePassType.BACKUP); return; } if (!am.isSignedIn()) { showSignInRequiredDialog(); return; } boolean cur = cs.isAutoBackupEnabled(); cs.setAutoBackupEnabled(!cur); binding.switchAutoBackup.setChecked(!cur); if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f); });
-        binding.btnWifiOnly.setOnClickListener(v -> { if (!AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)) { showRational(AppConfig.FeaturePassType.BACKUP); return; } if (!am.isSignedIn()) { showSignInRequiredDialog(); return; } boolean cur = cs.isWifiOnlyEnabled(); cs.setWifiOnlyEnabled(!cur); binding.switchWifiOnly.setChecked(!cur); if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f); });
+        binding.btnAutoBackup.setOnClickListener(v -> { if (!AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)) { showRational(AppConfig.FeaturePassType.BACKUP); return; } if (!am.isSignedIn()) { showSignInRequiredDialog(); return; } boolean cur = cs.isAutoBackupEnabled(); cs.setAutoBackupEnabled(!cur); binding.switchAutoBackup.setChecked(!cur); });
+        binding.btnWifiOnly.setOnClickListener(v -> { if (!AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)) { showRational(AppConfig.FeaturePassType.BACKUP); return; } if (!am.isSignedIn()) { showSignInRequiredDialog(); return; } boolean cur = cs.isWifiOnlyEnabled(); cs.setWifiOnlyEnabled(!cur); binding.switchWifiOnly.setChecked(!cur); });
         binding.btnBackupNow.setOnClickListener(v -> { if (!AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)) { showRational(AppConfig.FeaturePassType.BACKUP); return; } if (!am.isSignedIn()) { showSignInRequiredDialog(); return; } performCloudAction(true); });
         binding.btnRestoreCloud.setOnClickListener(v -> { if (!AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)) { showRational(AppConfig.FeaturePassType.BACKUP); return; } if (!am.isSignedIn()) { showSignInRequiredDialog(); return; } performCloudAction(false); });
     }
@@ -486,7 +524,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         boolean signedIn = account != null;
         if (!unlocked) {
             binding.containerCloudSettings.setVisibility(View.GONE); binding.btnSignOut.setVisibility(View.GONE); binding.btnGoogleSigninAction.setVisibility(View.VISIBLE);
-            binding.txtAccountName.setText(R.string.cloud_backup_title); binding.txtAccountEmail.setText(R.string.premium_only_feature); binding.imgUserProfile.setImageResource(R.drawable.ic_wizard_high_def);
+            binding.txtAccountName.setText(R.string.cloud_backup_title); binding.txtAccountEmail.setText(R.string.cloud_backup_sign_in_hint);
             return;
         }
         binding.containerCloudSettings.setVisibility(View.VISIBLE); binding.btnSignOut.setVisibility(signedIn ? View.VISIBLE : View.GONE); binding.btnGoogleSigninAction.setVisibility(signedIn ? View.GONE : View.VISIBLE);
@@ -495,10 +533,8 @@ public class SettingsFragment extends MedicationWizardFragment {
         binding.btnBackupNow.setAlpha(alpha); binding.btnRestoreCloud.setAlpha(alpha);
         if (signedIn) {
             binding.txtAccountName.setText(account.getDisplayName()); binding.txtAccountEmail.setText(account.getEmail()); binding.switchAutoBackup.setChecked(cs.isAutoBackupEnabled()); binding.switchWifiOnly.setChecked(cs.isWifiOnlyEnabled());
-            if (account.getPhotoUrl() != null) com.bumptech.glide.Glide.with(this).load(account.getPhotoUrl()).circleCrop().placeholder(R.mipmap.ic_launcher).into(binding.imgUserProfile);
-            else binding.imgUserProfile.setImageResource(R.mipmap.ic_launcher);
         } else {
-            binding.txtAccountName.setText(R.string.cloud_backup_title); binding.txtAccountEmail.setText(R.string.cloud_backup_sign_in_hint); binding.imgUserProfile.setImageResource(R.mipmap.ic_launcher);
+            binding.txtAccountName.setText(R.string.cloud_backup_title); binding.txtAccountEmail.setText(R.string.cloud_backup_sign_in_hint);
         }
     }
 
@@ -528,23 +564,59 @@ public class SettingsFragment extends MedicationWizardFragment {
     }
 
     private void showSnoozeDurationDialog() {
-        String[] opts = {"5 min", "10 min", "15 min", "20 min", "30 min"}; int[] vals = {5, 10, 15, 20, 30};
+        String[] opts = {
+            getString(R.string.snooze_5_min), 
+            getString(R.string.snooze_10_min), 
+            getString(R.string.snooze_15_min), 
+            getString(R.string.snooze_20_min), 
+            getString(R.string.snooze_30_min)
+        }; 
+        int[] vals = {5, 10, 15, 20, 30};
+        
+        int currentVal = viewModel.getSnoozeDuration().getValue() != null ? viewModel.getSnoozeDuration().getValue() : 10;
+        int checkedItem = 1; // Default 10 min
+        for (int i = 0; i < vals.length; i++) {
+            if (vals[i] == currentVal) {
+                checkedItem = i;
+                break;
+            }
+        }
+
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         d.setTitle(getString(R.string.settings_snooze_duration_title)); 
-        d.setItems(opts, (dialog, i) -> {
+        d.setSingleChoiceItems(opts, checkedItem, (dialog, i) -> {
             viewModel.setSnoozeDuration(vals[i]);
             if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+            dialog.dismiss();
         }); 
         d.show();
     }
 
     private void showMaxSnoozesDialog() {
-        String[] opts = {"1 time", "2 times", "3 times", "5 times", "Unlimited"}; int[] vals = {1, 2, 3, 5, -1};
+        String[] opts = {
+            getString(R.string.snooze_1_time), 
+            getString(R.string.snooze_2_times), 
+            getString(R.string.snooze_3_times), 
+            getString(R.string.snooze_5_times), 
+            getString(R.string.snooze_unlimited)
+        };
+        int[] vals = {1, 2, 3, 5, -1};
+        
+        int currentVal = viewModel.getMaxSnoozes().getValue() != null ? viewModel.getMaxSnoozes().getValue() : 3;
+        int checkedItem = 2; // Default 3 times
+        for (int i = 0; i < vals.length; i++) {
+            if (vals[i] == currentVal) {
+                checkedItem = i;
+                break;
+            }
+        }
+
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         d.setTitle(getString(R.string.settings_max_snoozes_title)); 
-        d.setItems(opts, (dialog, i) -> {
+        d.setSingleChoiceItems(opts, checkedItem, (dialog, i) -> {
             viewModel.setMaxSnoozes(vals[i]);
             if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+            dialog.dismiss();
         }); 
         d.show();
     }

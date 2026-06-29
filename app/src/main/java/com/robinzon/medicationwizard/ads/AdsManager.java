@@ -181,6 +181,18 @@ public class AdsManager implements OnAdActionListener{
         }
     }
 
+    public void attachBannerToContainer(android.widget.FrameLayout container) {
+        if (mainBanner != null) {
+            mainBanner.attachToContainer(container);
+        }
+    }
+
+    public void restoreBannerToDefault() {
+        if (mainBanner != null) {
+            mainBanner.resetContainer();
+        }
+    }
+
     /** @noinspection unused*/
     /**
      * Triggers a full-screen interstitial ad if both usage and time-based cooldowns are satisfied.

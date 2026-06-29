@@ -307,4 +307,15 @@
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
     <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="medication_delete_warning">سيؤدي هذا إلى حذف هذا الدواء وجميع سجلاته نهائيًا. لا يمكن التراجع عن هذا العمل. هل أنت متأكد؟</string>
+    <string name="snooze_5_min">5 دقائق</string>
+    <string name="snooze_10_min">10 دقائق</string>
+    <string name="snooze_15_min">15 دقيقة</string>
+    <string name="snooze_20_min">20 دقيقة</string>
+    <string name="snooze_30_min">30 دقيقة</string>
+    <string name="snooze_1_time">مرة واحدة</string>
+    <string name="snooze_2_times">مرتين</string>
+    <string name="snooze_3_times">3 مرات</string>
+    <string name="snooze_5_times">5 مرات</string>
+    <string name="snooze_unlimited">غير محدود</string>
 </resources>

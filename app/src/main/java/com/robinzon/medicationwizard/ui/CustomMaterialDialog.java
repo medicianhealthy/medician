@@ -64,21 +64,8 @@ public class CustomMaterialDialog {
     }
 
     public void setTitle(String title) {
-        // Magical Header: Start-aligned title for a professional, readable look
-        TextView titleView = new TextView(context);
-        titleView.setText(title);
-        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        titleView.setTypeface(null, Typeface.BOLD);
-        
-        int primaryAttr = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
-        int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
-        titleView.setTextColor(primaryColor);
-        
-        titleView.setGravity(Gravity.START);
-        int padding = (int) (24 * context.getResources().getDisplayMetrics().density);
-        titleView.setPadding(padding, padding, padding, (int) (4 * context.getResources().getDisplayMetrics().density));
-        
-        builder.setCustomTitle(titleView);
+        // Simple start-aligned title using standard Material text styling
+        builder.setTitle(title);
     }
 
     public void setMessage(String message) {
@@ -130,6 +117,10 @@ public class CustomMaterialDialog {
 
     public void setItems(CharSequence[] items, final DialogInterface.OnClickListener listener) {
         builder.setItems(items, listener);
+    }
+
+    public void setSingleChoiceItems(CharSequence[] items, int checkedItem, final DialogInterface.OnClickListener listener) {
+        builder.setSingleChoiceItems(items, checkedItem, listener);
     }
 
     public void setView(View view) {
