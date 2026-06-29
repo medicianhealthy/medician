@@ -326,6 +326,17 @@ public class SettingsFragment extends MedicationWizardFragment {
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.STICKY_NOTIF, binding.crownSticky, binding.badgeActiveSticky);
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.DOSE_WINDOW, binding.crownDoseWindow, binding.badgeActiveDoseWindow);
         
+        // Auto-expand detail containers if feature is active/unlocked
+        if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.VIBRATION)) {
+            // Only show if the main switch is also ON
+            boolean vibEnabled = java.util.Objects.equals(Boolean.TRUE, viewModel.getVibration().getValue());
+            if (binding.containerVibrationDetails != null) binding.containerVibrationDetails.setVisibility(vibEnabled ? View.VISIBLE : View.GONE);
+        }
+        
+        if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.DOSE_WINDOW)) {
+            if (binding.containerDoseWindowDetails != null) binding.containerDoseWindowDetails.setVisibility(View.VISIBLE);
+        }
+
         // Listeners for crowns to show premium dialog
         View.OnClickListener showPremium = v -> new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumSettings");
         if (binding.crownTheme != null) binding.crownTheme.setOnClickListener(showPremium);
