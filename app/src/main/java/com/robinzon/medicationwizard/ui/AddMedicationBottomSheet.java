@@ -386,6 +386,16 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             int timesPerDay = position + 1;
             medication.setDailyFrequency(timesPerDay);
             generateTimePickers(timesPerDay);
+            
+            // Move focus to the dynamic buttons container or first button
+            timesContainer.postDelayed(() -> {
+                if (timesContainer.getChildCount() > 0) {
+                    View row = timesContainer.getChildAt(0);
+                    if (row instanceof LinearLayout && ((LinearLayout) row).getChildCount() > 0) {
+                        ((LinearLayout) row).getChildAt(0).requestFocus();
+                    }
+                }
+            }, 100);
         });
     }
 
@@ -575,6 +585,11 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             hideKeyboard(dropdownForm);
             final EForm selectedForm = EForm.values()[position];
             medication.setForm(selectedForm);
+            
+            // Move focus to the next field (Frequency)
+            View next = view.findViewById(R.id.med_frequency_fragment_add_med);
+            if (next != null) next.requestFocus();
+
             int icon = switch (selectedForm) {
                 case Pill -> R.drawable.ic_med_pill;
                 case Drops -> R.drawable.ic_med_drops;
@@ -609,6 +624,10 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             dropdownUnit.setOnItemClickListener((parent, itemView, position, itemId) -> {
                 hideKeyboard(dropdownUnit);
                 medication.setMeasurementUnit(EMeasurementUnit.values()[position]);
+                
+                // Move focus to instructions group or save button
+                View next = view.findViewById(R.id.chip_group_instructions);
+                if (next != null) next.requestFocus();
             });
         }
     }
@@ -729,6 +748,17 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", picker.getHour(), picker.getMinute());
             buttonToUpdate.setText(getString(R.string.time_set_format, formattedTime));
             dosesInDay.put(finalIndex, new SimpleDayTime((byte) picker.getHour(), (byte) picker.getMinute()));
+            
+            // Explicitly stay on the button or move to next
+            buttonToUpdate.requestFocus();
+            
+            // If this was the last time button, move to Strength field after a small delay
+            if (finalIndex == medication.getDailyFrequency()) {
+                View nextView = getView() != null ? getView().findViewById(R.id.medication_strength) : null;
+                if (nextView != null) {
+                    nextView.postDelayed(nextView::requestFocus, 100);
+                }
+            }
         });
 
         picker.show(getParentFragmentManager(), "timePicker");
