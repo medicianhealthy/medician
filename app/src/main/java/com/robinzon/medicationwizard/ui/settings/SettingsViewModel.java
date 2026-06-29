@@ -173,6 +173,9 @@ public class SettingsViewModel extends AndroidViewModel {
      * @param langCode The new ISO language code (e.g., "en", "iw").
      */
     public void setLanguage(String langCode) {
+        if (!"en".equals(langCode) && !"iw".equals(langCode)) {
+            langCode = "en"; // Safeguard for English and Hebrew only
+        }
         if (langCode.equals(mLanguageCode.getValue())) return;
         
         mLanguageCode.setValue(langCode);

@@ -208,7 +208,6 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
         });
 
-        binding.btnLanguage.setOnClickListener(v -> showLanguageDialog());
         binding.txtVersion.setOnClickListener(v -> {
             cheatTapCount++;
             if (cheatTapCount >= 10) { 
@@ -643,23 +642,6 @@ public class SettingsFragment extends MedicationWizardFragment {
         d.show();
     }
 
-    private void showLanguageDialog() {
-        String[] langs = {getString(R.string.lang_english), getString(R.string.lang_hebrew), getString(R.string.lang_arabic), getString(R.string.lang_spanish), getString(R.string.lang_french), getString(R.string.lang_german), getString(R.string.lang_japanese), getString(R.string.lang_portuguese), getString(R.string.lang_korean)};
-        String[] codes = {"en", "iw", "ar", "es", "fr", "de", "ja", "pt-BR", "ko"};
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-        d.setTitle(getString(R.string.settings_language_title)); d.setItems(langs, (dialog, i) -> {
-            String sel = codes[i]; if (!sel.equals(viewModel.getLanguageCode().getValue())) {
-                com.robinzon.medicationwizard.ui.CustomMaterialDialog confirm = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-                confirm.setTitle(getString(R.string.settings_language_title)); confirm.setMessage(getString(R.string.settings_language_restart_warning));
-                confirm.setPositiveButton(getString(R.string.button_ok), (d2, w) -> { 
-                    viewModel.setLanguage(sel); 
-                    if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
-                    if (getActivity() != null) getActivity().recreate(); 
-                });
-                confirm.setNegativeButton(getString(R.string.button_not_now), null); confirm.show();
-            }
-        }); d.show();
-    }
 
     private void showClearDataConfirmation() {
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
