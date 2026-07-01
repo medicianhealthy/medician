@@ -17,9 +17,12 @@
         <item name="colorOnTertiaryContainer">@color/md_theme_dark_onTertiaryContainer</item>
 
         <item name="android:colorBackground">@color/md_theme_dark_background</item>
-        <item name="colorSurface">@color/md_theme_dark_surface</item>
+        <item name="colorSurface">@color/md_theme_dark_background</item>
+        <item name="colorSurfaceVariant">#44474E</item>
+        <item name="colorOutline">#8C9199</item>
+        <item name="colorOutlineVariant">#44474E</item>
 
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/android:colorBackground</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
 
         <!-- Global Card Styling -->
@@ -29,6 +32,7 @@
     <style name="Widget.MedicationWizard.Card.Elevated" parent="Widget.Material3.CardView.Elevated">
         <item name="cardElevation">6dp</item>
         <item name="cardCornerRadius">24dp</item>
+        <item name="cardBackgroundColor">@color/md_theme_dark_surface</item>
         <!-- In Dark Mode, a subtle border is critical for card visibility -->
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">?attr/colorOutlineVariant</item>

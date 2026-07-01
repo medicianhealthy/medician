@@ -17,11 +17,14 @@
         <item name="colorOnTertiaryContainer">@color/md_theme_light_onTertiaryContainer</item>
 
         <item name="android:colorBackground">@color/md_theme_light_background</item>
-        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorSurface">@color/md_theme_light_background</item>
+        <item name="colorSurfaceVariant">#E2E2E6</item>
+        <item name="colorOutline">#71787D</item>
+        <item name="colorOutlineVariant">#C1C7CE</item>
 
 
 
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorSurface</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/android:colorBackground</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 
         <!-- Global Card Styling -->
@@ -31,6 +34,7 @@
     <style name="Widget.MedicationWizard.Card.Elevated" parent="Widget.Material3.CardView.Elevated">
         <item name="cardElevation">6dp</item>
         <item name="cardCornerRadius">24dp</item>
+        <item name="cardBackgroundColor">@color/md_theme_light_surface</item>
         <!-- Subtle border for better visibility in dark mode -->
         <item name="strokeWidth">0dp</item>
     </style>

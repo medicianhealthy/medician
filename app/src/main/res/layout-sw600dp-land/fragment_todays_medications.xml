@@ -5,7 +5,7 @@
     android:id="@+id/adViewParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/android:colorBackground">
 
     <!-- Left Panel: Main Actions & List -->
     <LinearLayout
@@ -84,7 +84,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="?attr/colorSurfaceVariant"
+        android:background="?attr/android:colorBackground"
         android:orientation="vertical"
         android:padding="32dp"
         app:layout_constraintBottom_toBottomOf="parent"

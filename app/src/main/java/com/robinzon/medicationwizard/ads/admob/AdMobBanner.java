@@ -40,6 +40,7 @@ public class AdMobBanner extends AdMobAd {
         mAdView.setAdListener(getAdListener());
         addBannerHeightListener();
         mAdView.setAdSize(getAdSize(getActivity()));
+        mAdView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         
         getAdsManager().onAdAction(this, AdAction.Created);
     }
@@ -58,8 +59,50 @@ public class AdMobBanner extends AdMobAd {
             if (mAdView.getParent() != null) {
                 ((ViewGroup) mAdView.getParent()).removeView(mAdView);
             }
-            container.addView(mAdView);
-            mAdContainerView = container;
+            
+            // On wide tablet landscape, AdMob pads with black bars internally.
+            // We use the app's background color for the container to match the app theme.
+            int bgColor = com.google.android.material.color.MaterialColors.getColor(container, android.R.attr.colorBackground);
+            container.setBackgroundColor(bgColor);
+
+            // Dynamic width calculation based on target container
+            container.post(() -> {
+                int containerWidthPx = container.getWidth();
+                if (containerWidthPx <= 0) {
+                    containerWidthPx = Screen.getUsableScreenWidthPX(getActivity());
+                }
+                
+                float density = Screen.getDensity(getActivity().getResources());
+                int containerWidthDp = (int) (containerWidthPx / density);
+                
+                // For wide screens, use a fixed size (728dp) to prevent internal black padding from stretching
+                if (containerWidthDp > 760) {
+                    containerWidthDp = 728;
+                }
+
+                AdSize targetSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getActivity(), containerWidthDp);
+                
+                if (!targetSize.equals(mAdView.getAdSize())) {
+                    mAdView.setAdSize(targetSize);
+                }
+
+                int widthPx = (int) (targetSize.getWidth() * density);
+                int heightPx = (int) (targetSize.getHeight() * density);
+                
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                        widthPx > 0 ? widthPx : ViewGroup.LayoutParams.WRAP_CONTENT,
+                        heightPx > 0 ? heightPx : ViewGroup.LayoutParams.WRAP_CONTENT,
+                        android.view.Gravity.CENTER);
+
+                if (mAdView.getParent() != null) {
+                    ((ViewGroup) mAdView.getParent()).removeView(mAdView);
+                }
+                container.addView(mAdView, lp);
+                mAdContainerView = container;
+                
+                // Final aggressive attempt to clear background
+                mAdView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            });
         }
     }
 
@@ -122,6 +165,7 @@ public class AdMobBanner extends AdMobAd {
                 super.onAdLoaded();
                 setIsLoaded(true);
                 setIsLoading(false);
+                
                 log("%s Loaded.\n%s", getLogTag(), thisToString());
                 getAdsManager().onAdAction(AdMobBanner.this, AdAction.LoadedSuccessfully);
                 loaded();
@@ -185,7 +229,14 @@ public class AdMobBanner extends AdMobAd {
     private static AdSize getAdSize(final Activity activity) {
 
         int adWidthPixels = Screen.getUsableScreenWidthPX(activity);
-        final int adWidthDp = (int) (adWidthPixels / Screen.getDensity(activity.getResources()));
+        int adWidthDp = (int) (adWidthPixels / Screen.getDensity(activity.getResources()));
+
+        // Creative fix: On wide tablet landscape screens, AdMob often pads the ad with black bars
+        // if we request the full width. We cap the requested width to a standard tablet 
+        // leaderboard (728dp) to prevent this and let our "Wizardly Wings" background show.
+        if (adWidthDp > 760) {
+            adWidthDp = 728;
+        }
 
         // Use standard Anchored Adaptive (not the 'Large' version). 
         // This provides the best balance of aesthetics and filling the width.

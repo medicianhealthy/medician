@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:baselineAligned="false"
-    android:background="?attr/colorSurface">
+    android:background="?attr/android:colorBackground">
 
     <!-- Left Side: Calendar (Master) -->
     <LinearLayout
@@ -44,7 +44,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:background="?attr/colorSurfaceVariant"
+        android:background="?attr/android:colorBackground"
         android:paddingTop="24dp">
 
         <!-- Daily Completion Summary -->
