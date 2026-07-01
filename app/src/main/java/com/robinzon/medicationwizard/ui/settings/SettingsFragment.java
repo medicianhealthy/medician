@@ -196,6 +196,11 @@ public class SettingsFragment extends MedicationWizardFragment {
                 isThemeReverting = true;
                 Integer current = viewModel.getTheme().getValue();
                 int currentId = (current != null && current == SettingsViewModel.THEME_LIGHT) ? R.id.btn_theme_light : (current != null && current == SettingsViewModel.THEME_DARK) ? R.id.btn_theme_dark : R.id.btn_theme_system;
+                
+                // Store the intended theme in tag to apply after reward
+                int intendedTheme = (checkedId == R.id.btn_theme_light) ? SettingsViewModel.THEME_LIGHT : SettingsViewModel.THEME_DARK;
+                binding.toggleGroupTheme.setTag(intendedTheme);
+
                 showRational(AppConfig.FeaturePassType.THEME);
                 group.post(() -> { group.check(currentId); isThemeReverting = false; });
                 return;
@@ -363,6 +368,14 @@ public class SettingsFragment extends MedicationWizardFragment {
             
             AppConfig.FeaturePassType feature = AppConfig.FeaturePassType.valueOf(unlockedType);
             switch (feature) {
+                case THEME -> {
+                    // Automatically apply the last selected theme that triggered the rational
+                    Integer selectedTheme = (Integer) binding.toggleGroupTheme.getTag();
+                    if (selectedTheme != null) {
+                        viewModel.setTheme(selectedTheme);
+                        if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.5f);
+                    }
+                }
                 case BYPASS_VOLUME -> viewModel.setBypassVolume(true);
                 case QUIET_HOURS -> showQuietHoursPickers();
                 case SUPPORT -> showSupportOptionsDialog();
