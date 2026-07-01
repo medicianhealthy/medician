@@ -38,7 +38,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
-                app:tabBackground="@drawable/dot_indicator"
+                app:tabBackground="@drawable/dot_indicator_premium"
                 app:tabGravity="center"
                 app:tabIndicatorHeight="0dp"
                 app:tabMaxWidth="12dp"

@@ -157,8 +157,14 @@
     <string name="history_doses_format">%1$d מתוך %2$d מנות נלקחו</string>
     <string name="history_select_date_title">בחר תאריך</string>
     <string name="history_stats_title">סטטיסטיקת בריאות</string>
-    <string name="history_tip_title">טיפ יומי</string>
-    <string name="history_tip_content">עקביות היא המפתח לבריאות קסומה. שמור על הרצף שלך בחיים!</string>
+    <string name="history_tip_title">טיפ בריאות קסום</string>
+    <string name="history_tip_1">עקביות היא המפתח לבריאות קסומה. שמרו על רצף ההצלחות שלכם!</string>
+    <string name="history_tip_2">קוסם לעולם לא שוכח את התרופות שלו. השתמשו בתזכורות כדי להישאר במסלול!</string>
+    <string name="history_tip_3">לוקחים תרופות עם אוכל? בדקו את ההוראות להשפעה המאגית הטובה ביותר.</string>
+    <string name="history_tip_4">שתו מים! הקסם עובד הכי טוב כשהגוף רווי היטב.</string>
+    <string name="history_tip_5">מנוחה היא לחש חזק. השתמשו בשעות שקטות כדי להגן על קסם השינה שלכם.</string>
+    <string name="history_tip_6">עקבו אחר כל מנה. היסטוריה מלאה היא מגילה רבת עוצמה עבור הרופא שלכם.</string>
+    <string name="streak_empty">התחילו את רצף הקסם שלכם היום!</string>
     <string name="settings_title">הגדרות</string>
 
     <!-- Developer Cheats -->

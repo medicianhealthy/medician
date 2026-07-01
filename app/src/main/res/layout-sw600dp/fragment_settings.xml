@@ -578,40 +578,7 @@
                         android:orientation="vertical"
                         app:layout_constraintGuide_percent="0.666" />
 
-                    <View
-                        android:id="@+id/divider_theme"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="16dp"
-                        android:background="?attr/colorOutlineVariant"
-                        app:layout_constraintTop_toBottomOf="@id/toggle_group_theme" />
 
-                    <LinearLayout
-                        android:id="@+id/btn_language"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:orientation="vertical"
-                        app:layout_constraintTop_toBottomOf="@id/divider_theme">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/settings_language_title"
-                            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                        <TextView
-                            android:id="@+id/txt_language_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="@string/settings_language_summary"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 

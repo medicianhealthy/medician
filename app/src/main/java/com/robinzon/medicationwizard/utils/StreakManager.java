@@ -15,22 +15,12 @@ import java.util.Calendar;
  */
 public class StreakManager {
 
-    /**
-     * Interface to receive the result of a streak calculation.
-     */
     public interface StreakCallback {
         void onStreakCalculated(int streakCount);
     }
 
     /**
      * Calculates the current streak by checking historical data in the database.
-     * <p>
-     * Performance: Runs on a background thread via the database executor to avoid 
-     * blocking the main UI thread.
-     * </p>
-     *
-     * @param context  Application context.
-     * @param callback Callback to return the final count.
      */
     public static void calculateCurrentStreak(Context context, StreakCallback callback) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -42,34 +32,53 @@ public class StreakManager {
                 long startOfDay = getStartOfDay(cal);
                 long endOfDay = getEndOfDay(cal);
                 
-                // If the day has no medications, we skip it and continue the streak
-                // (e.g. weekends with no meds shouldn't break a streak)
-                int totalDoses = AppDatabase.getDatabase(context).doseInstanceDao().getInstancesInRangeInternal(startOfDay, endOfDay).size();
+                // Fetch doses that were scheduled to occur up to 'now' 
+                // (don't count future doses for today's 'perfection' check yet)
+                int totalDosesCount = AppDatabase.getDatabase(context).doseInstanceDao().getInstancesInRangeInternal(startOfDay, endOfDay).size();
                 
-                if (totalDoses > 0) {
+                if (totalDosesCount > 0) {
+                    // How many of these doses were actually taken?
                     int unfinished = AppDatabase.getDatabase(context).doseInstanceDao().getUnfinishedDosesCount(startOfDay, endOfDay);
+                    
                     if (unfinished == 0) {
+                        // All doses for this day were taken!
                         streak++;
                     } else {
-                        // A day with meds that weren't all taken breaks the streak
-                        break;
+                        // This day is not "perfect".
+                        // If it's TODAY, we don't break the streak yet (they might still take them).
+                        // If it's YESTERDAY or earlier, the streak is officially broken.
+                        boolean isToday = isSameDay(cal, Calendar.getInstance());
+                        if (!isToday) {
+                            break;
+                        }
+                        // If it's today and unfinished, we just continue to check yesterday 
+                        // to see the existing streak.
                     }
-                } else if (streak == 0) {
-                    // If today has no meds and we haven't found any taken meds yet, 
-                    // just keep going back to find the start.
                 } else {
-                    // Day with no meds doesn't break an existing streak.
+                    // Day with no meds doesn't break a streak, but doesn't increment it.
+                    // (e.g. if they finished a 3-day streak and today has no meds, it stays 3).
                 }
 
                 // Move to previous day
                 cal.add(Calendar.DAY_OF_YEAR, -1);
                 
                 // Safety break: don't check more than a year
-                if (streak > 365) break;
+                if (streak > 365 || Math.abs(System.currentTimeMillis() - cal.getTimeInMillis()) > 365L * 24 * 60 * 60 * 1000) {
+                    break;
+                }
+                
+                // If we've gone back more than 1 day without finding any meds, 
+                // or we hit a broken day, the loop would have broken above.
+                // We limit backtracking to avoid infinite loops if data is sparse.
             }
             
             callback.onStreakCalculated(streak);
         });
+    }
+
+    private static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+               cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
     private static long getStartOfDay(Calendar cal) {

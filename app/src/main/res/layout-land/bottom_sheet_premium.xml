@@ -25,13 +25,36 @@
             android:paddingBottom="24dp"
             android:baselineAligned="false">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/benefit_pager"
+            <!-- Left Panel: Benefits Carousel & Indicator -->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="320dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1.2"
-                android:layout_marginTop="8dp" />
+                android:orientation="vertical">
 
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/benefit_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:layout_marginTop="8dp" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:background="@android:color/transparent"
+                    app:tabBackground="@drawable/dot_indicator_premium"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabMaxWidth="12dp"
+                    app:tabRippleColor="@null"
+                    app:tabPaddingStart="8dp"
+                    app:tabPaddingEnd="8dp" />
+            </LinearLayout>
+
+            <!-- Right Panel: Actions -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -40,26 +63,11 @@
                 android:layout_gravity="center_vertical"
                 android:orientation="vertical">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="12dp"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    app:tabBackground="@drawable/dot_indicator"
-                    app:tabGravity="center"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabMaxWidth="12dp"
-                    app:tabRippleColor="@null"
-                    app:tabPaddingStart="8dp"
-                    app:tabPaddingEnd="8dp" />
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_upgrade"
                     style="@style/Widget.Material3.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:padding="16dp"
                     android:text="@string/premium_upgrade_button"
                     app:backgroundTint="#FFD700"

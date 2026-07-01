@@ -358,6 +358,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (fragment instanceof com.robinzon.medicationwizard.ui.settings.SettingsFragment) {
             ((com.robinzon.medicationwizard.ui.settings.SettingsFragment) fragment).updateNotificationStatus();
         }
+        
+        // REFINED: Also trigger refresh for the Dashboard if it's visible to ensure
+        // first-med addition is reflected if background updates were interrupted.
+        if (fragment instanceof com.robinzon.medicationwizard.ui.todaysmedications.TodaysMedicationsFragment) {
+            // This will trigger the reactive LiveData to re-evaluate the UI state
+            fragment.onResume(); 
+        }
+
         // Recursively search child fragments
         for (androidx.fragment.app.Fragment child : fragment.getChildFragmentManager().getFragments()) {
             refreshFragmentNotificationUi(child);

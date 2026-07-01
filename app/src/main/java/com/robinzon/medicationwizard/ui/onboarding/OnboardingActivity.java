@@ -197,8 +197,8 @@ public class OnboardingActivity extends AppCompatActivity {
         dots.clear();
         for (int i = 0; i < count; i++) {
             ImageView dot = new ImageView(this);
-            int size = (int) (8 * getResources().getDisplayMetrics().density);
-            int margin = (int) (4 * getResources().getDisplayMetrics().density);
+            int size = (int) (12 * getResources().getDisplayMetrics().density);
+            int margin = (int) (2 * getResources().getDisplayMetrics().density);
             
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
             params.setMargins(margin, 0, margin, 0);

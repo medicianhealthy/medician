@@ -450,7 +450,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         
         // Handle post-save logic (Ads and Permissions) after a delay to allow the database to commit
         // and the BottomSheet to finish its exit animation, ensuring a clean UI transition.
-        // We wait 800ms to ensure the background fragment is fully settled.
+        // We wait 1200ms to ensure the background fragment is fully settled and DB write is done.
         if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity) {
             final com.robinzon.medicationwizard.MainActivity mainActivity = (com.robinzon.medicationwizard.MainActivity) getActivity();
             new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
@@ -462,7 +462,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 // 2. Request notification permissions (Android 13+) 
                 // We do this after the ad trigger to avoid overlapping system dialogs.
                 com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(mainActivity).requestWithRationale();
-            }, 800);
+            }, 1200);
         }
     }
 

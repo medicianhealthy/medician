@@ -171,8 +171,14 @@
     <string name="history_doses_format">%1$d of %2$d doses taken</string>
     <string name="history_select_date_title">Select Date</string>
     <string name="history_stats_title">Health Stats</string>
-    <string name="history_tip_title">Daily Tip</string>
-    <string name="history_tip_content">Consistency is the key to magic health. Keep your streak alive!</string>
+    <string name="history_tip_title">Magic Health Tip</string>
+    <string name="history_tip_1">Consistency is the key to magic health. Keep your streak alive!</string>
+    <string name="history_tip_2">A wizard never forgets their meds. Use reminders to stay on track!</string>
+    <string name="history_tip_3">Taking meds with food? Check your instructions for the best magic effect.</string>
+    <string name="history_tip_4">Stay hydrated! Magic works best when your body is well-watered.</string>
+    <string name="history_tip_5">Rest is a powerful spell. Use Quiet Hours to protect your sleep magic.</string>
+    <string name="history_tip_6">Track every dose. A complete history is a powerful scroll for your doctor.</string>
+    <string name="streak_empty">Start your magic streak today!</string>
     <string name="settings_title">Settings</string>
 
     <!-- Developer Cheats -->
