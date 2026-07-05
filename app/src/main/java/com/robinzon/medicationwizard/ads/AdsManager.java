@@ -11,13 +11,13 @@ import com.robinzon.medicationwizard.ads.admob.AdMobInterstitial;
 import com.robinzon.medicationwizard.ads.admob.AdMobRewarded;
 import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
 import com.robinzon.medicationwizard.utils.Logger;
-import com.robinzon.medicationwizard.utils.NetworkUtils;
+import com.robinzon.medicationwizard.utils.NetworkMonitor;
 import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class AdsManager implements OnAdActionListener{
+public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkStatusListener{
 
 
     public interface OnRewardedFinishedListener {
@@ -66,6 +66,7 @@ public class AdsManager implements OnAdActionListener{
      * Performs one-time setup of ad units and initiates the first load requests.
      */
     public void initializeAds() {
+        NetworkMonitor.getInstance(activity).addListener(this);
         createAds();
         loadAds();
     }
@@ -74,32 +75,30 @@ public class AdsManager implements OnAdActionListener{
      * Instantiates the AdMob wrapper classes for each placement.
      */
     private void createAds() {
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            if (null == mainBanner) {
-                mainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Banner) : "a",
-                        this,
-                        AdPlacement.Main);
-                getAdsCollection().add(mainBanner);
+        if (null == mainBanner) {
+            mainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Banner) : "a",
+                    this,
+                    AdPlacement.Main);
+            getAdsCollection().add(mainBanner);
 
-            }
-            if (null == mainInterstitial) {
-                mainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
-                        this,
-                        AdPlacement.Main);
-                getAdsCollection().add(mainInterstitial);
-            }
-            if (null == mainRewarded) {
-                mainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
-                        this,
-                        AdPlacement.Main);
-                getAdsCollection().add(mainRewarded);
-            }
-            if (null == appOpenAd) {
-                appOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
-                        this,
-                        AdPlacement.Main);
-                getAdsCollection().add(appOpenAd);
-            }
+        }
+        if (null == mainInterstitial) {
+            mainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
+                    this,
+                    AdPlacement.Main);
+            getAdsCollection().add(mainInterstitial);
+        }
+        if (null == mainRewarded) {
+            mainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
+                    this,
+                    AdPlacement.Main);
+            getAdsCollection().add(mainRewarded);
+        }
+        if (null == appOpenAd) {
+            appOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
+                    this,
+                    AdPlacement.Main);
+            getAdsCollection().add(appOpenAd);
         }
     }
 
@@ -166,6 +165,7 @@ public class AdsManager implements OnAdActionListener{
     }
 
     public void onDestroy() {
+        NetworkMonitor.getInstance(activity).removeListener(this);
         for (AdMobAd ad : getAdsCollection()) {
             if (null != ad) {
                 ad.onDestroy();
@@ -352,5 +352,20 @@ public class AdsManager implements OnAdActionListener{
     private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
         // Use the value defined in Remote Config (Server or Local Cache)
         return com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getAdInterstitialCoolDownSeconds();
+    }
+
+    @Override
+    public void onNetworkChanged(boolean isAvailable) {
+        if (!isAvailable) {
+            Logger.log("AdsManager", "Network lost. Cancelling all ad load states.");
+            for (AdMobAd ad : getAdsCollection()) {
+                if (ad != null) {
+                    ad.setIsLoading(false);
+                }
+            }
+        } else {
+            Logger.log("AdsManager", "Network restored. Triggering ad loads.");
+            loadAds();
+        }
     }
 }

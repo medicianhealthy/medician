@@ -77,6 +77,7 @@ public class AdMobInterstitial extends AdMobAd {
             };
         }
         return mAdLoadCallBack;
+        
     }
 
     @Override
