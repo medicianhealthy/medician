@@ -712,16 +712,35 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
 
         final TextInputEditText amountTextView = getAmountInputEditText(view);
         if (amountTextView != null && amountTextView.getText() != null) {
+            String amountStr = amountTextView.getText().toString().replace(',', '.').trim();
             try {
-                medication.setAmount(Float.parseFloat(amountTextView.getText().toString()));
-            } catch (NumberFormatException ignored) {}
+                medication.setAmount(Float.parseFloat(amountStr));
+            } catch (NumberFormatException ignored) {
+                medication.setAmount(1.0f); // Fallback to 1 dose
+            }
         }
 
         final TextInputEditText strengthEditText = view.findViewById(R.id.medication_strength);
         if (strengthEditText != null && strengthEditText.getText() != null) {
-            try {
-                medication.setStrength(Float.parseFloat(strengthEditText.getText().toString()));
-            } catch (NumberFormatException ignored) {}
+            String strengthStr = strengthEditText.getText().toString().replace(',', '.').trim();
+            if (strengthStr.isEmpty()) {
+                medication.setStrength(0);
+            } else {
+                try {
+                    medication.setStrength(Float.parseFloat(strengthStr));
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+
+        final AutoCompleteTextView unitDropdown = view.findViewById(R.id.dropdown_unit);
+        if (unitDropdown != null && unitDropdown.getText() != null) {
+            String unitName = unitDropdown.getText().toString();
+            for (EMeasurementUnit unit : EMeasurementUnit.values()) {
+                if (unit.getName().equalsIgnoreCase(unitName)) {
+                    medication.setMeasurementUnit(unit);
+                    break;
+                }
+            }
         }
     }
 

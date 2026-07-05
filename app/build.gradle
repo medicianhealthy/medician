@@ -52,6 +52,25 @@ android {
         }
     }
     namespace 'com.robinzon.medicationwizard'
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "MedicationWizard-v${variant.versionName}-${variant.versionCode}-${variant.buildType.name}.apk"
+        }
+    }
+
+    // Rename App Bundles (AAB)
+    tasks.matching { it.name.startsWith("bundle") && (it.name.endsWith("Release") || it.name.endsWith("Debug")) }.configureEach { task ->
+        task.doLast {
+            def buildType = task.name.endsWith("Release") ? "release" : "debug"
+            def bundleName = "MedicationWizard-v${rootProject.VERSION_NAME}-${rootProject.VERSION_CODE}-${buildType}.aab"
+            def outputDir = layout.buildDirectory.dir("outputs/bundle/${buildType}").get().asFile
+            def originalFile = new File(outputDir, "app-${buildType}.aab")
+            if (originalFile.exists()) {
+                originalFile.renameTo(new File(outputDir, bundleName))
+            }
+        }
+    }
 }
 
 dependencies {

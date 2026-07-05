@@ -4,9 +4,15 @@ buildscript {
     project.ext.set("SDK_MINIMUM_VERSION", 28) //Android 9.0
     project.ext.set("SDK_COMPILE_VERSION", 36) //Android 16.0
     project.ext.set("SDK_TARGET_VERSION", 36) //Android 16.0
-    //App version
-    project.ext.set("VERSION_CODE", 100000001)
-    project.ext.set("VERSION_NAME", "1.0.1")
+    // Version components
+    def major = 1
+    def minor = 0
+    def patch = 1
+    def build = 2 // Increment this for hotfixes to the same version name
+
+    // Example: 100010001
+    project.ext.set("VERSION_CODE", major * 100000000 + minor * 1000000 + patch * 1000 + build)
+    project.ext.set("VERSION_NAME", "${major}.${minor}.${patch}")
 }
 
 plugins {

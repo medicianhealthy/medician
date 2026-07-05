@@ -3,7 +3,6 @@ package com.robinzon.medicationwizard.ui.settings;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

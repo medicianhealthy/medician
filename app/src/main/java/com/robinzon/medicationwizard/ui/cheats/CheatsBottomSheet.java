@@ -4,17 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import android.widget.TextView;
-
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
-import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
+import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 public class CheatsBottomSheet extends MedicationWizardBottomSheet {

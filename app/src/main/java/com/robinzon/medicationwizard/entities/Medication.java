@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.database.AppDatabase;
@@ -130,47 +129,49 @@ public class Medication implements Comparable<Medication> {
         // 2. Room logic: Generate and save schedules
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase db = AppDatabase.getDatabase(context);
-            long now = System.currentTimeMillis();
             
-            // FIX: Cancel and delete only FUTURE doses to preserve historical records in History view.
-            // Range: from 1 minute ago (buffer) to the end of the scheduling window.
-            long startRange = now - 60000;
-            long endRange = now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L);
-            
-            List<DoseInstanceEntity> instancesInRange = db.doseInstanceDao().getInstancesInRangeInternal(startRange, endRange);
-            for (DoseInstanceEntity e : instancesInRange) {
-                if (id.equals(e.getMedicationId())) {
-                    ReminderManager.cancelReminder(context, e.getId());
-                    // Delete future doses only (SCHEDULED) or all in current range to refresh definition?
-                    // We delete all in range to ensure the 7-day window always matches the latest definition.
-                    db.doseInstanceDao().deleteInstanceInternal(e);
-                }
+            // Step A: Cancel existing alarms for pending doses
+            List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getScheduledByMedicationId(id);
+            for (DoseInstanceEntity e : scheduled) {
+                ReminderManager.cancelReminder(context, e.getId());
             }
+            
+            // Step B: Purge all pending (SCHEDULED) doses to ensure latest definition is applied
+            db.doseInstanceDao().deleteScheduledByMedicationId(id);
 
             final SparseArray<SimpleDayTime> activeTimes = getTimesADay();
             if (activeTimes == null || activeTimes.size() == 0) return;
 
-            List<DoseInstanceEntity> entities = new ArrayList<>();
+            // Step C: Generate fresh doses for the scheduling window (Today + future)
+            List<DoseInstanceEntity> newEntities = new ArrayList<>();
             for (int i = 0; i < AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE; i++) {
                 for (int k = 0; k < activeTimes.size(); k++) {
                     SimpleDayTime time = activeTimes.valueAt(k);
                     MedicationInstance instance = getMedicationInstance(i, time);
-                    entities.add(DoseInstanceEntity.fromInstance(instance));
+                    long scheduledTime = instance.getScheduledTime();
+                    
+                    // CRITICAL FIX: Only create if a dose doesn't already exist for this slot.
+                    // This preserves historical TAKEN/SKIPPED records for today while 
+                    // updating all pending tasks with new name/strength/form.
+                    if (db.doseInstanceDao().getInstanceByTime(id, scheduledTime) == null) {
+                        newEntities.add(DoseInstanceEntity.fromInstance(instance));
+                    }
                 }
             }
 
-            if (!entities.isEmpty()) {
-                db.doseInstanceDao().insertAll(entities);
+            if (!newEntities.isEmpty()) {
+                db.doseInstanceDao().insertAll(newEntities);
                 
-                // Re-fetch only the newly inserted future instances to set alarms
-                List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getInstancesInRangeInternal(now, endRange);
-                for (DoseInstanceEntity e : scheduled) {
-                    if (id.equals(e.getMedicationId())) {
+                // Step D: Re-schedule Android alarms for all future doses
+                long now = System.currentTimeMillis();
+                List<DoseInstanceEntity> futureDoses = db.doseInstanceDao().getInstancesInRangeInternal(now, now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L));
+                for (DoseInstanceEntity e : futureDoses) {
+                    if (id.equals(e.getMedicationId()) && "SCHEDULED".equals(e.getStatus())) {
                         ReminderManager.scheduleReminder(context, e);
                     }
                 }
 
-                Logger.log("Room", "Saved " + entities.size() + " doses for " + commercialName);
+                Logger.log("Room", "Refreshed " + newEntities.size() + " doses for " + commercialName);
             }
         });
     }

@@ -257,6 +257,13 @@ public class AdsManager implements OnAdActionListener{
     }
 
     /**
+     * @return True if a rewarded video ad is currently being fetched from the server.
+     */
+    public boolean isRewardedLoading() {
+        return mainRewarded != null && mainRewarded.isLoading();
+    }
+
+    /**
      * Attempts to display an App Open ad, checking for usage thresholds and cooldowns.
      */
     public void showAppOpenAd() {

@@ -72,6 +72,9 @@ public interface DoseInstanceDao {
     @Query("SELECT * FROM dose_instances ORDER BY scheduledTime ASC")
     List<DoseInstanceEntity> getAllInstancesInternal();
 
+    @Query("SELECT * FROM dose_instances WHERE medicationId = :medicationId AND scheduledTime = :time LIMIT 1")
+    DoseInstanceEntity getInstanceByTime(String medicationId, long time);
+
     /**
      * Returns medications scheduled for a specific time window, sorted by schedule time.
      * Used primary for the "Today's Medications" and "History" views.
@@ -140,6 +143,18 @@ public interface DoseInstanceDao {
      */
     @Query("DELETE FROM dose_instances")
     void deleteAll();
+
+    /**
+     * Deletes only the pending (SCHEDULED) doses for a specific medication.
+     * Used when refreshing definitions to ensure pending tasks match the latest edits.
+     *
+     * @param medicationId The ID of the medication to target.
+     */
+    @Query("DELETE FROM dose_instances WHERE medicationId = :medicationId AND status = 'SCHEDULED'")
+    void deleteScheduledByMedicationId(String medicationId);
+
+    @Query("SELECT * FROM dose_instances WHERE medicationId = :medicationId AND status = 'SCHEDULED'")
+    List<DoseInstanceEntity> getScheduledByMedicationId(String medicationId);
 
     /**
      * Deletes dose instances that were scheduled before the given timestamp.

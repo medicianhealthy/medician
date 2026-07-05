@@ -22,10 +22,6 @@ import com.robinzon.medicationwizard.workers.HistoryCleanupWorker;
 
 import java.util.concurrent.TimeUnit;
 
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ProcessLifecycleOwner;
-
 public class MedicationWizardApplication extends Application
         implements Application.ActivityLifecycleCallbacks, DefaultLifecycleObserver {
 
