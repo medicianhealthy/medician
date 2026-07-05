@@ -17,6 +17,7 @@ import androidx.work.WorkManager;
 import com.robinzon.medicationwizard.billing.BillingManager;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
+import com.robinzon.medicationwizard.utils.NetworkMonitor;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.workers.HistoryCleanupWorker;
 
@@ -43,6 +44,7 @@ public class MedicationWizardApplication extends Application
         applyLanguage();
         scheduleHistoryCleanup();
         BillingManager.getInstance(this); // Initialize billing and check entitlements
+        NetworkMonitor.getInstance(this).start();
     }
 
     /**
