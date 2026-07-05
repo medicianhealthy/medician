@@ -43,7 +43,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private FragmentTodaysMedicationsBinding mBinding;
     private TodaysMedicationsViewModel mViewModel;
     private MedicationsAdapter mAdapter;
-    private TodaysMedicationsViewModel.SortOrder mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.TIME;
+    private TodaysMedicationsViewModel.SortOrder mCurrentSortOrder;
     
     private final Handler mInactivityHandler = new Handler(Looper.getMainLooper());
     private Runnable mInactivityRunnable;
@@ -60,6 +60,8 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
+        mCurrentSortOrder = mViewModel.getSortOrder();
+        
         if (mBinding != null) {
             if (mBinding.recyclerView != null) setPaddingForRecyclerView(mBinding.recyclerView);
             if (mBinding.emptyLayout != null && mBinding.emptyLayout.emptyStateContainer != null) {
@@ -71,7 +73,18 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         setupEmptyView();
         setupRecyclerView();
         setupSortChips();
+        syncSortUi();
         setupDataObservation();
+    }
+
+    private void syncSortUi() {
+        if (mBinding == null || mCurrentSortOrder == null) return;
+        int chipId = switch (mCurrentSortOrder) {
+            case TIME -> R.id.chip_sort_time;
+            case NAME -> R.id.chip_sort_name;
+            case ACTION_TIME -> R.id.chip_sort_action;
+        };
+        mBinding.chipGroupSort.check(chipId);
     }
 
     private void setupDataObservation() {

@@ -11,6 +11,7 @@ import androidx.lifecycle.Transformations;
 
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.Calendar;
 import java.util.List;
@@ -26,6 +27,8 @@ import java.util.List;
  */
 public class TodaysMedicationsViewModel extends AndroidViewModel {
 
+    private static final String PREF_SORT_ORDER = "todays_medications_sort_order";
+
     /** Supported sorting strategies for the daily list. */
     public enum SortOrder {
         /** Chronological order by scheduled time (earliest first). */
@@ -36,8 +39,8 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
         ACTION_TIME
     }
 
-    /** Observable sort preference, defaults to {@link SortOrder#TIME}. */
-    private final MutableLiveData<SortOrder> mSortOrder = new MutableLiveData<>(SortOrder.TIME);
+    /** Observable sort preference. */
+    private final MutableLiveData<SortOrder> mSortOrder;
     
     /** Trigger for manual data refresh (e.g., when returning from background or adding a med). */
     private final MutableLiveData<Long> mRefreshTrigger = new MutableLiveData<>(System.currentTimeMillis());
@@ -50,6 +53,9 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
      */
     public TodaysMedicationsViewModel(@NonNull Application application) {
         super(application);
+
+        String savedOrder = SharedPreferencesManager.getInstance(application).getString(PREF_SORT_ORDER, SortOrder.TIME.name());
+        mSortOrder = new MutableLiveData<>(SortOrder.valueOf(savedOrder));
 
         // Combine SortOrder and RefreshTrigger to create the final data stream.
         // This ensures that either a sort change OR a manual refresh (which updates the time window)
@@ -113,6 +119,14 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
      */
     public void setSortOrder(SortOrder order) {
         mSortOrder.setValue(order);
+        SharedPreferencesManager.getInstance(getApplication()).setString(PREF_SORT_ORDER, order.name());
+    }
+
+    /**
+     * @return The current sort order.
+     */
+    public SortOrder getSortOrder() {
+        return mSortOrder.getValue();
     }
 
     /** Helper class for combining triggers. */
