@@ -91,12 +91,14 @@ public class AdMobAppOpen extends AdMobAd {
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
+                    
+                    getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Dismissed);
+                    
                     final Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
                             getActivity().runOnUiThread(AdMobAppOpen.this::load);
-                            getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Dismissed);
                         }
                     },500L);
 

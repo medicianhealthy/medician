@@ -111,11 +111,12 @@ public class AdMobRewarded extends AdMobAd {
                         mRewardedFinishedListener = null;
                     }
 
+                    getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Dismissed);
+
                     final Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Dismissed);
                             getActivity().runOnUiThread(AdMobRewarded.this::load);
                         }
                     },500L);

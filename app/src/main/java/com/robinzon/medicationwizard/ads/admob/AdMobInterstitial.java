@@ -8,6 +8,7 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.robinzon.medicationwizard.ads.AdAction;
 import com.robinzon.medicationwizard.ads.AdPlacement;
 import com.robinzon.medicationwizard.ads.AdType;
 import com.robinzon.medicationwizard.ads.AdsManager;
@@ -98,6 +99,9 @@ public class AdMobInterstitial extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     mInterstitialAd = null;
+                    
+                    getAdsManager().onAdAction(AdMobInterstitial.this, AdAction.Dismissed);
+
                     final Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override

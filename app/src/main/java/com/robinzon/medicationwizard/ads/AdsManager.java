@@ -305,7 +305,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
                 "%s.", CLASS_NAME, adType.name(), adAction.name());
         switch (adType) {
             case AppOpen, RewardedInterstitial, Interstitial, InterstitialVideo, Rewarded -> {
-                if (AdAction.Dismissed == adAction) {
+                if (AdAction.Dismissed == adAction || AdAction.FailedToShow == adAction) {
                     setFullScreenNonUserInitiatedAdDismissTimeStamp();
                 }
             }
