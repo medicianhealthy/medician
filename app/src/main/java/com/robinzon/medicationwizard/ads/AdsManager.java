@@ -241,7 +241,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
      * @param listener Callback to receive the result of the reward event.
      */
     public void showRewarded(OnRewardedFinishedListener listener) {
-        if (null != mainRewarded) {
+        if (null != mainRewarded && mainRewarded.isLoaded()) {
             mainRewarded.setRewardedFinishedListener(listener);
             mainRewarded.show();
         } else if (listener != null) {

@@ -243,6 +243,8 @@
     <string name="premium_pass_active">מנוי קסם פעיל</string>
     <string name="premium_pass_remaining_format">נותרו %1$02d ש\' ו-%2$02d ד\'</string>
     <string name="loading_magic">טוען קסם... אנא המתן.</string>
+    <string name="reward_ad_not_ready_title">הסרטון לא מוכן</string>
+    <string name="reward_ad_not_ready_dialog">הסרטון עדיין לא מוכן. וודא שאתה מחובר לאינטרנט ונסה שוב מאוחר יותר.</string>
     <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
     <string name="theme_unlock_title">פתיחת ערכת נושא</string>
     <string name="theme_unlock_prompt">צפה בסרטון קצר כדי לפתוח את ערכת הנושא הזו ואת כל שאר קסמי הפרימיום ל-%1$d שעות!</string>

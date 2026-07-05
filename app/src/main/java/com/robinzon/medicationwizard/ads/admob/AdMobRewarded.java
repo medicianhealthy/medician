@@ -163,6 +163,12 @@ public class AdMobRewarded extends AdMobAd {
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Rewarding);
                 }
             });
+        } else {
+            // AD CANNOT BE SHOWN: Notify listener so UI can respond (e.g. show "Not Ready" toast)
+            if (mRewardedFinishedListener != null) {
+                mRewardedFinishedListener.onRewarded(false);
+                mRewardedFinishedListener = null;
+            }
         }
     }
 

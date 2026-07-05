@@ -87,7 +87,11 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                         Toast.makeText(requireContext(), getString(R.string.feature_unlocked_toast, getFeatureName()), Toast.LENGTH_SHORT).show();
                         dismiss();
                     } else {
-                        Toast.makeText(requireContext(), R.string.reward_ad_not_ready, Toast.LENGTH_SHORT).show();
+                        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+                        dialog.setTitle(getString(R.string.reward_ad_not_ready_title));
+                        dialog.setMessage(getString(R.string.reward_ad_not_ready_dialog));
+                        dialog.setPositiveButton(getString(R.string.button_ok), null);
+                        dialog.show();
                     }
                 });
             }
