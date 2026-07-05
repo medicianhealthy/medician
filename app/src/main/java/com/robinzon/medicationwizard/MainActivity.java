@@ -265,6 +265,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
         int itemId = item.getItemId();
+        
+        // Fix for navigation crash: home button should not be passed to onNavDestinationSelected
+        if (itemId == android.R.id.home) {
+            return super.onOptionsItemSelected(item);
+        }
+
         if (itemId == R.id.action_premium) {
             new com.robinzon.medicationwizard.ui.settings.PremiumBottomSheet().show(getSupportFragmentManager(), "PremiumMain");
             return true;

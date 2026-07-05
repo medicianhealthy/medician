@@ -32,6 +32,7 @@ import java.util.List;
 public class PremiumBottomSheet extends MedicationWizardBottomSheet {
 
     private ViewPager2 benefitPager;
+    private TabLayoutMediator tabLayoutMediator;
     private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
     private static final long AUTO_SCROLL_DELAY = 5000L; // 5 seconds
@@ -92,18 +93,7 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
         BenefitAdapter adapter = new BenefitAdapter(benefits);
         benefitPager.setAdapter(adapter);
 
-        new TabLayoutMediator(view.findViewById(R.id.tab_indicator), benefitPager, (tab, position) -> {}).attach();
-
-        // Reset timer if user manually swipes
-        benefitPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                autoScrollHandler.removeCallbacks(autoScrollRunnable);
-                autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
-            }
-        });
-
+        // 1. Initialize runnable FIRST to avoid NPE in onPageSelected
         autoScrollRunnable = new Runnable() {
             @Override
             public void run() {
@@ -112,10 +102,38 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
                 if (count == 0) return;
                 int nextItem = (benefitPager.getCurrentItem() + 1) % count;
                 benefitPager.setCurrentItem(nextItem, true);
-                // Note: onPageSelected will handle the next postDelayed
             }
         };
+
+        // 2. Setup indicator
+        tabLayoutMediator = new TabLayoutMediator(view.findViewById(R.id.tab_indicator), benefitPager, (tab, position) -> {});
+        tabLayoutMediator.attach();
+
+        // 3. Register callback
+        benefitPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (autoScrollRunnable != null) {
+                    autoScrollHandler.removeCallbacks(autoScrollRunnable);
+                    autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
+                }
+            }
+        });
+
+        // 4. Start initial scroll
         autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY);
+    }
+
+    @Override
+    public void onDestroyView() {
+        autoScrollHandler.removeCallbacksAndMessages(null);
+        if (tabLayoutMediator != null) {
+            tabLayoutMediator.detach();
+            tabLayoutMediator = null;
+        }
+        benefitPager = null;
+        super.onDestroyView();
     }
 
     @Override

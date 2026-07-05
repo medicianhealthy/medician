@@ -39,9 +39,11 @@ public class AdMobBanner extends AdMobAd {
         createAdListener();
         mAdView.setAdListener(getAdListener());
         addBannerHeightListener();
-        mAdView.setAdSize(getAdSize(getActivity()));
-        mAdView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         
+        // IMPORTANT: AdSize is NOT set here anymore. 
+        // It must be set exactly once in attachToContainer or load.
+        
+        mAdView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         getAdsManager().onAdAction(this, AdAction.Created);
     }
 
@@ -65,45 +67,54 @@ public class AdMobBanner extends AdMobAd {
             int bgColor = com.google.android.material.color.MaterialColors.getColor(container, android.R.attr.colorBackground);
             container.setBackgroundColor(bgColor);
 
-            // Dynamic width calculation based on target container
-            container.post(() -> {
-                int containerWidthPx = container.getWidth();
-                if (containerWidthPx <= 0) {
-                    containerWidthPx = Screen.getUsableScreenWidthPX(getActivity());
-                }
-                
-                float density = Screen.getDensity(getActivity().getResources());
-                int containerWidthDp = (int) (containerWidthPx / density);
-                
-                // For wide screens, use a fixed size (728dp) to prevent internal black padding from stretching
-                if (containerWidthDp > 760) {
-                    containerWidthDp = 728;
-                }
+            // Synchronous size check/set to avoid "Ad size can only be set once" crash.
+            ensureAdSizeSet(container);
 
-                AdSize targetSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getActivity(), containerWidthDp);
-                
-                if (!targetSize.equals(mAdView.getAdSize())) {
-                    mAdView.setAdSize(targetSize);
-                }
+            AdSize adSize = mAdView.getAdSize();
+            if (adSize == null) return;
 
-                int widthPx = (int) (targetSize.getWidth() * density);
-                int heightPx = (int) (targetSize.getHeight() * density);
-                
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                        widthPx > 0 ? widthPx : ViewGroup.LayoutParams.WRAP_CONTENT,
-                        heightPx > 0 ? heightPx : ViewGroup.LayoutParams.WRAP_CONTENT,
-                        android.view.Gravity.CENTER);
+            float density = Screen.getDensity(getActivity().getResources());
+            int widthPx = (int) (adSize.getWidth() * density);
+            int heightPx = (int) (adSize.getHeight() * density);
+            
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                    widthPx > 0 ? widthPx : ViewGroup.LayoutParams.WRAP_CONTENT,
+                    heightPx > 0 ? heightPx : ViewGroup.LayoutParams.WRAP_CONTENT,
+                    android.view.Gravity.CENTER);
 
-                if (mAdView.getParent() != null) {
-                    ((ViewGroup) mAdView.getParent()).removeView(mAdView);
-                }
-                container.addView(mAdView, lp);
-                mAdContainerView = container;
-                
-                // Final aggressive attempt to clear background
-                mAdView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-            });
+            container.addView(mAdView, lp);
+            mAdContainerView = container;
+            
+            // Aggressive transparency check
+            mAdView.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         }
+    }
+
+    /**
+     * Ensures the AdSize is set exactly once for this AdView instance.
+     * Uses the container's width if available, otherwise falls back to usable screen width.
+     */
+    private void ensureAdSizeSet(@Nullable FrameLayout container) {
+        if (mAdView.getAdSize() != null) return;
+
+        int containerWidthPx = (container != null) ? container.getWidth() : 0;
+        if (containerWidthPx <= 0) {
+            containerWidthPx = Screen.getUsableScreenWidthPX(getActivity());
+        }
+        
+        float density = Screen.getDensity(getActivity().getResources());
+        int containerWidthDp = (int) (containerWidthPx / density);
+        
+        // Creative fix: On wide tablet landscape screens, AdMob often pads the ad with black bars
+        // if we request the full width. We cap the requested width to a standard tablet 
+        // leaderboard (728dp) to prevent this and let our background show.
+        if (containerWidthDp > 760) {
+            containerWidthDp = 728;
+        }
+
+        AdSize targetSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(getActivity(), containerWidthDp);
+        mAdView.setAdSize(targetSize);
+        log("%s AdSize set to %s", getLogTag(), targetSize.toString());
     }
 
     public void resetContainer() {
@@ -206,6 +217,8 @@ public class AdMobBanner extends AdMobAd {
 
             getActivity().runOnUiThread(() -> {
                 attachToContainer();
+                // Ensure size is set as fallback if container attach didn't do it
+                ensureAdSizeSet(null);
                 mAdView.loadAd(getAdRequest());
                 setIsLoading(true);
             });
@@ -231,15 +244,10 @@ public class AdMobBanner extends AdMobAd {
         int adWidthPixels = Screen.getUsableScreenWidthPX(activity);
         int adWidthDp = (int) (adWidthPixels / Screen.getDensity(activity.getResources()));
 
-        // Creative fix: On wide tablet landscape screens, AdMob often pads the ad with black bars
-        // if we request the full width. We cap the requested width to a standard tablet 
-        // leaderboard (728dp) to prevent this and let our "Wizardly Wings" background show.
         if (adWidthDp > 760) {
             adWidthDp = 728;
         }
 
-        // Use standard Anchored Adaptive (not the 'Large' version). 
-        // This provides the best balance of aesthetics and filling the width.
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
     }
 
