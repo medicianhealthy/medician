@@ -235,6 +235,7 @@
     <string name="at_label">at</string>
     <string name="button_reschedule">Reschedule</string>
     <string name="button_take">Take</string>
+    <string name="button_pick_time">Pick exact time</string>
     <string name="button_sign_in">Sign In</string>
 
     <string name="hint_med_name">Medication Name</string>

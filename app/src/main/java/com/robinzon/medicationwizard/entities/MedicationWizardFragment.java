@@ -206,12 +206,33 @@ public class MedicationWizardFragment extends Fragment {
         dialog.setTitle(instance.getMedicationName());
         dialog.setMessage(message);
         dialog.setPositiveButton(getString(R.string.button_sure), (d, which) -> callback.onApply());
+        dialog.setNeutralButton(getString(R.string.button_pick_time), (d, which) -> {
+            showTimePickerForTimingClarification(instance, callback);
+        });
         dialog.setNegativeButton(getString(R.string.button_not_now), (d, which) -> {
             if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity main) {
                 main.addInteractionScore(1.0f);
             }
         });
         dialog.show();
+    }
+
+    private void showTimePickerForTimingClarification(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        int hour = calendar.get(java.util.Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(java.util.Calendar.MINUTE);
+
+        android.app.TimePickerDialog timePickerDialog = new android.app.TimePickerDialog(requireContext(), (view, hourOfDay, minuteOfHour) -> {
+            java.util.Calendar pickedCalendar = java.util.Calendar.getInstance();
+            pickedCalendar.set(java.util.Calendar.HOUR_OF_DAY, hourOfDay);
+            pickedCalendar.set(java.util.Calendar.MINUTE, minuteOfHour);
+            pickedCalendar.set(java.util.Calendar.SECOND, 0);
+            pickedCalendar.set(java.util.Calendar.MILLISECOND, 0);
+
+            instance.setActionTime(pickedCalendar.getTimeInMillis());
+            callback.onApply();
+        }, hour, minute, android.text.format.DateFormat.is24HourFormat(requireContext()));
+        timePickerDialog.show();
     }
 
     @Override

@@ -204,6 +204,7 @@
     <string name="at_label">ב-</string>
     <string name="button_reschedule">תזמן מחדש</string>
     <string name="button_take">לקחתי</string>
+    <string name="button_pick_time">בחר זמן מדויק</string>
     <string name="button_sign_in">התחבר</string>
 
     <string name="hint_med_name">שם התרופה</string>

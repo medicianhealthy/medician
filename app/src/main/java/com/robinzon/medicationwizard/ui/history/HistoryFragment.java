@@ -168,7 +168,9 @@ public class HistoryFragment extends MedicationWizardFragment {
         }
         instance.setStatus(status);
         if ("TAKEN".equals(status)) {
-            instance.setActionTime(System.currentTimeMillis());
+            if (instance.getActionTime() <= 0) {
+                instance.setActionTime(System.currentTimeMillis());
+            }
         } else if ("SCHEDULED".equals(status)) {
             instance.setActionTime(0);
         }

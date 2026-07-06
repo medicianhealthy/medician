@@ -248,7 +248,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
         if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
         instance.setStatus(status);
-        instance.setActionTime(System.currentTimeMillis());
+        if (instance.getActionTime() <= 0) {
+            instance.setActionTime(System.currentTimeMillis());
+        }
         final Context appContext = requireContext().getApplicationContext();
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
