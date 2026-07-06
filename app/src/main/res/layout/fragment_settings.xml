@@ -735,20 +735,29 @@
                         android:clickable="true"
                         android:orientation="vertical"
                         android:paddingVertical="12dp"
-                        android:paddingStart="44dp"
-                        android:paddingEnd="20dp">
-                        <TextView
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:gravity="start">
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/settings_vibration_pattern_title"
-                            android:textAppearance="?attr/textAppearanceTitleSmall" />
-                        <TextView
-                            android:id="@+id/txt_vibration_pattern_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="Standard"
-                            android:textAppearance="?attr/textAppearanceLabelSmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:orientation="vertical"
+                            android:layout_marginStart="24dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_vibration_pattern_title"
+                                android:textAppearance="?attr/textAppearanceTitleSmall"
+                                android:textAlignment="viewStart" />
+                            <TextView
+                                android:id="@+id/txt_vibration_pattern_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="Standard"
+                                android:textAppearance="?attr/textAppearanceLabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textAlignment="viewStart" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -759,20 +768,29 @@
                         android:clickable="true"
                         android:orientation="vertical"
                         android:paddingVertical="12dp"
-                        android:paddingStart="44dp"
-                        android:paddingEnd="20dp">
-                        <TextView
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:gravity="start">
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/settings_flash_pattern_title"
-                            android:textAppearance="?attr/textAppearanceTitleSmall" />
-                        <TextView
-                            android:id="@+id/txt_flash_pattern_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="None"
-                            android:textAppearance="?attr/textAppearanceLabelSmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:orientation="vertical"
+                            android:layout_marginStart="24dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_flash_pattern_title"
+                                android:textAppearance="?attr/textAppearanceTitleSmall"
+                                android:textAlignment="viewStart" />
+                            <TextView
+                                android:id="@+id/txt_flash_pattern_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="None"
+                                android:textAppearance="?attr/textAppearanceLabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textAlignment="viewStart" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -904,20 +922,29 @@
                         android:clickable="true"
                         android:orientation="vertical"
                         android:paddingVertical="12dp"
-                        android:paddingStart="44dp"
-                        android:paddingEnd="20dp">
-                        <TextView
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:gravity="start">
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/settings_early_threshold_title"
-                            android:textAppearance="?attr/textAppearanceTitleSmall" />
-                        <TextView
-                            android:id="@+id/txt_early_threshold_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="60 minutes"
-                            android:textAppearance="?attr/textAppearanceLabelSmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:orientation="vertical"
+                            android:layout_marginStart="24dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_early_threshold_title"
+                                android:textAppearance="?attr/textAppearanceTitleSmall"
+                                android:textAlignment="viewStart" />
+                            <TextView
+                                android:id="@+id/txt_early_threshold_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="60 minutes"
+                                android:textAppearance="?attr/textAppearanceLabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textAlignment="viewStart" />
+                        </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/btn_late_threshold"
@@ -927,20 +954,29 @@
                         android:clickable="true"
                         android:orientation="vertical"
                         android:paddingVertical="12dp"
-                        android:paddingStart="44dp"
-                        android:paddingEnd="20dp">
-                        <TextView
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:gravity="start">
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/settings_late_threshold_title"
-                            android:textAppearance="?attr/textAppearanceTitleSmall" />
-                        <TextView
-                            android:id="@+id/txt_late_threshold_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="180 minutes"
-                            android:textAppearance="?attr/textAppearanceLabelSmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:orientation="vertical"
+                            android:layout_marginStart="24dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_late_threshold_title"
+                                android:textAppearance="?attr/textAppearanceTitleSmall"
+                                android:textAlignment="viewStart" />
+                            <TextView
+                                android:id="@+id/txt_late_threshold_desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="180 minutes"
+                                android:textAppearance="?attr/textAppearanceLabelSmall"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textAlignment="viewStart" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
