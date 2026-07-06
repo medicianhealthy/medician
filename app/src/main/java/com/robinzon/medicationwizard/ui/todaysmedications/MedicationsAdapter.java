@@ -252,6 +252,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 AppCompatButton skipBtn = rowView.findViewById(R.id.btn_skip);
                 AppCompatButton reschedBtn = rowView.findViewById(R.id.btn_reschedule);
                 AppCompatButton untakeBtn = rowView.findViewById(R.id.btn_untake);
+                TextView actualActionSummaryTxt = rowView.findViewById(R.id.txt_actual_action_summary);
                 View divider = rowView.findViewById(R.id.divider);
 
                 // Smart Detail String: "Med Name - Amount Form Strength"
@@ -294,6 +295,15 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 doneImg.setVisibility(isScheduled ? View.GONE : View.VISIBLE);
                 rowView.setAlpha(isScheduled ? 1.0f : 0.6f);
                 
+                if (!isScheduled) {
+                    actualActionSummaryTxt.setVisibility(View.VISIBLE);
+                    String actTime = timeFmt.format(new Date(d.getActionTime() > 0 ? d.getActionTime() : d.getScheduledTime()));
+                    if (isTaken) actualActionSummaryTxt.setText(itemView.getContext().getString(R.string.took_format, amountStr, formStr.toLowerCase(), actTime));
+                    else actualActionSummaryTxt.setText(itemView.getContext().getString(R.string.skipped_at_format, actTime));
+                } else {
+                    actualActionSummaryTxt.setVisibility(View.GONE);
+                }
+
                 takeBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
                 skipBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
                 reschedBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
