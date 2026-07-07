@@ -162,7 +162,18 @@
 
     <!-- Premium -->
     <string name="premium_title">Unlock Full Magic!</string>
+    <string name="premium_benefit_ad_free_title">Ad-Free Magic</string>
+    <string name="premium_benefit_ad_free_desc">Focus on your health without any interruptions or distractions.</string>
+    <string name="premium_benefit_cloud_title">Cloud Protection</string>
+    <string name="premium_benefit_cloud_desc">Sync your medications and history safely across all your devices.</string>
+    <string name="premium_benefit_backup_title">Data Protection</string>
+    <string name="premium_benefit_backup_desc">Export and import your medication data to keep it safe.</string>
+    <string name="premium_benefit_rest_title">Respectful Rest</string>
+    <string name="premium_benefit_rest_desc">Enable Quiet Hours to ensure your sleep is never disturbed.</string>
+    <string name="premium_benefit_support_title">Priority Wizardry</string>
+    <string name="premium_benefit_support_desc">Get fast support and suggest new features directly to our wizards.</string>
     <string name="premium_description">Upgrade to Premium and enjoy advanced features like Cloud Backup, Quiet Hours, Premium Support, and an Ad-free experience.</string>
+    <string name="premium_description_local">Upgrade to Premium and enjoy advanced features like Data Backup, Quiet Hours, Premium Support, and an Ad-free experience.</string>
     <string name="premium_upgrade_button">Upgrade Now</string>
     <string name="premium_maybe_later">Maybe Later</string>
     <string name="menu_go_premium">Go Premium</string>
@@ -313,6 +324,7 @@
     <string name="premium_rational_theme_msg">Watch a short video to customize your app theme for the next 1 hour. Reverts to system after time is up.</string>
     <string name="premium_rational_support_msg">Watch a short video to access Premium Support for 1 hour.</string>
     <string name="premium_rational_backup_msg">Watch a short video to enable Cloud Backup and Restore for 1 hour.</string>
+    <string name="premium_rational_backup_local_msg">Watch a short video to enable Backup and Restore for 1 hour.</string>
     <string name="premium_rational_bypass_msg">Watch a short video to enable Bypass Volume for your next scheduled reminder only.</string>
     <string name="premium_rational_vibration_msg">Watch a short video to enable custom vibration and flash alerts for your next reminder only.</string>
     <string name="premium_rational_sticky_msg">Watch a short video to make your next reminder only "Sticky" until you take action.</string>

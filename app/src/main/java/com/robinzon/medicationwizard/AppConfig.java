@@ -15,6 +15,9 @@ public class AppConfig {
     
     /** Master flag for purchased Premium status. */
     public static boolean IS_PREMIUM = false;
+
+    /** Toggle for enabling/disabling the Cloud Backup feature globally. */
+    public static final boolean CLOUD_BACKUP_ENABLED = false;
     
     /** Developer cheat flag to force ads visibility for testing. */
     public static boolean FORCED_ADS_VISIBLE = false;

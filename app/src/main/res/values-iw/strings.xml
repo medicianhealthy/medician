@@ -148,7 +148,18 @@
 
     <!-- Premium -->
     <string name="premium_title">שחרר את כל הקסם!</string>
+    <string name="premium_benefit_ad_free_title">קסם ללא פרסומות</string>
+    <string name="premium_benefit_ad_free_desc">התמקד בבריאות שלך ללא הפרעות או הסחות דעת.</string>
+    <string name="premium_benefit_cloud_title">הגנה בענן</string>
+    <string name="premium_benefit_cloud_desc">סנכרן את התרופות וההיסטוריה שלך בצורה בטוחה בכל המכשירים שלך.</string>
+    <string name="premium_benefit_backup_title">הגנת נתונים</string>
+    <string name="premium_benefit_backup_desc">ייצוא וייבוא של נתוני התרופות שלך כדי לשמור עליהם בטוחים.</string>
+    <string name="premium_benefit_rest_title">מנוחה מכבדת</string>
+    <string name="premium_benefit_rest_desc">הפעל שעות שקט כדי להבטיח ששנתך לעולם לא תופרע.</string>
+    <string name="premium_benefit_support_title">קוסמות בעדיפות</string>
+    <string name="premium_benefit_support_desc">קבל תמיכה מהירה והצע קסמים חדשים ישירות לקוסמים שלנו.</string>
     <string name="premium_description">שדרג לפרימיום ותיהנה מתכונות מתקדמות כמו גיבוי בענן, שעות שקט וחוויה ללא פרסומות.</string>
+    <string name="premium_description_local">שדרג לפרימיום ותיהנה מתכונות מתקדמות כמו גיבוי נתונים, שעות שקט וחוויה ללא פרסומות.</string>
     <string name="premium_upgrade_button">שדרג עכשיו</string>
     <string name="premium_maybe_later">אולי מאוחר יותר</string>
     <string name="menu_go_premium">עבור לפרימיום</string>
@@ -292,6 +303,7 @@
     <string name="premium_rational_theme_msg">צפה בסרטון קצר כדי לעצב את ערכת הנושא של האפליקציה לשעה הקרובה. יחזור לברירת המחדל של המערכת לאחר סיום הזמן.</string>
     <string name="premium_rational_support_msg">צפה בסרטון קצר כדי לקבל גישה לתמיכה מובחרת לשעה הקרובה.</string>
     <string name="premium_rational_backup_msg">צפה בסרטון קצר כדי לאפשר גיבוי ושחזור בענן לשעה הקרובה.</string>
+    <string name="premium_rational_backup_local_msg">צפה בסרטון קצר כדי לאפשר גיבוי ושחזור לשעה הקרובה.</string>
     <string name="premium_rational_bypass_msg">צפה בסרטון קצר כדי לאפשר עקיפת עוצמת קול עבור התזכורת הבאה שלך בלבד.</string>
     <string name="premium_rational_vibration_msg">צפה בסרטון קצר כדי לאפשר רטט והתראות פלאש מותאמות אישית עבור התזכורת הבאה שלך בלבד.</string>
     <string name="premium_rational_sticky_msg">צפה בסרטון קצר כדי להפוך את התזכורת הבאה שלך בלבד ל"דביקה" עד שתבצע פעולה.</string>

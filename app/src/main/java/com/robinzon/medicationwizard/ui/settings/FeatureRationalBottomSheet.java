@@ -121,7 +121,9 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             }
             case BACKUP -> {
                 iconView.setImageResource(R.drawable.ic_cloud_upload);
-                descView.setText(R.string.premium_rational_backup_msg);
+                descView.setText(AppConfig.CLOUD_BACKUP_ENABLED ? 
+                        R.string.premium_rational_backup_msg : 
+                        R.string.premium_rational_backup_local_msg);
             }
             case BYPASS_VOLUME -> {
                 iconView.setImageResource(R.drawable.ic_volume_up);

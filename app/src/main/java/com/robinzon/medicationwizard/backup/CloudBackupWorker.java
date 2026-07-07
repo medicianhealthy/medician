@@ -32,6 +32,11 @@ public class CloudBackupWorker extends Worker {
     public Result doWork() {
         Logger.log("CloudBackupWorker", "Periodic backup task started");
         
+        if (!com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
+            Logger.log("CloudBackupWorker", "Cloud backup is disabled in AppConfig, skipping.");
+            return Result.success();
+        }
+
         Context context = getApplicationContext();
         
         if (!com.robinzon.medicationwizard.AppConfig.isPremium(getApplicationContext())) {

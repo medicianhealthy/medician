@@ -85,10 +85,14 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
 
     private void setupBenefitCarousel(View view) {
         List<Benefit> benefits = new ArrayList<>();
-        benefits.add(new Benefit("Ad-Free Magic", "Focus on your health without any interruptions or distractions.", R.drawable.ic_sparkle));
-        benefits.add(new Benefit("Cloud Protection", "Sync your medications and history safely across all your devices.", R.drawable.ic_cloud_upload));
-        benefits.add(new Benefit("Respectful Rest", "Enable Quiet Hours to ensure your sleep is never disturbed.", R.drawable.ic_nightlight));
-        benefits.add(new Benefit("Priority Wizardry", "Get fast support and suggest new features directly to our wizards.", R.drawable.ic_help_outline));
+        benefits.add(new Benefit(getString(R.string.premium_benefit_ad_free_title), getString(R.string.premium_benefit_ad_free_desc), R.drawable.ic_sparkle));
+        if (com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
+            benefits.add(new Benefit(getString(R.string.premium_benefit_cloud_title), getString(R.string.premium_benefit_cloud_desc), R.drawable.ic_cloud_upload));
+        } else {
+            benefits.add(new Benefit(getString(R.string.premium_benefit_backup_title), getString(R.string.premium_benefit_backup_desc), R.drawable.ic_cloud_upload));
+        }
+        benefits.add(new Benefit(getString(R.string.premium_benefit_rest_title), getString(R.string.premium_benefit_rest_desc), R.drawable.ic_nightlight));
+        benefits.add(new Benefit(getString(R.string.premium_benefit_support_title), getString(R.string.premium_benefit_support_desc), R.drawable.ic_help_outline));
 
         BenefitAdapter adapter = new BenefitAdapter(benefits);
         benefitPager.setAdapter(adapter);

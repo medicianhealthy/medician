@@ -198,13 +198,15 @@ public class MedicationsListFragment extends MedicationWizardFragment {
             updateUiState(adapter.getItemCount() == 0);
             
             // Sync to Google Drive if signed in and premium
-            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
-            if (account != null && com.robinzon.medicationwizard.AppConfig.isPremium(requireContext())) {
-                GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(requireContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
-                credential.setSelectedAccount(account.getAccount());
-                Drive service = new Drive.Builder(new NetHttpTransport(), new GsonFactory(), credential).setApplicationName("Medication Wizard").build();
-                CloudBackupManager manager = new CloudBackupManager(requireContext(), new DriveServiceHelper(service));
-                manager.backupToCloud();
+            if (com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
+                if (account != null && com.robinzon.medicationwizard.AppConfig.isPremium(requireContext())) {
+                    GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(requireContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+                    credential.setSelectedAccount(account.getAccount());
+                    Drive service = new Drive.Builder(new NetHttpTransport(), new GsonFactory(), credential).setApplicationName("Medication Wizard").build();
+                    CloudBackupManager manager = new CloudBackupManager(requireContext(), new DriveServiceHelper(service));
+                    manager.backupToCloud();
+                }
             }
 
             Snackbar.make(binding.getRoot(), message, SNACKBAR_DURATION_MS)

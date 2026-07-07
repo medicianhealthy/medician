@@ -289,6 +289,7 @@
 
             <!-- Category: Cloud Backup -->
             <TextView
+                android:id="@+id/header_cloud_backup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -297,6 +298,7 @@
                 android:textColor="?attr/colorPrimary" />
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_cloud_backup"
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -599,7 +601,59 @@
                 android:layout_marginBottom="20dp">
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
-                    <Button android:id="@+id/btn_backup" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_backup_title" android:textColor="?attr/colorOnSurface" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/btn_backup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="12dp">
+
+                        <androidx.constraintlayout.helper.widget.Flow
+                            android:id="@+id/flow_backup_data"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:constraint_referenced_ids="txt_backup_title,crown_backup_data,badge_active_backup_data"
+                            app:flow_horizontalBias="0"
+                            app:flow_horizontalGap="8dp"
+                            app:flow_horizontalStyle="packed"
+                            app:flow_wrapMode="aligned"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/txt_backup_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_backup_title"
+                            android:textAppearance="?attr/textAppearanceTitleSmall"
+                            android:textColor="?attr/colorOnSurface"
+                            tools:ignore="MissingConstraints" />
+
+                        <ImageView
+                            android:id="@+id/crown_backup_data"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            app:srcCompat="@drawable/ic_crown"
+                            android:contentDescription="@null"
+                            tools:ignore="MissingConstraints" />
+
+                        <TextView
+                            android:id="@+id/badge_active_backup_data"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_feature_active_badge"
+                            android:text="@string/feature_active_label"
+                            android:textColor="?attr/colorOnTertiaryContainer"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            tools:visibility="visible"
+                            tools:ignore="MissingConstraints" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_clear_data_title" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
 

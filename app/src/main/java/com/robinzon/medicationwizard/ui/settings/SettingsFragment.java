@@ -99,7 +99,6 @@ public class SettingsFragment extends MedicationWizardFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestScopes(new Scope(DriveScopes.DRIVE_APPDATA)).build());
         return binding.getRoot();
     }
 
@@ -114,7 +113,12 @@ public class SettingsFragment extends MedicationWizardFragment {
             defaultCardStrokeColor = binding.cardNotifications.getStrokeColorStateList();
         }
         setupSettings();
-        setupCloudBackup();
+        if (com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
+            setupCloudBackup();
+        } else {
+            if (binding.headerCloudBackup != null) binding.headerCloudBackup.setVisibility(View.GONE);
+            if (binding.cardCloudBackup != null) binding.cardCloudBackup.setVisibility(View.GONE);
+        }
         updateFeatureEntitlements();
     }
 
@@ -123,7 +127,9 @@ public class SettingsFragment extends MedicationWizardFragment {
      */
     private void setupSettings() {
         if (binding == null) return;
-        binding.txtVersion.setText(getString(R.string.settings_version_summary, BuildConfig.VERSION_NAME));
+        int buildNumber = BuildConfig.VERSION_CODE % 1000;
+        String fullVersion = BuildConfig.VERSION_NAME + "." + buildNumber;
+        binding.txtVersion.setText(getString(R.string.settings_version_summary, fullVersion));
         updateNotificationStatus();
         
         binding.btnNotifications.setOnClickListener(v -> {
@@ -321,6 +327,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         boolean purchased = AppConfig.isPremiumPurchased(requireContext());
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.THEME, binding.crownTheme, binding.badgeActiveTheme);
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.BACKUP, binding.crownBackup, binding.badgeActiveBackup);
+        updateRowEntitlement(purchased, AppConfig.FeaturePassType.BACKUP, binding.crownBackupData, binding.badgeActiveBackupData);
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.BYPASS_VOLUME, binding.crownBypass, binding.badgeActiveBypass);
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.QUIET_HOURS, binding.crownQuietHours, binding.badgeActiveQuietHours);
         updateRowEntitlement(purchased, AppConfig.FeaturePassType.SUPPORT, binding.crownSupport, binding.badgeActiveSupport);
@@ -343,6 +350,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         View.OnClickListener showPremium = v -> new PremiumBottomSheet().show(getChildFragmentManager(), "PremiumSettings");
         if (binding.crownTheme != null) binding.crownTheme.setOnClickListener(showPremium);
         if (binding.crownBackup != null) binding.crownBackup.setOnClickListener(showPremium);
+        if (binding.crownBackupData != null) binding.crownBackupData.setOnClickListener(showPremium);
         if (binding.crownBypass != null) binding.crownBypass.setOnClickListener(showPremium);
         if (binding.crownQuietHours != null) binding.crownQuietHours.setOnClickListener(showPremium);
         if (binding.crownSupport != null) binding.crownSupport.setOnClickListener(showPremium);
@@ -385,7 +393,11 @@ public class SettingsFragment extends MedicationWizardFragment {
                 case BYPASS_VOLUME -> viewModel.setBypassVolume(true);
                 case QUIET_HOURS -> showQuietHoursPickers();
                 case SUPPORT -> showSupportOptionsDialog();
-                case BACKUP -> updateCloudUi(GoogleAccountManager.getInstance(requireContext()), CloudBackupSettings.getInstance(requireContext()));
+                case BACKUP -> {
+                    if (AppConfig.CLOUD_BACKUP_ENABLED) {
+                        updateCloudUi(GoogleAccountManager.getInstance(requireContext()), CloudBackupSettings.getInstance(requireContext()));
+                    }
+                }
                 case VIBRATION -> viewModel.setVibration(true);
                 case STICKY_NOTIF -> viewModel.setStickyNotif(true);
                 case DOSE_WINDOW -> binding.containerDoseWindowDetails.setVisibility(View.VISIBLE);
@@ -543,6 +555,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     }
 
     private void setupCloudBackup() {
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestScopes(new Scope(DriveScopes.DRIVE_APPDATA)).build());
         GoogleAccountManager am = GoogleAccountManager.getInstance(requireContext());
         CloudBackupSettings cs = CloudBackupSettings.getInstance(requireContext());
         updateCloudUi(am, cs);

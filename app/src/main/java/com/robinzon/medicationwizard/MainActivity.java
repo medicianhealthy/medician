@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             android.widget.ImageView profileImage = headerView.findViewById(R.id.imageView);
             android.widget.TextView profileName = headerView.findViewById(R.id.textView);
 
-            if (!com.robinzon.medicationwizard.AppConfig.isPremium(this)) {
+            if (!com.robinzon.medicationwizard.AppConfig.isPremium(this) || !com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
                 profileName.setText(R.string.nav_header_subtitle);
                 profileImage.setImageResource(R.mipmap.ic_launcher);
                 return;
