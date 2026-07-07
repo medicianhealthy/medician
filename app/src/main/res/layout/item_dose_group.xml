@@ -74,71 +74,76 @@
             android:contentDescription="@null"
             tools:visibility="visible" />
 
-        <LinearLayout
-            android:id="@+id/group_actions"
+        <!-- GROUP ACTION BUTTONS: Redesigned with Flow helper to handle large zoom levels -->
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/group_button_flow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            android:gravity="end"
+            app:constraint_referenced_ids="btn_take_all,btn_reschedule_all,btn_skip_all,btn_untake_all"
+            app:flow_horizontalBias="1"
+            app:flow_horizontalGap="8dp"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalGap="8dp"
+            app:flow_wrapMode="aligned"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/text_content_stack"
             app:layout_constraintTop_toBottomOf="@id/text_content_stack"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_take_all"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="36dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:paddingHorizontal="12dp"
-                android:text="@string/button_take_all" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_take_all"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="36dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="12dp"
+            android:text="@string/button_take_all"
+            tools:ignore="MissingConstraints" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_reschedule_all"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:minWidth="0dp"
-                android:minHeight="36dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:paddingHorizontal="8dp"
-                android:text="@string/button_reschedule_all" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_reschedule_all"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="36dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="8dp"
+            android:text="@string/button_reschedule_all"
+            tools:ignore="MissingConstraints" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_skip_all"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:minWidth="0dp"
-                android:minHeight="36dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:paddingHorizontal="8dp"
-                android:text="@string/button_skip_all" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_skip_all"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="36dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="8dp"
+            android:text="@string/button_skip_all"
+            tools:ignore="MissingConstraints" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_untake_all"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="36dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:paddingHorizontal="8dp"
-                android:text="@string/button_untake_all"
-                android:textColor="?attr/colorError"
-                android:visibility="gone" />
-
-        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_untake_all"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="36dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="8dp"
+            android:text="@string/button_untake_all"
+            android:textColor="?attr/colorError"
+            android:visibility="gone"
+            tools:ignore="MissingConstraints" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

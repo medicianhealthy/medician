@@ -335,6 +335,7 @@
     <string name="settings_threshold_format">%1$d minutes</string>
 
     <string name="feature_active_label">Active</string>
+    <string name="onboarding_scroll_hint">Scroll for more</string>
     <string name="active_until_format">Active until %1$s</string>
     <string name="active_for_next_reminder">Active for next reminder</string>
     <string name="feature_unlocked_toast">%1$s unlocked!</string>

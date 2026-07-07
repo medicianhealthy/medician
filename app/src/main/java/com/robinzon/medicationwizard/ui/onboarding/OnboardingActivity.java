@@ -285,6 +285,29 @@ public class OnboardingActivity extends AppCompatActivity {
             startTwinkleAnimation(holder.s2, 500);
             startTwinkleAnimation(holder.s3, 900);
             startTwinkleAnimation(holder.s4, 1300);
+
+            // Handle Scroll Hint visibility
+            holder.scrollView.post(() -> {
+                boolean canScroll = holder.scrollView.canScrollVertically(1);
+                holder.scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
+                if (canScroll) {
+                    // Start subtle bouncing animation for the hint
+                    ObjectAnimator bounce = ObjectAnimator.ofFloat(holder.scrollHint, "translationY", 0f, -15f, 0f);
+                    bounce.setDuration(1500);
+                    bounce.setRepeatCount(ValueAnimator.INFINITE);
+                    bounce.setInterpolator(new AccelerateDecelerateInterpolator());
+                    bounce.start();
+                }
+            });
+
+            holder.scrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                // Hide hint as soon as user starts scrolling down significantly
+                if (scrollY > 50) {
+                    holder.scrollHint.animate().alpha(0f).setDuration(300).withEndAction(() -> holder.scrollHint.setVisibility(View.GONE)).start();
+                } else if (!holder.scrollView.canScrollVertically(1)) {
+                    holder.scrollHint.setVisibility(View.GONE);
+                }
+            });
         }
 
         private void startTwinkleAnimation(View view, long delay) {
@@ -331,6 +354,8 @@ public class OnboardingActivity extends AppCompatActivity {
             ImageView mascot, acc1, acc2;
             ImageView s1, s2, s3, s4;
             TextView title, desc;
+            androidx.core.widget.NestedScrollView scrollView;
+            View scrollHint;
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -345,6 +370,8 @@ public class OnboardingActivity extends AppCompatActivity {
 
                 title = itemView.findViewById(R.id.txt_title);
                 desc = itemView.findViewById(R.id.txt_description);
+                scrollView = itemView.findViewById(R.id.onboarding_scroll_view);
+                scrollHint = itemView.findViewById(R.id.scroll_hint);
             }
         }
     }

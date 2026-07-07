@@ -16,7 +16,7 @@
         android:padding="16dp">
 
         <!-- Header (Always visible) -->
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -24,45 +24,49 @@
                 android:id="@+id/med_icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
                 android:contentDescription="@string/medication_icon_desc"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_med_pill"
                 app:tint="?attr/colorPrimary" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginStart="16dp"
-                android:layout_toEndOf="@id/med_icon"
-                android:layout_toStartOf="@id/expand_icon"
-                android:orientation="vertical">
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/expand_icon"
+                app:layout_constraintStart_toEndOf="@id/med_icon"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/med_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Medication Name"
-                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                    tools:text="Medication Name" />
 
                 <TextView
                     android:id="@+id/med_strength"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="500 mg"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="500 mg" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/expand_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@android:drawable/arrow_down_float" />
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- Expanded Details -->
         <LinearLayout
@@ -98,9 +102,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    tools:text="Once a day"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="Once a day" />
             </LinearLayout>
 
             <!-- Instructions (Amount + Form + Instruction) -->
@@ -123,9 +127,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    tools:text="3 pills before eating"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="3 pills before eating" />
             </LinearLayout>
 
             <!-- Times -->
@@ -147,17 +151,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    tools:text="Scheduled at: 08:00, 20:00"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="Scheduled at: 08:00, 20:00" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="8dp">
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="btn_delete,btn_edit"
+                    app:flow_horizontalBias="1"
+                    app:flow_horizontalGap="8dp"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_wrapMode="aligned"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_delete"
@@ -168,7 +182,8 @@
                     android:textColor="?attr/colorError"
                     app:icon="@android:drawable/ic_menu_delete"
                     app:iconSize="16dp"
-                    app:iconTint="?attr/colorError" />
+                    app:iconTint="?attr/colorError"
+                    tools:ignore="MissingConstraints" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_edit"
@@ -178,9 +193,10 @@
                     android:text="@string/edit"
                     android:textColor="?attr/colorPrimary"
                     app:icon="@android:drawable/ic_menu_edit"
-                    app:iconSize="16dp" />
+                    app:iconSize="16dp"
+                    tools:ignore="MissingConstraints" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </LinearLayout>

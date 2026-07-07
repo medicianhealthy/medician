@@ -179,45 +179,61 @@
             android:contentDescription="@null"
             tools:visibility="visible" />
 
-        <!-- ACTION BUTTONS: Redesigned for absolute RTL/LTR stability -->
+        <!-- ACTION BUTTONS: Flow helper allows buttons to wrap if they exceed available width -->
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/button_flow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:constraint_referenced_ids="take_btn,reschedule_btn,skip_btn"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalGap="8dp"
+            app:flow_horizontalStyle="packed"
+            app:flow_verticalGap="8dp"
+            app:flow_wrapMode="aligned"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/text_content_stack"
+            app:layout_constraintTop_toBottomOf="@id/text_content_stack"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/take_btn"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:insetLeft="0dp"
-            android:insetRight="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:paddingHorizontal="16dp"
             android:text="@string/button_take"
-            app:layout_constraintStart_toStartOf="@id/text_content_stack"
-            app:layout_constraintTop_toBottomOf="@id/text_content_stack"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            tools:ignore="MissingConstraints" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reschedule_btn"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="8dp"
             android:text="@string/button_reschedule"
-            app:layout_constraintStart_toEndOf="@id/take_btn"
-            app:layout_constraintTop_toTopOf="@id/take_btn"
-            app:layout_constraintBottom_toBottomOf="@id/take_btn"
-            android:layout_marginStart="8dp" />
+            tools:ignore="MissingConstraints" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/skip_btn"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="8dp"
             android:text="@string/button_skip"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/take_btn"
-            app:layout_constraintBottom_toBottomOf="@id/take_btn" />
+            tools:ignore="MissingConstraints" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/untake_btn"

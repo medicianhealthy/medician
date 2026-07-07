@@ -314,6 +314,7 @@
     <string name="settings_threshold_format">%1$d דקות</string>
 
     <string name="feature_active_label">פעיל</string>
+    <string name="onboarding_scroll_hint">גלול למטה לעוד</string>
     <string name="active_until_format">פעיל עד %1$s</string>
     <string name="active_for_next_reminder">פעיל לתזכורת הבאה</string>
     <string name="feature_unlocked_toast">%1$s נפתח!</string>
