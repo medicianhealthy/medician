@@ -100,6 +100,11 @@ public class ReminderReceiver extends BroadcastReceiver {
     }
 
     private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+        boolean stickyEnabled = sp.getBoolean(SettingsViewModel.KEY_STICKY_NOTIF_ENABLED, false);
+        boolean unlockedSticky = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.STICKY_NOTIF);
+        boolean isSticky = stickyEnabled && unlockedSticky;
+
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
         
         String formStr;
@@ -165,7 +170,8 @@ public class ReminderReceiver extends BroadcastReceiver {
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
-                .setAutoCancel(true)
+                .setOngoing(isSticky)
+                .setAutoCancel(!isSticky)
                 .setContentIntent(pendingIntent)
                 .addAction(R.drawable.ic_list, context.getString(R.string.take), takePI)
                 .addAction(android.R.drawable.ic_menu_recent_history, context.getString(R.string.button_snooze), snoozePI)
