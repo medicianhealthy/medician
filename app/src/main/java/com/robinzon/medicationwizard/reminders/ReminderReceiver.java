@@ -4,11 +4,13 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Vibrator;
+import android.os.VibrationEffect;
+import android.hardware.camera2.CameraManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -24,12 +26,6 @@ import java.util.Calendar;
 
 /**
  * Background BroadcastReceiver that handles the "firing" of a medication reminder alarm.
- * <p>
- * This class is the "Action Engine" of the reminders. When a system alarm goes off, 
- * it wakes up this receiver to perform two critical tasks:
- * 1. Post a high-priority System Notification with medication details.
- * 2. Play the user's selected alert sound, potentially bypassing system volume if configured.
- * </p>
  */
 public class ReminderReceiver extends BroadcastReceiver {
 
@@ -39,12 +35,6 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final String EXTRA_AMOUNT = "extra_amount";
     public static final String EXTRA_FORM = "extra_form";
 
-    /**
-     * Entry point triggered by the Android System Alarm.
-     *
-     * @param context The application context.
-     * @param intent  The intent containing medication metadata (name, amount, form).
-     */
     @Override
     public void onReceive(Context context, Intent intent) {
         if (ACTION_REMIND.equals(intent.getAction())) {
@@ -54,118 +44,89 @@ public class ReminderReceiver extends BroadcastReceiver {
             int instanceId = intent.getIntExtra(EXTRA_INSTANCE_ID, 0);
 
             com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Alarm fired for: " + medName);
-            
-            SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
-            
-            // Check for Quiet Hours entitlement (Purchase or Pass)
-            boolean unlockedQuietHours = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.QUIET_HOURS);
-            boolean quietHoursEnabled = sp.getBoolean(SettingsViewModel.KEY_QUIET_HOURS_ENABLED, false);
-            boolean inQuietHours = unlockedQuietHours && quietHoursEnabled && isInQuietHours(sp);
 
-            showNotification(context, medName, amount, form, instanceId);
+            // Use goAsync to keep the receiver alive while playing sounds/vibrating/flashing
+            final PendingResult pendingResult = goAsync();
             
-            if (!inQuietHours) {
-                playAlertSound(context);
-            } else {
-                com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Quiet Hours active. Skipping alert sound.");
-            }
+            new Thread(() -> {
+                try {
+                    SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+
+                    // Check for Quiet Hours entitlement
+                    boolean unlockedQuietHours = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.QUIET_HOURS);
+                    boolean quietHoursEnabled = sp.getBoolean(SettingsViewModel.KEY_QUIET_HOURS_ENABLED, false);
+                    boolean inQuietHours = unlockedQuietHours && quietHoursEnabled && isInQuietHours(sp);
+
+                    showNotification(context, medName, amount, form, instanceId);
+
+                    if (!inQuietHours) {
+                        // Trigger alerts synchronously within this background thread
+                        playAlertSoundSync(context);
+                        triggerVibrationSync(context);
+                        triggerFlashSync(context);
+                    } else {
+                        com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Quiet Hours active. Skipping alerts.");
+                    }
+
+                    // Consume any "Next Reminder" temporary passes
+                    if (!com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(context)) {
+                        com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
+                    }
+                } catch (Exception e) {
+                    com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Error in background processing: " + e.getMessage());
+                } finally {
+                    pendingResult.finish();
+                }
+            }).start();
+
         } else {
             com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Received unknown intent: " + intent.getAction());
         }
     }
 
-    /**
-     * Checks if the current time falls within the user-defined Quiet Hours.
-     */
-    /**
-     * Checks if the current system time falls within the user-defined Quiet Hours.
-     *
-     * @param sp The SharedPreferences manager to read start/end times.
-     * @return True if alerts should be suppressed.
-     */
     private boolean isInQuietHours(SharedPreferencesManager sp) {
         String startStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_START, "23:00");
         String endStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_END, "07:00");
-
         try {
             String[] startParts = startStr.split(":");
             String[] endParts = endStr.split(":");
-
-            int startHour = Integer.parseInt(startParts[0]);
-            int startMin = Integer.parseInt(startParts[1]);
-            int endHour = Integer.parseInt(endParts[0]);
-            int endMin = Integer.parseInt(endParts[1]);
-
+            int startTotal = Integer.parseInt(startParts[0]) * 60 + Integer.parseInt(startParts[1]);
+            int endTotal = Integer.parseInt(endParts[0]) * 60 + Integer.parseInt(endParts[1]);
             Calendar now = Calendar.getInstance();
-            int nowHour = now.get(Calendar.HOUR_OF_DAY);
-            int nowMin = now.get(Calendar.MINUTE);
-
-            int nowTotalMinutes = nowHour * 60 + nowMin;
-            int startTotalMinutes = startHour * 60 + startMin;
-            int endTotalMinutes = endHour * 60 + endMin;
-
-            if (startTotalMinutes < endTotalMinutes) {
-                // Same day range (e.g., 09:00 - 17:00)
-                return nowTotalMinutes >= startTotalMinutes && nowTotalMinutes < endTotalMinutes;
-            } else {
-                // Overnight range (e.g., 22:00 - 07:00)
-                return nowTotalMinutes >= startTotalMinutes || nowTotalMinutes < endTotalMinutes;
-            }
-        } catch (Exception e) {
-            return false;
-        }
+            int nowTotal = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE);
+            if (startTotal < endTotal) return nowTotal >= startTotal && nowTotal < endTotal;
+            else return nowTotal >= startTotal || nowTotal < endTotal;
+        } catch (Exception e) { return false; }
     }
 
-    /**
-     * Constructs and displays a high-priority system notification.
-     * <p>
-     * Features:
-     * - Personalized message (e.g., "Time to take 2 Pills of Aspirin").
-     * - Tapping the notification opens the main app screen.
-     * - Uses the dedicated "Medication Reminders" notification channel.
-     * </p>
-     */
-    /**
-     * Builds and displays a system notification for the due medication.
-     * Includes action buttons for Take, Skip, and Snooze.
-     */
     private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
         String message = "Time to take " + amountStr + " " + (form != null ? form.toLowerCase() : "dose") + " of " + medName;
 
-        // 1. Content Intent (Open App)
+        // Content Intent
         Intent contentIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                context,
-                instanceId,
-                contentIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, instanceId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        // 2. Action: Take
+        // Action Intents
         Intent takeIntent = new Intent(context, NotificationActionReceiver.class);
         takeIntent.setAction(NotificationActionReceiver.ACTION_TAKE);
         takeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
-        PendingIntent takePendingIntent = PendingIntent.getBroadcast(context, instanceId + 1000, takeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent takePI = PendingIntent.getBroadcast(context, instanceId + 1000, takeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        // 3. Action: Snooze
         Intent snoozeIntent = new Intent(context, NotificationActionReceiver.class);
         snoozeIntent.setAction(NotificationActionReceiver.ACTION_SNOOZE);
         snoozeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
-        PendingIntent snoozePendingIntent = PendingIntent.getBroadcast(context, instanceId + 2000, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent snoozePI = PendingIntent.getBroadcast(context, instanceId + 2000, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        // 4. Action: Skip
         Intent skipIntent = new Intent(context, NotificationActionReceiver.class);
         skipIntent.setAction(NotificationActionReceiver.ACTION_SKIP);
         skipIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
-        PendingIntent skipPendingIntent = PendingIntent.getBroadcast(context, instanceId + 3000, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent skipPI = PendingIntent.getBroadcast(context, instanceId + 3000, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        // 5. Form-specific Large Icon
         int iconRes = R.drawable.ic_med_pill;
         if (form != null) {
             try {
-                EForm eForm = EForm.valueOf(form);
-                iconRes = switch (eForm) {
+                iconRes = switch (EForm.valueOf(form)) {
                     case Drops -> R.drawable.ic_med_drops;
                     case Injection -> R.drawable.ic_med_injection;
                     case Solution -> R.drawable.ic_med_solution;
@@ -176,108 +137,107 @@ public class ReminderReceiver extends BroadcastReceiver {
                 };
             } catch (Exception ignored) {}
         }
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), iconRes);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationManager.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_med_pill)
-                .setLargeIcon(largeIcon)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), iconRes))
                 .setContentTitle("Medication Reminder")
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-                .addAction(R.drawable.ic_list, context.getString(R.string.take), takePendingIntent)
-                .addAction(android.R.drawable.ic_menu_recent_history, context.getString(R.string.button_snooze), snoozePendingIntent)
-                .addAction(android.R.drawable.ic_menu_close_clear_cancel, context.getString(R.string.button_skip), skipPendingIntent);
+                .addAction(R.drawable.ic_list, context.getString(R.string.take), takePI)
+                .addAction(android.R.drawable.ic_menu_recent_history, context.getString(R.string.button_snooze), snoozePI)
+                .addAction(android.R.drawable.ic_menu_close_clear_cancel, context.getString(R.string.button_skip), skipPI);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
-        try {
-            manager.notify(instanceId, builder.build());
-        } catch (SecurityException ignored) {}
+        try { manager.notify(instanceId, builder.build()); } catch (SecurityException ignored) {}
     }
 
-    /**
-     * Handles the audio playback for the reminder.
-     * <p>
-     * Advanced Logic:
-     * 1. Fetches the user's custom ringtone URI from settings.
-     * 2. If "Bypass System Volume" is enabled, it forces playback through the 
-     *    ALARM stream and ignores the device's ringer mode.
-     * 3. Scales the volume based on the user's preference (0-100%).
-     * </p>
-     */
-    /**
-     * Plays the custom or default notification sound, potentially bypassing system volume
-     * if the premium feature is active.
-     */
-    private void playAlertSound(Context context) {
+    private void playAlertSoundSync(Context context) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         String uriStr = sp.getString(SettingsViewModel.KEY_NOTIF_SOUND_URI, "");
-        
-        // Check for Bypass Volume entitlement (Purchase or Pass)
         boolean unlockedBypass = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.BYPASS_VOLUME);
         boolean bypassPref = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
         boolean useBypass = unlockedBypass && bypassPref;
-        
         int volumePercent = sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
 
-        // Consume any "Next Reminder" temporary passes
-        if (!com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(context)) {
-            com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
-        }
-
-        Uri uri;
-        if (uriStr.isEmpty()) {
-            // Fallback to system default notification sound
-            uri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION);
-        } else {
-            uri = Uri.parse(uriStr);
-        }
-
+        Uri uri = uriStr.isEmpty() ? android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION) : Uri.parse(uriStr);
         if (uri == null) return;
 
-        // Run MediaPlayer preparation in a background thread to prevent Main-thread ANRs
-        // especially if the URI is on a slow network or SD card.
-        new Thread(() -> {
-            try {
-                MediaPlayer player = new MediaPlayer();
-                player.setDataSource(context, uri);
-
-                if (useBypass) {
-                    player.setAudioAttributes(new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .build());
-                    
-                    float volume = volumePercent / 100f;
-                    player.setVolume(volume, volume);
-                } else {
-                    player.setAudioAttributes(new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .build());
-                }
-
-                // prepare() is a blocking I/O call.
-                player.prepare();
-                player.start();
-                
-                // Release resources once finished
-                player.setOnCompletionListener(mp -> {
-                    mp.release();
-                    com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "MediaPlayer released.");
-                });
-                
-                // Safety: Release if error occurs during playback
-                player.setOnErrorListener((mp, what, extra) -> {
-                    mp.release();
-                    return true;
-                });
-
-            } catch (Exception e) {
-                com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Error playing sound: " + e.getMessage());
+        try {
+            MediaPlayer player = new MediaPlayer();
+            player.setDataSource(context, uri);
+            AudioAttributes.Builder attrs = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION);
+            if (useBypass) {
+                attrs.setUsage(AudioAttributes.USAGE_ALARM);
+                float vol = volumePercent / 100f;
+                player.setVolume(vol, vol);
+            } else {
+                attrs.setUsage(AudioAttributes.USAGE_NOTIFICATION);
             }
-        }).start();
+            player.setAudioAttributes(attrs.build());
+            player.prepare();
+            player.start();
+            player.setOnCompletionListener(MediaPlayer::release);
+        } catch (Exception e) {
+            com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Sound error: " + e.getMessage());
+        }
+    }
+
+    private void triggerVibrationSync(Context context) {
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+        if (!sp.getBoolean(SettingsViewModel.KEY_VIBRATION_ENABLED, false)) return;
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.VIBRATION)) return;
+
+        String patternName = sp.getString(SettingsViewModel.KEY_VIBRATION_PATTERN, "Standard");
+        long[] pattern = switch (patternName) {
+            case "Heartbeat" -> new long[]{0, 150, 100, 150, 400};
+            case "SOS" -> new long[]{0, 100, 100, 100, 100, 100, 300, 300, 100, 300, 100, 300, 300, 100, 100, 100, 100, 100};
+            case "Long Pulse" -> new long[]{0, 800, 200, 800};
+            default -> new long[]{0, 300, 200, 300, 200};
+        };
+
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1), audioAttributes);
+        }
+    }
+
+    private void triggerFlashSync(Context context) {
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+        String patternName = sp.getString(SettingsViewModel.KEY_FLASH_PATTERN, "None");
+        if (patternName == null || "None".equalsIgnoreCase(patternName)) return;
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.VIBRATION)) return;
+
+        CameraManager cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        if (cameraManager == null) return;
+
+        try {
+            String[] ids = cameraManager.getCameraIdList();
+            if (ids.length == 0) return;
+            String cameraId = ids[0];
+            int blinks; long onMs, offMs;
+            switch (patternName) {
+                case "Single Blink" -> { blinks = 1; onMs = 500; offMs = 500; }
+                case "Double Pulse" -> { blinks = 2; onMs = 200; offMs = 200; }
+                case "Strobe" -> { blinks = 10; onMs = 50; offMs = 50; }
+                default -> { return; }
+            }
+            for (int k = 0; k < blinks; k++) {
+                cameraManager.setTorchMode(cameraId, true);
+                Thread.sleep(onMs);
+                cameraManager.setTorchMode(cameraId, false);
+                if (k < blinks - 1) Thread.sleep(offMs);
+            }
+        } catch (Exception e) {
+            com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Flash error: " + e.getMessage());
+        }
     }
 }
