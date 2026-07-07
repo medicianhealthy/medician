@@ -268,6 +268,9 @@
     <string name="form_other">Other</string>
 
     <string name="medication_deleted_format">was deleted</string>
+    <string name="notification_reminder_title">Medication Reminder</string>
+    <string name="notification_reminder_message">Time to take %1$s %2$s of %3$s</string>
+    <string name="notification_reminder_dose">dose</string>
     <string name="notification_channel_name">Medication Reminders</string>
     <string name="notification_channel_desc">Reminders to take your scheduled medications</string>
     <string name="premium_only_feature">Premium only feature</string>
@@ -332,6 +335,8 @@
     <string name="settings_threshold_format">%1$d minutes</string>
 
     <string name="feature_active_label">Active</string>
+    <string name="active_until_format">Active until %1$s</string>
+    <string name="active_for_next_reminder">Active for next reminder</string>
     <string name="feature_unlocked_toast">%1$s unlocked!</string>
 
     <string name="button_cancel">Cancel</string>

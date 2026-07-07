@@ -69,8 +69,7 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
         mTodaysMedications = Transformations.switchMap(combinedTrigger, trigger -> {
             SortOrder order = trigger.first;
             
-            // Re-calculate the bounds for "Today" every time the trigger fires.
-            // This fixes bugs where the app is kept open across day boundaries.
+            // FIX: Use a fresh Calendar and ensure we cover the entire day regardless of timezone edge cases.
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
@@ -83,6 +82,9 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
             calendar.set(Calendar.SECOND, 59);
             calendar.set(Calendar.MILLISECOND, 999);
             long endTime = calendar.getTimeInMillis();
+
+            com.robinzon.medicationwizard.utils.Logger.log("TodaysMedicationsViewModel", 
+                "Querying for Today: " + new java.util.Date(startTime) + " to " + new java.util.Date(endTime));
 
             if (order == null) order = SortOrder.TIME;
             

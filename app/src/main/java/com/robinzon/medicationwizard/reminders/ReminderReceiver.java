@@ -101,7 +101,27 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
-        String message = "Time to take " + amountStr + " " + (form != null ? form.toLowerCase() : "dose") + " of " + medName;
+        
+        String formStr;
+        if (form != null) {
+            try {
+                formStr = switch (EForm.valueOf(form)) {
+                    case Pill -> context.getString(R.string.form_pill);
+                    case Solution -> context.getString(R.string.form_solution);
+                    case Injection -> context.getString(R.string.form_injection);
+                    case Powder -> context.getString(R.string.form_powder);
+                    case Drops -> context.getString(R.string.form_drops);
+                    case Inhaler -> context.getString(R.string.form_inhaler);
+                    default -> context.getString(R.string.form_other);
+                };
+            } catch (Exception e) {
+                formStr = form.toLowerCase();
+            }
+        } else {
+            formStr = context.getString(R.string.notification_reminder_dose);
+        }
+        
+        String message = context.getString(R.string.notification_reminder_message, amountStr, formStr.toLowerCase(), medName);
 
         // Content Intent
         Intent contentIntent = new Intent(context, MainActivity.class);
@@ -141,7 +161,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationManager.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_med_pill)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), iconRes))
-                .setContentTitle("Medication Reminder")
+                .setContentTitle(context.getString(R.string.notification_reminder_title))
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)

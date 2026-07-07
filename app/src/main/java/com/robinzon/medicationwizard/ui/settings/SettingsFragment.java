@@ -354,7 +354,15 @@ public class SettingsFragment extends MedicationWizardFragment {
     private void updateRowEntitlement(boolean purchased, AppConfig.FeaturePassType type, @Nullable View crown, @Nullable View badge) {
         boolean unlocked = AppConfig.isFeatureUnlocked(requireContext(), type);
         if (crown != null) crown.setVisibility(purchased ? View.GONE : View.VISIBLE);
-        if (badge != null) badge.setVisibility(!purchased && unlocked ? View.VISIBLE : View.GONE);
+        if (badge != null) {
+            boolean showBadge = !purchased && unlocked;
+            badge.setVisibility(showBadge ? View.VISIBLE : View.GONE);
+            if (showBadge && badge instanceof android.widget.TextView tv) {
+                String label = AppConfig.getFeatureExpiryLabel(requireContext(), type);
+                if (!label.isEmpty()) tv.setText(label);
+                else tv.setText(R.string.feature_active_label);
+            }
+        }
     }
 
     private void showRational(AppConfig.FeaturePassType type) {

@@ -252,6 +252,10 @@
     <string name="form_inhaler">משאף</string>
     <string name="form_other">אחר</string>
 
+    <string name="medication_deleted_format">נמחקה</string>
+    <string name="notification_reminder_title">תזכורת לתרופה</string>
+    <string name="notification_reminder_message">הגיע הזמן לקחת %1$s %2$s של %3$s</string>
+    <string name="notification_reminder_dose">מנה</string>
     <string name="notification_channel_name">תזכורות תרופות</string>
     <string name="notification_channel_desc">תזכורות לקחת את התרופות שנקבעו</string>
     <string name="premium_only_feature">פיצ\'ר למנויי פרימיום בלבד</string>
@@ -310,6 +314,8 @@
     <string name="settings_threshold_format">%1$d דקות</string>
 
     <string name="feature_active_label">פעיל</string>
+    <string name="active_until_format">פעיל עד %1$s</string>
+    <string name="active_for_next_reminder">פעיל לתזכורת הבאה</string>
     <string name="feature_unlocked_toast">%1$s נפתח!</string>
 
     <string name="button_cancel">ביטול</string>

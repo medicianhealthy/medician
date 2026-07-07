@@ -82,4 +82,38 @@ public class AppConfig {
     public enum FeaturePassType {
         THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW
     }
+
+    /**
+     * Generates a human-readable label for a feature's active pass status.
+     * 
+     * @param context Application context for string resources.
+     * @param feature The feature type to check.
+     * @return A string like "Active until 14:00" or "Active for next reminder", or empty if not active.
+     */
+    public static String getFeatureExpiryLabel(Context context, FeaturePassType feature) {
+        if (isPremiumPurchased(context)) return ""; 
+
+        SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
+
+        return switch (feature) {
+            case THEME -> formatExpiry(context, prefs.getLong(KEY_PASS_THEME_EXPIRY, 0));
+            case SUPPORT -> formatExpiry(context, prefs.getLong(KEY_PASS_SUPPORT_EXPIRY, 0));
+            case BACKUP -> formatExpiry(context, prefs.getLong(KEY_PASS_BACKUP_EXPIRY, 0));
+            case QUIET_HOURS -> formatExpiry(context, prefs.getLong(KEY_PASS_QUIET_HOURS_EXPIRY, 0));
+            case DOSE_WINDOW -> formatExpiry(context, prefs.getLong(KEY_PASS_DOSE_WINDOW_EXPIRY, 0));
+            
+            case BYPASS_VOLUME -> prefs.getBoolean(KEY_PASS_BYPASS_VOLUME_ACTIVE, false) ? 
+                    context.getString(R.string.active_for_next_reminder) : "";
+            case VIBRATION -> prefs.getBoolean(KEY_PASS_VIBRATION_ACTIVE, false) ? 
+                    context.getString(R.string.active_for_next_reminder) : "";
+            case STICKY_NOTIF -> prefs.getBoolean(KEY_PASS_STICKY_ACTIVE, false) ? 
+                    context.getString(R.string.active_for_next_reminder) : "";
+        };
+    }
+
+    private static String formatExpiry(Context context, long expiry) {
+        if (expiry <= System.currentTimeMillis()) return "";
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
+        return context.getString(R.string.active_until_format, sdf.format(new java.util.Date(expiry)));
+    }
 }
