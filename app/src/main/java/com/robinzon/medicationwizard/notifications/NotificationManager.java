@@ -251,4 +251,14 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(intent);
     }
+
+    /**
+     * Dismisses a specific notification by its ID.
+     *
+     * @param context Application context.
+     * @param notificationId The unique ID of the notification to dismiss.
+     */
+    public static void dismissNotification(Context context, int notificationId) {
+        NotificationManagerCompat.from(context).cancel(notificationId);
+    }
 }

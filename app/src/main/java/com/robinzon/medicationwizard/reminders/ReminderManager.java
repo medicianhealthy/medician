@@ -134,5 +134,8 @@ public class ReminderManager {
             pendingIntent.cancel();
             com.robinzon.medicationwizard.utils.Logger.log("ReminderManager", "Successfully cancelled alarm ID: " + instanceId);
         }
+
+        // FIX: Also dismiss any active notification for this instance.
+        com.robinzon.medicationwizard.notifications.NotificationManager.dismissNotification(appContext, instanceId);
     }
 }

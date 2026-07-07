@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.core.app.NotificationManagerCompat;
-
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
@@ -32,7 +30,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         if (instanceId == -1) return;
 
         // Dismiss the notification immediately
-        NotificationManagerCompat.from(context).cancel(instanceId);
+        com.robinzon.medicationwizard.notifications.NotificationManager.dismissNotification(context, instanceId);
 
         String action = intent.getAction();
         if (action == null) return;

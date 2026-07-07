@@ -254,7 +254,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         final Context appContext = requireContext().getApplicationContext();
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
-            if (!"SCHEDULED".equals(status)) com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
+            if (!"SCHEDULED".equals(status)) {
+                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
+            }
         });
         com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(appContext);
         Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), status.toLowerCase()), Snackbar.LENGTH_LONG)

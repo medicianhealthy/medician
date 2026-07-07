@@ -177,6 +177,11 @@ public class HistoryFragment extends MedicationWizardFragment {
         
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
+            if (!"SCHEDULED".equals(status)) {
+                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(requireContext(), instance.getId());
+            } else {
+                com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(requireContext(), instance);
+            }
         });
     }
 
