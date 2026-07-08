@@ -78,13 +78,13 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return True if the minimum required fields (Name, Amount, Frequency) are populated.
+     * @return True if the minimum required fields (Name, Amount, Frequency, Form) are populated.
      */
     public boolean isValid() {
-        return !java.util.Objects.equals(commercialName, "") &&
-                commercialName != null &&
+        return commercialName != null && !commercialName.trim().isEmpty() &&
                 amount > 0 &&
-                frequency > 0;
+                frequency > 0 &&
+                form != null;
     }
 
     /**

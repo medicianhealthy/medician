@@ -713,10 +713,14 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         final TextInputEditText amountTextView = getAmountInputEditText(view);
         if (amountTextView != null && amountTextView.getText() != null) {
             String amountStr = amountTextView.getText().toString().replace(',', '.').trim();
-            try {
-                medication.setAmount(Float.parseFloat(amountStr));
-            } catch (NumberFormatException ignored) {
-                medication.setAmount(1.0f); // Fallback to 1 dose
+            if (amountStr.isEmpty()) {
+                medication.setAmount(0);
+            } else {
+                try {
+                    medication.setAmount(Float.parseFloat(amountStr));
+                } catch (NumberFormatException ignored) {
+                    medication.setAmount(0);
+                }
             }
         }
 
