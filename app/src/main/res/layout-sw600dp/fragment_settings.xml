@@ -131,36 +131,47 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                                    <androidx.constraintlayout.helper.widget.Flow
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        app:constraint_referenced_ids="txt_bypass_title,crown_bypass,badge_active_bypass"
+                                        app:flow_horizontalBias="0"
+                                        app:flow_horizontalGap="8dp"
+                                        app:flow_horizontalStyle="packed"
+                                        app:flow_wrapMode="chain"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
                                     <TextView
+                                        android:id="@+id/txt_bypass_title"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/settings_bypass_title"
-                                        android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                                        tools:ignore="MissingConstraints" />
                                     <ImageView
                                         android:id="@+id/crown_bypass"
                                         android:layout_width="18dp"
                                         android:layout_height="18dp"
-                                        android:layout_marginStart="8dp"
                                         app:srcCompat="@drawable/ic_crown"
-                                        android:contentDescription="@null" />
+                                        android:contentDescription="@null"
+                                        tools:ignore="MissingConstraints" />
                                     <TextView
                                         android:id="@+id/badge_active_bypass"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginStart="8dp"
                                         android:background="@drawable/bg_feature_active_badge"
                                         android:text="@string/feature_active_label"
                                         android:textColor="?attr/colorOnTertiaryContainer"
                                         android:textSize="10sp"
                                         android:textStyle="bold"
                                         android:visibility="gone"
-                                        tools:visibility="visible" />
-                                </LinearLayout>
+                                        tools:visibility="visible"
+                                        tools:ignore="MissingConstraints" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -200,36 +211,47 @@
                             android:clickable="true"
                             android:orientation="vertical"
                             android:padding="20dp">
-                            <LinearLayout
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.constraintlayout.helper.widget.Flow
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                app:constraint_referenced_ids="txt_quiet_hours_title,crown_quiet_hours,badge_active_quiet_hours"
+                                app:flow_horizontalBias="0"
+                                app:flow_horizontalGap="8dp"
+                                app:flow_horizontalStyle="packed"
+                                app:flow_wrapMode="chain"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                            <TextView
+                                android:id="@+id/txt_quiet_hours_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/settings_quiet_hours_title"
-                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
-                                <ImageView
-                                    android:id="@+id/crown_quiet_hours"
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:layout_marginStart="8dp"
-                                    app:srcCompat="@drawable/ic_crown"
-                                    android:contentDescription="@null" />
-                                <TextView
-                                    android:id="@+id/badge_active_quiet_hours"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
-                                    android:background="@drawable/bg_feature_active_badge"
-                                    android:text="@string/feature_active_label"
-                                    android:textColor="?attr/colorOnTertiaryContainer"
-                                    android:textSize="10sp"
-                                    android:textStyle="bold"
-                                    android:visibility="gone"
-                                    tools:visibility="visible" />
-                                </LinearLayout>
+                                android:text="@string/settings_quiet_hours_title"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"
+                                tools:ignore="MissingConstraints" />
+                            <ImageView
+                                android:id="@+id/crown_quiet_hours"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                app:srcCompat="@drawable/ic_crown"
+                                android:contentDescription="@null"
+                                tools:ignore="MissingConstraints" />
+                            <TextView
+                                android:id="@+id/badge_active_quiet_hours"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_feature_active_badge"
+                                android:text="@string/feature_active_label"
+                                android:textColor="?attr/colorOnTertiaryContainer"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:visibility="gone"
+                                tools:visibility="visible"
+                                tools:ignore="MissingConstraints" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                             <TextView
                                 android:id="@+id/txt_quiet_hours_desc"
                                 android:layout_width="wrap_content"
@@ -326,37 +348,47 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <androidx.constraintlayout.helper.widget.Flow
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    app:constraint_referenced_ids="txt_account_name,crown_backup,badge_active_backup"
+                                    app:flow_horizontalBias="0"
+                                    app:flow_horizontalGap="8dp"
+                                    app:flow_horizontalStyle="packed"
+                                    app:flow_wrapMode="chain"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
                                 <TextView
                                     android:id="@+id/txt_account_name"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/cloud_backup_title"
-                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                                    tools:ignore="MissingConstraints" />
                                 <ImageView
                                     android:id="@+id/crown_backup"
                                     android:layout_width="18dp"
                                     android:layout_height="18dp"
-                                    android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
-                                    android:contentDescription="@null" />
+                                    android:contentDescription="@null"
+                                    tools:ignore="MissingConstraints" />
                                 <TextView
                                     android:id="@+id/badge_active_backup"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
                                     android:background="@drawable/bg_feature_active_badge"
                                     android:text="@string/feature_active_label"
                                     android:textColor="?attr/colorOnTertiaryContainer"
                                     android:textSize="10sp"
                                     android:textStyle="bold"
                                     android:visibility="gone"
-                                    tools:visibility="visible" />
-                            </LinearLayout>
+                                    tools:visibility="visible"
+                                    tools:ignore="MissingConstraints" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
                             <TextView
                                 android:id="@+id/txt_account_email"
                                 android:layout_width="wrap_content"
@@ -497,40 +529,50 @@
                     android:layout_height="wrap_content"
                     android:padding="20dp">
 
-                    <LinearLayout
-                        android:id="@+id/layout_theme_header"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_theme_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <androidx.constraintlayout.helper.widget.Flow
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:constraint_referenced_ids="txt_theme_title,crown_theme,badge_active_theme"
+                        app:flow_horizontalBias="0"
+                        app:flow_horizontalGap="8dp"
+                        app:flow_horizontalStyle="packed"
+                        app:flow_wrapMode="chain"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/txt_theme_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-                        <TextView
-                            android:id="@+id/txt_theme_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/settings_theme_title"
-                            android:textAppearance="?attr/textAppearanceTitleMedium" />
-                        <ImageView
-                            android:id="@+id/crown_theme"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginStart="8dp"
-                            app:srcCompat="@drawable/ic_crown"
-                            android:contentDescription="@null" />
-                        <TextView
-                            android:id="@+id/badge_active_theme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:background="@drawable/bg_feature_active_badge"
-                            android:text="@string/feature_active_label"
-                            android:textColor="?attr/colorOnTertiaryContainer"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-                    </LinearLayout>
+                        android:text="@string/settings_theme_title"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        tools:ignore="MissingConstraints" />
+                    <ImageView
+                        android:id="@+id/crown_theme"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        app:srcCompat="@drawable/ic_crown"
+                        android:contentDescription="@null"
+                        tools:ignore="MissingConstraints" />
+                    <TextView
+                        android:id="@+id/badge_active_theme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_feature_active_badge"
+                        android:text="@string/feature_active_label"
+                        android:textColor="?attr/colorOnTertiaryContainer"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        tools:ignore="MissingConstraints" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
                         android:id="@+id/toggle_group_theme"
@@ -736,36 +778,47 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <androidx.constraintlayout.helper.widget.Flow
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    app:constraint_referenced_ids="txt_vibration_title,crown_vibration,badge_active_vibration"
+                                    app:flow_horizontalBias="0"
+                                    app:flow_horizontalGap="8dp"
+                                    app:flow_horizontalStyle="packed"
+                                    app:flow_wrapMode="chain"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
                                 <TextView
+                                    android:id="@+id/txt_vibration_title"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/settings_vibration_title"
-                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                                    tools:ignore="MissingConstraints" />
                                 <ImageView
                                     android:id="@+id/crown_vibration"
                                     android:layout_width="18dp"
                                     android:layout_height="18dp"
-                                    android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
-                                    android:contentDescription="@null" />
+                                    android:contentDescription="@null"
+                                    tools:ignore="MissingConstraints" />
                                 <TextView
                                     android:id="@+id/badge_active_vibration"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
                                     android:background="@drawable/bg_feature_active_badge"
                                     android:text="@string/feature_active_label"
                                     android:textColor="?attr/colorOnTertiaryContainer"
                                     android:textSize="10sp"
                                     android:textStyle="bold"
                                     android:visibility="gone"
-                                    tools:visibility="visible" />
-                            </LinearLayout>
+                                    tools:visibility="visible"
+                                    tools:ignore="MissingConstraints" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -875,36 +928,47 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <androidx.constraintlayout.helper.widget.Flow
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    app:constraint_referenced_ids="txt_sticky_title,crown_sticky,badge_active_sticky"
+                                    app:flow_horizontalBias="0"
+                                    app:flow_horizontalGap="8dp"
+                                    app:flow_horizontalStyle="packed"
+                                    app:flow_wrapMode="chain"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
                                 <TextView
+                                    android:id="@+id/txt_sticky_title"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/settings_sticky_title"
-                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                                    tools:ignore="MissingConstraints" />
                                 <ImageView
                                     android:id="@+id/crown_sticky"
                                     android:layout_width="18dp"
                                     android:layout_height="18dp"
-                                    android:layout_marginStart="8dp"
                                     app:srcCompat="@drawable/ic_crown"
-                                    android:contentDescription="@null" />
+                                    android:contentDescription="@null"
+                                    tools:ignore="MissingConstraints" />
                                 <TextView
                                     android:id="@+id/badge_active_sticky"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
                                     android:background="@drawable/bg_feature_active_badge"
                                     android:text="@string/feature_active_label"
                                     android:textColor="?attr/colorOnTertiaryContainer"
                                     android:textSize="10sp"
                                     android:textStyle="bold"
                                     android:visibility="gone"
-                                    tools:visibility="visible" />
-                            </LinearLayout>
+                                    tools:visibility="visible"
+                                    tools:ignore="MissingConstraints" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -932,36 +996,47 @@
                         android:focusable="true"
                         android:orientation="vertical"
                         android:padding="20dp">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.constraintlayout.helper.widget.Flow
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                app:constraint_referenced_ids="txt_dose_window_title,crown_dose_window,badge_active_dose_window"
+                                app:flow_horizontalBias="0"
+                                app:flow_horizontalGap="8dp"
+                                app:flow_horizontalStyle="packed"
+                                app:flow_wrapMode="chain"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
                             <TextView
+                                android:id="@+id/txt_dose_window_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/settings_dose_window_title"
-                                android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                android:textAppearance="?attr/textAppearanceTitleMedium"
+                                tools:ignore="MissingConstraints" />
                             <ImageView
                                 android:id="@+id/crown_dose_window"
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                android:layout_marginStart="8dp"
                                 app:srcCompat="@drawable/ic_crown"
-                                android:contentDescription="@null" />
+                                android:contentDescription="@null"
+                                tools:ignore="MissingConstraints" />
                             <TextView
                                 android:id="@+id/badge_active_dose_window"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
                                 android:background="@drawable/bg_feature_active_badge"
                                 android:text="@string/feature_active_label"
                                 android:textColor="?attr/colorOnTertiaryContainer"
                                 android:textSize="10sp"
                                 android:textStyle="bold"
                                 android:visibility="gone"
-                                tools:visibility="visible" />
-                        </LinearLayout>
+                                tools:visibility="visible"
+                                tools:ignore="MissingConstraints" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

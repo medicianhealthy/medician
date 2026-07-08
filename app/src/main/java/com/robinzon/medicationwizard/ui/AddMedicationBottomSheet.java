@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.helper.widget.Flow;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
@@ -94,7 +96,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private final SparseArray<SimpleDayTime> dosesInDay = new SparseArray<>();
     
     /** Layout container where dynamic time picker buttons are added. */
-    private LinearLayout timesContainer;
+    private ConstraintLayout timesContainer;
     
     /** The medication object being built or edited. */
     private Medication medication = new Medication();
@@ -243,7 +245,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
 
         AutoCompleteTextView unitEdit = view.findViewById(R.id.dropdown_unit);
         if (unitEdit != null && medication.getMeasurementUnit() != null) {
-            unitEdit.setText(medication.getMeasurementUnit().getName(), false);
+            unitEdit.setText(medication.getMeasurementUnit().getLabel(requireContext()), false);
         }
 
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_instructions);
@@ -608,7 +610,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         final AutoCompleteTextView dropdownUnit = view.findViewById(R.id.dropdown_unit);
         final ArrayList<String> measurementUnits = new ArrayList<>();
         for (EMeasurementUnit unit : EMeasurementUnit.values()) {
-            measurementUnits.add(unit.getName());
+            measurementUnits.add(unit.getLabel(requireContext()));
         }
         
         if (null != dropdownUnit) {
@@ -628,77 +630,54 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     /**
      * Generates a list of buttons in the UI, one for each scheduled dose 
      * defined by the 'Frequency' dropdown.
+     * Uses ConstraintLayout Flow for automatic wrapping and RTL support.
      */
     private void generateTimePickers(final int amount) {
-        // Clear all previous views immediately to avoid ghost buttons
         timesContainer.removeAllViews();
         
         final Context context = requireContext();
         final float density = context.getResources().getDisplayMetrics().density;
-        final int margin = (int) (8 * density);
+        final int gap = (int) (8 * density);
 
-        // We use a post() to ensure we have the container width for row-fitting logic
-        timesContainer.post(() -> {
-            if (getView() == null) return;
+        // Create the Flow helper
+        Flow flow = new Flow(context);
+        flow.setId(View.generateViewId());
+        flow.setLayoutParams(new ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT));
+        
+        flow.setHorizontalGap(gap);
+        flow.setVerticalGap(gap);
+        flow.setWrapMode(Flow.WRAP_CHAIN);
+        flow.setHorizontalStyle(Flow.CHAIN_PACKED);
+        flow.setHorizontalBias(0f); // Align to start (Right in Hebrew)
+
+        int[] viewIds = new int[amount];
+
+        for (int i = 1; i <= amount; i++) {
+            MaterialButton timeButton = (MaterialButton) LayoutInflater.from(context)
+                    .inflate(R.layout.item_time_picker, timesContainer, false);
             
-            // Double check clear inside post to handle rapid frequency changes
-            timesContainer.removeAllViews();
+            int viewId = View.generateViewId();
+            timeButton.setId(viewId);
+            viewIds[i - 1] = viewId;
 
-            int containerWidth = timesContainer.getWidth();
-            if (containerWidth <= 0) {
-                containerWidth = (int) (context.getResources().getDisplayMetrics().widthPixels - (32 * density));
+            // Preserve existing time if available
+            SimpleDayTime existingTime = dosesInDay.get(i);
+            if (existingTime != null) {
+                timeButton.setText(getString(R.string.time_set_format, existingTime.toString()));
+            } else {
+                timeButton.setText(getString(R.string.select_time_index_format, i));
             }
 
-            LinearLayout currentRow = createNewRow(context);
-            timesContainer.addView(currentRow);
-            int currentLineWidth = 0;
+            int finalIndex = i;
+            timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
 
-            for (int i = 1; i <= amount; i++) {
-                MaterialButton timeButton = (MaterialButton) LayoutInflater.from(context)
-                        .inflate(R.layout.item_time_picker, currentRow, false);
+            timesContainer.addView(timeButton);
+        }
 
-                // Preserve existing time if available
-                SimpleDayTime existingTime = dosesInDay.get(i);
-                if (existingTime != null) {
-                    timeButton.setText(getString(R.string.time_set_format, existingTime.toString()));
-                } else {
-                    timeButton.setText(getString(R.string.select_time_index_format, i));
-                }
-
-                int finalIndex = i;
-                timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
-
-                // Measure button with constraints to get a realistic width
-                int maxWidthSpec = View.MeasureSpec.makeMeasureSpec(containerWidth, View.MeasureSpec.AT_MOST);
-                int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-                timeButton.measure(maxWidthSpec, heightSpec);
-                int btnWidth = timeButton.getMeasuredWidth();
-
-                // If adding this button exceeds width, start a new row
-                if (currentLineWidth + btnWidth + margin > containerWidth && currentLineWidth > 0) {
-                    currentRow = createNewRow(context);
-                    timesContainer.addView(currentRow);
-                    currentLineWidth = 0;
-                }
-
-                // Add margin to the button
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) timeButton.getLayoutParams();
-                layoutParams.setMargins(0, 0, margin, margin);
-                timeButton.setLayoutParams(layoutParams);
-
-                currentRow.addView(timeButton);
-                currentLineWidth += btnWidth + margin;
-            }
-        });
-    }
-
-    private LinearLayout createNewRow(Context context) {
-        LinearLayout row = new LinearLayout(context);
-        row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        return row;
+        flow.setReferencedIds(viewIds);
+        timesContainer.addView(flow);
     }
 
     /**
@@ -740,7 +719,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         if (unitDropdown != null && unitDropdown.getText() != null) {
             String unitName = unitDropdown.getText().toString();
             for (EMeasurementUnit unit : EMeasurementUnit.values()) {
-                if (unit.getName().equalsIgnoreCase(unitName)) {
+                if (unit.getLabel(requireContext()).equalsIgnoreCase(unitName)) {
                     medication.setMeasurementUnit(unit);
                     break;
                 }

@@ -107,7 +107,7 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoading(false);
 
                     if (mRewardedFinishedListener != null) {
-                        mRewardedFinishedListener.onRewarded(mUserEarnedReward);
+                        mRewardedFinishedListener.onRewarded(mUserEarnedReward ? AdsManager.RewardedStatus.SUCCESS : AdsManager.RewardedStatus.DISMISSED_EARLY);
                         mRewardedFinishedListener = null;
                     }
 
@@ -133,7 +133,7 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     if (mRewardedFinishedListener != null) {
-                        mRewardedFinishedListener.onRewarded(false);
+                        mRewardedFinishedListener.onRewarded(AdsManager.RewardedStatus.NOT_READY);
                         mRewardedFinishedListener = null;
                     }
                     log("%s Failed to show. Reason is %s.\n%s",getLogTag() ,adError.getMessage(), thisToString());
@@ -167,7 +167,7 @@ public class AdMobRewarded extends AdMobAd {
         } else {
             // AD CANNOT BE SHOWN: Notify listener so UI can respond (e.g. show "Not Ready" toast)
             if (mRewardedFinishedListener != null) {
-                mRewardedFinishedListener.onRewarded(false);
+                mRewardedFinishedListener.onRewarded(AdsManager.RewardedStatus.NOT_READY);
                 mRewardedFinishedListener = null;
             }
         }

@@ -6,7 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -30,6 +32,7 @@ import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
+import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private AdsManager adsManager;
     private NavController navController;
     private boolean isInitialLaunch;
+    private long lastBackPressedTime;
     
     public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
 
@@ -111,6 +115,25 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 invalidateOptionsMenu();
+            });
+
+            // Handle back button for Drawer closing, Home navigation, and Double-back exit
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    if (drawer.isDrawerOpen(GravityCompat.START)) {
+                        drawer.closeDrawer(GravityCompat.START);
+                    } else if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() != R.id.nav_home) {
+                        navController.popBackStack(R.id.nav_home, false);
+                    } else {
+                        if (lastBackPressedTime + 2000 > System.currentTimeMillis()) {
+                            finish();
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.back_to_exit, Toast.LENGTH_SHORT).show();
+                            lastBackPressedTime = System.currentTimeMillis();
+                        }
+                    }
+                }
             });
         }
 
@@ -287,6 +310,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
+        
+        // Ensure theme and other feature passes haven't expired
+        SettingsViewModel.enforceEntitlements(this);
+
         if (null != getAdsManager()) {
             getAdsManager().onResume();
         }

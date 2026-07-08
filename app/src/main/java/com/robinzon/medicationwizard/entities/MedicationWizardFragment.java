@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.Screen;
 
 import java.util.ArrayList;
@@ -184,12 +185,30 @@ public class MedicationWizardFragment extends Fragment {
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = 
                 com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
         
-        int earlyThreshold = rcm.getEarlyTakeThresholdMins();
-        int lateThreshold = rcm.getLateTakeThresholdMins();
+        int defaultEarly = rcm.getEarlyTakeThresholdMins();
+        int defaultLate = rcm.getLateTakeThresholdMins();
+        if (defaultEarly <= 0) defaultEarly = 60;
+        if (defaultLate <= 0) defaultLate = 180;
 
-        // Fallback to defaults if values are not yet fetched or invalid
-        if (earlyThreshold <= 0) earlyThreshold = 60;
-        if (lateThreshold <= 0) lateThreshold = 180;
+        int earlyThreshold = defaultEarly;
+        int lateThreshold = defaultLate;
+
+        boolean unlocked = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(requireContext(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.DOSE_WINDOW);
+        boolean isPremium = com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(requireContext());
+
+        if (unlocked) {
+            com.robinzon.medicationwizard.utils.SharedPreferencesManager sp = com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext());
+            earlyThreshold = sp.getInt(com.robinzon.medicationwizard.ui.settings.SettingsViewModel.KEY_CUSTOM_EARLY_THRESHOLD, defaultEarly);
+            lateThreshold = sp.getInt(com.robinzon.medicationwizard.ui.settings.SettingsViewModel.KEY_CUSTOM_LATE_THRESHOLD, defaultLate);
+        }
+
+        // Logic for consuming "Dose Window" temporary pass
+        if (unlocked && !isPremium) {
+            // Check if user is outside DEFAULT window (where they benefit from the pass or interact with it)
+            if (diffMins < -defaultEarly || diffMins > defaultLate) {
+                com.robinzon.medicationwizard.managers.FeaturePassManager.consumeDoseWindowPass(requireContext());
+            }
+        }
 
         if (diffMins < -earlyThreshold) {
             showTimingClarificationDialog(instance, callback, getString(R.string.take_early_warning));
@@ -233,6 +252,13 @@ public class MedicationWizardFragment extends Fragment {
             callback.onApply();
         }, hour, minute, android.text.format.DateFormat.is24HourFormat(requireContext()));
         timePickerDialog.show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Force an entitlement check whenever the user returns to or navigates between fragments
+        SettingsViewModel.enforceEntitlements(requireContext());
     }
 
     @Override

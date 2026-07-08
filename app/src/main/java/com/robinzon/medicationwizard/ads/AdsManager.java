@@ -20,8 +20,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkStatusListener{
 
 
+    public enum RewardedStatus {
+        SUCCESS,
+        DISMISSED_EARLY,
+        NOT_READY
+    }
+
     public interface OnRewardedFinishedListener {
-        void onRewarded(boolean success);
+        void onRewarded(RewardedStatus status);
     }
 
     private final Activity activity;
@@ -245,7 +251,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
             mainRewarded.setRewardedFinishedListener(listener);
             mainRewarded.show();
         } else if (listener != null) {
-            listener.onRewarded(false);
+            listener.onRewarded(RewardedStatus.NOT_READY);
         }
     }
 

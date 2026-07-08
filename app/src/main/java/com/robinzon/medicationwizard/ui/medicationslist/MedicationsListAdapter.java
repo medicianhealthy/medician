@@ -133,7 +133,7 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
 
                 binding.medStrength.setText(String.format(Locale.getDefault(), "%s %s",
                         strengthStr,
-                        medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getName() : ""));
+                        medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getLabel(binding.getRoot().getContext()) : ""));
             }
 
             // Sync icon with medication form (e.g., Drops icon for drops)

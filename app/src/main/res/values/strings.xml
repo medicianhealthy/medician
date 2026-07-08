@@ -72,6 +72,7 @@
 
     <string name="settings_clear_data_title">Start Fresh</string>
     <string name="settings_clear_data_message">This will permanently delete all your medications, history, and any cloud backups. This cannot be undone. Are you sure?</string>
+    <string name="settings_clear_data_message_no_cloud">This will permanently delete all your medications and history. This cannot be undone. Are you sure?</string>
     <string name="settings_clear_data_summary">Wipe all medications and history. Careful, this can\'t be undone!</string>
 
     <string name="settings_category_about">About</string>
@@ -144,6 +145,7 @@
     <string name="onboarding_btn_next">Next</string>
     <string name="onboarding_btn_skip">Skip</string>
     <string name="onboarding_btn_finish">Get Started</string>
+    <string name="back_to_exit">Click back again to exit</string>
 
     <string name="onboarding_title_1">Meet the Wizard</string>
     <string name="onboarding_desc_1">Your personal health companion is here to help you manage your medications with a touch of magic.</string>
@@ -280,6 +282,8 @@
 
     <string name="medication_deleted_format">was deleted</string>
     <string name="notification_reminder_title">Medication Reminder</string>
+    <string name="notification_permission_reminder_title">Notifications are Off</string>
+    <string name="notification_permission_reminder_message">You won\'t receive reminders until you enable notification permissions in your device settings.</string>
     <string name="notification_reminder_message">Time to take %1$s %2$s of %3$s</string>
     <string name="notification_reminder_dose">dose</string>
     <string name="notification_channel_name">Medication Reminders</string>
@@ -292,6 +296,18 @@
     <string name="loading_magic">Loading magic... please wait.</string>
     <string name="reward_ad_not_ready_title">Video Not Ready</string>
     <string name="reward_ad_not_ready_dialog">The video is not ready yet. Make sure you\'re connected to the internet and check back later.</string>
+    <string name="reward_ad_dismissed_early_title">Finish Watching</string>
+    <string name="reward_ad_dismissed_early_message">You need to watch the video until the end to %s</string>
+
+    <string name="benefit_theme">customize your app theme for the next 1 hour</string>
+    <string name="benefit_support">access Premium Support for 1 hour</string>
+    <string name="benefit_backup">enable Cloud Backup and Restore for 1 hour</string>
+    <string name="benefit_backup_local">enable Backup and Restore for 1 hour</string>
+    <string name="benefit_bypass">enable Bypass Volume for your next scheduled reminder</string>
+    <string name="benefit_vibration">enable custom vibration and flash alerts for your next reminder</string>
+    <string name="benefit_sticky">make your next reminder \"Sticky\" until you take action</string>
+    <string name="benefit_dose_window">customize your Take Warning thresholds for 1 hour</string>
+    <string name="benefit_quiet_hours">enable Quiet Hours until 08:00 tomorrow morning</string>
     <string name="reward_ad_not_ready">The Magic isn\'t ready yet. Please try again in a few seconds.</string>
     <string name="theme_unlock_title">Unlock This Theme</string>
     <string name="theme_unlock_prompt">Watch a short video to unlock this theme and all other Premium magic for %1$d hours!</string>
@@ -350,6 +366,7 @@
     <string name="onboarding_scroll_hint">Scroll for more</string>
     <string name="active_until_format">Active until %1$s</string>
     <string name="active_for_next_reminder">Active for next reminder</string>
+    <string name="active_for_next_take_outside_window">Active for next take outside window</string>
     <string name="feature_unlocked_toast">%1$s unlocked!</string>
 
     <string name="button_cancel">Cancel</string>
@@ -365,4 +382,12 @@
     <string name="snooze_3_times">3 times</string>
     <string name="snooze_5_times">5 times</string>
     <string name="snooze_unlimited">Unlimited</string>
+
+    <!-- Measurement Units -->
+    <string name="unit_grams">g</string>
+    <string name="unit_mg">mg</string>
+    <string name="unit_iu">IU</string>
+    <string name="unit_mcg">mcg</string>
+    <string name="unit_ml">mL</string>
+    <string name="unit_percentage">%</string>
 </resources>

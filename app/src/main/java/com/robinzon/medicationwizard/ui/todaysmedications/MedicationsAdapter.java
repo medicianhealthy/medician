@@ -15,6 +15,7 @@ import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.entities.EInstructions;
+import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -143,7 +144,8 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             // Formatting
             String strength = instance.getStrength() > 0 ? (instance.getStrength() == (long) instance.getStrength() ? String.valueOf((long) instance.getStrength()) : String.valueOf(instance.getStrength())) : "";
-            strengthText.setText(strength + (instance.getUnit() != null ? " " + instance.getUnit() : ""));
+            String unitLabel = EMeasurementUnit.getLabelByName(itemView.getContext(), instance.getUnit());
+            strengthText.setText(strength + (unitLabel.isEmpty() ? "" : " " + unitLabel));
             strengthText.setVisibility(instance.getStrength() > 0 ? View.VISIBLE : View.GONE);
 
             String amount = instance.getAmount() == (long) instance.getAmount() ? String.valueOf((long) instance.getAmount()) : String.valueOf(instance.getAmount());

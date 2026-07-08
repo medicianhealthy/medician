@@ -75,6 +75,8 @@ public class MedicationWizardApplication extends Application
      * Re-applies the saved theme preference (Light, Dark, or System) globally.
      */
     private void applyTheme() {
+        SettingsViewModel.enforceEntitlements(this);
+        
         int theme = SharedPreferencesManager.getInstance(this).getInt(SettingsViewModel.KEY_APP_THEME, SettingsViewModel.THEME_SYSTEM);
         switch (theme) {
             case SettingsViewModel.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -136,6 +138,9 @@ public class MedicationWizardApplication extends Application
      */
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
+        // Ensure theme/settings are correct if a pass expired while the app was in the background
+        SettingsViewModel.enforceEntitlements(this);
+
         // Start usage tracking
         com.robinzon.medicationwizard.utils.Statisticator.onMoveToForeground(this);
         

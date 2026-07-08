@@ -1,5 +1,9 @@
 package com.robinzon.medicationwizard.entities;
 
+import android.content.Context;
+import androidx.annotation.StringRes;
+import com.robinzon.medicationwizard.R;
+
 /**
  * Enumeration of standard measurement units for medication strength and volume.
  * <p>
@@ -10,22 +14,24 @@ package com.robinzon.medicationwizard.entities;
 @SuppressWarnings("unused")
 public enum EMeasurementUnit {
     /** Grams. */
-    Grams("g"),
+    Grams("g", R.string.unit_grams),
     /** Milligrams. */
-    Milligram("mg"),
+    Milligram("mg", R.string.unit_mg),
     /** International Units (commonly used for vitamins). */
-    IU("IU"),
+    IU("IU", R.string.unit_iu),
     /** Micrograms. */
-    Microgram("mcg"),
+    Microgram("mcg", R.string.unit_mcg),
     /** Milliliters. */
-    Milliliter("mL"),
+    Milliliter("mL", R.string.unit_ml),
     /** Percentage concentration (commonly used for topical solutions). */
-    Percentage("%");
+    Percentage("%", R.string.unit_percentage);
 
     private final String mName;
+    private final int mLabelResId;
 
-    EMeasurementUnit(final String name) {
+    EMeasurementUnit(final String name, @StringRes final int labelResId) {
         mName = name;
+        mLabelResId = labelResId;
     }
 
     /**
@@ -33,5 +39,25 @@ public enum EMeasurementUnit {
      */
     public String getName() {
         return mName;
+    }
+
+    /**
+     * @return The localized label for the unit.
+     */
+    public String getLabel(Context context) {
+        return context.getString(mLabelResId);
+    }
+
+    /**
+     * Finds a unit by its internal name and returns its localized label.
+     */
+    public static String getLabelByName(Context context, String name) {
+        if (name == null) return "";
+        for (EMeasurementUnit unit : values()) {
+            if (unit.getName().equalsIgnoreCase(name)) {
+                return unit.getLabel(context);
+            }
+        }
+        return name;
     }
 }

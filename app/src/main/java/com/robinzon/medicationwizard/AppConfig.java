@@ -37,7 +37,7 @@ public class AppConfig {
     public static final String KEY_PASS_BYPASS_VOLUME_ACTIVE = "pass_bypass_volume_active";
     public static final String KEY_PASS_VIBRATION_ACTIVE = "pass_vibration_active";
     public static final String KEY_PASS_STICKY_ACTIVE = "pass_sticky_active";
-    public static final String KEY_PASS_DOSE_WINDOW_EXPIRY = "pass_dose_window_expiry";
+    public static final String KEY_PASS_DOSE_WINDOW_ACTIVE = "pass_dose_window_active";
 
     /**
      * @return True if the user has purchased the full version of the app.
@@ -65,7 +65,7 @@ public class AppConfig {
             case BYPASS_VOLUME -> prefs.getBoolean(KEY_PASS_BYPASS_VOLUME_ACTIVE, false);
             case VIBRATION -> prefs.getBoolean(KEY_PASS_VIBRATION_ACTIVE, false);
             case STICKY_NOTIF -> prefs.getBoolean(KEY_PASS_STICKY_ACTIVE, false);
-            case DOSE_WINDOW -> prefs.getLong(KEY_PASS_DOSE_WINDOW_EXPIRY, 0) > now;
+            case DOSE_WINDOW -> prefs.getBoolean(KEY_PASS_DOSE_WINDOW_ACTIVE, false);
         };
     }
 
@@ -103,8 +103,10 @@ public class AppConfig {
             case SUPPORT -> formatExpiry(context, prefs.getLong(KEY_PASS_SUPPORT_EXPIRY, 0));
             case BACKUP -> formatExpiry(context, prefs.getLong(KEY_PASS_BACKUP_EXPIRY, 0));
             case QUIET_HOURS -> formatExpiry(context, prefs.getLong(KEY_PASS_QUIET_HOURS_EXPIRY, 0));
-            case DOSE_WINDOW -> formatExpiry(context, prefs.getLong(KEY_PASS_DOSE_WINDOW_EXPIRY, 0));
             
+            case DOSE_WINDOW -> prefs.getBoolean(KEY_PASS_DOSE_WINDOW_ACTIVE, false) ? 
+                    context.getString(R.string.active_for_next_take_outside_window) : "";
+
             case BYPASS_VOLUME -> prefs.getBoolean(KEY_PASS_BYPASS_VOLUME_ACTIVE, false) ? 
                     context.getString(R.string.active_for_next_reminder) : "";
             case VIBRATION -> prefs.getBoolean(KEY_PASS_VIBRATION_ACTIVE, false) ? 

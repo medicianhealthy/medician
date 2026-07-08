@@ -313,10 +313,18 @@ public class SettingsFragment extends MedicationWizardFragment {
                 showRational(AppConfig.FeaturePassType.DOSE_WINDOW); 
             }
         });
-        
-        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
-        binding.txtEarlyThresholdDesc.setText(getString(R.string.settings_threshold_format, rcm.getEarlyTakeThresholdMins()));
-        binding.txtLateThresholdDesc.setText(getString(R.string.settings_threshold_format, rcm.getLateTakeThresholdMins()));
+
+        viewModel.getCustomEarlyThreshold().observe(getViewLifecycleOwner(), mins -> {
+            if (binding != null && binding.txtEarlyThresholdDesc != null) {
+                binding.txtEarlyThresholdDesc.setText(getString(R.string.settings_threshold_format, mins));
+            }
+        });
+
+        viewModel.getCustomLateThreshold().observe(getViewLifecycleOwner(), mins -> {
+            if (binding != null && binding.txtLateThresholdDesc != null) {
+                binding.txtLateThresholdDesc.setText(getString(R.string.settings_threshold_format, mins));
+            }
+        });
         
         binding.btnEarlyThreshold.setOnClickListener(v -> showThresholdPicker(true));
         binding.btnLateThreshold.setOnClickListener(v -> showThresholdPicker(false));
@@ -409,17 +417,16 @@ public class SettingsFragment extends MedicationWizardFragment {
         String[] opts = {"15 min", "30 min", "45 min", "60 min", "90 min", "120 min", "180 min"};
         int[] vals = {15, 30, 45, 60, 90, 120, 180};
         
-        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
-        int currentVal = isEarly ? rcm.getEarlyTakeThresholdMins() : rcm.getLateTakeThresholdMins();
+        int currentVal = isEarly ? (viewModel.getCustomEarlyThreshold().getValue() != null ? viewModel.getCustomEarlyThreshold().getValue() : 60) 
+                                 : (viewModel.getCustomLateThreshold().getValue() != null ? viewModel.getCustomLateThreshold().getValue() : 180);
         int checkedItemIdx = 3; // Default 60
         for (int i = 0; i < vals.length; i++) { if (vals[i] == currentVal) { checkedItemIdx = i; break; } }
 
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         d.setTitle(getString(isEarly ? R.string.settings_early_threshold_title : R.string.settings_late_threshold_title));
         d.setSingleChoiceItems(opts, checkedItemIdx, (dialog, i) -> {
-            // Future logic to save custom thresholds. Currently placeholders.
-            if (isEarly) binding.txtEarlyThresholdDesc.setText(opts[i]);
-            else binding.txtLateThresholdDesc.setText(opts[i]);
+            if (isEarly) viewModel.setCustomEarlyThreshold(vals[i]);
+            else viewModel.setCustomLateThreshold(vals[i]);
             
             if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.0f);
             dialog.dismiss();
@@ -677,7 +684,12 @@ public class SettingsFragment extends MedicationWizardFragment {
 
     private void showClearDataConfirmation() {
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-        d.setTitle(getString(R.string.settings_clear_data_title)); d.setMessage(getString(R.string.settings_clear_data_message));
+        d.setTitle(getString(R.string.settings_clear_data_title));
+        
+        boolean cloudEnabled = com.robinzon.medicationwizard.backup.CloudBackupSettings.getInstance(requireContext()).isAutoBackupEnabled();
+        int messageRes = cloudEnabled ? R.string.settings_clear_data_message : R.string.settings_clear_data_message_no_cloud;
+        
+        d.setMessage(getString(messageRes));
         d.setPositiveButton(getString(android.R.string.yes), (dialog, i) -> { Medication.clearAllMedications(requireContext()); Snackbar.make(binding.getRoot(), R.string.data_cleared, Snackbar.LENGTH_SHORT).show(); });
         d.setNegativeButton(getString(android.R.string.no), null); d.show();
     }

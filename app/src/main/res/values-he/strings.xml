@@ -73,6 +73,7 @@
 
     <string name="settings_clear_data_title">התחלה מחדש</string>
     <string name="settings_clear_data_message">פעולה זו תמחק לצמיתות את כל התרופות, ההיסטוריה וכל גיבוי בענן. לא ניתן לבטל פעולה זו. האם אתה בטוח?</string>
+    <string name="settings_clear_data_message_no_cloud">פעולה זו תמחק לצמיתות את כל התרופות וההיסטוריה שלך. לא ניתן לבטל זאת. האם אתה בטוח?</string>
     <string name="settings_clear_data_summary">מחק את כל התרופות וההיסטוריה. זהירות, לא ניתן לבטל זאת!</string>
 
     <string name="settings_category_about">אודות</string>
@@ -130,6 +131,7 @@
     <string name="onboarding_btn_next">הבא</string>
     <string name="onboarding_btn_skip">דלג</string>
     <string name="onboarding_btn_finish">בוא נתחיל</string>
+    <string name="back_to_exit">לחץ שוב על חזור כדי לצאת</string>
 
     <string name="onboarding_title_1">הכירו את הקוסם</string>
     <string name="onboarding_desc_1">השותף האישי שלך לבריאות כאן כדי לעזור לך לנהל את התרופות שלך עם מגע של קסם.</string>
@@ -266,6 +268,8 @@
 
     <string name="medication_deleted_format">נמחקה</string>
     <string name="notification_reminder_title">תזכורת לתרופה</string>
+    <string name="notification_permission_reminder_title">ההתראות כבויות</string>
+    <string name="notification_permission_reminder_message">לא תקבל תזכורות עד שתאשר את הרשאות ההתראות בהגדרות המכשיר.</string>
     <string name="notification_reminder_message">הגיע הזמן לקחת %1$s %2$s של %3$s</string>
     <string name="notification_reminder_dose">מנה</string>
     <string name="notification_channel_name">תזכורות תרופות</string>
@@ -278,6 +282,18 @@
     <string name="loading_magic">טוען קסם... אנא המתן.</string>
     <string name="reward_ad_not_ready_title">הסרטון לא מוכן</string>
     <string name="reward_ad_not_ready_dialog">הסרטון עדיין לא מוכן. וודא שאתה מחובר לאינטרנט ונסה שוב מאוחר יותר.</string>
+    <string name="reward_ad_dismissed_early_title">סיימו לצפות</string>
+    <string name="reward_ad_dismissed_early_message">עליך לצפות בסרטון עד הסוף כדי %s</string>
+
+    <string name="benefit_theme">לעצב את ערכת הנושא של האפליקציה לשעה הקרובה</string>
+    <string name="benefit_support">לקבל גישה לתמיכה מובחרת לשעה הקרובה</string>
+    <string name="benefit_backup">לאפשר גיבוי ושחזור בענן לשעה הקרובה</string>
+    <string name="benefit_backup_local">לאפשר גיבוי ושחזור לשעה הקרובה</string>
+    <string name="benefit_bypass">לאפשר עקיפת עוצמת קול עבור התזכורת הבאה שלך</string>
+    <string name="benefit_vibration">לאפשר רטט והתראות פלאש מותאמות אישית לתזכורת הבאה</string>
+    <string name="benefit_sticky">להפוך את התזכורת הבאה שלך ל"דביקה" עד שתבצע פעולה</string>
+    <string name="benefit_dose_window">להתאים אישית את ספי אזהרת הלקיחה שלך לשעה הקרובה</string>
+    <string name="benefit_quiet_hours">לאפשר שעות שקט עד מחר בבוקר</string>
     <string name="reward_ad_not_ready">הקסם עדיין לא מוכן. נסה שוב בעוד כמה שניות.</string>
     <string name="theme_unlock_title">פתיחת ערכת נושא</string>
     <string name="theme_unlock_prompt">צפה בסרטון קצר כדי לפתוח את ערכת הנושא הזו ואת כל שאר קסמי הפרימיום ל-%1$d שעות!</string>
@@ -336,6 +352,7 @@
     <string name="onboarding_scroll_hint">גלול למטה לעוד</string>
     <string name="active_until_format">פעיל עד %1$s</string>
     <string name="active_for_next_reminder">פעיל לתזכורת הבאה</string>
+    <string name="active_for_next_take_outside_window">פעיל ללקיחה הבאה מחוץ לחלון</string>
     <string name="feature_unlocked_toast">%1$s נפתח!</string>
 
     <string name="button_cancel">ביטול</string>
@@ -351,4 +368,12 @@
     <string name="snooze_3_times">3 פעמים</string>
     <string name="snooze_5_times">5 פעמים</string>
     <string name="snooze_unlimited">ללא הגבלה</string>
+
+    <!-- Measurement Units -->
+    <string name="unit_grams">גרם</string>
+    <string name="unit_mg">מ"ג</string>
+    <string name="unit_iu">יב"ל</string>
+    <string name="unit_mcg">מק"ג</string>
+    <string name="unit_ml">מ"ל</string>
+    <string name="unit_percentage">%</string>
 </resources>

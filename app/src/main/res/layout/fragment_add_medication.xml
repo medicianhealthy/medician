@@ -100,11 +100,10 @@
                     android:popupBackground="@drawable/bg_dropdown_popup" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/times_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginBottom="16dp" />
 
             <!-- Optional Separator -->

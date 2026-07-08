@@ -23,7 +23,7 @@ public class FeaturePassManager {
             case THEME -> prefs.setLong(AppConfig.KEY_PASS_THEME_EXPIRY, now + HOUR_IN_MILLIS);
             case SUPPORT -> prefs.setLong(AppConfig.KEY_PASS_SUPPORT_EXPIRY, now + HOUR_IN_MILLIS);
             case BACKUP -> prefs.setLong(AppConfig.KEY_PASS_BACKUP_EXPIRY, now + HOUR_IN_MILLIS);
-            case DOSE_WINDOW -> prefs.setLong(AppConfig.KEY_PASS_DOSE_WINDOW_EXPIRY, now + HOUR_IN_MILLIS);
+            case DOSE_WINDOW -> prefs.setBoolean(AppConfig.KEY_PASS_DOSE_WINDOW_ACTIVE, true);
             case BYPASS_VOLUME -> prefs.setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, true);
             case VIBRATION -> prefs.setBoolean(AppConfig.KEY_PASS_VIBRATION_ACTIVE, true);
             case STICKY_NOTIF -> prefs.setBoolean(AppConfig.KEY_PASS_STICKY_ACTIVE, true);
@@ -60,8 +60,11 @@ public class FeaturePassManager {
     }
 
     /**
-     * @deprecated Use consumeNextReminderPasses instead.
+     * Consumes a specific "Marked Taken" pass.
      */
+    public static void consumeDoseWindowPass(Context context) {
+        SharedPreferencesManager.getInstance(context).setBoolean(AppConfig.KEY_PASS_DOSE_WINDOW_ACTIVE, false);
+    }
     @Deprecated
     public static void consumeBypassVolumePass(Context context) {
         SharedPreferencesManager.getInstance(context).setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, false);

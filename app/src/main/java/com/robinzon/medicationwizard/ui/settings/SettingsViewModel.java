@@ -35,6 +35,8 @@ public class SettingsViewModel extends AndroidViewModel {
     public static final String KEY_VIBRATION_PATTERN = "vibration_pattern";
     public static final String KEY_FLASH_PATTERN = "flash_pattern";
     public static final String KEY_STICKY_NOTIF_ENABLED = "sticky_notif_enabled";
+    public static final String KEY_CUSTOM_EARLY_THRESHOLD = "custom_early_threshold";
+    public static final String KEY_CUSTOM_LATE_THRESHOLD = "custom_late_threshold";
 
     // Theme Constants
     public static final int THEME_SYSTEM = 0;
@@ -55,6 +57,8 @@ public class SettingsViewModel extends AndroidViewModel {
     private final MutableLiveData<String> mVibrationPattern = new MutableLiveData<>();
     private final MutableLiveData<String> mFlashPattern = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mStickyNotif = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mCustomEarlyThreshold = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mCustomLateThreshold = new MutableLiveData<>();
 
     /**
      * Constructs the ViewModel and loads current preferences from disk.
@@ -68,37 +72,17 @@ public class SettingsViewModel extends AndroidViewModel {
      * Re-scans all preferences to ensure the UI is in sync with feature pass consumption.
      */
     public void refreshSettings() {
+        enforceEntitlements(getApplication());
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(getApplication());
         
-        int savedTheme = sp.getInt(KEY_APP_THEME, THEME_SYSTEM);
-        
-        // Entitlement Enforcement: Revert restricted features if pass expired
-        if (!com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(getApplication())) {
-            // 1. Theme Check
-            if (savedTheme != THEME_SYSTEM && !com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.THEME)) {
-                savedTheme = THEME_SYSTEM;
-                sp.setInt(KEY_APP_THEME, THEME_SYSTEM);
-                applyTheme(THEME_SYSTEM);
-            }
-            
-            // 2. Volume Check
-            if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.BYPASS_VOLUME)) {
-                sp.setBoolean(KEY_BYPASS_SYSTEM_VOLUME, false);
-            }
-            
-            // 3. Precision Checks
-            if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.VIBRATION)) {
-                sp.setBoolean(KEY_VIBRATION_ENABLED, false);
-            }
-            if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(getApplication(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.STICKY_NOTIF)) {
-                sp.setBoolean(KEY_STICKY_NOTIF_ENABLED, false);
-            }
-        }
-
-        mTheme.setValue(savedTheme);
+        mTheme.setValue(sp.getInt(KEY_APP_THEME, THEME_SYSTEM));
         mVibration.setValue(sp.getBoolean(KEY_VIBRATION_ENABLED, false));
         mStickyNotif.setValue(sp.getBoolean(KEY_STICKY_NOTIF_ENABLED, false));
         mBypassVolume.setValue(sp.getBoolean(KEY_BYPASS_SYSTEM_VOLUME, false));
+
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
+        mCustomEarlyThreshold.setValue(sp.getInt(KEY_CUSTOM_EARLY_THRESHOLD, rcm.getEarlyTakeThresholdMins()));
+        mCustomLateThreshold.setValue(sp.getInt(KEY_CUSTOM_LATE_THRESHOLD, rcm.getLateTakeThresholdMins()));
 
         String start = sp.getString(KEY_QUIET_HOURS_START, "23:00");
         String end = sp.getString(KEY_QUIET_HOURS_END, "07:00");
@@ -138,6 +122,8 @@ public class SettingsViewModel extends AndroidViewModel {
     public LiveData<Boolean> getStickyNotif() { return mStickyNotif; }
     public LiveData<String> getVibrationPattern() { return mVibrationPattern; }
     public LiveData<String> getFlashPattern() { return mFlashPattern; }
+    public LiveData<Integer> getCustomEarlyThreshold() { return mCustomEarlyThreshold; }
+    public LiveData<Integer> getCustomLateThreshold() { return mCustomLateThreshold; }
 
     /**
      * Updates and persists the custom vibration preference.
@@ -165,6 +151,16 @@ public class SettingsViewModel extends AndroidViewModel {
     public void setStickyNotif(boolean enabled) {
         mStickyNotif.setValue(enabled);
         SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_STICKY_NOTIF_ENABLED, enabled);
+    }
+
+    public void setCustomEarlyThreshold(int mins) {
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_CUSTOM_EARLY_THRESHOLD, mins);
+        mCustomEarlyThreshold.setValue(mins);
+    }
+
+    public void setCustomLateThreshold(int mins) {
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_CUSTOM_LATE_THRESHOLD, mins);
+        mCustomLateThreshold.setValue(mins);
     }
 
     /**
@@ -265,6 +261,36 @@ public class SettingsViewModel extends AndroidViewModel {
             case THEME_LIGHT -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO);
             case THEME_DARK -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
             default -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+    }
+
+    /**
+     * Global utility to check if any temporary passes have expired and revert their 
+     * associated settings immediately.
+     */
+    public static void enforceEntitlements(android.content.Context context) {
+        if (com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(context)) return;
+
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+        
+        // 1. Theme Check
+        int savedTheme = sp.getInt(KEY_APP_THEME, THEME_SYSTEM);
+        if (savedTheme != THEME_SYSTEM && !com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.THEME)) {
+            sp.setInt(KEY_APP_THEME, THEME_SYSTEM);
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+        
+        // 2. Volume Check
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.BYPASS_VOLUME)) {
+            sp.setBoolean(KEY_BYPASS_SYSTEM_VOLUME, false);
+        }
+        
+        // 3. Precision Checks
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.VIBRATION)) {
+            sp.setBoolean(KEY_VIBRATION_ENABLED, false);
+        }
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.STICKY_NOTIF)) {
+            sp.setBoolean(KEY_STICKY_NOTIF_ENABLED, false);
         }
     }
 }

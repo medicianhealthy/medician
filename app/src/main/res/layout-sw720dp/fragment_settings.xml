@@ -41,7 +41,8 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -93,9 +94,7 @@
                         android:orientation="vertical"
                         android:visibility="gone"
                         tools:visibility="visible">
-
                         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
-
                         <LinearLayout
                             android:id="@+id/btn_notif_sound"
                             android:layout_width="match_parent"
@@ -118,7 +117,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:id="@+id/btn_bypass_volume"
                             android:layout_width="match_parent"
@@ -133,47 +131,47 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <androidx.constraintlayout.helper.widget.Flow
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                app:constraint_referenced_ids="txt_bypass_title,crown_bypass,badge_active_bypass"
-                                app:flow_horizontalBias="0"
-                                app:flow_horizontalGap="8dp"
-                                app:flow_horizontalStyle="packed"
-                                app:flow_wrapMode="chain"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-                            <TextView
-                                android:id="@+id/txt_bypass_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/settings_bypass_title"
-                                android:textAppearance="?attr/textAppearanceTitleMedium"
-                                tools:ignore="MissingConstraints" />
-                            <ImageView
-                                android:id="@+id/crown_bypass"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                app:srcCompat="@drawable/ic_crown"
-                                android:contentDescription="@null"
-                                tools:ignore="MissingConstraints" />
-                            <TextView
-                                android:id="@+id/badge_active_bypass"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_feature_active_badge"
-                                android:text="@string/feature_active_label"
-                                android:textColor="?attr/colorOnTertiaryContainer"
-                                android:textSize="10sp"
-                                android:textStyle="bold"
-                                android:visibility="gone"
-                                tools:visibility="visible"
-                                tools:ignore="MissingConstraints" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                                    <androidx.constraintlayout.helper.widget.Flow
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        app:constraint_referenced_ids="txt_bypass_title,crown_bypass,badge_active_bypass"
+                                        app:flow_horizontalBias="0"
+                                        app:flow_horizontalGap="8dp"
+                                        app:flow_horizontalStyle="packed"
+                                        app:flow_wrapMode="chain"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+                                    <TextView
+                                        android:id="@+id/txt_bypass_title"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_bypass_title"
+                                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                                        tools:ignore="MissingConstraints" />
+                                    <ImageView
+                                        android:id="@+id/crown_bypass"
+                                        android:layout_width="18dp"
+                                        android:layout_height="18dp"
+                                        app:srcCompat="@drawable/ic_crown"
+                                        android:contentDescription="@null"
+                                        tools:ignore="MissingConstraints" />
+                                    <TextView
+                                        android:id="@+id/badge_active_bypass"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/bg_feature_active_badge"
+                                        android:text="@string/feature_active_label"
+                                        android:textColor="?attr/colorOnTertiaryContainer"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold"
+                                        android:visibility="gone"
+                                        tools:visibility="visible"
+                                        tools:ignore="MissingConstraints" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -189,7 +187,6 @@
                                 android:clickable="false"
                                 android:focusable="false" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:id="@+id/layout_volume"
                             android:layout_width="match_parent"
@@ -206,7 +203,6 @@
                                 android:valueFrom="0"
                                 android:valueTo="100" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:id="@+id/btn_quiet_hours"
                             android:layout_width="match_parent"
@@ -241,8 +237,7 @@
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
                                 app:srcCompat="@drawable/ic_crown"
-                                android:contentDescription="@null"
-                                tools:ignore="MissingConstraints" />
+                                android:contentDescription="@null" />
                             <TextView
                                 android:id="@+id/badge_active_quiet_hours"
                                 android:layout_width="wrap_content"
@@ -265,7 +260,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:id="@+id/btn_snooze_duration"
                             android:layout_width="match_parent"
@@ -288,7 +282,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
                         <LinearLayout
                             android:id="@+id/btn_max_snoozes"
                             android:layout_width="match_parent"
@@ -311,7 +304,6 @@
                                 android:textAppearance="?attr/textAppearanceBodySmall"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
-
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -322,7 +314,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/cloud_backup_title"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
@@ -332,7 +323,8 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -520,7 +512,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/settings_category_appearance"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
@@ -529,7 +520,8 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -638,7 +630,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:layout_marginTop="16dp"
                 android:text="@string/settings_category_data"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 android:textColor="?attr/colorPrimary" />
@@ -647,7 +638,8 @@
                 style="?attr/materialCardViewElevatedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -705,6 +697,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_clear_data_title" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+
                     <LinearLayout
                         android:id="@+id/btn_support"
                         android:layout_width="match_parent"
@@ -1006,7 +999,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <androidx.constraintlayout.helper.widget.Flow
-                                android:id="@+id/flow_dose_window"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 app:constraint_referenced_ids="txt_dose_window_title,crown_dose_window,badge_active_dose_window"
@@ -1134,11 +1126,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="32dp"
+                android:paddingVertical="24dp"
                 tools:text="Version 1.0"
                 android:textAppearance="?attr/textAppearanceBodySmall" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
