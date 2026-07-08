@@ -97,6 +97,16 @@
     <string name="button_snooze">נודניק</string>
     <string name="button_untake">בטל לקיחה</string>
     <string name="button_unskip">בטל דילוג</string>
+    <string name="button_take_all">קח את כולם</string>
+    <string name="button_skip_all">דלג על כולם</string>
+    <string name="button_reschedule_all">תזמן מחדש</string>
+    <string name="button_untake_all">בטל לקיחה לכולם</string>
+    <string name="button_unskip_all">בטל דילוג לכולם</string>
+    <string name="button_reset_all">אפס הכל</string>
+    <string name="group_title_format">תזכורות לשעה %1$s</string>
+    <string name="group_status_taken">הכל סומן כנלקח</string>
+    <string name="group_status_skipped">הכל סומן כדולג</string>
+    <string name="group_status_mixed">סטטוס מעורב</string>
     <string name="sort_scheduled">לפי זמן מתוכנן</string>
     <string name="sort_name">לפי שם</string>
     <string name="sort_action_time">לפי זמן פעולה</string>
@@ -158,8 +168,14 @@
     <string name="history_doses_format">%1$d מתוך %2$d מנות נלקחו</string>
     <string name="history_select_date_title">בחר תאריך</string>
     <string name="history_stats_title">סטטיסטיקת בריאות</string>
-    <string name="history_tip_title">טיפ יומי</string>
-    <string name="history_tip_content">עקביות היא המפתח לבריאות קסומה. שמור על הרצף שלך בחיים!</string>
+    <string name="history_tip_title">טיפ בריאות קסום</string>
+    <string name="history_tip_1">עקביות היא המפתח לבריאות קסומה. שמרו על רצף ההצלחות שלכם!</string>
+    <string name="history_tip_2">קוסם לעולם לא שוכח את התרופות שלו. השתמשו בתזכורות כדי להישאר במסלול!</string>
+    <string name="history_tip_3">לוקחים תרופות עם אוכל? בדקו את ההוראות להשפעה המאגית הטובה ביותר.</string>
+    <string name="history_tip_4">שתו מים! הקסם עובד הכי טוב כשהגוף רווי היטב.</string>
+    <string name="history_tip_5">מנוחה היא לחש חזק. השתמשו בשעות שקטות כדי להגן על קסם השינה שלכם.</string>
+    <string name="history_tip_6">עקבו אחר כל מנה. היסטוריה מלאה היא מגילה רבת עוצמה עבור הרופא שלכם.</string>
+    <string name="streak_empty">התחילו את רצף הקסם שלכם היום!</string>
     <string name="settings_title">הגדרות</string>
 
     <!-- Developer Cheats -->
@@ -171,6 +187,7 @@
     <string name="notif_already_active">ההתראות כבר פעילות!</string>
     <string name="data_cleared">הנתונים נמחקו.</string>
     <string name="support_coming_soon">התמיכה תהיה זמינה בקרוב!</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
     <string name="support_dialog_title">תמיכה קסומה</string>
     <string name="support_dialog_message">האם יש תקלה בקסם (דיווח על באג) או שיש לך רעיון ללחש חדש (בקשת פיצ\'ר)?</string>
     <string name="support_option_bug">תקלה (באג)</string>
@@ -271,6 +288,12 @@
     <string name="cloud_backup_sign_out">התנתק</string>
     <string name="cloud_backup_auto_title">גיבוי ענן אוטומטי</string>
     <string name="cloud_backup_auto_summary">סנכרן נתונים באופן אוטומטי ל-Google Drive</string>
+    <string name="sign_in_error_title">בעיית התחברות קסומה</string>
+    <string name="sign_in_error_network">לא הצלחנו להגיע לענני הקסם. אנא בדוק את חיבור האינטרנט שלך ונסה שוב.</string>
+    <string name="sign_in_error_cancelled">ההתחברות הופסקה. האם תרצה לנסות שוב?</string>
+    <string name="sign_in_error_dev">פורטל הקסם עובר תחזוקה. הקוסמים שלנו כבר מטפלים בזה.</string>
+    <string name="sign_in_error_generic">משהו בלתי צפוי קרה בזמן ההתחברות לחשבון שלך. אנא נסה שוב בעוד רגע.</string>
+    <string name="sign_in_error_btn_retry">נסה שוב</string>
     <string name="cloud_backup_wifi_title">גיבוי ב-Wi-Fi בלבד</string>
     <string name="cloud_backup_wifi_summary">חסוך בנתוני גלישה</string>
     <string name="cloud_backup_now">גבה לענן עכשיו</string>
