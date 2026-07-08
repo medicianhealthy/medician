@@ -1,0 +1,101 @@
+Suite,ID,Scenario,Steps,Expected Result
+Onboarding & Compliance,1.1,Fresh Install Flow,Install and open app.,OnboardingActivity launches; Terms page first.
+Onboarding & Compliance,1.2,Terms Shaker,Tap "Get Started" without checkbox.,Terms container shakes; toast appears.
+Onboarding & Compliance,1.3,Privacy Policy Link,Tap "Privacy Policy" link.,WebViewerActivity loads correct URL.
+Onboarding & Compliance,1.4,Terms of Service Link,Tap "Terms" link.,WebViewerActivity loads correct content.
+Onboarding & Compliance,1.5,Onboarding Swiping,Swipe between all 4 pages.,Dots update; animations (Twinkle/Float) trigger.
+Onboarding & Compliance,1.6,Onboarding Finish,Tap "Let's Go" on page 4.,App transitions to MainActivity; flag saved.
+Onboarding & Compliance,1.7,GDPR EEA Check,Debug EEA mode + Fresh Install.,Google UMP Consent form appears BEFORE ads.
+Onboarding & Compliance,1.8,Repeat Launch,Close app after onboarding; Re-open.,Directly enters "Today's Medications."
+Medication Management,2.1,Create 1x/Day,Add "Med A" 1x Day at 08:00.,Med appears in list; 1 dose in Today.
+Medication Management,2.2,Create Multi-Dose,"Add "Med B" 3x Day (08:00, 14:00, 20:00).",3 distinct doses appear in Today view.
+Medication Management,2.3,Mandatory: Name,Leave Name empty; Save.,Name field shakes; Error: "Required".
+Medication Management,2.4,Mandatory: Amount,Amount = 0; Save.,Amount field shakes; Error: "Required".
+Medication Management,2.5,Mandatory: Form,Form (Type) not selected; Save.,Form layout shakes; Error: "Required".
+Medication Management,2.6,Edit: Change Name,Update "Med A" to "Med C".,All active notifications/history update name.
+Medication Management,2.7,Edit: Increase Freq,Change 1x to 4x.,3 new time pickers appear; alarms scheduled.
+Medication Management,2.8,Edit: Decrease Freq,Change 3x to 1x.,Extra alarms cancelled; History preserved.
+Medication Management,2.9,Delete Medication,Delete med from List.,Med removed; All pending system alarms cancelled.
+Medication Management,2.10,Special Characters,Name med "💊 Health!".,UI renders correctly; emoji handled.
+Medication Management,2.11,Rapid Save Spam,Double-tap Save button.,Only one medication created (Button disabled).
+Medication Management,2.12,Time Picker UI,Open Time Picker; Cancel.,Time remains unchanged; Picker dismisses.
+Reminder Engine,3.1,Precise Alarm,Set alarm for +1 min; lock screen.,Notification fires at exact second scheduled.
+Reminder Engine,3.2,Action: Take,Tap "Take" on notification.,Notif dismissed; Status: TAKEN in History.
+Reminder Engine,3.3,Action: Skip,Tap "Skip" on notification.,Notif dismissed; Status: SKIPPED in History.
+Reminder Engine,3.4,Action: Snooze,Tap "Snooze" on notification.,Notif dismissed; New alarm set for +10m.
+Reminder Engine,3.5,Snooze Counter,Snooze 3 times (Default limit).,4th snooze attempt auto-skips (Limit logic).
+Reminder Engine,3.6,Simultaneous Doses,2 different meds at 08:00.,Android groups notifications; both trigger.
+Reminder Engine,3.7,Early Take,Take a dose 30m before alarm.,System alarm for that dose is CANCELLED.
+Reminder Engine,3.8,Quiet Hours: Active,Alarm at 01:00; QH: 23:00-07:00.,Notif appears; NO SOUND VIBE or FLASH.
+Reminder Engine,3.9,Quiet Hours: Edge,Alarm at 23:00 (Start time).,Quiet hours active; notification is silent.
+Reminder Engine,3.10,Bypass Volume,Mute phone; Bypass ON (Pass).,Alarm sound plays at override volume.
+Reminder Engine,3.11,Notification Icons,Add "Drops" form.,Notification shows "Drops" icon (Large icon).
+Reminder Engine,3.12,Sticky Notif,Enable Sticky Notifications.,Reminder cannot be swiped away; must use Take/Skip.
+Battery & Power,4.1,Restricted Battery,Battery -> Restricted; schedule alarm.,OS may delay alarm. App should verify reliability.
+Battery & Power,4.2,Optimized Mode,Battery -> Optimized; wait for Doze.,setExactAndAllowWhileIdle fires correctly.
+Battery & Power,4.3,Deep Doze Test,Screen OFF 4 hours; no charger.,App "wakes" system to deliver high-priority notif.
+Battery & Power,4.4,Power Saver State,Device Battery 3%; Power Saver ON.,Alarm triggers despite system throttling.
+Battery & Power,4.5,Unrestricted,Battery -> Unrestricted.,Alarms fire with 0ms deviation.
+Battery & Power,4.6,Background Kill,OS kills app for memory.,AlarmManager keeps Intents; alarm still fires.
+Battery & Power,4.7,Standby Bucket,App in "Rare" standby bucket.,Alarms still fire per RTC_WAKEUP rules.
+History & Statistics,5.1,History Navigation,Today -> Drawer -> History.,History Fragment loads; FAB disappears.
+History & Statistics,5.2,Date Change,Change Date in Calendar.,List refreshes with past records for that date.
+History & Statistics,5.3,Untake Action,Swipe "Untake" on TAKEN dose.,Status -> SCHEDULED; System alarm RE-SCHEDULED.
+History & Statistics,5.4,Unskip Action,Swipe "Unskip" on SKIPPED dose.,Status -> SCHEDULED; System alarm RE-SCHEDULED.
+History & Statistics,5.5,Streak 0 -> 1,Take all doses for 1 day.,Streak counter increments to 1.
+History & Statistics,5.6,Streak Break,Skip a dose.,Streak counter resets to 0 immediately.
+History & Statistics,5.7,Progress Card,Take 1/2 doses.,Card shows 50%; color = Secondary.
+History & Statistics,5.8,Progress Cards,Take 2/2 doses.,Card shows 100%; color = Primary.
+History & Statistics,5.9,Empty History,Pick date with no meds.,Mascot animation + "No records" text.
+History & Statistics,5.10,Retention Purge,Simulate 30+ days pass.,HistoryCleanupWorker deletes old Room entries.
+GDPR & Data,6.1,Right to Erasure,Settings -> Clear All Data.,SharedPreferences & Room wiped; Alarms cancelled.
+GDPR & Data,6.2,Export JSON,Settings -> Export Data.,Creates valid JSON file on device storage.
+GDPR & Data,6.3,Import JSON,Clear Data -> Import valid JSON.,All meds and history restored perfectly.
+GDPR & Data,6.4,Corrupt Import,Import random text file.,App shows "Invalid file" error; doesn't crash.
+GDPR & Data,6.5,Partial JSON,Import JSON with missing IDs.,fromJson handles nulls; assigns new random IDs.
+GDPR & Data,6.6,Google Sign Out,Settings -> Google -> Sign Out.,Entitlements cleared; Cloud Backup disabled.
+GDPR & Data,6.7,Cloud Auto-Sync,Enable Cloud Backup; Save med.,CloudBackupWorker triggers in background.
+GDPR & Data,6.8,Backup Wifi-Only,4G ON; Wifi OFF; Trigger backup.,Backup deferred until Wifi available.
+UI & Config,7.1,Orientation: Sheet,Open Add Med; Rotate.,Data preserved; landscape layout used.
+UI & Config,7.2,Orientation: History,Scroll history; Rotate.,Position saved; Calendar view scales.
+UI & Config,7.3,Multi-Resolution,Open on 400dpi phone vs 600dpi tablet.,Tablet uses layout-sw600dp Today view.
+UI & Config,7.4,System Theme,Toggle Dark Mode.,values-night colors apply; text is readable.
+UI & Config,7.5,RTL Layout,System -> Hebrew.,UI mirrors; text aligns right; icons flip.
+UI & Config,7.6,Font Scaling,Set system font to 200%.,No text cut-offs; ScrollView allows navigation.
+UI & Config,7.7,Split Screen,Open app in Split Screen.,UI stays functional; Add Med sheet scales.
+UI & Config,7.8,Navigation Back,Tap system Back button.,App navigates correctly between fragments.
+UI & Config,7.9,Drawer Gesture,Swipe from left edge.,Navigation Drawer opens smoothly.
+UI & Config,7.10,Empty Mascot,Fresh app; visit List Fragment.,Rotating mascot animation triggers; CTA visible.
+Monetization,8.1,Ad-Free Premium,Buy Premium; browse app.,Banners/Interstitials/AppOpen ads removed.
+Monetization,8.2,Ad Load Failure,Airplane Mode; Re-open.,Ads stay hidden; placeholder handles empty space.
+Monetization,8.3,Global Cooldown,Close ad; Save med.,Cooldown prevents 2nd ad from firing.
+Monetization,8.4,Rewarded sound,Watch ad for sound picker.,"Feature Pass" active; sound list unlocked.
+Monetization,8.5,Pass Expiry,Use rewarded vibe; 1 alarm.,Vibe works for 1st alarm; Gated for 2nd.
+Monetization,8.6,Offline Grace,Premium; no internet 3 sessions.,status maintained via cached_premium_status.
+Monetization,8.7,Offline Expiry,Premium; no internet 6 sessions.,Status revoked until Play Store re-verify.
+Monetization,8.8,Purchase Restore,Fresh install; Tap Restore.,Play Billing restores status from history.
+Monetization,8.9,App Open Ad,Close app; Hot-restart.,Ad appears if Usage/Session threshold met.
+Environmental Resilience,9.1,System Reboot,Pending alarms -> Reboot.,BootReceiver restores all alarms automatically.
+Environmental Resilience,9.2,Storage Full,Simulate 0KB free; Save med.,Error dialog "Storage Full"; data is not lost.
+Environmental Resilience,9.3,Time Travel Forward,Move clock +2 hours past dose.,Missed dose triggers immediately on detection.
+Environmental Resilience,9.4,Time Travel Back,Move clock -2 hours before dose.,App re-schedules alarm for the "new" future time.
+Environmental Resilience,9.5,Network Lost Mid-Ad,Start video; disable internet.,Ad player handles error; returns to app gracefully.
+Environmental Resilience,9.6,Permission Revoked,Revoke Notif permission in OS.,App shows rationale on next start.
+Environmental Resilience,9.7,Exact Alarm Off,Revoke Exact Alarms in OS.,App falls back to inexact setAndAllowWhileIdle.
+Environmental Resilience,9.8,Process Kill,Add Med -> Home -> OS Kill.,State handles data restoration.
+Environmental Resilience,9.9,Database Corrupt,Delete Room -shm file.,Room attempts to rebuild or crashes gracefully.
+Accessibility & UX,10.1,TalkBack: Add Med,Enable TalkBack; Navigate inputs.,Every field has clear labels.
+Accessibility & UX,10.2,TalkBack: History,Navigate Calendar via TalkBack.,Screen reader announces "Date" and "Counts".
+Accessibility & UX,10.3,High Contrast UI,Enable High Contrast in OS.,Icons in Today list remain distinguishable.
+Accessibility & UX,10.4,Accidental Dismiss,Fill 50% of Add Med; Tap outside.,App prompts "Discard changes?" to prevent loss.
+Accessibility & UX,10.5,Empty Search UX,Search "XYZ" in Med List.,"No medications found" mascot/text appears.
+Accessibility & UX,10.6,Search Sensitivity,Search "AsPiRiN".,Search is case-insensitive; returns "Aspirin".
+Accessibility & UX,10.7,Rapid Tab Spam,Tap Today/History 10x rapidly.,UI remains stable; no crashes.
+Accessibility & UX,10.8,Long Name Wrap,Add med with 50-char name.,Today card wraps text; doesn't truncate.
+Accessibility & UX,10.9,Bluetooth Headset,Remind while on Bluetooth audio.,MediaPlayer respects audio routing.
+Accessibility & UX,10.10,DND Respect,OS Do Not Disturb ON.,App respects "Priority" vs "Alarms" settings.
+Dev & Maintenance,11.1,Cheat Code Unlock,7-Tap Version; enter "wisemed".,Cheat menu opens; manual Premium toggle.
+Dev & Maintenance,11.2,Interaction Scoring,Perform 10 status changes.,Interaction score triggers an ad.
+Dev & Maintenance,11.3,Daylight Savings +,Set dose 02:30; Clock jumps 02:00 -> 03:00.,App logic handles the "skipped hour" gracefully.
+Dev & Maintenance,11.4,Leap Year Daily,Daily med; Leap Year Feb 28 -> 29.,Alarm triggers on Feb 29 correctly.
+Dev & Maintenance,11.5,Crashlytics Force,Trigger "Force Crash" from Cheat.,Crash occurs; verified in Firebase Dashboard.
