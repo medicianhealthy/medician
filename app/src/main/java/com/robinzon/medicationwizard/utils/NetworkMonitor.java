@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.robinzon.medicationwizard.BuildConfig;
+
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -21,18 +22,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class NetworkMonitor {
 
-    public interface NetworkStatusListener {
-        void onNetworkChanged(boolean isAvailable);
-    }
-
     private static NetworkMonitor sInstance;
     private final Context mContext;
     private final ConnectivityManager mConnectivityManager;
     private final Set<NetworkStatusListener> mListeners = new CopyOnWriteArraySet<>();
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
-    
     private boolean mIsConnected = false;
-
     private final ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(@NonNull Network network) {
@@ -82,7 +77,8 @@ public class NetworkMonitor {
     public void stop() {
         try {
             mConnectivityManager.unregisterNetworkCallback(mNetworkCallback);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     public void addListener(NetworkStatusListener listener) {
@@ -112,5 +108,9 @@ public class NetworkMonitor {
                 }
             });
         }
+    }
+
+    public interface NetworkStatusListener {
+        void onNetworkChanged(boolean isAvailable);
     }
 }

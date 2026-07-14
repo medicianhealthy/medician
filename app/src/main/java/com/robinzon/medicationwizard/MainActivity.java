@@ -45,20 +45,18 @@ import java.util.TimerTask;
  */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnAdActionListener {
 
+    public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
     private AppBarConfiguration appBarConfiguration;
     private AdsManager adsManager;
     private NavController navController;
     private boolean isInitialLaunch;
     private long lastBackPressedTime;
-    
-    public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
-
     private Timer adCheckTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         if (!SharedPreferencesManager.getInstance(this).getBoolean(OnboardingActivity.KEY_HAS_SEEN_ONBOARDING, false)) {
             startActivity(new Intent(this, OnboardingActivity.class));
             finish();
@@ -74,17 +72,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
             bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
         });
-        
+
         setSupportActionBar(mainBinding.appBarMain.toolbar);
 
         final DrawerLayout drawer = mainBinding.drawerLayout;
         final NavigationView navigationView = mainBinding.navView;
-        
+
         appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_medications_list, R.id.nav_history, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
-                
+
         final NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment_content_main);
 
@@ -94,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
             // Bind NavigationView to NavController
             NavigationUI.setupWithNavController(navigationView, navController);
-            
+
             navigationView.setNavigationItemSelectedListener(item -> {
                 int selectedItemId = item.getItemId();
                 if (selectedItemId == R.id.nav_home) {
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         adsManager = new AdsManager(this);
-        
+
         ConsentManager.gatherConsent(this, () -> {
             Logger.log("Ads", "Consent gathered, fetching Remote Config");
             RemoteConfigManager.getInstance().fetchConfiguration(new FireBaseFetchCallBack() {
@@ -269,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (navController != null && navController.getCurrentDestination() != null) {
             int currentDestinationId = navController.getCurrentDestination().getId();
-            
+
             // Hide the settings icon ONLY if we're already on the settings screen
             android.view.MenuItem settingsMenuItem = menu.findItem(R.id.nav_settings);
             if (settingsMenuItem != null) {
@@ -288,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public boolean onOptionsItemSelected(@NonNull android.view.MenuItem item) {
         int itemId = item.getItemId();
-        
+
         // Fix for navigation crash: home button should not be passed to onNavDestinationSelected
         if (itemId == android.R.id.home) {
             return super.onOptionsItemSelected(item);
@@ -310,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
-        
+
         // Ensure theme and other feature passes haven't expired
         SettingsViewModel.enforceEntitlements(this);
 
@@ -369,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             final boolean hasResults = grantResults.length > 0;
             final boolean granted = hasResults && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
             NotificationManager.getInstance(this).setHasGrantedPermission(granted);
-            
+
             // Aggressive UI refresh: Iterate all possible fragment managers to find the Settings screen
             new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
                 try {
@@ -391,12 +389,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (fragment instanceof com.robinzon.medicationwizard.ui.settings.SettingsFragment) {
             ((com.robinzon.medicationwizard.ui.settings.SettingsFragment) fragment).updateNotificationStatus();
         }
-        
+
         // REFINED: Also trigger refresh for the Dashboard if it's visible to ensure
         // first-med addition is reflected if background updates were interrupted.
         if (fragment instanceof com.robinzon.medicationwizard.ui.todaysmedications.TodaysMedicationsFragment) {
             // This will trigger the reactive LiveData to re-evaluate the UI state
-            fragment.onResume(); 
+            fragment.onResume();
         }
 
         // Recursively search child fragments

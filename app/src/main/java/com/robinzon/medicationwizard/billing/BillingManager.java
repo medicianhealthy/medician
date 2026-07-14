@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Manages all Google Play Billing interactions for the application.
  * <p>
- * This class handles connecting to the Play Store, querying available products, 
+ * This class handles connecting to the Play Store, querying available products,
  * processing purchases, and verifying existing entitlements.
  * </p>
  */
@@ -35,34 +35,41 @@ public class BillingManager implements PurchasesUpdatedListener {
     private static final String KEY_CACHED_PREMIUM = "cached_premium_status";
     private static final String KEY_OFFLINE_COUNT = "offline_premium_count";
     private static final int MAX_OFFLINE_SESSIONS = 5;
-    
+
     private static BillingManager sInstance;
-    
+
     private final BillingClient mBillingClient;
     private final Context mContext;
     private ProductDetails mPremiumProductDetails;
 
     private BillingManager(Context context) {
         this.mContext = context.getApplicationContext();
-        
+
         PendingPurchasesParams pendingPurchasesParams = PendingPurchasesParams.newBuilder()
                 .enableOneTimeProducts()
                 .build();
-                
+
         this.mBillingClient = BillingClient.newBuilder(mContext)
                 .setListener(this)
                 .enablePendingPurchases(pendingPurchasesParams)
                 .build();
-        
+
         loadPremiumFallback();
         startConnection();
+    }
+
+    public static synchronized BillingManager getInstance(Context context) {
+        if (sInstance == null) {
+            sInstance = new BillingManager(context);
+        }
+        return sInstance;
     }
 
     /**
      * Loads the premium status from local storage as a fallback for offline use.
      * <p>
-     * Logic: Allows the user to retain premium benefits for a limited number of 
-     * offline sessions (MAX_OFFLINE_SESSIONS) before requiring a successful 
+     * Logic: Allows the user to retain premium benefits for a limited number of
+     * offline sessions (MAX_OFFLINE_SESSIONS) before requiring a successful
      * Play Store re-verification.
      * </p>
      */
@@ -81,13 +88,6 @@ public class BillingManager implements PurchasesUpdatedListener {
                 Logger.log("Billing", "Offline limit reached. Re-verification required.");
             }
         }
-    }
-
-    public static synchronized BillingManager getInstance(Context context) {
-        if (sInstance == null) {
-            sInstance = new BillingManager(context);
-        }
-        return sInstance;
     }
 
     /**
@@ -140,7 +140,7 @@ public class BillingManager implements PurchasesUpdatedListener {
     /**
      * Checks Google Play for active purchases and updates the user's premium state.
      * <p>
-     * Performance: Iterates through current purchases and specifically verifies 
+     * Performance: Iterates through current purchases and specifically verifies
      * the product ID to ensure robust entitlement management.
      * </p>
      */
@@ -151,13 +151,13 @@ public class BillingManager implements PurchasesUpdatedListener {
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                         boolean owned = false;
                         for (Purchase purchase : purchases) {
-                            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED 
+                            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED
                                     && purchase.getProducts().contains(PRODUCT_ID_PREMIUM)) {
                                 owned = true;
                                 break;
                             }
                         }
-                        
+
                         // Performance: Cache the verified status and reset offline counter
                         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(mContext);
                         sp.setBoolean(KEY_CACHED_PREMIUM, owned);
@@ -167,7 +167,7 @@ public class BillingManager implements PurchasesUpdatedListener {
                         if (!sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, false)) {
                             AppConfig.IS_PREMIUM = owned;
                         }
-                        
+
                         Logger.log("Billing", "Premium status refreshed: " + owned + (sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, false) ? " (Ignored due to cheat)" : ""));
                     }
                 }
@@ -209,18 +209,18 @@ public class BillingManager implements PurchasesUpdatedListener {
     /**
      * Processes a single purchase object.
      * <p>
-     * Performance: Checks for the specific premium ID and updates the global 
+     * Performance: Checks for the specific premium ID and updates the global
      * app configuration immediately.
      * </p>
      *
      * @param purchase The purchase object to verify.
      */
     private void handlePurchase(Purchase purchase) {
-        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED 
+        if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED
                 && purchase.getProducts().contains(PRODUCT_ID_PREMIUM)) {
             // In a real app, you must acknowledge the purchase here.
             AppConfig.IS_PREMIUM = true;
-            
+
             // Immediately cache the success
             SharedPreferencesManager sp = SharedPreferencesManager.getInstance(mContext);
             sp.setBoolean(KEY_CACHED_PREMIUM, true);

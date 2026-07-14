@@ -24,11 +24,9 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
 
     // REFINED: V2 Channel ID to force-apply the 'No Sound' setting on existing installs
     public static final String CHANNEL_ID = "medication_reminders_v2";
-
+    public static final String PREF_KEY_HAS_DENIED_NOTIFICATION_PERMISSION = "has_denied_noti_perm";
     private static final String PREF_KEY_DO_NOT_SHOW_RATIONALE = "do_not_show_rationale";
     private static final String PREF_KEY_REFUSE_COUNT = "refuse_count";
-    public static final String PREF_KEY_HAS_DENIED_NOTIFICATION_PERMISSION = "has_denied_noti_perm";
-    
     private static WeakReference<NotificationManager> singletonInstance;
     private final Activity activity;
     private Integer lastClickedButton;
@@ -51,7 +49,7 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
                     android.app.NotificationManager.IMPORTANCE_HIGH
             );
             channel.setDescription(context.getString(R.string.notification_channel_desc));
-            
+
             // FIX: Silence the system sound so we only hear the app's custom MediaPlayer alert.
             // This prevents the "Double Sound" issue.
             channel.setSound(null, null);
@@ -61,6 +59,26 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
                 manager.createNotificationChannel(channel);
             }
         }
+    }
+
+    /**
+     * Retrieves the singleton NotificationManager instance for the current activity.
+     */
+    public static NotificationManager getInstance(final Activity activity) {
+        if (null == singletonInstance || null == singletonInstance.get()) {
+            singletonInstance = new WeakReference<>(new NotificationManager(activity));
+        }
+        return singletonInstance.get();
+    }
+
+    /**
+     * Dismisses a specific notification by its ID.
+     *
+     * @param context        Application context.
+     * @param notificationId The unique ID of the notification to dismiss.
+     */
+    public static void dismissNotification(Context context, int notificationId) {
+        NotificationManagerCompat.from(context).cancel(notificationId);
     }
 
     private boolean shouldAskForNotificationPermission() {
@@ -90,16 +108,6 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
      */
     public boolean hasPermission() {
         return !notificationsAreDisabled();
-    }
-
-    /**
-     * Retrieves the singleton NotificationManager instance for the current activity.
-     */
-    public static NotificationManager getInstance(final Activity activity) {
-        if (null == singletonInstance || null == singletonInstance.get()) {
-            singletonInstance = new WeakReference<>(new NotificationManager(activity));
-        }
-        return singletonInstance.get();
     }
 
     public void requestPermissionIfNeeded() {
@@ -188,9 +196,12 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
         switch (which) {
-            case DialogInterface.BUTTON_POSITIVE -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_POSITIVE);
-            case DialogInterface.BUTTON_NEGATIVE -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEGATIVE);
-            case DialogInterface.BUTTON_NEUTRAL -> setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEUTRAL);
+            case DialogInterface.BUTTON_POSITIVE ->
+                    setButtonClickedBeforeDismissed(DialogInterface.BUTTON_POSITIVE);
+            case DialogInterface.BUTTON_NEGATIVE ->
+                    setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEGATIVE);
+            case DialogInterface.BUTTON_NEUTRAL ->
+                    setButtonClickedBeforeDismissed(DialogInterface.BUTTON_NEUTRAL);
         }
     }
 
@@ -250,15 +261,5 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(intent);
-    }
-
-    /**
-     * Dismisses a specific notification by its ID.
-     *
-     * @param context Application context.
-     * @param notificationId The unique ID of the notification to dismiss.
-     */
-    public static void dismissNotification(Context context, int notificationId) {
-        NotificationManagerCompat.from(context).cancel(notificationId);
     }
 }

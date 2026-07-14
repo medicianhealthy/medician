@@ -30,6 +30,13 @@ public class MedicationWizardApplication extends Application
     private Activity mCurrentActivity;
 
     /**
+     * @return The global application context.
+     */
+    public static android.content.Context getContext() {
+        return sInstance.getApplicationContext();
+    }
+
+    /**
      * Initializes the notification channel and default app settings on startup.
      */
     @Override
@@ -38,7 +45,7 @@ public class MedicationWizardApplication extends Application
         sInstance = this;
         this.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
-        
+
         NotificationManager.createNotificationChannel(this);
         applyTheme();
         applyLanguage();
@@ -76,12 +83,15 @@ public class MedicationWizardApplication extends Application
      */
     private void applyTheme() {
         SettingsViewModel.enforceEntitlements(this);
-        
+
         int theme = SharedPreferencesManager.getInstance(this).getInt(SettingsViewModel.KEY_APP_THEME, SettingsViewModel.THEME_SYSTEM);
         switch (theme) {
-            case SettingsViewModel.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            case SettingsViewModel.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            default -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            case SettingsViewModel.THEME_LIGHT ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            case SettingsViewModel.THEME_DARK ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            default ->
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
     }
 
@@ -126,13 +136,6 @@ public class MedicationWizardApplication extends Application
     }
 
     /**
-     * @return The global application context.
-     */
-    public static android.content.Context getContext() {
-        return sInstance.getApplicationContext();
-    }
-
-    /**
      * Called when the application process moves to the foreground.
      * Triggers usage tracking and displays App Open ads if eligible.
      */
@@ -143,7 +146,7 @@ public class MedicationWizardApplication extends Application
 
         // Start usage tracking
         com.robinzon.medicationwizard.utils.Statisticator.onMoveToForeground(this);
-        
+
         // Record as a new session for ad decision purposes
         com.robinzon.medicationwizard.utils.Statisticator.onSessionStarted(this);
 

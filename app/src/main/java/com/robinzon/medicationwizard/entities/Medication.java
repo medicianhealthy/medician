@@ -25,8 +25,8 @@ import java.util.UUID;
 /**
  * Domain model representing a medication definition.
  * <p>
- * This class holds the persistent configuration for a medication (e.g., Aspirin 500mg, 
- * taken twice a day). It handles serialization to JSON for SharedPreferences storage 
+ * This class holds the persistent configuration for a medication (e.g., Aspirin 500mg,
+ * taken twice a day). It handles serialization to JSON for SharedPreferences storage
  * and coordinate with Room for scheduling dose instances.
  * </p>
  */
@@ -64,143 +64,6 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The number of doses scheduled per day.
-     */
-    public int getDailyFrequency() {
-        return frequency;
-    }
-
-    /**
-     * @param frequency The number of doses scheduled per day.
-     */
-    public void setDailyFrequency(int frequency) {
-        this.frequency = frequency;
-    }
-
-    /**
-     * @return True if the minimum required fields (Name, Amount, Frequency, Form) are populated.
-     */
-    public boolean isValid() {
-        return commercialName != null && !commercialName.trim().isEmpty() &&
-                amount > 0 &&
-                frequency > 0 &&
-                form != null;
-    }
-
-    /**
-     * Saves this medication to persistent storage and schedules future doses.
-     * <p>
-     * Operation:
-     * 1. Updates the global medication list in SharedPreferences.
-     * 2. Clears any existing future schedules for this ID in the Room database.
-     * 3. Generates a fresh set of {@link DoseInstanceEntity} records for the coming week.
-     * 4. Triggers {@link ReminderManager} to set Android system alarms for the new doses.
-     * </p>
-     *
-     * @param context The application context.
-     */
-    public void addToMedicationList(final Context context) {
-        final JSONObject json = toJson();
-        if (json == null) return;
-        
-        JSONArray medsArray = SharedPreferencesManager.getInstance(context).getJsonArray(PREF_MEDICATION_LIST, null);
-        if (medsArray == null) {
-            medsArray = new JSONArray();
-        }
-
-        // 1. Update SharedPreferences (Small list of definitions)
-        boolean found = false;
-        for (int i = 0; i < medsArray.length(); i++) {
-            try {
-                JSONObject obj = medsArray.getJSONObject(i);
-                if (id.equals(obj.optString(JsonKeys.ID))) {
-                    medsArray.put(i, json);
-                    found = true;
-                    break;
-                }
-            } catch (JSONException ignored) {}
-        }
-
-        if (!found) {
-            medsArray.put(json);
-        }
-        SharedPreferencesManager.getInstance(context).setJsonArray(PREF_MEDICATION_LIST, medsArray);
-
-        // 2. Room logic: Generate and save schedules
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase db = AppDatabase.getDatabase(context);
-            
-            // Step A: Cancel existing alarms for pending doses
-            List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getScheduledByMedicationId(id);
-            for (DoseInstanceEntity e : scheduled) {
-                ReminderManager.cancelReminder(context, e.getId());
-            }
-            
-            // Step B: Purge all pending (SCHEDULED) doses to ensure latest definition is applied
-            db.doseInstanceDao().deleteScheduledByMedicationId(id);
-
-            final SparseArray<SimpleDayTime> activeTimes = getTimesADay();
-            if (activeTimes == null || activeTimes.size() == 0) return;
-
-            // Step C: Generate fresh doses for the scheduling window (Today + future)
-            List<DoseInstanceEntity> newEntities = new ArrayList<>();
-            for (int i = 0; i < AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE; i++) {
-                for (int k = 0; k < activeTimes.size(); k++) {
-                    SimpleDayTime time = activeTimes.valueAt(k);
-                    MedicationInstance instance = getMedicationInstance(i, time);
-                    long scheduledTime = instance.getScheduledTime();
-                    
-                    // CRITICAL FIX: Only create if a dose doesn't already exist for this slot.
-                    // This preserves historical TAKEN/SKIPPED records for today while 
-                    // updating all pending tasks with new name/strength/form.
-                    if (db.doseInstanceDao().getInstanceByTime(id, scheduledTime) == null) {
-                        newEntities.add(DoseInstanceEntity.fromInstance(instance));
-                    }
-                }
-            }
-
-            if (!newEntities.isEmpty()) {
-                db.doseInstanceDao().insertAll(newEntities);
-                
-                // Step D: Re-schedule Android alarms for all future doses
-                long now = System.currentTimeMillis();
-                List<DoseInstanceEntity> futureDoses = db.doseInstanceDao().getInstancesInRangeInternal(now, now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L));
-                for (DoseInstanceEntity e : futureDoses) {
-                    if (id.equals(e.getMedicationId()) && "SCHEDULED".equals(e.getStatus())) {
-                        ReminderManager.scheduleReminder(context, e);
-                    }
-                }
-
-                Logger.log("Room", "Refreshed " + newEntities.size() + " doses for " + commercialName);
-            }
-        });
-    }
-
-    /**
-     * Internal helper to create a specific time-stamped instance of this medication.
-     *
-     * @param dayOffset Number of days from today.
-     * @param time      The specific time of day.
-     * @return A self-contained MedicationInstance.
-     */
-    @NonNull
-    private MedicationInstance getMedicationInstance(int dayOffset, SimpleDayTime time) {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        calendar.add(java.util.Calendar.DAY_OF_YEAR, dayOffset);
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, time.getHour());
-        calendar.set(java.util.Calendar.MINUTE, time.getMinute());
-        calendar.set(java.util.Calendar.SECOND, 0);
-        calendar.set(java.util.Calendar.MILLISECOND, 0);
-
-        long scheduledTime = calendar.getTimeInMillis();
-
-        final MedicationInstance medicationInstance = new MedicationInstance(this);
-        medicationInstance.setScheduledTime(scheduledTime);
-        medicationInstance.setStatus(MedicationInstance.Status.SCHEDULED);
-        return medicationInstance;
-    }
-
-    /**
      * Completely removes a medication definition and all associated schedules.
      *
      * @param context Application context.
@@ -217,7 +80,8 @@ public class Medication implements Comparable<Medication> {
                     if (!id.equals(obj.optString(JsonKeys.ID))) {
                         newArray.put(obj);
                     }
-                } catch (JSONException ignored) {}
+                } catch (JSONException ignored) {
+                }
             }
             SharedPreferencesManager.getInstance(context).setJsonArray(PREF_MEDICATION_LIST, newArray);
         }
@@ -277,7 +141,8 @@ public class Medication implements Comparable<Medication> {
             for (int i = 0; i < array.length(); i++) {
                 try {
                     result.add(fromJson(array.getJSONObject(i)));
-                } catch (JSONException ignored) {}
+                } catch (JSONException ignored) {
+                }
             }
         }
         Collections.sort(result);
@@ -300,13 +165,22 @@ public class Medication implements Comparable<Medication> {
         med.setAmountLeft(json.optInt(JsonKeys.AMOUNT_LEFT, 0));
 
         if (!json.isNull(JsonKeys.FORM)) {
-            try { med.setForm(EForm.valueOf(json.getString(JsonKeys.FORM))); } catch (Exception ignored) {}
+            try {
+                med.setForm(EForm.valueOf(json.getString(JsonKeys.FORM)));
+            } catch (Exception ignored) {
+            }
         }
         if (!json.isNull(JsonKeys.INSTRUCTIONS)) {
-            try { med.setInstruction(EInstructions.valueOf(json.getString(JsonKeys.INSTRUCTIONS))); } catch (Exception ignored) {}
+            try {
+                med.setInstruction(EInstructions.valueOf(json.getString(JsonKeys.INSTRUCTIONS)));
+            } catch (Exception ignored) {
+            }
         }
         if (!json.isNull(JsonKeys.MEASUREMENT_UNIT)) {
-            try { med.setMeasurementUnit(EMeasurementUnit.valueOf(json.getString(JsonKeys.MEASUREMENT_UNIT))); } catch (Exception ignored) {}
+            try {
+                med.setMeasurementUnit(EMeasurementUnit.valueOf(json.getString(JsonKeys.MEASUREMENT_UNIT)));
+            } catch (Exception ignored) {
+            }
         }
 
         JSONArray times = json.optJSONArray(JsonKeys.TIMES_IN_DAY);
@@ -320,6 +194,144 @@ public class Medication implements Comparable<Medication> {
         }
 
         return med;
+    }
+
+    /**
+     * @return The number of doses scheduled per day.
+     */
+    public int getDailyFrequency() {
+        return frequency;
+    }
+
+    /**
+     * @param frequency The number of doses scheduled per day.
+     */
+    public void setDailyFrequency(int frequency) {
+        this.frequency = frequency;
+    }
+
+    /**
+     * @return True if the minimum required fields (Name, Amount, Frequency, Form) are populated.
+     */
+    public boolean isValid() {
+        return commercialName != null && !commercialName.trim().isEmpty() &&
+                amount > 0 &&
+                frequency > 0 &&
+                form != null;
+    }
+
+    /**
+     * Saves this medication to persistent storage and schedules future doses.
+     * <p>
+     * Operation:
+     * 1. Updates the global medication list in SharedPreferences.
+     * 2. Clears any existing future schedules for this ID in the Room database.
+     * 3. Generates a fresh set of {@link DoseInstanceEntity} records for the coming week.
+     * 4. Triggers {@link ReminderManager} to set Android system alarms for the new doses.
+     * </p>
+     *
+     * @param context The application context.
+     */
+    public void addToMedicationList(final Context context) {
+        final JSONObject json = toJson();
+        if (json == null) return;
+
+        JSONArray medsArray = SharedPreferencesManager.getInstance(context).getJsonArray(PREF_MEDICATION_LIST, null);
+        if (medsArray == null) {
+            medsArray = new JSONArray();
+        }
+
+        // 1. Update SharedPreferences (Small list of definitions)
+        boolean found = false;
+        for (int i = 0; i < medsArray.length(); i++) {
+            try {
+                JSONObject obj = medsArray.getJSONObject(i);
+                if (id.equals(obj.optString(JsonKeys.ID))) {
+                    medsArray.put(i, json);
+                    found = true;
+                    break;
+                }
+            } catch (JSONException ignored) {
+            }
+        }
+
+        if (!found) {
+            medsArray.put(json);
+        }
+        SharedPreferencesManager.getInstance(context).setJsonArray(PREF_MEDICATION_LIST, medsArray);
+
+        // 2. Room logic: Generate and save schedules
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(context);
+
+            // Step A: Cancel existing alarms for pending doses
+            List<DoseInstanceEntity> scheduled = db.doseInstanceDao().getScheduledByMedicationId(id);
+            for (DoseInstanceEntity e : scheduled) {
+                ReminderManager.cancelReminder(context, e.getId());
+            }
+
+            // Step B: Purge all pending (SCHEDULED) doses to ensure latest definition is applied
+            db.doseInstanceDao().deleteScheduledByMedicationId(id);
+
+            final SparseArray<SimpleDayTime> activeTimes = getTimesADay();
+            if (activeTimes == null || activeTimes.size() == 0) return;
+
+            // Step C: Generate fresh doses for the scheduling window (Today + future)
+            List<DoseInstanceEntity> newEntities = new ArrayList<>();
+            for (int i = 0; i < AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE; i++) {
+                for (int k = 0; k < activeTimes.size(); k++) {
+                    SimpleDayTime time = activeTimes.valueAt(k);
+                    MedicationInstance instance = getMedicationInstance(i, time);
+                    long scheduledTime = instance.getScheduledTime();
+
+                    // CRITICAL FIX: Only create if a dose doesn't already exist for this slot.
+                    // This preserves historical TAKEN/SKIPPED records for today while
+                    // updating all pending tasks with new name/strength/form.
+                    if (db.doseInstanceDao().getInstanceByTime(id, scheduledTime) == null) {
+                        newEntities.add(DoseInstanceEntity.fromInstance(instance));
+                    }
+                }
+            }
+
+            if (!newEntities.isEmpty()) {
+                db.doseInstanceDao().insertAll(newEntities);
+
+                // Step D: Re-schedule Android alarms for all future doses
+                long now = System.currentTimeMillis();
+                List<DoseInstanceEntity> futureDoses = db.doseInstanceDao().getInstancesInRangeInternal(now, now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L));
+                for (DoseInstanceEntity e : futureDoses) {
+                    if (id.equals(e.getMedicationId()) && "SCHEDULED".equals(e.getStatus())) {
+                        ReminderManager.scheduleReminder(context, e);
+                    }
+                }
+
+                Logger.log("Room", "Refreshed " + newEntities.size() + " doses for " + commercialName);
+            }
+        });
+    }
+
+    /**
+     * Internal helper to create a specific time-stamped instance of this medication.
+     *
+     * @param dayOffset Number of days from today.
+     * @param time      The specific time of day.
+     * @return A self-contained MedicationInstance.
+     */
+    @NonNull
+    private MedicationInstance getMedicationInstance(int dayOffset, SimpleDayTime time) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.add(java.util.Calendar.DAY_OF_YEAR, dayOffset);
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, time.getHour());
+        calendar.set(java.util.Calendar.MINUTE, time.getMinute());
+        calendar.set(java.util.Calendar.SECOND, 0);
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+
+        long scheduledTime = calendar.getTimeInMillis();
+
+        final MedicationInstance medicationInstance = new MedicationInstance(this);
+        medicationInstance.setScheduledTime(scheduledTime);
+        medicationInstance.setStatus(MedicationInstance.Status.SCHEDULED);
+        return medicationInstance;
     }
 
     /**
@@ -347,61 +359,165 @@ public class Medication implements Comparable<Medication> {
      */
     public void sortTimesADay() {
         if (timesADay == null || timesADay.size() <= 1) return;
-        
+
         List<SimpleDayTime> list = new ArrayList<>();
         for (int i = 0; i < timesADay.size(); i++) {
             list.add(timesADay.valueAt(i));
         }
         Collections.sort(list);
-        
+
         timesADay.clear();
         for (int i = 0; i < list.size(); i++) {
             timesADay.put(i + 1, list.get(i));
         }
     }
 
-    /** @return The unique identifier of the medication. */
-    public String getId() { return id; }
-    /** @param id The unique identifier of the medication. */
-    public void setId(String id) { this.id = id; }
-    /** @return The commercial display name. */
-    public String getCommercialName() { return commercialName; }
-    /** @param commercialName The commercial display name. */
-    public void setCommercialName(String commercialName) { this.commercialName = commercialName; }
-    /** @return The amount per dose. */
-    public float getAmount() { return amount; }
-    /** @param amount The amount per dose. */
-    public void setAmount(float amount) { this.amount = amount; }
-    /** @return The delivery form (e.g., Pill, Drops). */
-    public EForm getForm() { return form; }
-    /** @param form The delivery form (e.g., Pill, Drops). */
-    public void setForm(EForm form) { this.form = form; }
-    /** @return The strength value (e.g., 500). */
-    public float getStrength() { return strength; }
-    /** @param strength The strength value (e.g., 500). */
-    public void setStrength(float strength) { this.strength = strength; }
-    /** @return The medical condition being treated. */
-    public String getMedicalCondition() { return medicalCondition; }
-    /** @param medicalCondition The medical condition being treated. */
-    public void setMedicalCondition(String medicalCondition) { this.medicalCondition = medicalCondition; }
-    /** @return The list of daily timestamps. */
-    public List<Long> getDailySchedule() { return dailySchedule; }
-    /** @param dailySchedule The list of daily timestamps. */
-    public void setDailySchedule(List<Long> dailySchedule) { this.dailySchedule = dailySchedule; }
-    /** @return The measurement unit (e.g., mg, ml). */
-    public EMeasurementUnit getMeasurementUnit() { return measurementUnit; }
-    /** @param measurementUnit The measurement unit (e.g., mg, ml). */
-    public void setMeasurementUnit(EMeasurementUnit measurementUnit) { this.measurementUnit = measurementUnit; }
-    /** @return The count of remaining doses in the pack. */
-    public int getAmountLeft() { return amountLeft; }
-    /** @param amountLeft The count of remaining doses in the pack. */
-    public void setAmountLeft(int amountLeft) { this.amountLeft = amountLeft; }
-    /** @return Map of daily dose indices to times. */
-    public SparseArray<SimpleDayTime> getTimesADay() { return timesADay; }
-    /** @return Instructions for taking (e.g., Before Food). */
-    public EInstructions getInstruction() { return instruction; }
-    /** @param instruction Instructions for taking (e.g., Before Food). */
-    public void setInstruction(EInstructions instruction) { this.instruction = instruction; }
+    /**
+     * @return The unique identifier of the medication.
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * @param id The unique identifier of the medication.
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
+     * @return The commercial display name.
+     */
+    public String getCommercialName() {
+        return commercialName;
+    }
+
+    /**
+     * @param commercialName The commercial display name.
+     */
+    public void setCommercialName(String commercialName) {
+        this.commercialName = commercialName;
+    }
+
+    /**
+     * @return The amount per dose.
+     */
+    public float getAmount() {
+        return amount;
+    }
+
+    /**
+     * @param amount The amount per dose.
+     */
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    /**
+     * @return The delivery form (e.g., Pill, Drops).
+     */
+    public EForm getForm() {
+        return form;
+    }
+
+    /**
+     * @param form The delivery form (e.g., Pill, Drops).
+     */
+    public void setForm(EForm form) {
+        this.form = form;
+    }
+
+    /**
+     * @return The strength value (e.g., 500).
+     */
+    public float getStrength() {
+        return strength;
+    }
+
+    /**
+     * @param strength The strength value (e.g., 500).
+     */
+    public void setStrength(float strength) {
+        this.strength = strength;
+    }
+
+    /**
+     * @return The medical condition being treated.
+     */
+    public String getMedicalCondition() {
+        return medicalCondition;
+    }
+
+    /**
+     * @param medicalCondition The medical condition being treated.
+     */
+    public void setMedicalCondition(String medicalCondition) {
+        this.medicalCondition = medicalCondition;
+    }
+
+    /**
+     * @return The list of daily timestamps.
+     */
+    public List<Long> getDailySchedule() {
+        return dailySchedule;
+    }
+
+    /**
+     * @param dailySchedule The list of daily timestamps.
+     */
+    public void setDailySchedule(List<Long> dailySchedule) {
+        this.dailySchedule = dailySchedule;
+    }
+
+    /**
+     * @return The measurement unit (e.g., mg, ml).
+     */
+    public EMeasurementUnit getMeasurementUnit() {
+        return measurementUnit;
+    }
+
+    /**
+     * @param measurementUnit The measurement unit (e.g., mg, ml).
+     */
+    public void setMeasurementUnit(EMeasurementUnit measurementUnit) {
+        this.measurementUnit = measurementUnit;
+    }
+
+    /**
+     * @return The count of remaining doses in the pack.
+     */
+    public int getAmountLeft() {
+        return amountLeft;
+    }
+
+    /**
+     * @param amountLeft The count of remaining doses in the pack.
+     */
+    public void setAmountLeft(int amountLeft) {
+        this.amountLeft = amountLeft;
+    }
+
+    /**
+     * @return Map of daily dose indices to times.
+     */
+    public SparseArray<SimpleDayTime> getTimesADay() {
+        return timesADay;
+    }
+
+    /**
+     * @return Instructions for taking (e.g., Before Food).
+     */
+    public EInstructions getInstruction() {
+        return instruction;
+    }
+
+    /**
+     * @param instruction Instructions for taking (e.g., Before Food).
+     */
+    public void setInstruction(EInstructions instruction) {
+        this.instruction = instruction;
+    }
 
     @Override
     public int compareTo(Medication other) {
@@ -438,7 +554,8 @@ public class Medication implements Comparable<Medication> {
             json.put(JsonKeys.AMOUNT_LEFT, amountLeft);
             if (form != null) json.put(JsonKeys.FORM, form.name());
             if (instruction != null) json.put(JsonKeys.INSTRUCTIONS, instruction.name());
-            if (measurementUnit != null) json.put(JsonKeys.MEASUREMENT_UNIT, measurementUnit.name());
+            if (measurementUnit != null)
+                json.put(JsonKeys.MEASUREMENT_UNIT, measurementUnit.name());
             json.put(JsonKeys.TIMES_IN_DAY, getTimesADayAsJsonArray());
         } catch (JSONException e) {
             return null;

@@ -32,10 +32,6 @@ public class BackupManager {
     private static final String KEY_HISTORY = "history";
     private static final int CURRENT_BACKUP_VERSION = 1;
 
-    public interface BackupCallback {
-        void onComplete(boolean success, String message);
-    }
-
     /**
      * Exports all data to the provided URI.
      */
@@ -134,5 +130,9 @@ public class BackupManager {
                 callback.onComplete(false, "Restore failed: " + e.getMessage());
             }
         });
+    }
+
+    public interface BackupCallback {
+        void onComplete(boolean success, String message);
     }
 }

@@ -28,32 +28,20 @@ import java.util.Locale;
  */
 public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsListAdapter.MedicationViewHolder> {
 
-    /** Current list of medications to display. */
+    /**
+     * Current list of medications to display.
+     */
     private final List<Medication> medications = new ArrayList<>();
-    
-    /** The position of the currently expanded card (-1 if none). */
-    private int expandedPosition = -1;
-    
-    /** Listener for edit and delete actions. */
-    private OnMedicationActionListener listener;
 
     /**
-     * Interface for handling actions triggered from individual medication cards.
+     * The position of the currently expanded card (-1 if none).
      */
-    public interface OnMedicationActionListener {
-        /**
-         * Triggered when the user clicks the delete button.
-         * @param medication The medication to delete.
-         * @param position   The adapter position.
-         */
-        void onDelete(Medication medication, int position);
-        
-        /**
-         * Triggered when the user clicks the edit button.
-         * @param medication The medication to edit.
-         */
-        void onEdit(Medication medication);
-    }
+    private int expandedPosition = -1;
+
+    /**
+     * Listener for edit and delete actions.
+     */
+    private OnMedicationActionListener listener;
 
     /**
      * Sets the action listener.
@@ -103,6 +91,26 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
     }
 
     /**
+     * Interface for handling actions triggered from individual medication cards.
+     */
+    public interface OnMedicationActionListener {
+        /**
+         * Triggered when the user clicks the delete button.
+         *
+         * @param medication The medication to delete.
+         * @param position   The adapter position.
+         */
+        void onDelete(Medication medication, int position);
+
+        /**
+         * Triggered when the user clicks the edit button.
+         *
+         * @param medication The medication to edit.
+         */
+        void onEdit(Medication medication);
+    }
+
+    /**
      * ViewHolder that manages the lifecycle and binding logic for a single medication card.
      */
     class MedicationViewHolder extends RecyclerView.ViewHolder {
@@ -121,7 +129,7 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
          */
         public void bind(Medication medication, boolean isExpanded) {
             binding.medName.setText(medication.getCommercialName());
-            
+
             // Smart Strength Formatting: Hides 0 values and formats decimals nicely.
             if (medication.getStrength() <= 0) {
                 binding.medStrength.setVisibility(View.GONE);

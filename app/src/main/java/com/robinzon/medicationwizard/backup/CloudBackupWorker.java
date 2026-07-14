@@ -31,21 +31,21 @@ public class CloudBackupWorker extends Worker {
     @Override
     public Result doWork() {
         Logger.log("CloudBackupWorker", "Periodic backup task started");
-        
+
         if (!com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
             Logger.log("CloudBackupWorker", "Cloud backup is disabled in AppConfig, skipping.");
             return Result.success();
         }
 
         Context context = getApplicationContext();
-        
+
         if (!com.robinzon.medicationwizard.AppConfig.isPremium(getApplicationContext())) {
             Logger.log("CloudBackupWorker", "User is not premium, skipping backup");
             return Result.success();
         }
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
-        
+
         if (account == null) {
             Logger.log("CloudBackupWorker", "No signed in account, skipping backup");
             return Result.success();
@@ -68,7 +68,7 @@ public class CloudBackupWorker extends Worker {
 
             // This is synchronous in the worker
             Tasks.await(manager.backupToCloud());
-            
+
             Logger.log("CloudBackupWorker", "Periodic backup successful");
             return Result.success();
         } catch (Exception e) {

@@ -57,11 +57,49 @@ import java.util.Set;
  * - Dual-mode operation: "New Medication" and "Edit Medication".
  * </p>
  * <p>
- * Performance: Uses customized window attributes to ensure a sharp, centered 
+ * Performance: Uses customized window attributes to ensure a sharp, centered
  * card look that opens fully on all devices.
  * </p>
  */
 public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
+
+    /**
+     * Map of dose index to the user-selected time.
+     */
+    private final SparseArray<SimpleDayTime> dosesInDay = new SparseArray<>();
+    /**
+     * Layout container where dynamic time picker buttons are added.
+     */
+    private ConstraintLayout timesContainer;
+    /**
+     * The medication object being built or edited.
+     */
+    private Medication medication = new Medication();
+    /**
+     * Flag to enable aggressive validation after the first save attempt.
+     */
+    private boolean hasAttemptedSave;
+    /**
+     * True if the sheet is in 'Edit' mode (modifying an existing medication).
+     */
+    private boolean isEditMode = false;
+
+    /**
+     * Factory method to create a new instance of the sheet, optionally pre-filled with
+     * medication data for editing.
+     *
+     * @param medication The medication to edit, or null for a new entry.
+     * @return A configured fragment instance.
+     */
+    public static AddMedicationBottomSheet newInstance(@Nullable Medication medication) {
+        AddMedicationBottomSheet fragment = new AddMedicationBottomSheet();
+        if (medication != null) {
+            Bundle args = new Bundle();
+            args.putString("medication_json", medication.toJson().toString());
+            fragment.setArguments(args);
+        }
+        return fragment;
+    }
 
     /**
      * Standard lifecycle method to define the dialog's visual style.
@@ -92,39 +130,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
-    /** Map of dose index to the user-selected time. */
-    private final SparseArray<SimpleDayTime> dosesInDay = new SparseArray<>();
-    
-    /** Layout container where dynamic time picker buttons are added. */
-    private ConstraintLayout timesContainer;
-    
-    /** The medication object being built or edited. */
-    private Medication medication = new Medication();
-    
-    /** Flag to enable aggressive validation after the first save attempt. */
-    private boolean hasAttemptedSave;
-    
-    /** True if the sheet is in 'Edit' mode (modifying an existing medication). */
-    private boolean isEditMode = false;
-
-    /**
-     * Factory method to create a new instance of the sheet, optionally pre-filled with 
-     * medication data for editing.
-     *
-     * @param medication The medication to edit, or null for a new entry.
-     * @return A configured fragment instance.
-     */
-    public static AddMedicationBottomSheet newInstance(@Nullable Medication medication) {
-        AddMedicationBottomSheet fragment = new AddMedicationBottomSheet();
-        if (medication != null) {
-            Bundle args = new Bundle();
-            args.putString("medication_json", medication.toJson().toString());
-            fragment.setArguments(args);
-        }
-        return fragment;
-    }
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -132,7 +137,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     /**
-     * Initializes the UI. 
+     * Initializes the UI.
      * Handles argument parsing for Edit mode and sets up all interactive listeners.
      */
     @Override
@@ -147,11 +152,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                     medication = Medication.fromJson(new JSONObject(json));
                     isEditMode = true;
                 }
-            } catch (JSONException ignored) {}
+            } catch (JSONException ignored) {
+            }
         }
 
         setupDropdowns(view);
-        
+
         // Fix for disappearing hint: explicitly re-set it after dropdown setup
         TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
         if (layoutForm != null) {
@@ -173,7 +179,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     /**
-     * Populates all UI fields with data from an existing medication. 
+     * Populates all UI fields with data from an existing medication.
      * Used exclusively in Edit mode.
      */
     private void preFillData(View view) {
@@ -288,7 +294,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     /**
-     * Factory for {@link TextWatcher} that handles both error highlighting and 
+     * Factory for {@link TextWatcher} that handles both error highlighting and
      * live title updates.
      */
     private TextWatcher getTextWatcher(@NonNull final EditText editText, @NonNull View mainView) {
@@ -304,7 +310,10 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                         highLightInValidFields(editText, trimmedInput.isEmpty(), false);
                     } else if (editTextId == R.id.med_amount) {
                         float amountVal = 0;
-                        try { amountVal = Float.parseFloat(trimmedInput); } catch (Exception ignored) {}
+                        try {
+                            amountVal = Float.parseFloat(trimmedInput);
+                        } catch (Exception ignored) {
+                        }
                         highLightInValidFields(editText, amountVal <= 0, false);
                     } else if (editTextId == R.id.med_form_fragment_add_med || editTextId == R.id.med_frequency_fragment_add_med) {
                         highLightInValidFields(editText, trimmedInput.isEmpty(), false);
@@ -314,7 +323,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 // Update the bottom sheet title live as the user types the name
                 TextView titleView = getTitleTextView(mainView);
                 if (titleView != null && editText.getId() == R.id.med_name_fragment_add_med) {
-                    if (trimmedInput.isEmpty()){
+                    if (trimmedInput.isEmpty()) {
                         titleView.setText(R.string.fragment_add_med_title);
                     } else {
                         titleView.setText(trimmedInput);
@@ -322,11 +331,15 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 }
             }
 
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
         };
     }
-
 
 
     /**
@@ -364,7 +377,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private void setupDropdowns(View view) {
         setFormDropDown(view);
         setUnitDropDown(view);
-        
+
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
         String[] frequencies = new String[]{
                 getString(R.string.frequency_once),
@@ -383,7 +396,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             int timesPerDay = position + 1;
             medication.setDailyFrequency(timesPerDay);
             generateTimePickers(timesPerDay);
-            
+
             // Move focus to the dynamic buttons container or first button
             timesContainer.postDelayed(() -> {
                 if (timesContainer.getChildCount() > 0) {
@@ -426,7 +439,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
 
         final int frequency = medication.getDailyFrequency();
         final SparseArray<SimpleDayTime> activeTimes = new SparseArray<>();
-        
+
         for (int i = 1; i <= frequency; i++) {
             SimpleDayTime time = dosesInDay.get(i);
             if (time == null) {
@@ -449,7 +462,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         medication.addToMedicationList(requireContext().getApplicationContext());
 
         dismiss();
-        
+
         // Handle post-save logic (Ads and Permissions) after a delay to allow the database to commit
         // and the BottomSheet to finish its exit animation, ensuring a clean UI transition.
         // We wait 1200ms to ensure the background fragment is fully settled and DB write is done.
@@ -457,10 +470,10 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             final com.robinzon.medicationwizard.MainActivity mainActivity = (com.robinzon.medicationwizard.MainActivity) getActivity();
             new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
                 if (mainActivity.isFinishing() || mainActivity.isDestroyed()) return;
-                
+
                 // 1. Trigger interstitial ad (if eligible)
                 mainActivity.getAdsManager().showInterstitialAd();
-                
+
                 // 2. Request notification permissions (Android 13+) 
                 // We do this after the ad trigger to avoid overlapping system dialogs.
                 com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(mainActivity).requestWithRationale();
@@ -542,7 +555,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     /**
-     * Configures the drug form dropdown and updates the start icon dynamically 
+     * Configures the drug form dropdown and updates the start icon dynamically
      * based on selection (e.g., show a pill icon for "Pill").
      */
     private void setFormDropDown(View view) {
@@ -565,11 +578,11 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         };
 
         // Use a standard layout and disable filtering to prevent hint/text clearance issues
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
                 R.layout.item_dropdown_menu, forms);
         dropdownForm.setAdapter(adapter);
         dropdownForm.setThreshold(Integer.MAX_VALUE); // Disable filtering by typing
-        
+
         // Ensure hint is visible initially if no value
         if (TextUtils.isEmpty(dropdownForm.getText())) {
             dropdownForm.setText(null);
@@ -590,7 +603,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 }
             }
             medication.setForm(selectedForm);
-            
+
             // Move focus to the next field (Frequency)
             View next = view.findViewById(R.id.med_frequency_fragment_add_med);
             if (next != null) next.requestFocus();
@@ -605,7 +618,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 case Other -> R.drawable.ic_med_other;
             };
             layoutForm.setStartIconDrawable(icon);
-            
+
             // Apply theme-aware tint instead of hardcoded white
             int onSurfaceAttr = com.google.android.material.R.attr.colorOnSurface;
             int iconColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
@@ -619,14 +632,14 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         for (EMeasurementUnit unit : EMeasurementUnit.values()) {
             measurementUnits.add(unit.getLabel(requireContext()));
         }
-        
+
         if (null != dropdownUnit) {
             dropdownUnit.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_menu, measurementUnits));
             dropdownUnit.setOnClickListener(v -> dropdownUnit.showDropDown());
             dropdownUnit.setOnItemClickListener((parent, itemView, position, itemId) -> {
                 hideKeyboard(dropdownUnit);
                 medication.setMeasurementUnit(EMeasurementUnit.values()[position]);
-                
+
                 // Move focus to instructions group or save button
                 View next = view.findViewById(R.id.chip_group_instructions);
                 if (next != null) next.requestFocus();
@@ -635,13 +648,13 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     /**
-     * Generates a list of buttons in the UI, one for each scheduled dose 
+     * Generates a list of buttons in the UI, one for each scheduled dose
      * defined by the 'Frequency' dropdown.
      * Uses ConstraintLayout Flow for automatic wrapping and RTL support.
      */
     private void generateTimePickers(final int amount) {
         timesContainer.removeAllViews();
-        
+
         final Context context = requireContext();
         final float density = context.getResources().getDisplayMetrics().density;
         final int gap = (int) (8 * density);
@@ -652,7 +665,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         flow.setLayoutParams(new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT));
-        
+
         flow.setHorizontalGap(gap);
         flow.setVerticalGap(gap);
         flow.setWrapMode(Flow.WRAP_CHAIN);
@@ -664,7 +677,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         for (int i = 1; i <= amount; i++) {
             MaterialButton timeButton = (MaterialButton) LayoutInflater.from(context)
                     .inflate(R.layout.item_time_picker, timesContainer, false);
-            
+
             int viewId = View.generateViewId();
             timeButton.setId(viewId);
             viewIds[i - 1] = viewId;
@@ -718,7 +731,8 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             } else {
                 try {
                     medication.setStrength(Float.parseFloat(strengthStr));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
 
@@ -735,7 +749,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     /**
-     * Opens the standard Android Material Time Picker. 
+     * Opens the standard Android Material Time Picker.
      * Upon confirmation, updates the medication's schedule and the button text.
      */
     private void showTimePicker(final int finalIndex, final Button buttonToUpdate) {
@@ -750,10 +764,10 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", picker.getHour(), picker.getMinute());
             buttonToUpdate.setText(getString(R.string.time_set_format, formattedTime));
             dosesInDay.put(finalIndex, new SimpleDayTime((byte) picker.getHour(), (byte) picker.getMinute()));
-            
+
             // Explicitly stay on the button or move to next
             buttonToUpdate.requestFocus();
-            
+
             // If this was the last time button, move to Strength field after a small delay
             if (finalIndex == medication.getDailyFrequency()) {
                 View nextView = getView() != null ? getView().findViewById(R.id.medication_strength) : null;
@@ -766,9 +780,28 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         picker.show(getParentFragmentManager(), "timePicker");
     }
 
-    @Nullable private TextInputEditText getCommercialNameInputEditText(@NonNull View view) { return view.findViewById(R.id.med_name_fragment_add_med); }
-    @Nullable private TextInputEditText getAmountInputEditText(@NonNull View view) { return view.findViewById(R.id.med_amount); }
-    @Nullable private AutoCompleteTextView getFrequencyInputEditText(@NonNull View view) { return view.findViewById(R.id.med_frequency_fragment_add_med); }
-    @Nullable private AutoCompleteTextView getFormInputEditText(@NonNull View view) { return view.findViewById(R.id.med_form_fragment_add_med); }
-    @Nullable private TextView getTitleTextView(View mainView) { return mainView.findViewById(R.id.title_fragment_add_med); }
+    @Nullable
+    private TextInputEditText getCommercialNameInputEditText(@NonNull View view) {
+        return view.findViewById(R.id.med_name_fragment_add_med);
+    }
+
+    @Nullable
+    private TextInputEditText getAmountInputEditText(@NonNull View view) {
+        return view.findViewById(R.id.med_amount);
+    }
+
+    @Nullable
+    private AutoCompleteTextView getFrequencyInputEditText(@NonNull View view) {
+        return view.findViewById(R.id.med_frequency_fragment_add_med);
+    }
+
+    @Nullable
+    private AutoCompleteTextView getFormInputEditText(@NonNull View view) {
+        return view.findViewById(R.id.med_form_fragment_add_med);
+    }
+
+    @Nullable
+    private TextView getTitleTextView(View mainView) {
+        return mainView.findViewById(R.id.title_fragment_add_med);
+    }
 }

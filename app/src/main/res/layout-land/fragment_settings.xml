@@ -6,23 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/android:colorBackground"
-    android:clipToPadding="false"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="24dp"
+        android:clipChildren="false"
         android:clipToPadding="false"
-        android:clipChildren="false">
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:alignmentMode="alignMargins"
             android:columnCount="2"
-            android:paddingHorizontal="8dp"
-            android:alignmentMode="alignMargins">
+            android:paddingHorizontal="8dp">
 
             <!-- Left Column: Reminders -->
             <LinearLayout
@@ -61,24 +61,28 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:padding="20dp">
+
                             <ImageView
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
+                                android:contentDescription="@null"
                                 app:srcCompat="@drawable/ic_clock"
-                                app:tint="?attr/colorOnSurface"
-                                android:contentDescription="@null" />
+                                app:tint="?attr/colorOnSurface" />
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:layout_marginStart="16dp"
+                                android:layout_weight="1"
                                 android:orientation="vertical">
+
                                 <TextView
                                     android:id="@+id/txt_notifications_title"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/settings_notifications_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                 <TextView
                                     android:id="@+id/txt_notifications_summary"
                                     android:layout_width="wrap_content"
@@ -96,7 +100,13 @@
                             android:orientation="vertical"
                             android:visibility="gone"
                             tools:visibility="visible">
-                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginHorizontal="20dp"
+                                android:background="?attr/colorOutlineVariant" />
+
                             <LinearLayout
                                 android:id="@+id/btn_notif_sound"
                                 android:layout_width="match_parent"
@@ -105,20 +115,23 @@
                                 android:clickable="true"
                                 android:orientation="vertical"
                                 android:padding="20dp">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/settings_sound_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                 <TextView
                                     android:id="@+id/txt_sound_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    tools:text="Default"
                                     android:textAppearance="?attr/textAppearanceBodySmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    tools:text="Default" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/btn_bypass_volume"
                                 android:layout_width="match_parent"
@@ -128,14 +141,17 @@
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="20dp">
+
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:orientation="vertical">
+
                                     <androidx.constraintlayout.widget.ConstraintLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content">
+
                                         <androidx.constraintlayout.helper.widget.Flow
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
@@ -147,6 +163,7 @@
                                             app:layout_constraintEnd_toEndOf="parent"
                                             app:layout_constraintStart_toStartOf="parent"
                                             app:layout_constraintTop_toTopOf="parent" />
+
                                         <TextView
                                             android:id="@+id/txt_bypass_title"
                                             android:layout_width="wrap_content"
@@ -154,13 +171,15 @@
                                             android:text="@string/settings_bypass_title"
                                             android:textAppearance="?attr/textAppearanceTitleMedium"
                                             tools:ignore="MissingConstraints" />
+
                                         <ImageView
                                             android:id="@+id/crown_bypass"
                                             android:layout_width="18dp"
                                             android:layout_height="18dp"
-                                            app:srcCompat="@drawable/ic_crown"
                                             android:contentDescription="@null"
+                                            app:srcCompat="@drawable/ic_crown"
                                             tools:ignore="MissingConstraints" />
+
                                         <TextView
                                             android:id="@+id/badge_active_bypass"
                                             android:layout_width="wrap_content"
@@ -171,9 +190,10 @@
                                             android:textSize="10sp"
                                             android:textStyle="bold"
                                             android:visibility="gone"
-                                            tools:visibility="visible"
-                                            tools:ignore="MissingConstraints" />
+                                            tools:ignore="MissingConstraints"
+                                            tools:visibility="visible" />
                                     </androidx.constraintlayout.widget.ConstraintLayout>
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -181,6 +201,7 @@
                                         android:textAppearance="?attr/textAppearanceBodySmall"
                                         android:textColor="?attr/colorOnSurfaceVariant" />
                                 </LinearLayout>
+
                                 <com.google.android.material.materialswitch.MaterialSwitch
                                     android:id="@+id/switch_bypass"
                                     android:layout_width="wrap_content"
@@ -189,6 +210,7 @@
                                     android:clickable="false"
                                     android:focusable="false" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/layout_volume"
                                 android:layout_width="match_parent"
@@ -198,6 +220,7 @@
                                 android:paddingBottom="12dp"
                                 android:visibility="gone"
                                 tools:visibility="visible">
+
                                 <com.google.android.material.slider.Slider
                                     android:id="@+id/slider_volume"
                                     android:layout_width="match_parent"
@@ -205,6 +228,7 @@
                                     android:valueFrom="0"
                                     android:valueTo="100" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/btn_quiet_hours"
                                 android:layout_width="match_parent"
@@ -213,9 +237,11 @@
                                 android:clickable="true"
                                 android:orientation="vertical"
                                 android:padding="20dp">
+
                                 <androidx.constraintlayout.widget.ConstraintLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
+
                                     <androidx.constraintlayout.helper.widget.Flow
                                         android:id="@+id/flow_quiet_hours"
                                         android:layout_width="0dp"
@@ -228,6 +254,7 @@
                                         app:layout_constraintEnd_toEndOf="parent"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toTopOf="parent" />
+
                                     <TextView
                                         android:id="@+id/txt_quiet_hours_title"
                                         android:layout_width="wrap_content"
@@ -235,13 +262,15 @@
                                         android:text="@string/settings_quiet_hours_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium"
                                         tools:ignore="MissingConstraints" />
+
                                     <ImageView
                                         android:id="@+id/crown_quiet_hours"
                                         android:layout_width="18dp"
                                         android:layout_height="18dp"
-                                        app:srcCompat="@drawable/ic_crown"
                                         android:contentDescription="@null"
+                                        app:srcCompat="@drawable/ic_crown"
                                         tools:ignore="MissingConstraints" />
+
                                     <TextView
                                         android:id="@+id/badge_active_quiet_hours"
                                         android:layout_width="wrap_content"
@@ -252,18 +281,20 @@
                                         android:textSize="10sp"
                                         android:textStyle="bold"
                                         android:visibility="gone"
-                                        tools:visibility="visible"
-                                        tools:ignore="MissingConstraints" />
+                                        tools:ignore="MissingConstraints"
+                                        tools:visibility="visible" />
                                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                                 <TextView
                                     android:id="@+id/txt_quiet_hours_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    tools:text="Off"
                                     android:textAppearance="?attr/textAppearanceBodySmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    tools:text="Off" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/btn_snooze_duration"
                                 android:layout_width="match_parent"
@@ -272,20 +303,23 @@
                                 android:clickable="true"
                                 android:orientation="vertical"
                                 android:padding="20dp">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/settings_snooze_duration_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                 <TextView
                                     android:id="@+id/txt_snooze_duration_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    tools:text="10 minutes"
                                     android:textAppearance="?attr/textAppearanceBodySmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    tools:text="10 minutes" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/btn_max_snoozes"
                                 android:layout_width="match_parent"
@@ -294,19 +328,21 @@
                                 android:clickable="true"
                                 android:orientation="vertical"
                                 android:padding="20dp">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/settings_max_snoozes_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                 <TextView
                                     android:id="@+id/txt_max_snoozes_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    tools:text="3 times"
                                     android:textAppearance="?attr/textAppearanceBodySmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    tools:text="3 times" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -340,6 +376,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:id="@+id/btn_google_signin"
                             android:layout_width="match_parent"
@@ -350,29 +387,34 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:padding="20dp">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
+
                                     <TextView
                                         android:id="@+id/txt_account_name"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/cloud_backup_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                     <ImageView
                                         android:id="@+id/crown_backup"
                                         android:layout_width="18dp"
                                         android:layout_height="18dp"
                                         android:layout_marginStart="8dp"
-                                        app:srcCompat="@drawable/ic_crown"
-                                        android:contentDescription="@null" />
+                                        android:contentDescription="@null"
+                                        app:srcCompat="@drawable/ic_crown" />
+
                                     <TextView
                                         android:id="@+id/badge_active_backup"
                                         android:layout_width="wrap_content"
@@ -386,6 +428,7 @@
                                         android:visibility="gone"
                                         tools:visibility="visible" />
                                 </LinearLayout>
+
                                 <TextView
                                     android:id="@+id/txt_account_email"
                                     android:layout_width="wrap_content"
@@ -394,12 +437,14 @@
                                     android:textAppearance="?attr/textAppearanceBodySmall"
                                     android:textColor="?attr/colorOnSurfaceVariant" />
                             </LinearLayout>
+
                             <Button
                                 android:id="@+id/btn_google_signin_action"
                                 style="@style/Widget.Material3.Button.TonalButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/button_sign_in" />
+
                             <Button
                                 android:id="@+id/btn_sign_out"
                                 style="@style/Widget.Material3.Button.TextButton"
@@ -408,6 +453,7 @@
                                 android:text="@string/cloud_backup_sign_out"
                                 android:visibility="gone" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/container_cloud_settings"
                             android:layout_width="match_parent"
@@ -415,7 +461,13 @@
                             android:orientation="vertical"
                             android:visibility="gone"
                             tools:visibility="visible">
-                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginHorizontal="20dp"
+                                android:background="?attr/colorOutlineVariant" />
+
                             <LinearLayout
                                 android:id="@+id/btn_auto_backup"
                                 android:layout_width="match_parent"
@@ -425,16 +477,19 @@
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="20dp">
+
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/cloud_backup_auto_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -442,6 +497,7 @@
                                         android:textAppearance="?attr/textAppearanceBodySmall"
                                         android:textColor="?attr/colorOnSurfaceVariant" />
                                 </LinearLayout>
+
                                 <com.google.android.material.materialswitch.MaterialSwitch
                                     android:id="@+id/switch_auto_backup"
                                     android:layout_width="wrap_content"
@@ -450,6 +506,7 @@
                                     android:clickable="false"
                                     android:focusable="false" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/btn_wifi_only"
                                 android:layout_width="match_parent"
@@ -459,16 +516,19 @@
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="20dp">
+
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/cloud_backup_wifi_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -476,6 +536,7 @@
                                         android:textAppearance="?attr/textAppearanceBodySmall"
                                         android:textColor="?attr/colorOnSurfaceVariant" />
                                 </LinearLayout>
+
                                 <com.google.android.material.materialswitch.MaterialSwitch
                                     android:id="@+id/switch_wifi_only"
                                     android:layout_width="wrap_content"
@@ -484,6 +545,7 @@
                                     android:clickable="false"
                                     android:focusable="false" />
                             </LinearLayout>
+
                             <Button
                                 android:id="@+id/btn_backup_now"
                                 style="@style/Widget.Material3.Button.TonalButton"
@@ -492,6 +554,7 @@
                                 android:layout_marginHorizontal="16dp"
                                 android:layout_marginTop="16dp"
                                 android:text="@string/cloud_backup_now" />
+
                             <Button
                                 android:id="@+id/btn_restore_cloud"
                                 style="@style/Widget.Material3.Button.TextButton"
@@ -507,8 +570,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
                     android:layout_marginTop="8dp"
+                    android:padding="16dp"
                     android:text="@string/settings_category_appearance"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorPrimary" />
@@ -530,6 +593,7 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
+
                             <androidx.constraintlayout.helper.widget.Flow
                                 android:id="@+id/flow_theme"
                                 android:layout_width="0dp"
@@ -542,6 +606,7 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
+
                             <TextView
                                 android:id="@+id/txt_theme_title"
                                 android:layout_width="wrap_content"
@@ -549,13 +614,15 @@
                                 android:text="@string/settings_theme_title"
                                 android:textAppearance="?attr/textAppearanceTitleMedium"
                                 tools:ignore="MissingConstraints" />
+
                             <ImageView
                                 android:id="@+id/crown_theme"
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                app:srcCompat="@drawable/ic_crown"
                                 android:contentDescription="@null"
+                                app:srcCompat="@drawable/ic_crown"
                                 tools:ignore="MissingConstraints" />
+
                             <TextView
                                 android:id="@+id/badge_active_theme"
                                 android:layout_width="wrap_content"
@@ -566,8 +633,8 @@
                                 android:textSize="10sp"
                                 android:textStyle="bold"
                                 android:visibility="gone"
-                                tools:visibility="visible"
-                                tools:ignore="MissingConstraints" />
+                                tools:ignore="MissingConstraints"
+                                tools:visibility="visible" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
                         <com.google.android.material.button.MaterialButtonToggleGroup
@@ -625,8 +692,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
                     android:layout_marginTop="8dp"
+                    android:padding="16dp"
                     android:text="@string/settings_category_data"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorPrimary" />
@@ -637,7 +704,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp">
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="8dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/btn_backup"
                             android:layout_width="match_parent"
@@ -674,8 +746,8 @@
                                 android:id="@+id/crown_backup_data"
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                app:srcCompat="@drawable/ic_crown"
                                 android:contentDescription="@null"
+                                app:srcCompat="@drawable/ic_crown"
                                 tools:ignore="MissingConstraints" />
 
                             <TextView
@@ -688,11 +760,21 @@
                                 android:textSize="10sp"
                                 android:textStyle="bold"
                                 android:visibility="gone"
-                                tools:visibility="visible"
-                                tools:ignore="MissingConstraints" />
+                                tools:ignore="MissingConstraints"
+                                tools:visibility="visible" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-                        <Button android:id="@+id/btn_clear_data" style="@style/Widget.Material3.Button.TextButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/settings_clear_data_title" android:textColor="?attr/colorError" android:gravity="start" android:paddingStart="12dp" tools:ignore="RtlSymmetry" />
+                        <Button
+                            android:id="@+id/btn_clear_data"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:paddingStart="12dp"
+                            android:text="@string/settings_clear_data_title"
+                            android:textColor="?attr/colorError"
+                            tools:ignore="RtlSymmetry" />
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/btn_support"
                             android:layout_width="match_parent"
@@ -729,8 +811,8 @@
                                 android:id="@+id/crown_support"
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                app:srcCompat="@drawable/ic_crown"
                                 android:contentDescription="@null"
+                                app:srcCompat="@drawable/ic_crown"
                                 tools:ignore="MissingConstraints" />
 
                             <TextView
@@ -743,8 +825,8 @@
                                 android:textSize="10sp"
                                 android:textStyle="bold"
                                 android:visibility="gone"
-                                tools:visibility="visible"
-                                tools:ignore="MissingConstraints" />
+                                tools:ignore="MissingConstraints"
+                                tools:visibility="visible" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -753,8 +835,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
                     android:layout_marginTop="8dp"
+                    android:padding="16dp"
                     android:text="@string/settings_category_advanced"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorPrimary" />
@@ -781,28 +863,33 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:padding="20dp">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/settings_vibration_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                     <ImageView
                                         android:id="@+id/crown_vibration"
                                         android:layout_width="18dp"
                                         android:layout_height="18dp"
                                         android:layout_marginStart="8dp"
-                                        app:srcCompat="@drawable/ic_crown"
-                                        android:contentDescription="@null" />
+                                        android:contentDescription="@null"
+                                        app:srcCompat="@drawable/ic_crown" />
+
                                     <TextView
                                         android:id="@+id/badge_active_vibration"
                                         android:layout_width="wrap_content"
@@ -816,6 +903,7 @@
                                         android:visibility="gone"
                                         tools:visibility="visible" />
                                 </LinearLayout>
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -823,6 +911,7 @@
                                     android:textAppearance="?attr/textAppearanceBodySmall"
                                     android:textColor="?attr/colorOnSurfaceVariant" />
                             </LinearLayout>
+
                             <com.google.android.material.materialswitch.MaterialSwitch
                                 android:id="@+id/switch_vibration"
                                 android:layout_width="wrap_content"
@@ -839,7 +928,12 @@
                             android:orientation="vertical"
                             android:visibility="gone"
                             tools:visibility="visible">
-                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginHorizontal="20dp"
+                                android:background="?attr/colorOutlineVariant" />
 
                             <LinearLayout
                                 android:id="@+id/btn_vibration_pattern"
@@ -847,30 +941,33 @@
                                 android:layout_height="wrap_content"
                                 android:background="?attr/selectableItemBackground"
                                 android:clickable="true"
+                                android:gravity="start"
                                 android:orientation="vertical"
                                 android:paddingVertical="12dp"
                                 android:paddingStart="20dp"
-                                android:paddingEnd="20dp"
-                                android:gravity="start">
+                                android:paddingEnd="20dp">
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginStart="24dp">
+                                    android:layout_marginStart="24dp"
+                                    android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/settings_vibration_pattern_title"
-                                        android:textAppearance="?attr/textAppearanceTitleSmall"
-                                        android:textAlignment="viewStart" />
+                                        android:textAlignment="viewStart"
+                                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
                                     <TextView
                                         android:id="@+id/txt_vibration_pattern_desc"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        tools:text="Standard"
+                                        android:textAlignment="viewStart"
                                         android:textAppearance="?attr/textAppearanceLabelSmall"
                                         android:textColor="?attr/colorOnSurfaceVariant"
-                                        android:textAlignment="viewStart" />
+                                        tools:text="Standard" />
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -880,35 +977,42 @@
                                 android:layout_height="wrap_content"
                                 android:background="?attr/selectableItemBackground"
                                 android:clickable="true"
+                                android:gravity="start"
                                 android:orientation="vertical"
                                 android:paddingVertical="12dp"
                                 android:paddingStart="20dp"
-                                android:paddingEnd="20dp"
-                                android:gravity="start">
+                                android:paddingEnd="20dp">
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginStart="24dp">
+                                    android:layout_marginStart="24dp"
+                                    android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/settings_flash_pattern_title"
-                                        android:textAppearance="?attr/textAppearanceTitleSmall"
-                                        android:textAlignment="viewStart" />
+                                        android:textAlignment="viewStart"
+                                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
                                     <TextView
                                         android:id="@+id/txt_flash_pattern_desc"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        tools:text="None"
+                                        android:textAlignment="viewStart"
                                         android:textAppearance="?attr/textAppearanceLabelSmall"
                                         android:textColor="?attr/colorOnSurfaceVariant"
-                                        android:textAlignment="viewStart" />
+                                        tools:text="None" />
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
 
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginHorizontal="20dp"
+                            android:background="?attr/colorOutlineVariant" />
 
                         <LinearLayout
                             android:id="@+id/btn_sticky"
@@ -920,28 +1024,33 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
                             android:padding="20dp">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/settings_sticky_title"
                                         android:textAppearance="?attr/textAppearanceTitleMedium" />
+
                                     <ImageView
                                         android:id="@+id/crown_sticky"
                                         android:layout_width="18dp"
                                         android:layout_height="18dp"
                                         android:layout_marginStart="8dp"
-                                        app:srcCompat="@drawable/ic_crown"
-                                        android:contentDescription="@null" />
+                                        android:contentDescription="@null"
+                                        app:srcCompat="@drawable/ic_crown" />
+
                                     <TextView
                                         android:id="@+id/badge_active_sticky"
                                         android:layout_width="wrap_content"
@@ -955,6 +1064,7 @@
                                         android:visibility="gone"
                                         tools:visibility="visible" />
                                 </LinearLayout>
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -962,6 +1072,7 @@
                                     android:textAppearance="?attr/textAppearanceBodySmall"
                                     android:textColor="?attr/colorOnSurfaceVariant" />
                             </LinearLayout>
+
                             <com.google.android.material.materialswitch.MaterialSwitch
                                 android:id="@+id/switch_sticky"
                                 android:layout_width="wrap_content"
@@ -971,7 +1082,11 @@
                                 android:focusable="false" />
                         </LinearLayout>
 
-                        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginHorizontal="20dp"
+                            android:background="?attr/colorOutlineVariant" />
 
                         <LinearLayout
                             android:id="@+id/btn_dose_window"
@@ -982,9 +1097,11 @@
                             android:focusable="true"
                             android:orientation="vertical"
                             android:padding="20dp">
+
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
+
                                 <androidx.constraintlayout.helper.widget.Flow
                                     android:id="@+id/flow_dose_window"
                                     android:layout_width="0dp"
@@ -997,6 +1114,7 @@
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
+
                                 <TextView
                                     android:id="@+id/txt_dose_window_title"
                                     android:layout_width="wrap_content"
@@ -1004,13 +1122,15 @@
                                     android:text="@string/settings_dose_window_title"
                                     android:textAppearance="?attr/textAppearanceTitleMedium"
                                     tools:ignore="MissingConstraints" />
+
                                 <ImageView
                                     android:id="@+id/crown_dose_window"
                                     android:layout_width="18dp"
                                     android:layout_height="18dp"
-                                    app:srcCompat="@drawable/ic_crown"
                                     android:contentDescription="@null"
+                                    app:srcCompat="@drawable/ic_crown"
                                     tools:ignore="MissingConstraints" />
+
                                 <TextView
                                     android:id="@+id/badge_active_dose_window"
                                     android:layout_width="wrap_content"
@@ -1021,9 +1141,10 @@
                                     android:textSize="10sp"
                                     android:textStyle="bold"
                                     android:visibility="gone"
-                                    tools:visibility="visible"
-                                    tools:ignore="MissingConstraints" />
+                                    tools:ignore="MissingConstraints"
+                                    tools:visibility="visible" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -1039,69 +1160,82 @@
                             android:orientation="vertical"
                             android:visibility="gone"
                             tools:visibility="visible">
-                            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant" android:layout_marginHorizontal="20dp" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginHorizontal="20dp"
+                                android:background="?attr/colorOutlineVariant" />
+
                             <LinearLayout
                                 android:id="@+id/btn_early_threshold"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="?attr/selectableItemBackground"
                                 android:clickable="true"
+                                android:gravity="start"
                                 android:orientation="vertical"
                                 android:paddingVertical="12dp"
                                 android:paddingStart="20dp"
-                                android:paddingEnd="20dp"
-                                android:gravity="start">
+                                android:paddingEnd="20dp">
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginStart="24dp">
+                                    android:layout_marginStart="24dp"
+                                    android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/settings_early_threshold_title"
-                                        android:textAppearance="?attr/textAppearanceTitleSmall"
-                                        android:textAlignment="viewStart" />
+                                        android:textAlignment="viewStart"
+                                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
                                     <TextView
                                         android:id="@+id/txt_early_threshold_desc"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        tools:text="60 minutes"
+                                        android:textAlignment="viewStart"
                                         android:textAppearance="?attr/textAppearanceLabelSmall"
                                         android:textColor="?attr/colorOnSurfaceVariant"
-                                        android:textAlignment="viewStart" />
+                                        tools:text="60 minutes" />
                                 </LinearLayout>
                             </LinearLayout>
+
                             <LinearLayout
                                 android:id="@+id/btn_late_threshold"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="?attr/selectableItemBackground"
                                 android:clickable="true"
+                                android:gravity="start"
                                 android:orientation="vertical"
                                 android:paddingVertical="12dp"
                                 android:paddingStart="20dp"
-                                android:paddingEnd="20dp"
-                                android:gravity="start">
+                                android:paddingEnd="20dp">
+
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginStart="24dp">
+                                    android:layout_marginStart="24dp"
+                                    android:orientation="vertical">
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/settings_late_threshold_title"
-                                        android:textAppearance="?attr/textAppearanceTitleSmall"
-                                        android:textAlignment="viewStart" />
+                                        android:textAlignment="viewStart"
+                                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+
                                     <TextView
                                         android:id="@+id/txt_late_threshold_desc"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        tools:text="180 minutes"
+                                        android:textAlignment="viewStart"
                                         android:textAppearance="?attr/textAppearanceLabelSmall"
                                         android:textColor="?attr/colorOnSurfaceVariant"
-                                        android:textAlignment="viewStart" />
+                                        tools:text="180 minutes" />
                                 </LinearLayout>
                             </LinearLayout>
                         </LinearLayout>
@@ -1117,8 +1251,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingVertical="24dp"
-            tools:text="Version 1.0"
-            android:textAppearance="?attr/textAppearanceBodySmall" />
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            tools:text="Version 1.0" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

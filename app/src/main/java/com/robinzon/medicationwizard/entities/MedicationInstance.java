@@ -14,23 +14,8 @@ import org.json.JSONObject;
  */
 public class MedicationInstance extends Medication {
 
-    /**
-     * Represents the current state of a specific medication dose.
-     */
-    public enum Status {
-        /** The dose is planned for the future but hasn't occurred yet. */
-        SCHEDULED,
-        /** The user has successfully taken the dose. */
-        TAKEN,
-        /** The dose was missed (time passed without action). */
-        MISSED,
-        /** The user explicitly chose not to take this specific dose. */
-        SKIPPED
-    }
-
     private Status status;
     private long scheduledTime;
-
     /**
      * Default constructor for serialization.
      */
@@ -40,7 +25,7 @@ public class MedicationInstance extends Medication {
 
     /**
      * "Upgrade" constructor that creates a specific instance from a medication definition.
-     * Copies all base properties (name, strength, form, etc.) to ensure the instance 
+     * Copies all base properties (name, strength, form, etc.) to ensure the instance
      * is self-contained.
      *
      * @param medication The base medication definition.
@@ -124,7 +109,7 @@ public class MedicationInstance extends Medication {
     }
 
     /**
-     * Returns a human-readable representation of the instance, including a 
+     * Returns a human-readable representation of the instance, including a
      * localized date and time string for easier debugging and logging.
      *
      * @return Formatted string (e.g., "MedicationInstance{name='Aspirin', status=SCHEDULED, scheduledTime=Mon, May 17, 08:30}").
@@ -139,5 +124,27 @@ public class MedicationInstance extends Medication {
                 ", status=" + status +
                 ", scheduledTime=" + readableDate +
                 '}';
+    }
+
+    /**
+     * Represents the current state of a specific medication dose.
+     */
+    public enum Status {
+        /**
+         * The dose is planned for the future but hasn't occurred yet.
+         */
+        SCHEDULED,
+        /**
+         * The user has successfully taken the dose.
+         */
+        TAKEN,
+        /**
+         * The dose was missed (time passed without action).
+         */
+        MISSED,
+        /**
+         * The user explicitly chose not to take this specific dose.
+         */
+        SKIPPED
     }
 }

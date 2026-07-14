@@ -9,7 +9,7 @@ import com.robinzon.medicationwizard.BuildConfig;
 /**
  * Utility class for tracking application usage statistics.
  * <p>
- * Performance: Operations are performed asynchronously using {@link AsyncTask} 
+ * Performance: Operations are performed asynchronously using {@link AsyncTask}
  * to ensure that disk I/O for SharedPreferences does not block the UI thread.
  * </p>
  */
@@ -21,11 +21,15 @@ public class Statisticator {
     private static final String SPK_TOTAL_DOSES_LOGGED = "spk_total_doses_logged";
     private static final String SPK_ACTIONS_FOR_INTERSTITIAL = "spk_actions_for_interstitial";
     private static final String SPK_INTERSTITIAL_SCORE = "spk_interstitial_score";
-    
-    /** Anchor for total usage calculation in the current foreground session. */
+
+    /**
+     * Anchor for total usage calculation in the current foreground session.
+     */
     private static long mStartUserActive;
-    
-    /** Anchor for ad-specific usage calculation (resets after showing an ad). */
+
+    /**
+     * Anchor for ad-specific usage calculation (resets after showing an ad).
+     */
     private static long mStartAdUsageActive;
 
     /**
@@ -99,7 +103,7 @@ public class Statisticator {
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
         int currentActions = prefs.getInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0) + 1;
         int threshold = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getActionsPerInterstitial();
-        
+
         if (currentActions >= threshold) {
             prefs.setInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0);
             if (BuildConfig.DEBUG) {
@@ -123,12 +127,12 @@ public class Statisticator {
         if (context == null) return false;
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
         float currentScore = prefs.getFloat(SPK_INTERSTITIAL_SCORE, 0.0f) + scoreToAdd;
-        
+
         double threshold = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getDoubleValue("interstitial_score_threshold");
         if (threshold <= 0) threshold = 4.0; // Fallback
 
         if (currentScore >= threshold) {
-            float remainder = (float) (currentScore - (float)threshold);
+            float remainder = (float) (currentScore - (float) threshold);
             prefs.setFloat(SPK_INTERSTITIAL_SCORE, remainder);
             if (BuildConfig.DEBUG && scoreToAdd > 0) {
                 Toast.makeText(context, "Added " + scoreToAdd + " points, reached " + threshold + ", total is " + remainder, Toast.LENGTH_SHORT).show();
@@ -181,7 +185,7 @@ public class Statisticator {
             // Persist the live values which already include the elapsed foreground time
             SharedPreferencesManager.getInstance(context).setFloat(SPK_SESSION_TIME_MINUTES, getTotalUsageMinutes(context));
             SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, getUsageMinutesForAds(context));
-            
+
             // Stop live tracking
             mStartUserActive = 0;
             mStartAdUsageActive = 0;

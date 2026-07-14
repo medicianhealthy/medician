@@ -103,7 +103,8 @@ public class CloudBackupManager {
                             try {
                                 DoseInstanceEntity entity = DoseInstanceEntity.fromJson(historyArray.getJSONObject(i));
                                 db.doseInstanceDao().insert(entity);
-                            } catch (Exception ignored) {}
+                            } catch (Exception ignored) {
+                            }
                         }
                     });
                 }

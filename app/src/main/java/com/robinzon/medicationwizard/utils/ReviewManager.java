@@ -13,7 +13,7 @@ import com.robinzon.medicationwizard.MainActivity;
 public class ReviewManager {
 
     private static final String SPK_LAST_REVIEW_TIME = "spk_last_review_time";
-    
+
     private static final int MIN_SESSIONS = 3;
     private static final int MIN_DOSES_LOGGED = 15;
     private static final float MIN_USAGE_MINUTES = 5.0f;
@@ -23,7 +23,7 @@ public class ReviewManager {
      * Potentially triggers the in-app review flow based on user activity.
      */
     /**
-     * Checks if the user meets the engagement criteria (sessions, doses, usage time) 
+     * Checks if the user meets the engagement criteria (sessions, doses, usage time)
      * and triggers the official Google Play In-App Review flow if they do.
      *
      * @param activity The currently foregrounded activity.
@@ -60,7 +60,7 @@ public class ReviewManager {
         // 4. Launch Play Store Review
         com.google.android.play.core.review.ReviewManager manager = ReviewManagerFactory.create(activity);
         Task<ReviewInfo> request = manager.requestReviewFlow();
-        
+
         request.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ReviewInfo reviewInfo = task.getResult();

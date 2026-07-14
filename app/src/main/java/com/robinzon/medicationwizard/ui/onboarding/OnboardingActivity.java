@@ -36,8 +36,8 @@ import java.util.List;
 public class OnboardingActivity extends AppCompatActivity {
 
     public static final String KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding";
-    private ActivityOnboardingBinding binding;
     private final List<ImageView> dots = new ArrayList<>();
+    private ActivityOnboardingBinding binding;
     private int pageBeforeSkip = -1;
 
     @Override
@@ -55,26 +55,26 @@ public class OnboardingActivity extends AppCompatActivity {
 
         List<OnboardingPage> pages = new ArrayList<>();
         pages.add(new OnboardingPage(
-                R.drawable.ic_magic_wand, 
-                R.drawable.ic_med_pill,
-                getString(R.string.onboarding_title_1), 
-                getString(R.string.onboarding_desc_1)));
-        
-        pages.add(new OnboardingPage(
-                R.drawable.ic_clock, 
-                R.drawable.ic_med_drops,
-                getString(R.string.onboarding_title_2), 
-                getString(R.string.onboarding_desc_2)));
-        
-        pages.add(new OnboardingPage(
-                R.drawable.ic_list, 
                 R.drawable.ic_magic_wand,
-                getString(R.string.onboarding_title_3), 
+                R.drawable.ic_med_pill,
+                getString(R.string.onboarding_title_1),
+                getString(R.string.onboarding_desc_1)));
+
+        pages.add(new OnboardingPage(
+                R.drawable.ic_clock,
+                R.drawable.ic_med_drops,
+                getString(R.string.onboarding_title_2),
+                getString(R.string.onboarding_desc_2)));
+
+        pages.add(new OnboardingPage(
+                R.drawable.ic_list,
+                R.drawable.ic_magic_wand,
+                getString(R.string.onboarding_title_3),
                 getString(R.string.onboarding_desc_3)));
 
         setupDots(pages.size());
         setupTerms();
-        
+
         OnboardingAdapter adapter = new OnboardingAdapter(pages);
         binding.viewPager.setAdapter(adapter);
 
@@ -146,7 +146,7 @@ public class OnboardingActivity extends AppCompatActivity {
         ObjectAnimator shake = ObjectAnimator.ofFloat(binding.containerTerms, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0);
         shake.setDuration(500);
         shake.start();
-        
+
         // Optional: provide haptic feedback
         binding.containerTerms.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
     }
@@ -155,16 +155,16 @@ public class OnboardingActivity extends AppCompatActivity {
         String termsUrl = getString(R.string.url_terms).trim();
         String privacyUrl = getString(R.string.url_privacy).trim();
         String textTemplate = getString(R.string.onboarding_terms_agree, termsUrl, privacyUrl);
-        
+
         Spanned html = Html.fromHtml(textTemplate, Html.FROM_HTML_MODE_COMPACT);
         SpannableStringBuilder spannable = new SpannableStringBuilder(html);
         URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);
-        
+
         for (URLSpan span : spans) {
             int start = spannable.getSpanStart(span);
             int end = spannable.getSpanEnd(span);
             String url = span.getURL();
-            
+
             spannable.removeSpan(span);
             spannable.setSpan(new ClickableSpan() {
                 @Override
@@ -173,10 +173,10 @@ public class OnboardingActivity extends AppCompatActivity {
                 }
             }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        
+
         binding.txtTerms.setText(spannable);
         binding.txtTerms.setMovementMethod(LinkMovementMethod.getInstance());
-        
+
         // Fix: Added click listener to the TextView itself to catch taps outside links
         View.OnClickListener toggleListener = v -> binding.checkTerms.toggle();
         binding.containerTerms.setOnClickListener(toggleListener);
@@ -186,7 +186,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private void openInternalUrl(String url) {
         Intent intent = new Intent(this, WebViewerActivity.class);
         intent.putExtra(WebViewerActivity.EXTRA_URL, url);
-        
+
         int titleResId = url.contains("terms") ? R.string.legal_terms_title : R.string.legal_privacy_title;
         intent.putExtra(WebViewerActivity.EXTRA_TITLE, getString(titleResId));
         startActivity(intent);
@@ -199,12 +199,12 @@ public class OnboardingActivity extends AppCompatActivity {
             ImageView dot = new ImageView(this);
             int size = (int) (12 * getResources().getDisplayMetrics().density);
             int margin = (int) (2 * getResources().getDisplayMetrics().density);
-            
+
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
             params.setMargins(margin, 0, margin, 0);
             dot.setLayoutParams(params);
             dot.setImageResource(R.drawable.dot_indicator);
-            
+
             binding.dotsIndicatorContainer.addView(dot);
             dots.add(dot);
         }
@@ -225,7 +225,7 @@ public class OnboardingActivity extends AppCompatActivity {
         boolean isLastPage = position == totalPages - 1;
         binding.btnNext.setText(isLastPage ? R.string.onboarding_btn_finish : R.string.onboarding_btn_next);
         binding.containerTerms.setVisibility(isLastPage ? View.VISIBLE : View.GONE);
-        
+
         // Hide Skip button on the last page to ensure agreement
         binding.btnSkip.setVisibility(isLastPage ? View.GONE : View.VISIBLE);
     }
@@ -273,15 +273,15 @@ public class OnboardingActivity extends AppCompatActivity {
             holder.desc.setText(page.description);
             holder.acc1.setImageResource(page.accessory1);
             holder.acc2.setImageResource(page.accessory2);
-            
+
             // Use the brand new High-Definition Vector Wizard for perfect sharpness
             holder.mascot.setImageResource(R.drawable.ic_wizard_high_def);
-            
+
             // Apply balanced floating animations
             startFloatingAnimation(holder.mascot, 0, -35f, 3200);
-            startFloatingAnimation(holder.acc1, 200, 25f, 3500); 
-            startFloatingAnimation(holder.acc2, 400, -20f, 4000); 
-            
+            startFloatingAnimation(holder.acc1, 200, 25f, 3500);
+            startFloatingAnimation(holder.acc2, 400, -20f, 4000);
+
             // Add twinkling animations to background stars
             startTwinkleAnimation(holder.s1, 100);
             startTwinkleAnimation(holder.s2, 500);
@@ -299,6 +299,11 @@ public class OnboardingActivity extends AppCompatActivity {
                     bounce.setRepeatCount(ValueAnimator.INFINITE);
                     bounce.setInterpolator(new AccelerateDecelerateInterpolator());
                     bounce.start();
+
+                    // FIX: Make the hint clickable to trigger actual scroll action
+                    holder.scrollHint.setOnClickListener(v -> {
+                        holder.scrollView.smoothScrollBy(0, 300); // Scroll down by 300px
+                    });
                 }
             });
 
@@ -316,23 +321,23 @@ public class OnboardingActivity extends AppCompatActivity {
             ObjectAnimator alpha = ObjectAnimator.ofFloat(view, "alpha", 0.2f, 1.0f, 0.2f);
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.8f, 1.2f, 0.8f);
             ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.8f, 1.2f, 0.8f);
-            
+
             alpha.setDuration(2500);
             scaleX.setDuration(2500);
             scaleY.setDuration(2500);
-            
+
             alpha.setStartDelay(delay);
             scaleX.setStartDelay(delay);
             scaleY.setStartDelay(delay);
-            
+
             alpha.setRepeatCount(ValueAnimator.INFINITE);
             scaleX.setRepeatCount(ValueAnimator.INFINITE);
             scaleY.setRepeatCount(ValueAnimator.INFINITE);
-            
+
             alpha.setInterpolator(new AccelerateDecelerateInterpolator());
             scaleX.setInterpolator(new AccelerateDecelerateInterpolator());
             scaleY.setInterpolator(new AccelerateDecelerateInterpolator());
-            
+
             alpha.start();
             scaleX.start();
             scaleY.start();
@@ -364,7 +369,7 @@ public class OnboardingActivity extends AppCompatActivity {
                 mascot = itemView.findViewById(R.id.img_mascot);
                 acc1 = itemView.findViewById(R.id.img_accessory_1);
                 acc2 = itemView.findViewById(R.id.img_accessory_2);
-                
+
                 s1 = itemView.findViewById(R.id.sparkle_1);
                 s2 = itemView.findViewById(R.id.sparkle_2);
                 s3 = itemView.findViewById(R.id.sparkle_3);

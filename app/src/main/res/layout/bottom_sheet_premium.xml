@@ -41,9 +41,9 @@
                 app:tabGravity="center"
                 app:tabIndicatorHeight="0dp"
                 app:tabMaxWidth="12dp"
-                app:tabRippleColor="@null"
+                app:tabPaddingEnd="8dp"
                 app:tabPaddingStart="8dp"
-                app:tabPaddingEnd="8dp" />
+                app:tabRippleColor="@null" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_upgrade"
@@ -53,10 +53,10 @@
                 android:layout_marginTop="24dp"
                 android:padding="16dp"
                 android:text="@string/premium_upgrade_button"
-                app:backgroundTint="#FFD700"
-                app:rippleColor="#40000000"
                 android:textColor="#000000"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:backgroundTint="#FFD700"
+                app:rippleColor="#40000000" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_maybe_later"

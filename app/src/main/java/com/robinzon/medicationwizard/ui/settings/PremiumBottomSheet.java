@@ -31,11 +31,11 @@ import java.util.List;
  */
 public class PremiumBottomSheet extends MedicationWizardBottomSheet {
 
+    private static final long AUTO_SCROLL_DELAY = 5000L; // 5 seconds
+    private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private ViewPager2 benefitPager;
     private TabLayoutMediator tabLayoutMediator;
-    private final Handler autoScrollHandler = new Handler(Looper.getMainLooper());
     private Runnable autoScrollRunnable;
-    private static final long AUTO_SCROLL_DELAY = 5000L; // 5 seconds
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
                 BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
                 behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 behavior.setSkipCollapsed(true);
-                
+
                 // Set the bottom sheet container background to transparent to let our gradient show
                 bottomSheet.setBackground(new ColorDrawable(Color.TRANSPARENT));
             }
@@ -110,7 +110,8 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
         };
 
         // 2. Setup indicator
-        tabLayoutMediator = new TabLayoutMediator(view.findViewById(R.id.tab_indicator), benefitPager, (tab, position) -> {});
+        tabLayoutMediator = new TabLayoutMediator(view.findViewById(R.id.tab_indicator), benefitPager, (tab, position) -> {
+        });
         tabLayoutMediator.attach();
 
         // 3. Register callback
@@ -161,13 +162,20 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
         final String title;
         final String desc;
         final int iconRes;
-        Benefit(String title, String desc, int iconRes) { this.title = title; this.desc = desc; this.iconRes = iconRes; }
+
+        Benefit(String title, String desc, int iconRes) {
+            this.title = title;
+            this.desc = desc;
+            this.iconRes = iconRes;
+        }
     }
 
     private static class BenefitAdapter extends RecyclerView.Adapter<BenefitAdapter.ViewHolder> {
         private final List<Benefit> data;
 
-        BenefitAdapter(List<Benefit> data) { this.data = data; }
+        BenefitAdapter(List<Benefit> data) {
+            this.data = data;
+        }
 
         @NonNull
         @Override
@@ -181,18 +189,21 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
             holder.title.setText(b.title);
             holder.desc.setText(b.desc);
             holder.icon.setImageResource(b.iconRes);
-            
+
             // All premium text on gradient should be white/off-white for contrast
             holder.title.setTextColor(Color.WHITE);
             holder.desc.setTextColor(Color.parseColor("#CCFFFFFF"));
         }
 
         @Override
-        public int getItemCount() { return data.size(); }
+        public int getItemCount() {
+            return data.size();
+        }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             final TextView title, desc;
             final ImageView icon;
+
             ViewHolder(View v) {
                 super(v);
                 title = v.findViewById(R.id.txt_benefit_title);

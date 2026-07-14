@@ -31,7 +31,7 @@ public class HistoryCleanupWorker extends Worker {
         try {
             int retentionDays = AppConfig.getHistoryRetentionDays();
             long thresholdMillis = System.currentTimeMillis() - ((long) retentionDays * 24 * 60 * 60 * 1000L);
-            
+
             AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
             db.doseInstanceDao().deleteOldInstances(thresholdMillis);
 

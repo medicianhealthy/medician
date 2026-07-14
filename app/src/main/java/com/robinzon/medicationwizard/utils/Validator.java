@@ -11,8 +11,9 @@ public class Validator {
 
     private static WeakReference<Validator> sThisInstance;
 
-    @NonNull public static Validator getInstance() {
-        if (null == sThisInstance || null == sThisInstance.get()){
+    @NonNull
+    public static Validator getInstance() {
+        if (null == sThisInstance || null == sThisInstance.get()) {
             sThisInstance = new WeakReference<>(new Validator());
         }
         return sThisInstance.get();
@@ -30,13 +31,6 @@ public class Validator {
     public boolean isValidMap(final Map<Object, Object> map) {
         return null != map && !map.isEmpty();
     }
-
-
-
-
-
-
-
 
 
 }

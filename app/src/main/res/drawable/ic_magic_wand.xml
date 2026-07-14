@@ -9,8 +9,8 @@
         android:pathData="M18,3.5l2.5,2.5L5.5,21L3,18.5L18,3.5z" />
     <!-- Glowing Tip -->
     <path
-        android:fillColor="?attr/colorPrimary"
         android:alpha="0.4"
+        android:fillColor="?attr/colorPrimary"
         android:pathData="M18,3.5l2.5,2.5l1.5-1.5L19.5,2L18,3.5z" />
     <!-- Magic Stars -->
     <path

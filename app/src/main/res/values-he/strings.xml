@@ -111,6 +111,7 @@
     <string name="sort_scheduled">לפי זמן מתוכנן</string>
     <string name="sort_name">לפי שם</string>
     <string name="sort_action_time">לפי זמן פעולה</string>
+    <string name="sort_by_hint">מיין לפי:</string>
     <string name="fragment_add_med_title">תרופה חדשה</string>
     <string name="edit">עריכה</string>
     <string name="delete">מחיקה</string>

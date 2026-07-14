@@ -43,7 +43,7 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         View btnApply = view.findViewById(R.id.btn_apply);
 
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(requireContext());
-        
+
         checkPremium.setChecked(prefs.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM));
         checkShowAds.setChecked(prefs.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE));
 
@@ -61,10 +61,10 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         btnApply.setOnClickListener(v -> {
             prefs.setBoolean(AppConfig.KEY_CHEAT_PREMIUM, checkPremium.isChecked());
             prefs.setBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, checkShowAds.isChecked());
-            
+
             // Persist to the main billing cache as well so it survives process death
             prefs.setBoolean("cached_premium_status", checkPremium.isChecked());
-            
+
             AppConfig.IS_PREMIUM = checkPremium.isChecked();
             AppConfig.FORCED_ADS_VISIBLE = checkShowAds.isChecked();
 
@@ -89,7 +89,7 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         RemoteConfigManager remoteConfigManager = RemoteConfigManager.getInstance();
         StringBuilder builder = new StringBuilder();
         java.util.Locale locale = java.util.Locale.getDefault();
-        
+
         builder.append("--- Remote Config Defaults/Server ---\n");
         builder.append("Int. Cooldown: ").append(remoteConfigManager.getAdInterstitialCoolDownSeconds()).append("s\n");
         builder.append("Min Sessions (Int): ").append(remoteConfigManager.getMinSessionsForInterstitial()).append("\n");

@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_settings"
         android:orderInCategory="100"
         android:title="@string/menu_settings"
-        android:icon="@drawable/ic_settings"
         app:iconTint="?attr/colorOnSurface"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_premium"
+        android:icon="@drawable/ic_crown"
         android:orderInCategory="110"
         android:title="@string/menu_go_premium"
-        android:icon="@drawable/ic_crown"
         app:showAsAction="ifRoom" />
 </menu>

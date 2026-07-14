@@ -12,14 +12,14 @@ import java.util.List;
 /**
  * BroadcastReceiver responsible for restoring alarms after a device reboot.
  * <p>
- * On Android, all {@link android.app.AlarmManager} schedules are lost when the device is 
- * turned off. This receiver catches the {@code BOOT_COMPLETED} signal and 
- * re-schedules all future medication doses stored in the Room database to ensure 
+ * On Android, all {@link android.app.AlarmManager} schedules are lost when the device is
+ * turned off. This receiver catches the {@code BOOT_COMPLETED} signal and
+ * re-schedules all future medication doses stored in the Room database to ensure
  * the user continues to receive reminders.
  * </p>
  */
 public class BootReceiver extends BroadcastReceiver {
-    
+
     /**
      * Entry point triggered by the system boot sequence.
      * <p>

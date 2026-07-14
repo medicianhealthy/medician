@@ -15,11 +15,15 @@ import org.json.JSONObject;
  * </p>
  */
 final public class SimpleDayTime implements Comparable<SimpleDayTime> {
-    
-    /** The hour of the day in 24-hour format (0-23). */
+
+    /**
+     * The hour of the day in 24-hour format (0-23).
+     */
     public final byte hour;
-    
-    /** The minute of the hour (0-59). */
+
+    /**
+     * The minute of the hour (0-59).
+     */
     public final byte minute;
 
     /**
@@ -44,6 +48,42 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
+     * Robust factory method to create a SimpleDayTime from various JSON inputs.
+     * Supports both modern {@link JSONObject} and legacy {@link String} formats (e.g., "12:00").
+     *
+     * @param obj The input object (expected to be a JSONObject or String).
+     * @return A new SimpleDayTime instance, or {@code null} if parsing fails.
+     */
+    @Nullable
+    public static SimpleDayTime fromJson(Object obj) {
+        if (obj instanceof JSONObject) {
+            JSONObject json = (JSONObject) obj;
+            try {
+                return new SimpleDayTime(
+                        (byte) json.getInt("hour"),
+                        (byte) json.getInt("minute")
+                );
+            } catch (JSONException e) {
+                return null;
+            }
+        } else if (obj instanceof String) {
+            String timeStr = (String) obj;
+            try {
+                String[] parts = timeStr.split(":");
+                if (parts.length == 2) {
+                    return new SimpleDayTime(
+                            Byte.parseByte(parts[0].trim()),
+                            Byte.parseByte(parts[1].trim())
+                    );
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return The hour of the day (0-23).
      */
     public byte getHour() {
@@ -62,8 +102,8 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
      * Checks hours first, then minutes.
      *
      * @param other The other time to compare to.
-     * @return A negative integer, zero, or a positive integer as this time 
-     *         is earlier than, equal to, or later than the specified time.
+     * @return A negative integer, zero, or a positive integer as this time
+     * is earlier than, equal to, or later than the specified time.
      */
     @Override
     public int compareTo(@NonNull SimpleDayTime other) {
@@ -109,42 +149,6 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
         // ALWAYS use Locale.US for serialization to ensure ASCII digits are used.
         // Localized digits (e.g. Arabic-Indic) break Integer/Byte parsing.
         return String.format(java.util.Locale.US, "%02d:%02d", hour, minute);
-    }
-
-    /**
-     * Robust factory method to create a SimpleDayTime from various JSON inputs.
-     * Supports both modern {@link JSONObject} and legacy {@link String} formats (e.g., "12:00").
-     *
-     * @param obj The input object (expected to be a JSONObject or String).
-     * @return A new SimpleDayTime instance, or {@code null} if parsing fails.
-     */
-    @Nullable
-    public static SimpleDayTime fromJson(Object obj) {
-        if (obj instanceof JSONObject) {
-            JSONObject json = (JSONObject) obj;
-            try {
-                return new SimpleDayTime(
-                        (byte) json.getInt("hour"),
-                        (byte) json.getInt("minute")
-                );
-            } catch (JSONException e) {
-                return null;
-            }
-        } else if (obj instanceof String) {
-            String timeStr = (String) obj;
-            try {
-                String[] parts = timeStr.split(":");
-                if (parts.length == 2) {
-                    return new SimpleDayTime(
-                            Byte.parseByte(parts[0].trim()),
-                            Byte.parseByte(parts[1].trim())
-                    );
-                }
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        return null;
     }
 
     /**

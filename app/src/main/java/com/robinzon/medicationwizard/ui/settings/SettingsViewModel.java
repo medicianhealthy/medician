@@ -12,8 +12,8 @@ import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 /**
  * ViewModel for application-wide settings and preferences.
  * <p>
- * This class serves as the bridge between the {@link SettingsFragment} and 
- * the persistent {@link SharedPreferencesManager}. It manages live states 
+ * This class serves as the bridge between the {@link SettingsFragment} and
+ * the persistent {@link SharedPreferencesManager}. It manages live states
  * for the UI and applies global changes such as theme switching.
  * </p>
  */
@@ -69,12 +69,42 @@ public class SettingsViewModel extends AndroidViewModel {
     }
 
     /**
+     * Global utility to check if any temporary passes have expired and revert their
+     * associated settings immediately.
+     */
+    public static void enforceEntitlements(android.content.Context context) {
+        if (com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(context)) return;
+
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+
+        // 1. Theme Check
+        int savedTheme = sp.getInt(KEY_APP_THEME, THEME_SYSTEM);
+        if (savedTheme != THEME_SYSTEM && !com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.THEME)) {
+            sp.setInt(KEY_APP_THEME, THEME_SYSTEM);
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        }
+
+        // 2. Volume Check
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.BYPASS_VOLUME)) {
+            sp.setBoolean(KEY_BYPASS_SYSTEM_VOLUME, false);
+        }
+
+        // 3. Precision Checks
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.VIBRATION)) {
+            sp.setBoolean(KEY_VIBRATION_ENABLED, false);
+        }
+        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.STICKY_NOTIF)) {
+            sp.setBoolean(KEY_STICKY_NOTIF_ENABLED, false);
+        }
+    }
+
+    /**
      * Re-scans all preferences to ensure the UI is in sync with feature pass consumption.
      */
     public void refreshSettings() {
         enforceEntitlements(getApplication());
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(getApplication());
-        
+
         mTheme.setValue(sp.getInt(KEY_APP_THEME, THEME_SYSTEM));
         mVibration.setValue(sp.getBoolean(KEY_VIBRATION_ENABLED, false));
         mStickyNotif.setValue(sp.getBoolean(KEY_STICKY_NOTIF_ENABLED, false));
@@ -98,105 +128,40 @@ public class SettingsViewModel extends AndroidViewModel {
         mLanguageCode.setValue(sp.getString(KEY_APP_LANGUAGE, "en"));
     }
 
-    /** @return Observable LiveData for the current app theme ID. */
-    public LiveData<Integer> getTheme() { return mTheme; }
-    /** @return Observable LiveData for the formatted Quiet Hours range string. */
-    public LiveData<String> getQuietHoursRange() { return mQuietHoursRange; }
-    /** @return Observable LiveData for the Bypass System Volume status. */
-    public LiveData<Boolean> getBypassVolume() { return mBypassVolume; }
-    /** @return Observable LiveData for the notification volume level. */
-    public LiveData<Integer> getNotifVolume() { return mNotifVolume; }
-    /** @return Observable LiveData for the current notification sound name. */
-    public LiveData<String> getSoundName() { return mSoundName; }
-    /** @return Observable LiveData for the current notification sound URI. */
-    public LiveData<String> getSoundUri() { return mSoundUri; }
-    /** @return Observable LiveData for the snooze interval in minutes. */
-    public LiveData<Integer> getSnoozeDuration() { return mSnoozeDuration; }
-    /** @return Observable LiveData for the maximum allowed snoozes (-1 for unlimited). */
-    public LiveData<Integer> getMaxSnoozes() { return mMaxSnoozes; }
-    /** @return Observable LiveData for the current application language code. */
-    public LiveData<String> getLanguageCode() { return mLanguageCode; }
-    /** @return Observable LiveData for the custom vibration status. */
-    public LiveData<Boolean> getVibration() { return mVibration; }
-    /** @return Observable LiveData for the sticky notification status. */
-    public LiveData<Boolean> getStickyNotif() { return mStickyNotif; }
-    public LiveData<String> getVibrationPattern() { return mVibrationPattern; }
-    public LiveData<String> getFlashPattern() { return mFlashPattern; }
-    public LiveData<Integer> getCustomEarlyThreshold() { return mCustomEarlyThreshold; }
-    public LiveData<Integer> getCustomLateThreshold() { return mCustomLateThreshold; }
-
     /**
-     * Updates and persists the custom vibration preference.
-     * @param enabled True to enable custom vibration patterns.
+     * @return Observable LiveData for the current app theme ID.
      */
-    public void setVibration(boolean enabled) {
-        mVibration.setValue(enabled);
-        SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_VIBRATION_ENABLED, enabled);
-    }
-
-    public void setVibrationPattern(String pattern) {
-        mVibrationPattern.setValue(pattern);
-        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_VIBRATION_PATTERN, pattern);
-    }
-
-    public void setFlashPattern(String pattern) {
-        mFlashPattern.setValue(pattern);
-        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_FLASH_PATTERN, pattern);
+    public LiveData<Integer> getTheme() {
+        return mTheme;
     }
 
     /**
-     * Updates and persists the sticky notification preference.
-     * @param enabled True to prevent notifications from being swiped away.
+     * Updates the application theme globally.
+     * This method triggers {@link androidx.appcompat.app.AppCompatDelegate} to immediately re-draw the app
+     * in the selected mode.
+     *
+     * @param theme One of {@link #THEME_LIGHT}, {@link #THEME_DARK}, or {@link #THEME_SYSTEM}.
      */
-    public void setStickyNotif(boolean enabled) {
-        mStickyNotif.setValue(enabled);
-        SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_STICKY_NOTIF_ENABLED, enabled);
-    }
+    public void setTheme(int theme) {
+        if (mTheme.getValue() != null && mTheme.getValue() == theme) return;
 
-    public void setCustomEarlyThreshold(int mins) {
-        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_CUSTOM_EARLY_THRESHOLD, mins);
-        mCustomEarlyThreshold.setValue(mins);
-    }
-
-    public void setCustomLateThreshold(int mins) {
-        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_CUSTOM_LATE_THRESHOLD, mins);
-        mCustomLateThreshold.setValue(mins);
+        mTheme.setValue(theme);
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_APP_THEME, theme);
+        applyTheme(theme);
     }
 
     /**
-     * Updates the application language and applies the change globally.
-     * @param langCode The new ISO language code (e.g., "en", "iw").
+     * @return Observable LiveData for the formatted Quiet Hours range string.
      */
-    public void setLanguage(String langCode) {
-        if (!"en".equals(langCode) && !"iw".equals(langCode)) {
-            langCode = "en"; // Safeguard for English and Hebrew only
-        }
-        if (langCode.equals(mLanguageCode.getValue())) return;
-        
-        mLanguageCode.setValue(langCode);
-        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_APP_LANGUAGE, langCode);
-        
-        // Apply the language change
-        androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
-        androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(locales);
+    public LiveData<String> getQuietHoursRange() {
+        return mQuietHoursRange;
     }
 
     /**
-     * Updates and persists the snooze duration.
-     * @param mins The number of minutes for each snooze.
+     * @return Observable LiveData for the Bypass System Volume status.
      */
-    public void setSnoozeDuration(int mins) {
-        mSnoozeDuration.setValue(mins);
-        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_SNOOZE_DURATION_MINS, mins);
-    }
-
-    /**
-     * Updates and persists the maximum number of snoozes.
-     * @param max The limit, or -1 for unlimited.
-     */
-    public void setMaxSnoozes(int max) {
-        mMaxSnoozes.setValue(max);
-        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_MAX_SNOOZES, max);
+    public LiveData<Boolean> getBypassVolume() {
+        return mBypassVolume;
     }
 
     /**
@@ -208,11 +173,162 @@ public class SettingsViewModel extends AndroidViewModel {
     }
 
     /**
+     * @return Observable LiveData for the notification volume level.
+     */
+    public LiveData<Integer> getNotifVolume() {
+        return mNotifVolume;
+    }
+
+    /**
      * Updates the custom alert volume percentage (0-100).
      */
     public void setNotifVolume(int volume) {
         mNotifVolume.setValue(volume);
         SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_NOTIF_VOLUME, volume);
+    }
+
+    /**
+     * @return Observable LiveData for the current notification sound name.
+     */
+    public LiveData<String> getSoundName() {
+        return mSoundName;
+    }
+
+    /**
+     * @return Observable LiveData for the current notification sound URI.
+     */
+    public LiveData<String> getSoundUri() {
+        return mSoundUri;
+    }
+
+    /**
+     * @return Observable LiveData for the snooze interval in minutes.
+     */
+    public LiveData<Integer> getSnoozeDuration() {
+        return mSnoozeDuration;
+    }
+
+    /**
+     * Updates and persists the snooze duration.
+     *
+     * @param mins The number of minutes for each snooze.
+     */
+    public void setSnoozeDuration(int mins) {
+        mSnoozeDuration.setValue(mins);
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_SNOOZE_DURATION_MINS, mins);
+    }
+
+    /**
+     * @return Observable LiveData for the maximum allowed snoozes (-1 for unlimited).
+     */
+    public LiveData<Integer> getMaxSnoozes() {
+        return mMaxSnoozes;
+    }
+
+    /**
+     * Updates and persists the maximum number of snoozes.
+     *
+     * @param max The limit, or -1 for unlimited.
+     */
+    public void setMaxSnoozes(int max) {
+        mMaxSnoozes.setValue(max);
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_MAX_SNOOZES, max);
+    }
+
+    /**
+     * @return Observable LiveData for the current application language code.
+     */
+    public LiveData<String> getLanguageCode() {
+        return mLanguageCode;
+    }
+
+    /**
+     * @return Observable LiveData for the custom vibration status.
+     */
+    public LiveData<Boolean> getVibration() {
+        return mVibration;
+    }
+
+    /**
+     * Updates and persists the custom vibration preference.
+     *
+     * @param enabled True to enable custom vibration patterns.
+     */
+    public void setVibration(boolean enabled) {
+        mVibration.setValue(enabled);
+        SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_VIBRATION_ENABLED, enabled);
+    }
+
+    /**
+     * @return Observable LiveData for the sticky notification status.
+     */
+    public LiveData<Boolean> getStickyNotif() {
+        return mStickyNotif;
+    }
+
+    /**
+     * Updates and persists the sticky notification preference.
+     *
+     * @param enabled True to prevent notifications from being swiped away.
+     */
+    public void setStickyNotif(boolean enabled) {
+        mStickyNotif.setValue(enabled);
+        SharedPreferencesManager.getInstance(getApplication()).setBoolean(KEY_STICKY_NOTIF_ENABLED, enabled);
+    }
+
+    public LiveData<String> getVibrationPattern() {
+        return mVibrationPattern;
+    }
+
+    public void setVibrationPattern(String pattern) {
+        mVibrationPattern.setValue(pattern);
+        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_VIBRATION_PATTERN, pattern);
+    }
+
+    public LiveData<String> getFlashPattern() {
+        return mFlashPattern;
+    }
+
+    public void setFlashPattern(String pattern) {
+        mFlashPattern.setValue(pattern);
+        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_FLASH_PATTERN, pattern);
+    }
+
+    public LiveData<Integer> getCustomEarlyThreshold() {
+        return mCustomEarlyThreshold;
+    }
+
+    public void setCustomEarlyThreshold(int mins) {
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_CUSTOM_EARLY_THRESHOLD, mins);
+        mCustomEarlyThreshold.setValue(mins);
+    }
+
+    public LiveData<Integer> getCustomLateThreshold() {
+        return mCustomLateThreshold;
+    }
+
+    public void setCustomLateThreshold(int mins) {
+        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_CUSTOM_LATE_THRESHOLD, mins);
+        mCustomLateThreshold.setValue(mins);
+    }
+
+    /**
+     * Updates the application language and applies the change globally.
+     *
+     * @param langCode The new ISO language code (e.g., "en", "iw").
+     */
+    public void setLanguage(String langCode) {
+        if (!"en".equals(langCode) && !"iw".equals(langCode)) {
+            langCode = "en"; // Safeguard for English and Hebrew only
+        }
+        if (langCode.equals(mLanguageCode.getValue())) return;
+
+        mLanguageCode.setValue(langCode);
+        SharedPreferencesManager.getInstance(getApplication()).setString(KEY_APP_LANGUAGE, langCode);
+
+        // Apply the language change
+        androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
+        androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(locales);
     }
 
     /**
@@ -231,26 +347,11 @@ public class SettingsViewModel extends AndroidViewModel {
     public void setQuietHours(int startH, int startM, int endH, int endM) {
         String start = String.format(java.util.Locale.getDefault(), "%02d:%02d", startH, startM);
         String end = String.format(java.util.Locale.getDefault(), "%02d:%02d", endH, endM);
-        
+
         SharedPreferencesManager.getInstance(getApplication()).setString(KEY_QUIET_HOURS_START, start);
         SharedPreferencesManager.getInstance(getApplication()).setString(KEY_QUIET_HOURS_END, end);
-        
-        mQuietHoursRange.setValue(start + " - " + end);
-    }
 
-    /**
-     * Updates the application theme globally.
-     * This method triggers {@link androidx.appcompat.app.AppCompatDelegate} to immediately re-draw the app
-     * in the selected mode.
-     *
-     * @param theme One of {@link #THEME_LIGHT}, {@link #THEME_DARK}, or {@link #THEME_SYSTEM}.
-     */
-    public void setTheme(int theme) {
-        if (mTheme.getValue() != null && mTheme.getValue() == theme) return;
-        
-        mTheme.setValue(theme);
-        SharedPreferencesManager.getInstance(getApplication()).setInt(KEY_APP_THEME, theme);
-        applyTheme(theme);
+        mQuietHoursRange.setValue(start + " - " + end);
     }
 
     /**
@@ -258,39 +359,12 @@ public class SettingsViewModel extends AndroidViewModel {
      */
     private void applyTheme(int theme) {
         switch (theme) {
-            case THEME_LIGHT -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO);
-            case THEME_DARK -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
-            default -> androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
-    }
-
-    /**
-     * Global utility to check if any temporary passes have expired and revert their 
-     * associated settings immediately.
-     */
-    public static void enforceEntitlements(android.content.Context context) {
-        if (com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(context)) return;
-
-        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
-        
-        // 1. Theme Check
-        int savedTheme = sp.getInt(KEY_APP_THEME, THEME_SYSTEM);
-        if (savedTheme != THEME_SYSTEM && !com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.THEME)) {
-            sp.setInt(KEY_APP_THEME, THEME_SYSTEM);
-            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
-        
-        // 2. Volume Check
-        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.BYPASS_VOLUME)) {
-            sp.setBoolean(KEY_BYPASS_SYSTEM_VOLUME, false);
-        }
-        
-        // 3. Precision Checks
-        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.VIBRATION)) {
-            sp.setBoolean(KEY_VIBRATION_ENABLED, false);
-        }
-        if (!com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(context, com.robinzon.medicationwizard.AppConfig.FeaturePassType.STICKY_NOTIF)) {
-            sp.setBoolean(KEY_STICKY_NOTIF_ENABLED, false);
+            case THEME_LIGHT ->
+                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO);
+            case THEME_DARK ->
+                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
+            default ->
+                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         }
     }
 }

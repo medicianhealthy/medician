@@ -11,50 +11,74 @@ import org.json.JSONObject;
 /**
  * Represents a single specific dose of medication as a table row in the Room database.
  * <p>
- * This entity captures a "point-in-time" snapshot of a medication reminder. It stores 
+ * This entity captures a "point-in-time" snapshot of a medication reminder. It stores
  * both the planned schedule and the user's eventual action (taken, skipped, etc.).
- * Storing a snapshot ensures that historical records remain accurate even if the 
+ * Storing a snapshot ensures that historical records remain accurate even if the
  * parent medication's definition is later modified or deleted.
  * </p>
  */
 @Entity(tableName = "dose_instances")
 public class DoseInstanceEntity {
 
-    /** Unique primary key for the database record. */
+    /**
+     * Unique primary key for the database record.
+     */
     @PrimaryKey(autoGenerate = true)
     private Integer id;
 
-    /** Unique ID of the parent medication (from SharedPreferences). */
+    /**
+     * Unique ID of the parent medication (from SharedPreferences).
+     */
     private String medicationId;
-    
-    /** Name of the medication at the time of scheduling. */
+
+    /**
+     * Name of the medication at the time of scheduling.
+     */
     private String medicationName;
-    
-    /** The dose amount to be taken (e.g., 2.0). */
+
+    /**
+     * The dose amount to be taken (e.g., 2.0).
+     */
     private float amount;
-    
-    /** The strength of the medication (e.g., 500.0). */
+
+    /**
+     * The strength of the medication (e.g., 500.0).
+     */
     private float strength;
-    
-    /** The measurement unit (e.g., "mg", "mL"). */
+
+    /**
+     * The measurement unit (e.g., "mg", "mL").
+     */
     private String unit;
-    
-    /** The physical form of the drug (e.g., "Pill", "Drops"). */
+
+    /**
+     * The physical form of the drug (e.g., "Pill", "Drops").
+     */
     private String form;
-    
-    /** The planned execution time (epoch milliseconds). */
+
+    /**
+     * The planned execution time (epoch milliseconds).
+     */
     private long scheduledTime;
-    
-    /** The actual time the user interacted with this dose (epoch milliseconds). */
+
+    /**
+     * The actual time the user interacted with this dose (epoch milliseconds).
+     */
     private long actionTime;
-    
-    /** Current status: SCHEDULED, TAKEN, MISSED, or SKIPPED. */
+
+    /**
+     * Current status: SCHEDULED, TAKEN, MISSED, or SKIPPED.
+     */
     private String status;
-    
-    /** Casual instructions (e.g., "After eating"). */
+
+    /**
+     * Casual instructions (e.g., "After eating").
+     */
     private String instruction;
-    
-    /** Number of times this specific dose has been snoozed. */
+
+    /**
+     * Number of times this specific dose has been snoozed.
+     */
     private int snoozeCount;
 
     /**
@@ -83,41 +107,121 @@ public class DoseInstanceEntity {
         return entity;
     }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    /**
+     * Creates a DoseInstanceEntity from a JSONObject.
+     */
+    public static DoseInstanceEntity fromJson(JSONObject json) {
+        if (json == null) return null;
+        DoseInstanceEntity entity = new DoseInstanceEntity();
+        entity.medicationId = json.optString("medicationId");
+        entity.medicationName = json.optString("medicationName");
+        entity.amount = (float) json.optDouble("amount");
+        entity.strength = (float) json.optDouble("strength");
+        entity.unit = json.isNull("unit") ? null : json.optString("unit");
+        entity.form = json.isNull("form") ? null : json.optString("form");
+        entity.scheduledTime = json.optLong("scheduledTime");
+        entity.actionTime = json.optLong("actionTime");
+        entity.status = json.optString("status");
+        entity.instruction = json.isNull("instruction") ? null : json.optString("instruction");
+        entity.snoozeCount = json.optInt("snoozeCount");
+        return entity;
+    }
 
-    public String getMedicationId() { return medicationId; }
-    public void setMedicationId(String medicationId) { this.medicationId = medicationId; }
+    public Integer getId() {
+        return id;
+    }
 
-    public String getMedicationName() { return medicationName; }
-    public void setMedicationName(String medicationName) { this.medicationName = medicationName; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public float getAmount() { return amount; }
-    public void setAmount(float amount) { this.amount = amount; }
+    public String getMedicationId() {
+        return medicationId;
+    }
 
-    public float getStrength() { return strength; }
-    public void setStrength(float strength) { this.strength = strength; }
+    public void setMedicationId(String medicationId) {
+        this.medicationId = medicationId;
+    }
 
-    public String getUnit() { return unit; }
-    public void setUnit(String unit) { this.unit = unit; }
+    public String getMedicationName() {
+        return medicationName;
+    }
 
-    public String getForm() { return form; }
-    public void setForm(String form) { this.form = form; }
+    public void setMedicationName(String medicationName) {
+        this.medicationName = medicationName;
+    }
 
-    public long getScheduledTime() { return scheduledTime; }
-    public void setScheduledTime(long scheduledTime) { this.scheduledTime = scheduledTime; }
+    public float getAmount() {
+        return amount;
+    }
 
-    public long getActionTime() { return actionTime; }
-    public void setActionTime(long actionTime) { this.actionTime = actionTime; }
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public float getStrength() {
+        return strength;
+    }
 
-    public String getInstruction() { return instruction; }
-    public void setInstruction(String instruction) { this.instruction = instruction; }
+    public void setStrength(float strength) {
+        this.strength = strength;
+    }
 
-    public int getSnoozeCount() { return snoozeCount; }
-    public void setSnoozeCount(int snoozeCount) { this.snoozeCount = snoozeCount; }
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
+    }
+
+    public long getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(long scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
+
+    public long getActionTime() {
+        return actionTime;
+    }
+
+    public void setActionTime(long actionTime) {
+        this.actionTime = actionTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
+    }
+
+    public int getSnoozeCount() {
+        return snoozeCount;
+    }
+
+    public void setSnoozeCount(int snoozeCount) {
+        this.snoozeCount = snoozeCount;
+    }
 
     /**
      * Serializes this entity into a JSONObject for backup purposes.
@@ -140,25 +244,5 @@ public class DoseInstanceEntity {
             return null;
         }
         return json;
-    }
-
-    /**
-     * Creates a DoseInstanceEntity from a JSONObject.
-     */
-    public static DoseInstanceEntity fromJson(JSONObject json) {
-        if (json == null) return null;
-        DoseInstanceEntity entity = new DoseInstanceEntity();
-        entity.medicationId = json.optString("medicationId");
-        entity.medicationName = json.optString("medicationName");
-        entity.amount = (float) json.optDouble("amount");
-        entity.strength = (float) json.optDouble("strength");
-        entity.unit = json.isNull("unit") ? null : json.optString("unit");
-        entity.form = json.isNull("form") ? null : json.optString("form");
-        entity.scheduledTime = json.optLong("scheduledTime");
-        entity.actionTime = json.optLong("actionTime");
-        entity.status = json.optString("status");
-        entity.instruction = json.isNull("instruction") ? null : json.optString("instruction");
-        entity.snoozeCount = json.optInt("snoozeCount");
-        return entity;
     }
 }

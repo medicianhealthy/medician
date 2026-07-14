@@ -23,7 +23,7 @@ import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 
 /**
- * A contextual dialog to prompt users to unlock specific premium features 
+ * A contextual dialog to prompt users to unlock specific premium features
  * by watching a Rewarded Video.
  */
 public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
@@ -80,14 +80,14 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                 main.getAdsManager().showRewarded(status -> {
                     if (status == AdsManager.RewardedStatus.SUCCESS) {
                         FeaturePassManager.grantPass(requireContext(), featureType);
-                        
+
                         // Notify listener to perform the action
                         Bundle result = new Bundle();
                         result.putString("feature_type", featureType.name());
                         getParentFragmentManager().setFragmentResult("feature_unlocked", result);
-                        
+
                         Toast.makeText(requireContext(), getString(R.string.feature_unlocked_toast, getFeatureName()), Toast.LENGTH_SHORT).show();
-                        
+
                         // Check if notifications are disabled and remind the user
                         if (!NotificationManager.getInstance(main).hasPermission()) {
                             com.robinzon.medicationwizard.ui.CustomMaterialDialog permDialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(main);
@@ -101,10 +101,10 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                     } else if (status == AdsManager.RewardedStatus.DISMISSED_EARLY) {
                         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
                         dialog.setTitle(getString(R.string.reward_ad_dismissed_early_title));
-                        
+
                         String benefit = getFeatureBenefitText();
                         dialog.setMessage(getString(R.string.reward_ad_dismissed_early_message, benefit));
-                        
+
                         dialog.setPositiveButton(getString(R.string.button_ok), null);
                         dialog.show();
                     } else {
@@ -142,8 +142,8 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             }
             case BACKUP -> {
                 iconView.setImageResource(R.drawable.ic_cloud_upload);
-                descView.setText(AppConfig.CLOUD_BACKUP_ENABLED ? 
-                        R.string.premium_rational_backup_msg : 
+                descView.setText(AppConfig.CLOUD_BACKUP_ENABLED ?
+                        R.string.premium_rational_backup_msg :
                         R.string.premium_rational_backup_local_msg);
             }
             case BYPASS_VOLUME -> {
@@ -167,7 +167,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                 descView.setText(R.string.premium_rational_dose_window_msg);
             }
         }
-        
+
         String pkg = requireContext().getPackageName();
         int primaryAttr = getResources().getIdentifier("colorPrimary", "attr", pkg);
         int primary = com.google.android.material.color.MaterialColors.getColor(requireContext(), primaryAttr, android.graphics.Color.BLUE);
@@ -194,7 +194,8 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         return switch (featureType) {
             case THEME -> getString(R.string.benefit_theme);
             case SUPPORT -> getString(R.string.benefit_support);
-            case BACKUP -> getString(AppConfig.CLOUD_BACKUP_ENABLED ? R.string.benefit_backup : R.string.benefit_backup_local);
+            case BACKUP ->
+                    getString(AppConfig.CLOUD_BACKUP_ENABLED ? R.string.benefit_backup : R.string.benefit_backup_local);
             case BYPASS_VOLUME -> getString(R.string.benefit_bypass);
             case QUIET_HOURS -> getString(R.string.benefit_quiet_hours);
             case VIBRATION -> getString(R.string.benefit_vibration);

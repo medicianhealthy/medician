@@ -19,14 +19,12 @@ import java.util.Map;
 
 public class RemoteConfigManager {
 
-    private static final String PREF_PREFIX = "rc_cache_";
-    private String LOG_REMOTE_CONFIG_VALUES;
-    public static WeakReference<RemoteConfigManager> sRemoteConfigManagerInstance;
-
-
-    private Map<String, FirebaseRemoteConfigValue> mRemoteConfigValues;
     public static final float FETCH_INTERVAL_HOURS = 0.5F;
     public static final byte FETCH_TIMEOUT_SECONDS = 5;
+    private static final String PREF_PREFIX = "rc_cache_";
+    public static WeakReference<RemoteConfigManager> sRemoteConfigManagerInstance;
+    private String LOG_REMOTE_CONFIG_VALUES;
+    private Map<String, FirebaseRemoteConfigValue> mRemoteConfigValues;
 
     private RemoteConfigManager() {
         if (Logger.IS_LOGGING_ENABLED) {
@@ -40,6 +38,14 @@ public class RemoteConfigManager {
         getFirebaseClient().setConfigSettingsAsync(firebaseRemoteConfigSettings);
     }
 
+    @NonNull
+    public static RemoteConfigManager getInstance() {
+        if (null == sRemoteConfigManagerInstance || null == sRemoteConfigManagerInstance.get()) {
+            sRemoteConfigManagerInstance = new WeakReference<>(new RemoteConfigManager());
+        }
+        return sRemoteConfigManagerInstance.get();
+    }
+
     private long getMinimumFetchIntervalInSeconds() {
         if (BuildConfig.DEBUG) {
             return FETCH_TIMEOUT_SECONDS;
@@ -48,17 +54,9 @@ public class RemoteConfigManager {
         }
     }
 
-
     @NonNull
     private FirebaseRemoteConfig getFirebaseClient() {
         return FirebaseRemoteConfig.getInstance();
-    }
-
-    @NonNull public static RemoteConfigManager getInstance() {
-        if (null == sRemoteConfigManagerInstance || null == sRemoteConfigManagerInstance.get()) {
-            sRemoteConfigManagerInstance = new WeakReference<>(new RemoteConfigManager());
-        }
-        return sRemoteConfigManagerInstance.get();
     }
 
     public void fetchConfiguration(@NonNull final FireBaseFetchCallBack fetchCallbackListener) {
@@ -104,7 +102,8 @@ public class RemoteConfigManager {
         }
     }
 
-    @Nullable private List<String> getRemoteConfigLogs() {
+    @Nullable
+    private List<String> getRemoteConfigLogs() {
         if (Logger.IS_LOGGING_ENABLED) {
             return new ArrayList<>() {{
                 add(null != LOG_REMOTE_CONFIG_VALUES ? LOG_REMOTE_CONFIG_VALUES : "null");
@@ -125,7 +124,8 @@ public class RemoteConfigManager {
                 try {
                     String rawStringValue = remoteValue.asString();
                     return Integer.parseInt(rawStringValue);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
 
@@ -135,7 +135,8 @@ public class RemoteConfigManager {
         if (cachedValue != null) {
             try {
                 return Integer.parseInt(cachedValue);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         // 3. Static Defaults
@@ -155,7 +156,8 @@ public class RemoteConfigManager {
             if (remoteValue != null && remoteValue.getSource() != FirebaseRemoteConfig.VALUE_SOURCE_STATIC) {
                 try {
                     return remoteValue.asBoolean();
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
 
@@ -175,7 +177,8 @@ public class RemoteConfigManager {
         return null != defaultValueFromMap && (boolean) defaultValueFromMap;
     }
 
-    @NonNull public String getStringValue(final @NonNull String configKey) {
+    @NonNull
+    public String getStringValue(final @NonNull String configKey) {
         // 1. Fresh Memory Cache
         final Map<String, FirebaseRemoteConfigValue> remoteConfigValues = getFirebaseValues();
         if (remoteConfigValues != null && remoteConfigValues.containsKey(configKey)) {
@@ -300,7 +303,8 @@ public class RemoteConfigManager {
         return remoteConfigValues != null && remoteConfigValues.containsKey(configKey);
     }
 
-    @Nullable private Map<String, FirebaseRemoteConfigValue> getFirebaseValues() {
+    @Nullable
+    private Map<String, FirebaseRemoteConfigValue> getFirebaseValues() {
         return mRemoteConfigValues;
     }
 

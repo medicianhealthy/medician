@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.button.MaterialButton
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.Material3.Button.TonalButton"
     android:layout_width="wrap_content"
@@ -10,5 +9,5 @@
     android:text="@string/time_picker_title"
     android:textColor="?attr/colorPrimary"
     app:icon="@android:drawable/ic_menu_recent_history"
-    app:iconTint="?attr/colorPrimary"
-    app:iconGravity="textStart" />
+    app:iconGravity="textStart"
+    app:iconTint="?attr/colorPrimary" />

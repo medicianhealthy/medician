@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
     android:background="?attr/android:colorBackground"
+    android:fitsSystemWindows="false"
     tools:openDrawer="start">
 
     <LinearLayout
@@ -26,8 +26,8 @@
             android:id="@+id/ad_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/ad_banner_min_height"
-            android:background="@drawable/bg_ad_banner" />
+            android:background="@drawable/bg_ad_banner"
+            android:minHeight="@dimen/ad_banner_min_height" />
 
     </LinearLayout>
 

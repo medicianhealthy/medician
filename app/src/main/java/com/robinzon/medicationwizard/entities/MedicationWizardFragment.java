@@ -23,15 +23,15 @@ import java.util.List;
  * Base fragment class for the Medication Wizard project.
  * <p>
  * This class provides shared layout logic for all feature screens (Home, List, History).
- * Its primary responsibility is managing UI "clearance" to ensure that scrollable 
- * content (like {@link RecyclerView}) is not obscured by permanent UI elements 
+ * Its primary responsibility is managing UI "clearance" to ensure that scrollable
+ * content (like {@link RecyclerView}) is not obscured by permanent UI elements
  * like the bottom Ad banner or the Floating Action Button (FAB).
  * </p>
  */
 public class MedicationWizardFragment extends Fragment {
 
     private final List<AnimatorSet> mActiveAnimators = new ArrayList<>();
-    
+
     /**
      * Triggers the synchronized animations for empty states (Breathing button + Twinkling stars).
      * <p>
@@ -46,7 +46,7 @@ public class MedicationWizardFragment extends Fragment {
      */
     protected void startEmptyStateAnimations(View root) {
         if (root == null || !mActiveAnimators.isEmpty()) return;
-        
+
         MaterialButton actionButton = root.findViewById(R.id.btn_empty_action);
         if (actionButton == null) return;
 
@@ -57,7 +57,7 @@ public class MedicationWizardFragment extends Fragment {
         scaleY.setRepeatCount(ValueAnimator.INFINITE);
         scaleX.setDuration(2500);
         scaleY.setDuration(2500);
-        
+
         AnimatorSet breathSet = new AnimatorSet();
         breathSet.playTogether(scaleX, scaleY);
         breathSet.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -85,7 +85,7 @@ public class MedicationWizardFragment extends Fragment {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(view, "alpha", 0.2f, 1.0f, 0.2f);
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.7f, 1.2f, 0.7f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.7f, 1.2f, 0.7f);
-        
+
         alpha.setRepeatCount(ValueAnimator.INFINITE);
         scaleX.setRepeatCount(ValueAnimator.INFINITE);
         scaleY.setRepeatCount(ValueAnimator.INFINITE);
@@ -123,7 +123,7 @@ public class MedicationWizardFragment extends Fragment {
      */
     protected void applyCompactEmptyState(View root) {
         if (root == null) return;
-        
+
         View container = root.findViewById(R.id.empty_state_container);
         View mascotContainer = root.findViewById(R.id.mascot_container);
         View mascot = root.findViewById(R.id.empty_mascot);
@@ -156,20 +156,6 @@ public class MedicationWizardFragment extends Fragment {
     }
 
     /**
-     * Interface for handling delayed status updates after user confirmation.
-     */
-    protected interface StatusUpdateCallback {
-        void onApply();
-    }
-
-    /**
-     * Validates if the user is taking a medication too early or too late based on 
-     * Remote Config thresholds. Shows a warning dialog if necessary.
-     *
-     * @param instance The dose being marked as taken.
-     * @param callback Logic to execute if the timing is valid or user confirms.
-     */
-    /**
      * Checks if a "Take" action is significantly early or late and prompts for confirmation.
      *
      * @param instance The dose instance being taken.
@@ -178,13 +164,13 @@ public class MedicationWizardFragment extends Fragment {
     protected void checkAndClarifyTakeTiming(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback) {
         long now = System.currentTimeMillis();
         long scheduled = instance.getScheduledTime();
-        
+
         // Difference in minutes: positive if late, negative if early
         long diffMins = (now - scheduled) / 60000;
 
-        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = 
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm =
                 com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
-        
+
         int defaultEarly = rcm.getEarlyTakeThresholdMins();
         int defaultLate = rcm.getLateTakeThresholdMins();
         if (defaultEarly <= 0) defaultEarly = 60;
@@ -219,8 +205,16 @@ public class MedicationWizardFragment extends Fragment {
         }
     }
 
+    /**
+     * Validates if the user is taking a medication too early or too late based on 
+     * Remote Config thresholds. Shows a warning dialog if necessary.
+     *
+     * @param instance The dose being marked as taken.
+     * @param callback Logic to execute if the timing is valid or user confirms.
+     */
+
     private void showTimingClarificationDialog(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback, String message) {
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = 
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog =
                 new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         dialog.setTitle(instance.getMedicationName());
         dialog.setMessage(message);
@@ -267,6 +261,13 @@ public class MedicationWizardFragment extends Fragment {
         super.onDestroyView();
     }
 
+    /**
+     * Applies standard bottom padding to a view to prevent clipping with the bottom navigation bar.
+     */
+    protected void setPaddingForRecyclerView(@NonNull final View rootView) {
+        setPaddingForRecyclerView(rootView, true);
+    }
+
 
     /**
      * Applies dynamic bottom padding to a view to clear both the Ad banner and the FAB.
@@ -276,12 +277,6 @@ public class MedicationWizardFragment extends Fragment {
      *
      * @param rootView The view to apply padding to (usually a RecyclerView).
      */
-    /**
-     * Applies standard bottom padding to a view to prevent clipping with the bottom navigation bar.
-     */
-    protected void setPaddingForRecyclerView(@NonNull final View rootView) {
-        setPaddingForRecyclerView(rootView, true);
-    }
 
     /**
      * Applies dynamic bottom padding to a view, with an option to exclude FAB clearance.
@@ -313,8 +308,15 @@ public class MedicationWizardFragment extends Fragment {
 
         if (rootView instanceof RecyclerView) {
             // 2. Critically important: allows items to scroll 'under' the fab and reach the bottom
-            ((RecyclerView)rootView).setClipToPadding(false);
+            ((RecyclerView) rootView).setClipToPadding(false);
         }
+    }
+
+    /**
+     * Interface for handling delayed status updates after user confirmation.
+     */
+    protected interface StatusUpdateCallback {
+        void onApply();
     }
 
 }

@@ -16,19 +16,21 @@ import java.util.List;
 /**
  * ViewModel for the Medications List screen.
  * <p>
- * This class manages the state for the full medication library. It implements 
- * {@link SharedPreferences.OnSharedPreferenceChangeListener} to provide 
- * real-time UI updates whenever the underlying medication list is modified 
+ * This class manages the state for the full medication library. It implements
+ * {@link SharedPreferences.OnSharedPreferenceChangeListener} to provide
+ * real-time UI updates whenever the underlying medication list is modified
  * from anywhere in the app (e.g., adding or deleting a med).
  * </p>
  */
 public class MedicationsListViewModel extends AndroidViewModel implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    /** Observable list of all defined medications. */
+    /**
+     * Observable list of all defined medications.
+     */
     private final MutableLiveData<List<Medication>> mMedications = new MutableLiveData<>();
 
     /**
-     * Initializes the ViewModel, loads the initial list, and registers for 
+     * Initializes the ViewModel, loads the initial list, and registers for
      * real-time data changes.
      */
     public MedicationsListViewModel(@NonNull Application application) {
@@ -47,7 +49,7 @@ public class MedicationsListViewModel extends AndroidViewModel implements Shared
     /**
      * Forces a fresh reload of medications from SharedPreferences.
      * <p>
-     * Performance: Runs parsing on a background thread to prevent UI stutter 
+     * Performance: Runs parsing on a background thread to prevent UI stutter
      * when the medication list grows large.
      * </p>
      */
@@ -59,7 +61,7 @@ public class MedicationsListViewModel extends AndroidViewModel implements Shared
     }
 
     /**
-     * Listener callback triggered by SharedPreferences changes. 
+     * Listener callback triggered by SharedPreferences changes.
      * If the medication list key is modified, it automatically refreshes the UI.
      */
     @Override

@@ -13,28 +13,15 @@ import org.json.JSONException;
 /**
  * A robust singleton manager for handling all Android SharedPreferences operations.
  * <p>
- * This class provides a high-level API for persistent data storage, abstracting 
- * the complexities of the {@link SharedPreferences.Editor} and handling data 
- * types such as JSON Arrays, Booleans, and Strings. 
+ * This class provides a high-level API for persistent data storage, abstracting
+ * the complexities of the {@link SharedPreferences.Editor} and handling data
+ * types such as JSON Arrays, Booleans, and Strings.
  * </p>
  */
 public class SharedPreferencesManager {
 
-    private SharedPreferences mAndroidSharedPreferences;
     private static SharedPreferencesManager sManagerInstance;
-
-    /**
-     * Retrieves the singleton instance of the manager.
-     *
-     * @param context The application context.
-     * @return The active SharedPreferencesManager instance.
-     */
-    public static synchronized SharedPreferencesManager getInstance(@NonNull final Context context) {
-        if (null == sManagerInstance) {
-            sManagerInstance = new SharedPreferencesManager(context.getApplicationContext());
-        }
-        return sManagerInstance;
-    }
+    private SharedPreferences mAndroidSharedPreferences;
 
     private SharedPreferencesManager(@NonNull final Context context) {
         final String fileName = getFileName(context);
@@ -49,9 +36,23 @@ public class SharedPreferencesManager {
     }
 
     /**
+     * Retrieves the singleton instance of the manager.
+     *
+     * @param context The application context.
+     * @return The active SharedPreferencesManager instance.
+     */
+    public static synchronized SharedPreferencesManager getInstance(@NonNull final Context context) {
+        if (null == sManagerInstance) {
+            sManagerInstance = new SharedPreferencesManager(context.getApplicationContext());
+        }
+        return sManagerInstance;
+    }
+
+    /**
      * Generates a unique file name for the preferences based on the package name.
      */
-    @Nullable private static String getFileName(final Context context) {
+    @Nullable
+    private static String getFileName(final Context context) {
         if (null != context) {
             final String packageName = context.getPackageName();
             if (!TextUtils.isEmpty(packageName)) {
@@ -74,7 +75,8 @@ public class SharedPreferencesManager {
         }
     }
 
-    @Nullable private SharedPreferences.Editor getEditor() {
+    @Nullable
+    private SharedPreferences.Editor getEditor() {
         if (null != mAndroidSharedPreferences) {
             return mAndroidSharedPreferences.edit();
         }
@@ -114,7 +116,8 @@ public class SharedPreferencesManager {
      * @param defaultValue The value to return if the key is missing or invalid.
      * @return The parsed JSONArray or the default value.
      */
-    @Nullable public JSONArray getJsonArray(@Nullable final String key, @Nullable final JSONArray defaultValue) {
+    @Nullable
+    public JSONArray getJsonArray(@Nullable final String key, @Nullable final JSONArray defaultValue) {
         if (null != mAndroidSharedPreferences) {
             try {
                 String jsonString = mAndroidSharedPreferences.getString(key, null);
@@ -133,8 +136,8 @@ public class SharedPreferencesManager {
         return defaultValue;
     }
 
-    public void setInt (@NonNull final String key, final int value){
-        if (null != getEditor()){
+    public void setInt(@NonNull final String key, final int value) {
+        if (null != getEditor()) {
             getEditor().putInt(key, value).apply();
         }
     }
@@ -146,8 +149,8 @@ public class SharedPreferencesManager {
         return defaultValue;
     }
 
-    public void setLong (@NonNull final String key, final long value){
-        if (null != getEditor()){
+    public void setLong(@NonNull final String key, final long value) {
+        if (null != getEditor()) {
             getEditor().putLong(key, value).apply();
         }
     }
@@ -159,8 +162,8 @@ public class SharedPreferencesManager {
         return defaultValue;
     }
 
-    public void setFloat (@NonNull final String key, final float value){
-        if (null != getEditor()){
+    public void setFloat(@NonNull final String key, final float value) {
+        if (null != getEditor()) {
             getEditor().putFloat(key, value).apply();
         }
     }
@@ -172,8 +175,8 @@ public class SharedPreferencesManager {
         return defaultValue;
     }
 
-    public void setString (@NonNull final String key, @NonNull final String value){
-        if (null != getEditor()){
+    public void setString(@NonNull final String key, @NonNull final String value) {
+        if (null != getEditor()) {
             getEditor().putString(key, value).apply();
         }
     }
@@ -185,14 +188,14 @@ public class SharedPreferencesManager {
         return defaultValue;
     }
 
-    public void setBoolean (@NonNull final String key, final boolean value){
-        if (null != getEditor()){
+    public void setBoolean(@NonNull final String key, final boolean value) {
+        if (null != getEditor()) {
             getEditor().putBoolean(key, value).apply();
         }
     }
 
     /**
-     * Registers a listener for preference changes. 
+     * Registers a listener for preference changes.
      * Used by ViewModels to trigger UI refreshes when data is modified.
      *
      * @param listener The listener to register.
@@ -217,7 +220,8 @@ public class SharedPreferencesManager {
     /**
      * @return The low-level Android SharedPreferences instance.
      */
-    @Nullable public SharedPreferences getAndroidSharedPreferencesInstance() {
+    @Nullable
+    public SharedPreferences getAndroidSharedPreferencesInstance() {
         return mAndroidSharedPreferences;
     }
 }

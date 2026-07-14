@@ -65,7 +65,7 @@ android {
         def vCode = rootProject.VERSION_CODE
         def buildType = task.name.endsWith("Release") ? "release" : "debug"
         def outputDirProvider = layout.buildDirectory.dir("outputs/bundle/${buildType}")
-        
+
         task.doLast {
             def bundleName = "MedicationWizard-v${vName}-${vCode}-${buildType}.aab"
             def outputDir = outputDirProvider.get().asFile
@@ -84,7 +84,7 @@ dependencies {
     implementation libs.firebase.ads
     //Material
     implementation libs.material
-    
+
     // Google Drive Backup Dependencies
     implementation libs.play.services.auth
     implementation(libs.google.api.services.drive) {
@@ -93,17 +93,17 @@ dependencies {
     implementation(libs.google.api.client.android) {
         exclude group: 'org.apache.httpcomponents'
     }
-    
+
     // Image Loading
     implementation libs.glide
     annotationProcessor libs.compiler
-    
+
     // WorkManager
     implementation libs.androidx.work.runtime
 
     // Play Review
     implementation libs.review
-    
+
     // Play Billing
     implementation libs.billing
 

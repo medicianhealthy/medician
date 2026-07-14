@@ -8,35 +8,55 @@
     android:background="?attr/android:colorBackground"
     tools:context=".ui.todaysmedications.TodaysMedicationsFragment">
 
+    <TextView
+        android:id="@+id/txt_sort_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/sort_by_hint"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
     <HorizontalScrollView
         android:id="@+id/scroll_chips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
+        android:paddingBottom="8dp"
         android:scrollbars="none"
-        app:layout_constraintTop_toTopOf="parent">
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/txt_sort_hint"
+        tools:visibility="visible">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:selectionRequired="true">
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_sort_time"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sort_scheduled"
                 android:checked="true"
+                android:text="@string/sort_scheduled"
                 app:chipIcon="@drawable/ic_clock" />
+
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_sort_name"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sort_name" />
+
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_sort_action"
                 style="@style/Widget.Material3.Chip.Filter"
@@ -67,21 +87,23 @@
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp">
+
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:src="@drawable/ic_magic_wand"
                 android:contentDescription="@null"
+                android:src="@drawable/ic_magic_wand"
                 app:tint="?attr/colorOnPrimaryContainer" />
+
             <TextView
                 android:id="@+id/txtStreak"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                tools:text="3 Day Magic Streak!"
                 android:textAppearance="?attr/textAppearanceLabelLarge"
                 android:textColor="?attr/colorOnPrimaryContainer"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="3 Day Magic Streak!" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -95,13 +117,15 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="8dp"
                 android:clipToPadding="false"
+                android:paddingTop="8dp"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
             <include
                 android:id="@+id/empty_layout"
                 layout="@layout/view_empty_state" />

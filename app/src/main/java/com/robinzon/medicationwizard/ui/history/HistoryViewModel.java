@@ -17,18 +17,22 @@ import java.util.List;
 /**
  * ViewModel for the History screen.
  * <p>
- * This class manages the state for the history view, specifically the currently 
- * selected date. It uses {@link Transformations#switchMap} to automatically 
- * re-query the Room database whenever the selected date changes, ensuring 
+ * This class manages the state for the history view, specifically the currently
+ * selected date. It uses {@link Transformations#switchMap} to automatically
+ * re-query the Room database whenever the selected date changes, ensuring
  * the UI always displays the correct historical records.
  * </p>
  */
 public class HistoryViewModel extends AndroidViewModel {
 
-    /** The date currently selected by the user in the calendar (epoch millis). */
+    /**
+     * The date currently selected by the user in the calendar (epoch millis).
+     */
     private final MutableLiveData<Long> mSelectedDate = new MutableLiveData<>(System.currentTimeMillis());
-    
-    /** Reactive stream of medication instances for the selected date. */
+
+    /**
+     * Reactive stream of medication instances for the selected date.
+     */
     private final LiveData<List<DoseInstanceEntity>> mHistory;
 
     /**
@@ -36,12 +40,12 @@ public class HistoryViewModel extends AndroidViewModel {
      */
     public HistoryViewModel(@NonNull Application application) {
         super(application);
-        
+
         // Listen for date changes and return a new LiveData query from Room
         mHistory = Transformations.switchMap(mSelectedDate, date -> {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(date);
-            
+
             // Define the start of the selected day (00:00:00.000)
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);

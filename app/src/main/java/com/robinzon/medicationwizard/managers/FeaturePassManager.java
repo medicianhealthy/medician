@@ -1,8 +1,10 @@
 package com.robinzon.medicationwizard.managers;
 
 import android.content.Context;
+
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
+
 import java.util.Calendar;
 
 /**
@@ -51,7 +53,7 @@ public class FeaturePassManager {
         prefs.setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, false);
         prefs.setBoolean(AppConfig.KEY_PASS_VIBRATION_ACTIVE, false);
         prefs.setBoolean(AppConfig.KEY_PASS_STICKY_ACTIVE, false);
-        
+
         // Also explicitly disable the functional switches in preferences
         // to ensure the UI stays in sync after consumption.
         prefs.setBoolean("bypass_system_volume", false);
@@ -65,6 +67,7 @@ public class FeaturePassManager {
     public static void consumeDoseWindowPass(Context context) {
         SharedPreferencesManager.getInstance(context).setBoolean(AppConfig.KEY_PASS_DOSE_WINDOW_ACTIVE, false);
     }
+
     @Deprecated
     public static void consumeBypassVolumePass(Context context) {
         SharedPreferencesManager.getInstance(context).setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, false);

@@ -62,13 +62,13 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="12dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone"
+        android:background="@drawable/bg_bottom_sheet_card"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="10dp"
-        android:background="@drawable/bg_bottom_sheet_card"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,10 +79,10 @@
             android:id="@+id/check_terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
             android:clickable="false"
-            android:focusable="false" />
+            android:focusable="false"
+            android:minWidth="0dp"
+            android:minHeight="0dp" />
 
         <TextView
             android:id="@+id/txt_terms"

@@ -31,9 +31,9 @@ public class AdMobAppOpen extends AdMobAd {
 
     @Override
     public void load() {
-        log("%s Requesting load.\n%s",getLogTag() , thisToString());
+        log("%s Requesting load.\n%s", getLogTag(), thisToString());
         if (Boolean.TRUE.equals(shouldBeLoaded())) {
-            log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
+            log("%s Preparing for loading.\n%s", getLogTag(), thisToString());
             getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.StartingToLoad);
             setIsLoading(true);
             AppOpenAd.load(getContext().getApplicationContext(),
@@ -47,7 +47,7 @@ public class AdMobAppOpen extends AdMobAd {
                             setIsLoaded(false);
                             mAppOpenAd = null;
                             failedToLoad(loadAdError);
-                            log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
+                            log("%s Failed to load. Reason is %s.\n%s", getLogTag(), loadAdError.getMessage(), thisToString());
                             getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.FailedToLoad);
                         }
 
@@ -58,14 +58,14 @@ public class AdMobAppOpen extends AdMobAd {
                             setIsLoaded(true);
                             mAppOpenAd = appOpenAd;
                             loaded();
-                            log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(appOpenAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
+                            log("%s Loaded. Adapter is %s.\n%s", getLogTag(), getLastWord(appOpenAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
                             getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.LoadedSuccessfully);
                         }
 
                     });
         } else {
             log("%s Refusing load. Has network %b. \n%s",
-                    getLogTag() ,
+                    getLogTag(),
                     NetworkUtils.isNetworkAvailable(getContext().getApplicationContext()),
                     thisToString());
 
@@ -80,7 +80,7 @@ public class AdMobAppOpen extends AdMobAd {
                 @Override
                 public void onAdClicked() {
                     super.onAdClicked();
-                    log("%s Clicked.\n%s",getLogTag() , thisToString());
+                    log("%s Clicked.\n%s", getLogTag(), thisToString());
                     getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Clicked);
                 }
 
@@ -91,18 +91,18 @@ public class AdMobAppOpen extends AdMobAd {
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
-                    
+
                     getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Dismissed);
-                    
+
                     final Timer timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
                             getActivity().runOnUiThread(AdMobAppOpen.this::load);
                         }
-                    },500L);
+                    }, 500L);
 
-                    log("%s Dismissed.\n%s",getLogTag() , thisToString());
+                    log("%s Dismissed.\n%s", getLogTag(), thisToString());
                 }
 
                 @Override
@@ -112,7 +112,7 @@ public class AdMobAppOpen extends AdMobAd {
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
-                    log("%s Failed to show. Reason is %s.\n%s",getLogTag() ,adError.getMessage(), thisToString());
+                    log("%s Failed to show. Reason is %s.\n%s", getLogTag(), adError.getMessage(), thisToString());
                     getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.FailedToShow);
                 }
 
@@ -128,7 +128,7 @@ public class AdMobAppOpen extends AdMobAd {
                     setIsShowing(true);
                     setIsLoaded(false);
                     setIsLoading(false);
-                    log("%s Showed.\n%s",getLogTag() , thisToString());
+                    log("%s Showed.\n%s", getLogTag(), thisToString());
                     getAdsManager().onAdAction(AdMobAppOpen.this, AdAction.Showing);
                 }
             });

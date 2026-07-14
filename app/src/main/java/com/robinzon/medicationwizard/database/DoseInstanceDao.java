@@ -20,7 +20,7 @@ import java.util.List;
 public interface DoseInstanceDao {
 
     /**
-     * Inserts a single dose instance into the database. 
+     * Inserts a single dose instance into the database.
      * If a record with the same ID already exists, it will be replaced.
      *
      * @param instance The entity to persist.
@@ -107,7 +107,7 @@ public interface DoseInstanceDao {
     LiveData<List<DoseInstanceEntity>> getInstancesInRangeSortedByActionTime(long startTime, long endTime);
 
     /**
-     * Synchronous (blocking) version of range fetch. Useful for background alarm scheduling 
+     * Synchronous (blocking) version of range fetch. Useful for background alarm scheduling
      * or boot-time re-scheduling where LiveData is not appropriate.
      *
      * @param startTime Start of range (epoch millis).
@@ -138,7 +138,7 @@ public interface DoseInstanceDao {
     void deleteByMedicationId(String medicationId);
 
     /**
-     * Wipes the entire database table. 
+     * Wipes the entire database table.
      * Part of the "Start Fresh" safety feature in settings.
      */
     @Query("DELETE FROM dose_instances")

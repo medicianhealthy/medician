@@ -69,7 +69,9 @@ public abstract class AdMobAd {
         return mPlacement;
     }
 
-    /** @noinspection BooleanMethodIsAlwaysInverted*/
+    /**
+     * @noinspection BooleanMethodIsAlwaysInverted
+     */
     public boolean isLoading() {
         return mIsLoading;
     }
@@ -133,7 +135,7 @@ public abstract class AdMobAd {
         return null != getCoreAdObject() && isLoaded() && !isShowing() && !isLoading();
     }
 
-    public  boolean isExpired() {
+    public boolean isExpired() {
         final long timeFromLastLoadInMillis = System.currentTimeMillis() - mLastLoadTime;
         final float timeFromLastLoadInMinutes = TimeManager.getInstance().toMinutesFromMillis(timeFromLastLoadInMillis);
         return timeFromLastLoadInMinutes > 58;
@@ -141,7 +143,9 @@ public abstract class AdMobAd {
 
     public abstract boolean shouldShow();
 
-    /** @noinspection unused*/
+    /**
+     * @noinspection unused
+     */
     public abstract void hide();
 
     public abstract void onPause();
@@ -180,7 +184,9 @@ public abstract class AdMobAd {
 
     }
 
-    /** @noinspection unused*/
+    /**
+     * @noinspection unused
+     */
     private void setLastLoadTime() {
         mLastLoadTime = System.currentTimeMillis();
     }
@@ -213,5 +219,5 @@ public abstract class AdMobAd {
         }
     }
 
-    public abstract void  onDestroy();
+    public abstract void onDestroy();
 }

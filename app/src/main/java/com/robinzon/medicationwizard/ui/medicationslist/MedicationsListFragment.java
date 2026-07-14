@@ -33,24 +33,25 @@ import java.util.Collections;
 /**
  * A fragment that displays the master list of all defined medications.
  * <p>
- * This screen provides the management interface for the user's medication "library". 
- * It allows users to view their active drugs, edit dose details, or delete 
+ * This screen provides the management interface for the user's medication "library".
+ * It allows users to view their active drugs, edit dose details, or delete
  * medications with an "Undo" safety feature.
  * </p>
  * <p>
- * It implements a "Real-time Delete" pattern: items are removed from storage 
- * immediately to maintain list consistency, but can be restored if the 
+ * It implements a "Real-time Delete" pattern: items are removed from storage
+ * immediately to maintain list consistency, but can be restored if the
  * snackbar action is triggered.
  * </p>
  */
 public class MedicationsListFragment extends MedicationWizardFragment {
 
+    /**
+     * Duration for which the "Delete Undo" snackbar is visible.
+     */
+    private static final int SNACKBAR_DURATION_MS = 5000;
     private FragmentMedicationsListBinding binding;
     private MedicationsListViewModel viewModel;
     private MedicationsListAdapter adapter;
-    
-    /** Duration for which the "Delete Undo" snackbar is visible. */
-    private static final int SNACKBAR_DURATION_MS = 5000;
 
     /**
      * Initializes data binding and the {@link MedicationsListViewModel}.
@@ -70,7 +71,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
     /**
      * Sets up the list view components.
-     * Observes the global medication list and updates the UI state (Empty vs. List) 
+     * Observes the global medication list and updates the UI state (Empty vs. List)
      * automatically when data changes.
      */
     @Override
@@ -80,7 +81,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
         setupRecyclerView();
         setupSwipeRefresh();
         setupEmptyView();
-        
+
         // Ensure empty state is not hidden by ad banner
         setPaddingForRecyclerView(binding.emptyLayout.emptyStateContainer);
 
@@ -101,7 +102,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
     /**
      * Toggles visibility between the empty state Wizard mascot and the medication cards.
      * <p>
-     * Performance: This method only updates visibility and starts/stops animations 
+     * Performance: This method only updates visibility and starts/stops animations
      * when the state changes, avoiding redundant UI work.
      * </p>
      *
@@ -112,7 +113,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
         binding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         binding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        
+
         if (isEmpty) {
             startEmptyStateAnimations(binding.getRoot());
         } else {
@@ -139,7 +140,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
     }
 
     /**
-     * Configures the RecyclerView with the {@link MedicationsListAdapter} and 
+     * Configures the RecyclerView with the {@link MedicationsListAdapter} and
      * sets up Edit/Delete listeners.
      * <p>
      * Performance: Uses a GridLayoutManager on tablets to utilize screen space effectively.
@@ -160,7 +161,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
                 bottomSheet.show(getChildFragmentManager(), "EditMedBottomSheet");
             }
         });
-        
+
         int columns = getResources().getInteger(R.integer.medication_grid_columns);
         if (columns > 1) {
             binding.recyclerView.setLayoutManager(new GridLayoutManager(getContext(), columns));
@@ -169,7 +170,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
         }
 
         binding.recyclerView.setAdapter(adapter);
-        
+
         // Ensure the list doesn't get hidden behind the ad banner
         setPaddingForRecyclerView(binding.recyclerView);
     }
@@ -196,7 +197,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
             Medication.deleteMedication(requireContext(), medication.getId());
             adapter.removeItem(position);
             updateUiState(adapter.getItemCount() == 0);
-            
+
             // Sync to Google Drive if signed in and premium
             if (com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
                 GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());

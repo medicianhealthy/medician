@@ -12,28 +12,28 @@
         android:id="@+id/scroll_chips"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scrollbars="none"
         android:paddingHorizontal="16dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:scrollbars="none"
         app:layout_constraintEnd_toStartOf="@+id/card_streak"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0">
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingVertical="8dp"
-            app:singleSelection="true"
-            app:selectionRequired="true">
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_sort_time"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sort_scheduled"
                 android:checked="true"
+                android:text="@string/sort_scheduled"
                 app:chipIcon="@drawable/ic_clock" />
 
             <com.google.android.material.chip.Chip
@@ -60,12 +60,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:visibility="gone"
-        tools:visibility="visible"
         app:cardBackgroundColor="?attr/colorPrimaryContainer"
         app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/scroll_chips"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/scroll_chips"
-        app:layout_constraintBottom_toBottomOf="@id/scroll_chips">
+        tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -86,10 +86,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                tools:text="3 Day Streak"
                 android:textAppearance="?attr/textAppearanceLabelMedium"
                 android:textColor="?attr/colorOnPrimaryContainer"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="3 Day Streak" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -115,8 +115,8 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="12dp"
                 android:clipToPadding="false"
+                android:paddingTop="12dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="2"
                 tools:listitem="@layout/medications_list_row" />

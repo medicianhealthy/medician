@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * Orchestrator class responsible for managing Android System Alarms for medication reminders.
  * <p>
- * This class translates database records ({@link DoseInstanceEntity}) into low-level 
- * {@link AlarmManager} schedules. It ensures that reminders are set accurately, 
+ * This class translates database records ({@link DoseInstanceEntity}) into low-level
+ * {@link AlarmManager} schedules. It ensures that reminders are set accurately,
  * respecting modern Android background execution restrictions and power-saving modes.
  * </p>
  */
@@ -59,7 +59,7 @@ public class ReminderManager {
      */
     public static void scheduleReminder(Context context, DoseInstanceEntity instance) {
         if (instance == null || !"SCHEDULED".equals(instance.getStatus())) return;
-        
+
         long time = instance.getScheduledTime();
         // Allow a 1-minute grace period for "now" reminders to account for processing time
         if (time < System.currentTimeMillis() - 60000) return;
@@ -75,9 +75,9 @@ public class ReminderManager {
 
         // Use instance.getId() as the requestCode to keep individual alarms unique
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                appContext, 
-                instance.getId(), 
-                intent, 
+                appContext,
+                instance.getId(),
+                intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
@@ -121,11 +121,11 @@ public class ReminderManager {
         AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(appContext, ReminderReceiver.class);
         intent.setAction(ReminderReceiver.ACTION_REMIND);
-        
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                appContext, 
-                instanceId, 
-                intent, 
+                appContext,
+                instanceId,
+                intent,
                 PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
         );
 

@@ -22,16 +22,17 @@ import java.util.TimerTask;
 
 public class AdMobRewarded extends AdMobAd {
 
-    private AdsManager.OnRewardedFinishedListener mRewardedFinishedListener;
     RewardedAd mRewardedAd;
-
-    public void setRewardedFinishedListener(AdsManager.OnRewardedFinishedListener listener) {
-        this.mRewardedFinishedListener = listener;
-    }
+    private AdsManager.OnRewardedFinishedListener mRewardedFinishedListener;
+    private boolean mUserEarnedReward = false;
 
     public AdMobRewarded(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
-        log("%s Creating object.\n%s",getLogTag() , thisToString());
+        log("%s Creating object.\n%s", getLogTag(), thisToString());
+    }
+
+    public void setRewardedFinishedListener(AdsManager.OnRewardedFinishedListener listener) {
+        this.mRewardedFinishedListener = listener;
     }
 
     @NonNull
@@ -46,11 +47,11 @@ public class AdMobRewarded extends AdMobAd {
 
     @Override
     public void load() {
-        log("%s Requesting load.\n%s",getLogTag() , thisToString());
+        log("%s Requesting load.\n%s", getLogTag(), thisToString());
         if (Boolean.TRUE.equals(shouldBeLoaded())) {
             getAdsManager().onAdAction(AdMobRewarded.this, AdAction.StartingToLoad);
             setIsLoading(true);
-            log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
+            log("%s Preparing for loading.\n%s", getLogTag(), thisToString());
             final RewardedAdLoadCallback rewardedAdLoadCallback = new RewardedAdLoadCallback() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -60,7 +61,7 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoading(false);
                     failedToLoad(loadAdError);
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.FailedToLoad);
-                    log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
+                    log("%s Failed to load. Reason is %s.\n%s", getLogTag(), loadAdError.getMessage(), thisToString());
                 }
 
                 @Override
@@ -70,20 +71,18 @@ public class AdMobRewarded extends AdMobAd {
                     setIsLoaded(true);
                     loaded();
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.LoadedSuccessfully);
-                    log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(ad.getResponseInfo().getMediationAdapterClassName()), thisToString());
+                    log("%s Loaded. Adapter is %s.\n%s", getLogTag(), getLastWord(ad.getResponseInfo().getMediationAdapterClassName()), thisToString());
                 }
             };
-            log("%s Loading.\n%s",getLogTag() , thisToString());
-            RewardedAd.load(getActivity(), getAdUnitId(),getAdRequest(), rewardedAdLoadCallback);
+            log("%s Loading.\n%s", getLogTag(), thisToString());
+            RewardedAd.load(getActivity(), getAdUnitId(), getAdRequest(), rewardedAdLoadCallback);
         } else {
             log("%s Refusing load. Has network %b. \n%s",
-                    getLogTag() ,
+                    getLogTag(),
                     NetworkUtils.isNetworkAvailable(getContext().getApplicationContext()),
                     thisToString());
         }
     }
-
-    private boolean mUserEarnedReward = false;
 
     @Override
     public void show() {
@@ -93,7 +92,7 @@ public class AdMobRewarded extends AdMobAd {
                 @Override
                 public void onAdClicked() {
                     // Called when a click is recorded for an ad.
-                    log("%s Clicked.\n%s",getLogTag() , thisToString());
+                    log("%s Clicked.\n%s", getLogTag(), thisToString());
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Clicked);
                 }
 
@@ -119,9 +118,9 @@ public class AdMobRewarded extends AdMobAd {
                         public void run() {
                             getActivity().runOnUiThread(AdMobRewarded.this::load);
                         }
-                    },500L);
+                    }, 500L);
 
-                    log("%s Dismissed.\n%s",getLogTag() , thisToString());
+                    log("%s Dismissed.\n%s", getLogTag(), thisToString());
 
                 }
 
@@ -136,7 +135,7 @@ public class AdMobRewarded extends AdMobAd {
                         mRewardedFinishedListener.onRewarded(AdsManager.RewardedStatus.NOT_READY);
                         mRewardedFinishedListener = null;
                     }
-                    log("%s Failed to show. Reason is %s.\n%s",getLogTag() ,adError.getMessage(), thisToString());
+                    log("%s Failed to show. Reason is %s.\n%s", getLogTag(), adError.getMessage(), thisToString());
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.FailedToShow);
                 }
 
@@ -152,7 +151,7 @@ public class AdMobRewarded extends AdMobAd {
                     setIsShowing(true);
                     setIsLoaded(false);
                     setIsLoading(false);
-                    log("%s Showed.\n%s",getLogTag() , thisToString());
+                    log("%s Showed.\n%s", getLogTag(), thisToString());
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Showing);
                 }
             });
@@ -160,7 +159,7 @@ public class AdMobRewarded extends AdMobAd {
                 @Override
                 public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                     mUserEarnedReward = true;
-                    log("%s Rewarded.\n%s",getLogTag() , thisToString());
+                    log("%s Rewarded.\n%s", getLogTag(), thisToString());
                     getAdsManager().onAdAction(AdMobRewarded.this, AdAction.Rewarding);
                 }
             });

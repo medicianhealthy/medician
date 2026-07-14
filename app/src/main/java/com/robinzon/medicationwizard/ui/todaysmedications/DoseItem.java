@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.ui.todaysmedications;
 
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+
 import java.util.List;
 
 /**
@@ -9,21 +10,40 @@ import java.util.List;
  */
 public abstract class DoseItem {
     public abstract long getScheduledTime();
+
     public abstract String getStatus();
 
     public static class Single extends DoseItem {
         public final DoseInstanceEntity entity;
-        public Single(DoseInstanceEntity entity) { this.entity = entity; }
-        @Override public long getScheduledTime() { return entity.getScheduledTime(); }
-        @Override public String getStatus() { return entity.getStatus(); }
+
+        public Single(DoseInstanceEntity entity) {
+            this.entity = entity;
+        }
+
+        @Override
+        public long getScheduledTime() {
+            return entity.getScheduledTime();
+        }
+
+        @Override
+        public String getStatus() {
+            return entity.getStatus();
+        }
     }
 
     public static class Group extends DoseItem {
         public final List<DoseInstanceEntity> doses;
-        public Group(List<DoseInstanceEntity> doses) { this.doses = doses; }
-        @Override public long getScheduledTime() { return doses.get(0).getScheduledTime(); }
-        
-        @Override 
+
+        public Group(List<DoseInstanceEntity> doses) {
+            this.doses = doses;
+        }
+
+        @Override
+        public long getScheduledTime() {
+            return doses.get(0).getScheduledTime();
+        }
+
+        @Override
         public String getStatus() {
             String firstStatus = doses.get(0).getStatus();
             for (DoseInstanceEntity d : doses) {

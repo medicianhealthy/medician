@@ -17,30 +17,18 @@ import com.robinzon.medicationwizard.utils.TimeManager;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkStatusListener{
+public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkStatusListener {
 
-
-    public enum RewardedStatus {
-        SUCCESS,
-        DISMISSED_EARLY,
-        NOT_READY
-    }
-
-    public interface OnRewardedFinishedListener {
-        void onRewarded(RewardedStatus status);
-    }
 
     private final Activity activity;
+    private final CopyOnWriteArrayList<Runnable> adAvailabilityListeners = new CopyOnWriteArrayList<>();
     private AdMobBanner mainBanner;
     private AdMobInterstitial mainInterstitial;
     private AdMobRewarded mainRewarded;
     private AdMobAppOpen appOpenAd;
-
     private ArrayList<AdMobAd> adsCollection;
     private long fullAdDismissedTimeStamp;
     private long bannerClickTimeStamp;
-    private final CopyOnWriteArrayList<Runnable> adAvailabilityListeners = new CopyOnWriteArrayList<>();
-
     public AdsManager(final @NonNull Activity activity) {
         this.activity = activity;
     }
@@ -143,7 +131,6 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
-
     /**
      * @noinspection SameParameterValue
      */
@@ -199,12 +186,12 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
-    /** @noinspection unused*/
     /**
      * Triggers a full-screen interstitial ad if both usage and time-based cooldowns are satisfied.
      */
     public void showInterstitialAd() {
-        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE)
+            return;
 
         if (null != mainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             if (shouldShowInterstitialBasedOnUsage()) {
@@ -218,12 +205,15 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
      * but still strictly respecting the time-based cooldown.
      */
     public void showInterstitialAdWithCooldownOnly() {
-        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE)
+            return;
 
         if (null != mainInterstitial && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             mainInterstitial.show();
         }
     }
+
+    /** @noinspection unused*/
 
     /**
      * Determines if the user has reached the minimum activity levels required for interstitials.
@@ -232,7 +222,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     private boolean shouldShowInterstitialBasedOnUsage() {
         final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
         final float usageMinutesForAds = com.robinzon.medicationwizard.utils.Statisticator.getUsageMinutesForAds(activity);
-        
+
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager remoteConfigManager = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
         int minimumSessionsThreshold = remoteConfigManager.getMinSessionsForInterstitial();
         int minimumMinutesThreshold = remoteConfigManager.getMinAppTimeForInterstitialMins();
@@ -240,7 +230,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         // Standard Hybrid Trigger: Show if minimum session count OR usage time since last ad is met
         return sessionCount >= minimumSessionsThreshold || usageMinutesForAds >= (float) minimumMinutesThreshold;
     }
-    /** @noinspection unused*/
+
     /**
      * Displays a rewarded video ad to the user.
      *
@@ -261,6 +251,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     public boolean isRewardedLoaded() {
         return mainRewarded != null && mainRewarded.isLoaded();
     }
+    /** @noinspection unused*/
 
     /**
      * @return True if a rewarded video ad is currently being fetched from the server.
@@ -273,7 +264,8 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
      * Attempts to display an App Open ad, checking for usage thresholds and cooldowns.
      */
     public void showAppOpenAd() {
-        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) return;
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE)
+            return;
 
         if (null != appOpenAd && hasCoolDownForFullScreenNonUserInitiatedAd()) {
             if (shouldShowAppOpenBasedOnUsage()) {
@@ -284,12 +276,12 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
 
     private boolean shouldShowAppOpenBasedOnUsage() {
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
-        
+
         if (!rcm.shouldShowAppOpen()) return false;
 
         final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
         final float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(activity);
-        
+
         int minSessions = rcm.getMinSessionsAppOpen();
         int minUsageMins = rcm.getMinAppTimeAppOpenMins();
 
@@ -300,7 +292,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     @Override
     public void onAdAction(@NonNull AdMobAd adMobAd, AdAction adAction) {
         final AdType adType = adMobAd.getAdType();
-        
+
         if (adAction == AdAction.LoadedSuccessfully || adAction == AdAction.FailedToLoad || adAction == AdAction.Dismissed) {
             notifyAvailabilityChanged();
         }
@@ -319,8 +311,8 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
                 if (AdAction.Clicked == adAction) {
                     setBannerClickTimeStamp();
                 }
-                if (AdAction.Created == adAction){
-                    ((OnAdActionListener)getActivity()).onAdAction(adMobAd, AdAction.Created);
+                if (AdAction.Created == adAction) {
+                    ((OnAdActionListener) getActivity()).onAdAction(adMobAd, AdAction.Created);
                 }
             }
             default -> {
@@ -352,7 +344,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         final long lastFullAdDismiss = getFullScreenNonUserInitiatedAdDismissTimeStamp();
         final long lastBannerClick = getBannerClickTimeStamp();
         return (now - lastFullAdDismiss) > coolDownMillis &&
-                (now - lastBannerClick) >  coolDownMillis;
+                (now - lastBannerClick) > coolDownMillis;
     }
 
     private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
@@ -373,5 +365,15 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
             Logger.log("AdsManager", "Network restored. Triggering ad loads.");
             loadAds();
         }
+    }
+
+    public enum RewardedStatus {
+        SUCCESS,
+        DISMISSED_EARLY,
+        NOT_READY
+    }
+
+    public interface OnRewardedFinishedListener {
+        void onRewarded(RewardedStatus status);
     }
 }

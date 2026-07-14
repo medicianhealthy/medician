@@ -51,7 +51,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         }
 
         showNotification(context, medName, amount, form, instanceId);
-        
+
         // Effects (Sound, Vibration, Flash)
         new Thread(() -> {
             playAlertSoundSync(context);
@@ -78,7 +78,9 @@ public class ReminderReceiver extends BroadcastReceiver {
 
             if (startTotal < endTotal) return nowTotal >= startTotal && nowTotal < endTotal;
             else return nowTotal >= startTotal || nowTotal < endTotal;
-        } catch (Exception e) { return false; }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
@@ -105,7 +107,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         } else {
             formStr = context.getString(R.string.notification_reminder_dose);
         }
-        
+
         String message = context.getString(R.string.notification_reminder_message, amountStr, formStr, medName);
 
         // Content Intent
@@ -145,7 +147,10 @@ public class ReminderReceiver extends BroadcastReceiver {
                 .addAction(R.drawable.ic_clock, context.getString(R.string.button_snooze), snoozePI)
                 .addAction(R.drawable.ic_med_other, context.getString(R.string.button_skip), skipPI);
 
-        try { nm.notify(instanceId, builder.build()); } catch (SecurityException ignored) {}
+        try {
+            nm.notify(instanceId, builder.build());
+        } catch (SecurityException ignored) {
+        }
     }
 
     private void playAlertSoundSync(Context context) {
@@ -153,7 +158,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         String uriStr = sp.getString(SettingsViewModel.KEY_NOTIF_SOUND_URI, "");
         Uri soundUri = uriStr.isEmpty() ? android.provider.Settings.System.DEFAULT_NOTIFICATION_URI : Uri.parse(uriStr);
         boolean bypassPref = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
-        
+
         int volumePercent = sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
         float volume = volumePercent / 100f;
 
@@ -169,7 +174,9 @@ public class ReminderReceiver extends BroadcastReceiver {
             mp.prepare();
             mp.start();
             mp.setOnCompletionListener(MediaPlayer::release);
-        } catch (Exception e) { mp.release(); }
+        } catch (Exception e) {
+            mp.release();
+        }
     }
 
     private void triggerVibrationSync(Context context) {
@@ -189,7 +196,8 @@ public class ReminderReceiver extends BroadcastReceiver {
         String patternName = sp.getString(SettingsViewModel.KEY_VIBRATION_PATTERN, "Standard");
         long[] pattern = switch (patternName) {
             case "Heartbeat" -> new long[]{0, 200, 100, 200, 100, 200, 500};
-            case "SOS" -> new long[]{0, 100, 100, 100, 100, 100, 300, 300, 100, 300, 100, 300, 300, 100, 100, 100, 100, 100, 500};
+            case "SOS" ->
+                    new long[]{0, 100, 100, 100, 100, 100, 300, 300, 100, 300, 100, 300, 300, 100, 100, 100, 100, 100, 500};
             case "Long Pulse" -> new long[]{0, 800, 200, 800, 200};
             default -> new long[]{0, 500, 200, 500, 200};
         };
@@ -222,6 +230,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                 cm.setTorchMode(cameraId, false);
                 Thread.sleep(150);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 }

@@ -20,22 +20,23 @@
             <com.google.android.material.bottomsheet.BottomSheetDragHandleView
                 android:id="@+id/drag_handle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/title_fragment_add_med"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:text="@string/fragment_add_med_title"
-                android:textAppearance="?attr/textAppearanceHeadlineSmall"
-                android:layout_marginBottom="16dp" />
+                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_med_name"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                android:hint="@string/hint_med_name">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/med_name_fragment_add_med"
                     android:layout_width="match_parent"
@@ -46,16 +47,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_amount"
-                    android:layout_marginEnd="8dp">
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_amount">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/med_amount"
                         android:layout_width="match_parent"
@@ -67,19 +69,20 @@
                     android:id="@+id/layout_med_form"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
-                    android:layout_weight="1.5"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
                     android:hint="@string/hint_form"
                     app:hintEnabled="true"
                     app:startIconDrawable="@drawable/baseline_medication_24"
                     app:startIconTint="?attr/colorOnSurface">
+
                     <AutoCompleteTextView
                         android:id="@+id/med_form_fragment_add_med"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false"
                         android:clickable="true"
+                        android:focusable="false"
+                        android:inputType="none"
                         android:popupBackground="@drawable/bg_dropdown_popup" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -88,15 +91,16 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_frequency"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                android:hint="@string/hint_frequency">
+
                 <AutoCompleteTextView
                     android:id="@+id/med_frequency_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    android:focusable="false"
                     android:clickable="true"
+                    android:focusable="false"
+                    android:inputType="none"
                     android:popupBackground="@drawable/bg_dropdown_popup" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,22 +114,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="1"
                     android:background="?attr/colorOutlineVariant" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
                     android:text="@string/extra_details_label"
                     android:textAppearance="?attr/textAppearanceLabelLarge"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:layout_marginHorizontal="12dp" />
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
@@ -136,16 +143,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_strength"
-                    android:layout_marginEnd="8dp">
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_strength">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/medication_strength"
                         android:layout_width="match_parent"
@@ -156,16 +164,17 @@
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:hint="@string/hint_unit">
+
                     <AutoCompleteTextView
                         android:id="@+id/dropdown_unit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none"
-                        android:focusable="false"
                         android:clickable="true"
+                        android:focusable="false"
+                        android:inputType="none"
                         android:popupBackground="@drawable/bg_dropdown_popup" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -173,40 +182,45 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="@string/instructions_label"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:layout_marginBottom="8dp"/>
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_instructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleSelection="true"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="24dp"
+                app:singleSelection="true">
+
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_before_eating"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/instruction_before_eating" />
+
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_after_eating"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/instruction_after_eating" />
+
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_while_eating"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/instruction_while_eating" />
+
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_before_sleep"
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/instruction_before_sleep" />
+
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_does_not_matter"
                     style="@style/Widget.Material3.Chip.Filter"

@@ -11,11 +11,11 @@
         android:id="@+id/calendar_view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -29,11 +29,11 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1.2"
         app:layout_constraintStart_toEndOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Daily Completion Summary (Compact for Land) -->
         <com.google.android.material.card.MaterialCardView
@@ -44,8 +44,8 @@
             android:layout_marginHorizontal="8dp"
             android:layout_marginVertical="4dp"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:cardBackgroundColor="?attr/colorSurfaceVariant">
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
+            tools:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,25 +65,25 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="12dp"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/txt_completion_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="75% Completed"
                         android:textAppearance="?attr/textAppearanceTitleSmall"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="75% Completed" />
 
                     <TextView
                         android:id="@+id/txt_completion_subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="3 of 4 doses"
                         android:textAppearance="?attr/textAppearanceLabelSmall"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="3 of 4 doses" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -97,8 +97,8 @@
                 android:id="@+id/recycler_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="16dp"
                 android:clipToPadding="false"
+                android:paddingBottom="16dp"
                 tools:listitem="@layout/medications_list_row" />
 
             <include

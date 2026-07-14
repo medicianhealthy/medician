@@ -26,9 +26,9 @@ import java.util.List;
 /**
  * A custom Material 3 BottomSheet for selecting a system reminder sound.
  * <p>
- * This dialog queries the Android {@link RingtoneManager} to list all available 
- * notification and alarm sounds on the device. It provides an interactive 
- * list with radio-button selection and automatic audio previews when a 
+ * This dialog queries the Android {@link RingtoneManager} to list all available
+ * notification and alarm sounds on the device. It provides an interactive
+ * list with radio-button selection and automatic audio previews when a
  * sound is tapped.
  * </p>
  * <p>
@@ -36,6 +36,11 @@ import java.util.List;
  * </p>
  */
 public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
+
+    private OnSoundSelectedListener listener;
+    private String selectedSoundUri;
+    private String selectedSoundName;
+    private Ringtone lastRingtone;
 
     /**
      * Standard lifecycle method to define the dialog's visual style.
@@ -66,22 +71,6 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
-    private OnSoundSelectedListener listener;
-    private String selectedSoundUri;
-    private String selectedSoundName;
-    private Ringtone lastRingtone;
-
-    /**
-     * Listener interface to notify the caller when a sound selection is confirmed.
-     */
-    public interface OnSoundSelectedListener {
-        /**
-         * @param name The human-readable name of the sound.
-         * @param uri  The system URI string of the sound file.
-         */
-        void onSoundSelected(String name, String uri);
-    }
-
     /**
      * Sets the selection listener.
      */
@@ -110,9 +99,9 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_sounds);
-        
+
         List<SoundItem> sounds = fetchAvailableSounds();
-        
+
         int selectedPos = -1;
         for (int i = 0; i < sounds.size(); i++) {
             if (sounds.get(i).uri.equals(selectedSoundUri)) {
@@ -123,19 +112,19 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
         }
 
         recyclerView.setAdapter(new SoundAdapter(sounds));
-        
+
         if (selectedPos != -1) {
             final int finalPos = selectedPos;
             // Longer delay to ensure layout stability on tablets and make animation visible
             recyclerView.postDelayed(() -> {
                 if (isAdded() && recyclerView.getLayoutManager() != null) {
-                    androidx.recyclerview.widget.LinearSmoothScroller smoothScroller = 
-                        new androidx.recyclerview.widget.LinearSmoothScroller(requireContext()) {
-                            @Override
-                            protected int getVerticalSnapPreference() {
-                                return androidx.recyclerview.widget.LinearSmoothScroller.SNAP_TO_START;
-                            }
-                        };
+                    androidx.recyclerview.widget.LinearSmoothScroller smoothScroller =
+                            new androidx.recyclerview.widget.LinearSmoothScroller(requireContext()) {
+                                @Override
+                                protected int getVerticalSnapPreference() {
+                                    return androidx.recyclerview.widget.LinearSmoothScroller.SNAP_TO_START;
+                                }
+                            };
                     smoothScroller.setTargetPosition(finalPos);
                     recyclerView.getLayoutManager().startSmoothScroll(smoothScroller);
                 }
@@ -167,7 +156,7 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
                 selectedSoundUri = defaultUri.toString();
             }
         }
-        
+
         Cursor cursor = manager.getCursor();
         while (cursor.moveToNext()) {
             String title = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX);
@@ -191,7 +180,8 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
             Uri uri = Uri.parse(uriString);
             lastRingtone = RingtoneManager.getRingtone(requireContext(), uri);
             lastRingtone.play();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -203,11 +193,28 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
         if (lastRingtone != null) lastRingtone.stop();
     }
 
-    /** Simple POJO for sound data. */
+    /**
+     * Listener interface to notify the caller when a sound selection is confirmed.
+     */
+    public interface OnSoundSelectedListener {
+        /**
+         * @param name The human-readable name of the sound.
+         * @param uri  The system URI string of the sound file.
+         */
+        void onSoundSelected(String name, String uri);
+    }
+
+    /**
+     * Simple POJO for sound data.
+     */
     private static class SoundItem {
         final String name;
         final String uri;
-        SoundItem(String name, String uri) { this.name = name; this.uri = uri; }
+
+        SoundItem(String name, String uri) {
+            this.name = name;
+            this.uri = uri;
+        }
     }
 
     /**
@@ -216,7 +223,9 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
     private class SoundAdapter extends RecyclerView.Adapter<SoundAdapter.ViewHolder> {
         private final List<SoundItem> data;
 
-        SoundAdapter(List<SoundItem> data) { this.data = data; }
+        SoundAdapter(List<SoundItem> data) {
+            this.data = data;
+        }
 
         @NonNull
         @Override
@@ -230,7 +239,7 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
             SoundItem item = data.get(position);
             holder.name.setText(item.name);
             holder.radioButton.setChecked(item.uri.equals(selectedSoundUri));
-            
+
             holder.itemView.setOnClickListener(v -> {
                 selectedSoundUri = item.uri;
                 selectedSoundName = item.name;
@@ -240,11 +249,14 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
         }
 
         @Override
-        public int getItemCount() { return data.size(); }
+        public int getItemCount() {
+            return data.size();
+        }
 
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView name;
             final RadioButton radioButton;
+
             ViewHolder(View v) {
                 super(v);
                 name = v.findViewById(R.id.txt_sound_name);

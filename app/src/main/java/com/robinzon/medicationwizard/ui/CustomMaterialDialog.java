@@ -47,17 +47,17 @@ public class CustomMaterialDialog {
                 .build();
 
         MaterialShapeDrawable shapeDrawable = new MaterialShapeDrawable(shapeAppearanceModel);
-        
+
         // 2. Magic Border: Primary Colored Stroke (Subtle 1dp)
         int surfaceAttr = context.getResources().getIdentifier("colorSurface", "attr", context.getPackageName());
         int primaryAttr = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
-        
+
         int surfaceColor = MaterialColors.getColor(context, surfaceAttr, Color.WHITE);
         int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
-        
+
         shapeDrawable.setFillColor(ColorStateList.valueOf(surfaceColor));
         shapeDrawable.setStroke(strokeWidth, primaryColor);
-        
+
         builder.setBackground(shapeDrawable);
     }
 
@@ -71,7 +71,7 @@ public class CustomMaterialDialog {
         TextView messageView = new TextView(context);
         messageView.setText(message);
         messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        
+
         // HIGH_QUALITY/BALANCED break strategy to prevent "lonely words"
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             // Constant 1 is BREAK_STRATEGY_HIGH_QUALITY, 2 is BREAK_STRATEGY_BALANCED
@@ -79,21 +79,21 @@ public class CustomMaterialDialog {
             messageView.setBreakStrategy(1);
             messageView.setHyphenationFrequency(android.text.Layout.HYPHENATION_FREQUENCY_FULL);
         }
-        
+
         // Start alignment (Left for LTR, Right for RTL)
         messageView.setGravity(Gravity.START);
-        
+
         float density = context.getResources().getDisplayMetrics().density;
         int paddingSide = (int) (24 * density);
         int paddingTop = 0;
         int paddingBottom = (int) (8 * density);
-        
+
         messageView.setPadding(paddingSide, paddingTop, paddingSide, paddingBottom);
-        
+
         int variantAttr = context.getResources().getIdentifier("colorOnSurfaceVariant", "attr", context.getPackageName());
         int textColor = MaterialColors.getColor(context, variantAttr, Color.GRAY);
         messageView.setTextColor(textColor);
-        
+
         builder.setView(messageView);
     }
 
@@ -131,11 +131,11 @@ public class CustomMaterialDialog {
         }
         dialog = builder.create();
         dialog.show();
-        
+
         // 4. Guided Actions: Bold Primary Buttons
         if (dialog instanceof AlertDialog) {
             AlertDialog alertDialog = (AlertDialog) dialog;
-            
+
             Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
             if (positiveButton != null) {
                 positiveButton.setTypeface(null, Typeface.BOLD);
@@ -145,7 +145,7 @@ public class CustomMaterialDialog {
                 positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 positiveButton.setAllCaps(false); // M3 compliant sentence-case
             }
-            
+
             Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
             if (negativeButton != null) {
                 int variantAttr = context.getResources().getIdentifier("colorOnSurfaceVariant", "attr", context.getPackageName());

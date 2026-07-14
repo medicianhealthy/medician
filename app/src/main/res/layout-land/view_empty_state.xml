@@ -42,16 +42,16 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_wizard_high_def"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                app:srcCompat="@drawable/ic_wizard_high_def" />
 
             <ImageView
                 android:id="@+id/empty_sparkle_1"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="50dp"
                 android:layout_marginEnd="60dp"
+                android:layout_marginBottom="50dp"
                 android:src="@drawable/ic_sparkle"
                 app:tint="?attr/colorPrimary" />
 
@@ -60,8 +60,8 @@
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="40dp"
                 android:layout_marginStart="70dp"
+                android:layout_marginTop="40dp"
                 android:src="@drawable/ic_sparkle"
                 app:tint="?attr/colorPrimary" />
         </FrameLayout>
@@ -70,10 +70,10 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_weight="1.5"
-            android:orientation="vertical"
             android:gravity="start"
-            android:layout_marginStart="24dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/empty_title"

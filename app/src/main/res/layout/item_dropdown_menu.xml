@@ -2,10 +2,10 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="16dp"
+    android:background="?attr/selectableItemBackground"
     android:ellipsize="end"
     android:maxLines="1"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="16dp"
     android:textAppearance="?attr/textAppearanceBodyLarge"
-    android:textColor="?attr/colorOnSurface"
-    android:background="?attr/selectableItemBackground" />
+    android:textColor="?attr/colorOnSurface" />

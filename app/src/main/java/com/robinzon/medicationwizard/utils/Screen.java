@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 /**
  * Utility class for retrieving device display metrics and screen dimensions.
  * <p>
- * This class handles the complexity of retrieving screen sizes across different 
- * Android versions, including the modern {@link android.view.WindowMetrics} API 
+ * This class handles the complexity of retrieving screen sizes across different
+ * Android versions, including the modern {@link android.view.WindowMetrics} API
  * introduced in Android R (API 30).
  * </p>
  */
@@ -26,7 +26,7 @@ public final class Screen {
      * @param activity The current activity.
      * @return Screen width in pixels.
      */
-    public static int getUsableScreenWidthPX(@NonNull final Activity activity){
+    public static int getUsableScreenWidthPX(@NonNull final Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
             return bounds.width();
@@ -43,7 +43,7 @@ public final class Screen {
      * @param activity The current activity.
      * @return Screen height in pixels.
      */
-    public static int getUsableScreenHeightPX(@NonNull final Activity activity){
+    public static int getUsableScreenHeightPX(@NonNull final Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             final Rect bounds = activity.getWindowManager().getCurrentWindowMetrics().getBounds();
             return bounds.height();
@@ -61,8 +61,8 @@ public final class Screen {
      * @param resources Application or Activity resources.
      * @return The display density (e.g., 2.0 for xhdpi).
      */
-    public static float getDensity(final Resources resources){
-        if (mDensity == 0F){
+    public static float getDensity(final Resources resources) {
+        if (mDensity == 0F) {
             mDensity = resources.getDisplayMetrics().density;
         }
         return mDensity;

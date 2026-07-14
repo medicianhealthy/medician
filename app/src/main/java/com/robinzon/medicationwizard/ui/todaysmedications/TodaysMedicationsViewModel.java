@@ -19,33 +19,26 @@ import java.util.List;
 /**
  * ViewModel for the "Today's Medications" dashboard.
  * <p>
- * This class provides a reactive stream of medication dose instances scheduled for 
- * the current calendar day. It maintains the user's preferred {@link SortOrder} 
- * and automatically triggers a fresh Room database query whenever the sort 
+ * This class provides a reactive stream of medication dose instances scheduled for
+ * the current calendar day. It maintains the user's preferred {@link SortOrder}
+ * and automatically triggers a fresh Room database query whenever the sort
  * preference changes.
  * </p>
  */
 public class TodaysMedicationsViewModel extends AndroidViewModel {
 
     private static final String PREF_SORT_ORDER = "todays_medications_sort_order";
-
-    /** Supported sorting strategies for the daily list. */
-    public enum SortOrder {
-        /** Chronological order by scheduled time (earliest first). */
-        TIME, 
-        /** Alphabetical order by medication name. */
-        NAME, 
-        /** Chronological order by when the action was performed (latest first). */
-        ACTION_TIME
-    }
-
-    /** Observable sort preference. */
+    /**
+     * Observable sort preference.
+     */
     private final MutableLiveData<SortOrder> mSortOrder;
-    
-    /** Trigger for manual data refresh (e.g., when returning from background or adding a med). */
+    /**
+     * Trigger for manual data refresh (e.g., when returning from background or adding a med).
+     */
     private final MutableLiveData<Long> mRefreshTrigger = new MutableLiveData<>(System.currentTimeMillis());
-    
-    /** Reactive stream of medication instances for today. */
+    /**
+     * Reactive stream of medication instances for today.
+     */
     private final LiveData<List<DoseInstanceEntity>> mTodaysMedications;
 
     /**
@@ -61,14 +54,14 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
         // This ensures that either a sort change OR a manual refresh (which updates the time window)
         // will trigger a fresh database query.
         LiveData<Pair<SortOrder, Long>> combinedTrigger = new MediatorLiveData<>();
-        ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).addSource(mSortOrder, order -> 
-            ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).setValue(new Pair<>(order, mRefreshTrigger.getValue())));
-        ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).addSource(mRefreshTrigger, time -> 
-            ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).setValue(new Pair<>(mSortOrder.getValue(), time)));
+        ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).addSource(mSortOrder, order ->
+                ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).setValue(new Pair<>(order, mRefreshTrigger.getValue())));
+        ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).addSource(mRefreshTrigger, time ->
+                ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).setValue(new Pair<>(mSortOrder.getValue(), time)));
 
         mTodaysMedications = Transformations.switchMap(combinedTrigger, trigger -> {
             SortOrder order = trigger.first;
-            
+
             // FIX: Use a fresh Calendar and ensure we cover the entire day regardless of timezone edge cases.
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -83,11 +76,11 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
             calendar.set(Calendar.MILLISECOND, 999);
             long endTime = calendar.getTimeInMillis();
 
-            com.robinzon.medicationwizard.utils.Logger.log("TodaysMedicationsViewModel", 
-                "Querying for Today: " + new java.util.Date(startTime) + " to " + new java.util.Date(endTime));
+            com.robinzon.medicationwizard.utils.Logger.log("TodaysMedicationsViewModel",
+                    "Querying for Today: " + new java.util.Date(startTime) + " to " + new java.util.Date(endTime));
 
             if (order == null) order = SortOrder.TIME;
-            
+
             switch (order) {
                 case NAME:
                     return AppDatabase.getDatabase(application).doseInstanceDao().getInstancesInRangeSortedByName(startTime, endTime);
@@ -115,6 +108,13 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
     }
 
     /**
+     * @return The current sort order.
+     */
+    public SortOrder getSortOrder() {
+        return mSortOrder.getValue();
+    }
+
+    /**
      * Updates the active sort order, triggering an immediate UI refresh.
      *
      * @param order The new sort strategy.
@@ -125,16 +125,33 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
     }
 
     /**
-     * @return The current sort order.
+     * Supported sorting strategies for the daily list.
      */
-    public SortOrder getSortOrder() {
-        return mSortOrder.getValue();
+    public enum SortOrder {
+        /**
+         * Chronological order by scheduled time (earliest first).
+         */
+        TIME,
+        /**
+         * Alphabetical order by medication name.
+         */
+        NAME,
+        /**
+         * Chronological order by when the action was performed (latest first).
+         */
+        ACTION_TIME
     }
 
-    /** Helper class for combining triggers. */
+    /**
+     * Helper class for combining triggers.
+     */
     private static class Pair<A, B> {
         final A first;
         final B second;
-        Pair(A first, B second) { this.first = first; this.second = second; }
+
+        Pair(A first, B second) {
+            this.first = first;
+            this.second = second;
+        }
     }
 }

@@ -12,20 +12,28 @@
             <gradient
                 android:centerX="54"
                 android:centerY="54"
+                android:endX="54"
+                android:endY="108"
                 android:gradientRadius="70"
-                android:type="linear"
                 android:startX="54"
                 android:startY="0"
-                android:endX="54"
-                android:endY="108">
-                <item android:color="#FF0097A7" android:offset="0.0" /> <!-- Deeper Cyan -->
-                <item android:color="#FF7B1FA2" android:offset="1.0" /> <!-- Deeper Purple -->
+                android:type="linear">
+                <item
+                    android:color="#FF0097A7"
+                    android:offset="0.0" /> <!-- Deeper Cyan -->
+                <item
+                    android:color="#FF7B1FA2"
+                    android:offset="1.0" /> <!-- Deeper Purple -->
             </gradient>
         </aapt:attr>
     </path>
 
     <!-- Magic Sparkles (Subtle) -->
-    <path android:fillColor="#1AFFFFFF" android:pathData="M80,20l1,3l3,1l-3,1l-1,3l-1,-3l-3,-1l3,-1z" />
-    <path android:fillColor="#1AFFFFFF" android:pathData="M20,80l1,3l3,1l-3,1l-1,3l-1,-3l-3,-1l3,-1z" />
+    <path
+        android:fillColor="#1AFFFFFF"
+        android:pathData="M80,20l1,3l3,1l-3,1l-1,3l-1,-3l-3,-1l3,-1z" />
+    <path
+        android:fillColor="#1AFFFFFF"
+        android:pathData="M20,80l1,3l3,1l-3,1l-1,3l-1,-3l-3,-1l3,-1z" />
 
 </vector>

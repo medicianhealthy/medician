@@ -47,7 +47,7 @@ public class HistoryFragment extends MedicationWizardFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setFabVisible(false);
             ((MainActivity) getActivity()).getAdsManager().showInterstitialAd();
@@ -56,13 +56,13 @@ public class HistoryFragment extends MedicationWizardFragment {
         setupRecyclerView();
         setupCalendar();
         setupEmptyView();
-        
+
         applyCompactEmptyState(binding.getRoot());
 
         viewModel.getHistory().observe(getViewLifecycleOwner(), instances -> {
             List<DoseItem> grouped = groupDoses(instances);
             adapter.setData(grouped);
-            
+
             boolean isEmpty = instances == null || instances.isEmpty();
             updateUiState(isEmpty, instances);
         });
@@ -71,7 +71,7 @@ public class HistoryFragment extends MedicationWizardFragment {
     private void updateUiState(boolean isEmpty, List<DoseInstanceEntity> instances) {
         binding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         binding.recyclerHistory.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        
+
         if (isEmpty) {
             boolean hasAnyMeds = com.robinzon.medicationwizard.entities.Medication.hasMedications(requireContext());
             if (hasAnyMeds) {
@@ -122,7 +122,7 @@ public class HistoryFragment extends MedicationWizardFragment {
         }
 
         int percent = total > 0 ? (int) (((float) taken / total) * 100) : 0;
-        
+
         binding.cardSummary.setVisibility(View.VISIBLE);
         binding.progressCompletion.setProgress(percent, true);
         binding.txtCompletionTitle.setText(getString(R.string.history_percent_format, percent));
@@ -138,17 +138,53 @@ public class HistoryFragment extends MedicationWizardFragment {
     private void setupRecyclerView() {
         adapter = new MedicationsAdapter(new ArrayList<>());
         adapter.setOnMedicationActionListener(new MedicationsAdapter.OnMedicationActionListener() {
-            @Override public void onTake(DoseInstanceEntity instance, int position) { updateStatus(instance, "TAKEN"); }
-            @Override public void onSkip(DoseInstanceEntity instance, int position) { updateStatus(instance, "SKIPPED"); }
-            @Override public void onReschedule(DoseInstanceEntity instance, int position) {}
-            @Override public void onUntake(DoseInstanceEntity instance, int position) { updateStatus(instance, "SCHEDULED"); }
-            @Override public void onUnskip(DoseInstanceEntity instance, int position) { updateStatus(instance, "SCHEDULED"); }
+            @Override
+            public void onTake(DoseInstanceEntity instance, int position) {
+                updateStatus(instance, "TAKEN");
+            }
 
-            @Override public void onTakeGroup(List<DoseInstanceEntity> doses, int position) { for (DoseInstanceEntity d : doses) updateStatus(d, "TAKEN"); }
-            @Override public void onSkipGroup(List<DoseInstanceEntity> doses, int position) { for (DoseInstanceEntity d : doses) updateStatus(d, "SKIPPED"); }
-            @Override public void onRescheduleGroup(List<DoseInstanceEntity> doses, int position) {}
-            @Override public void onUntakeGroup(List<DoseInstanceEntity> doses, int position) { for (DoseInstanceEntity d : doses) updateStatus(d, "SCHEDULED"); }
-            @Override public void onUnskipGroup(List<DoseInstanceEntity> doses, int position) { for (DoseInstanceEntity d : doses) updateStatus(d, "SCHEDULED"); }
+            @Override
+            public void onSkip(DoseInstanceEntity instance, int position) {
+                updateStatus(instance, "SKIPPED");
+            }
+
+            @Override
+            public void onReschedule(DoseInstanceEntity instance, int position) {
+            }
+
+            @Override
+            public void onUntake(DoseInstanceEntity instance, int position) {
+                updateStatus(instance, "SCHEDULED");
+            }
+
+            @Override
+            public void onUnskip(DoseInstanceEntity instance, int position) {
+                updateStatus(instance, "SCHEDULED");
+            }
+
+            @Override
+            public void onTakeGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateStatus(d, "TAKEN");
+            }
+
+            @Override
+            public void onSkipGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateStatus(d, "SKIPPED");
+            }
+
+            @Override
+            public void onRescheduleGroup(List<DoseInstanceEntity> doses, int position) {
+            }
+
+            @Override
+            public void onUntakeGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateStatus(d, "SCHEDULED");
+            }
+
+            @Override
+            public void onUnskipGroup(List<DoseInstanceEntity> doses, int position) {
+                for (DoseInstanceEntity d : doses) updateStatus(d, "SCHEDULED");
+            }
         });
         binding.recyclerHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerHistory.setAdapter(adapter);
@@ -174,7 +210,7 @@ public class HistoryFragment extends MedicationWizardFragment {
         } else if ("SCHEDULED".equals(status)) {
             instance.setActionTime(0);
         }
-        
+
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
             if (!"SCHEDULED".equals(status)) {

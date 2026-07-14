@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
@@ -19,11 +18,11 @@
             android:id="@+id/med_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:contentDescription="@string/medication_icon_desc"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_med_pill"
-            app:tint="?attr/colorPrimary"
-            android:contentDescription="@string/medication_icon_desc" />
+            app:tint="?attr/colorPrimary" />
 
         <!-- Vertical stack for all textual content to prevent overlap -->
         <LinearLayout
@@ -48,8 +47,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:maxLines="1"
                     android:gravity="start"
+                    android:maxLines="1"
                     android:textAlignment="viewStart"
                     android:textAppearance="?attr/textAppearanceTitleLarge"
                     android:textColor="?attr/colorOnSurface"
@@ -78,11 +77,11 @@
                     android:id="@+id/txt_scheduled_summary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:gravity="start"
                     android:textAlignment="viewStart"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"
+                    android:visibility="gone"
                     tools:text="Scheduled for 08:00"
                     tools:visibility="visible" />
 
@@ -91,11 +90,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:visibility="gone"
                     android:gravity="start"
                     android:textAlignment="viewStart"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorPrimary"
+                    android:visibility="gone"
                     tools:text="Took 2 pills at 14:52"
                     tools:visibility="visible" />
 
@@ -103,17 +102,19 @@
                     android:id="@+id/group_scheduled_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="start|center_vertical"
+                    android:orientation="horizontal"
                     tools:visibility="visible">
+
                     <TextView
                         android:id="@+id/take"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/take"
                         android:gravity="start"
+                        android:text="@string/take"
                         android:textAlignment="viewStart"
                         android:textAppearance="?attr/textAppearanceBodyMedium" />
+
                     <TextView
                         android:id="@+id/quantity"
                         android:layout_width="wrap_content"
@@ -121,9 +122,10 @@
                         android:layout_marginStart="4dp"
                         android:gravity="start"
                         android:textAlignment="viewStart"
-                        android:textStyle="bold"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textStyle="bold"
                         tools:text="2" />
+
                     <TextView
                         android:id="@+id/form"
                         android:layout_width="wrap_content"
@@ -133,15 +135,17 @@
                         android:textAlignment="viewStart"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         tools:text="Pills" />
+
                     <TextView
                         android:id="@+id/at"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="@string/at_label"
                         android:gravity="start"
+                        android:text="@string/at_label"
                         android:textAlignment="viewStart"
                         android:textAppearance="?attr/textAppearanceBodyMedium" />
+
                     <TextView
                         android:id="@+id/time"
                         android:layout_width="wrap_content"
@@ -149,8 +153,8 @@
                         android:layout_marginStart="4dp"
                         android:gravity="start"
                         android:textAlignment="viewStart"
-                        android:textStyle="bold"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textStyle="bold"
                         tools:text="20:40" />
                 </LinearLayout>
 
@@ -171,12 +175,12 @@
             android:id="@+id/icon_done"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:contentDescription="@null"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_done_pill"
             app:tint="?attr/colorPrimary"
-            android:contentDescription="@null"
             tools:visibility="visible" />
 
         <!-- ACTION BUTTONS: Flow helper allows buttons to wrap if they exceed available width -->
@@ -191,20 +195,20 @@
             app:flow_horizontalStyle="packed"
             app:flow_verticalGap="8dp"
             app:flow_wrapMode="aligned"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/text_content_stack"
-            app:layout_constraintTop_toBottomOf="@id/text_content_stack"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_content_stack" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/take_btn"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
             android:paddingHorizontal="16dp"
             android:text="@string/button_take"
             tools:ignore="MissingConstraints" />
@@ -214,10 +218,10 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
             android:paddingHorizontal="8dp"
             android:text="@string/button_reschedule"
             tools:ignore="MissingConstraints" />
@@ -227,10 +231,10 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
             android:paddingHorizontal="8dp"
             android:text="@string/button_skip"
             tools:ignore="MissingConstraints" />
@@ -243,9 +247,9 @@
             android:text="@string/button_untake"
             android:textColor="?attr/colorError"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/text_content_stack"
             app:layout_constraintTop_toBottomOf="@id/text_content_stack"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

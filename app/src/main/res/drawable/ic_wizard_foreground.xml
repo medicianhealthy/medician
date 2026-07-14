@@ -7,7 +7,11 @@
 
     <!-- THE OWL DOCTOR (Adaptive Foreground) -->
     <!-- PERFORMANCE: Reduced scale to 0.18 to ensure full visibility within the 66dp "Safe Zone" -->
-    <group android:translateX="54" android:translateY="54" android:scaleX="0.18" android:scaleY="0.18">
+    <group
+        android:scaleX="0.18"
+        android:scaleY="0.18"
+        android:translateX="54"
+        android:translateY="54">
 
         <!-- Outer Head/Body (Bright Yellow) -->
         <path
@@ -36,10 +40,10 @@
 
         <!-- Chest Feathers -->
         <path
-            android:strokeColor="#FFE0E0E0"
+            android:pathData="M-30,40 l8,8 l8,-8 M-10,40 l8,8 l8,-8 M10,40 l8,8 l8,-8 M-20,65 l8,8 l8,-8 M0,65 l8,8 l8,-8 M-10,90 l8,8 l8,-8"
             android:strokeWidth="2.5"
-            android:strokeLineCap="round"
-            android:pathData="M-30,40 l8,8 l8,-8 M-10,40 l8,8 l8,-8 M10,40 l8,8 l8,-8 M-20,65 l8,8 l8,-8 M0,65 l8,8 l8,-8 M-10,90 l8,8 l8,-8" />
+            android:strokeColor="#FFE0E0E0"
+            android:strokeLineCap="round" />
 
         <!-- Eyes -->
         <path
@@ -50,8 +54,12 @@
             android:pathData="M50,15m-28,0a28,28 0,1 1,56 0a28,28 0,1 1,-56 0" />
 
         <!-- Eye Highlights -->
-        <path android:fillColor="#FFFFFFFF" android:pathData="M-40,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
-        <path android:fillColor="#FFFFFFFF" android:pathData="M60,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M-40,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M60,5m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
 
         <!-- Beak -->
         <path
@@ -68,10 +76,10 @@
 
         <!-- Stethoscope -->
         <path
-            android:strokeColor="#FF1976D2"
+            android:pathData="M-90,60 Q0,140 90,60"
             android:strokeWidth="12"
-            android:strokeLineCap="round"
-            android:pathData="M-90,60 Q0,140 90,60" />
+            android:strokeColor="#FF1976D2"
+            android:strokeLineCap="round" />
         <path
             android:fillColor="#FF1976D2"
             android:pathData="M0,135m-22,0a22,22 0,1 1,44 0a22,22 0,1 1,-44 0" />
@@ -82,8 +90,12 @@
             android:pathData="M75,120c0,-8 -16,-8 -16,0c0,8 16,16 16,16s16,-8 16,-16c0,-8 -16,-8 -16,0" />
 
         <!-- Feet -->
-        <path android:fillColor="#FFFF9800" android:pathData="M-45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
-        <path android:fillColor="#FFFF9800" android:pathData="M45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
+        <path
+            android:fillColor="#FFFF9800"
+            android:pathData="M-45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
+        <path
+            android:fillColor="#FFFF9800"
+            android:pathData="M45,150m-16,0a16,16 0,1 1,32 0a16,16 0,1 1,-32 0" />
     </group>
 
 </vector>

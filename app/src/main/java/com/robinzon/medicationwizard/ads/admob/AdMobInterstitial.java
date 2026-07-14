@@ -24,7 +24,7 @@ public class AdMobInterstitial extends AdMobAd {
 
     public AdMobInterstitial(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
-        log("%s Creating object.\n%s",getLogTag() , thisToString());
+        log("%s Creating object.\n%s", getLogTag(), thisToString());
     }
 
     @NonNull
@@ -39,15 +39,15 @@ public class AdMobInterstitial extends AdMobAd {
 
     @Override
     public void load() {
-        log("%s Requesting load.\n%s",getLogTag() , thisToString());
+        log("%s Requesting load.\n%s", getLogTag(), thisToString());
         if (Boolean.TRUE.equals(shouldBeLoaded())) {
-            log("%s Preparing for loading.\n%s",getLogTag(), thisToString());
+            log("%s Preparing for loading.\n%s", getLogTag(), thisToString());
             setIsLoading(true);
-            log("%s Loading.\n%s",getLogTag() , thisToString());
-            InterstitialAd.load(getActivity(), getAdUnitId() , getAdRequest() , getAdLoadCallBack());
+            log("%s Loading.\n%s", getLogTag(), thisToString());
+            InterstitialAd.load(getActivity(), getAdUnitId(), getAdRequest(), getAdLoadCallBack());
         } else {
             log("%s Refusing load. Has network %b. \n%s",
-                    getLogTag() ,
+                    getLogTag(),
                     NetworkUtils.isNetworkAvailable(getContext().getApplicationContext()),
                     thisToString());
         }
@@ -55,7 +55,7 @@ public class AdMobInterstitial extends AdMobAd {
 
     private InterstitialAdLoadCallback getAdLoadCallBack() {
         if (null == mAdLoadCallBack) {
-            mAdLoadCallBack = new InterstitialAdLoadCallback(){
+            mAdLoadCallBack = new InterstitialAdLoadCallback() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
@@ -63,7 +63,7 @@ public class AdMobInterstitial extends AdMobAd {
                     setIsLoading(false);
                     mInterstitialAd = null;
                     failedToLoad(loadAdError);
-                    log("%s Failed to load. Reason is %s.\n%s",getLogTag() ,loadAdError.getMessage(), thisToString());
+                    log("%s Failed to load. Reason is %s.\n%s", getLogTag(), loadAdError.getMessage(), thisToString());
                 }
 
                 @Override
@@ -73,22 +73,22 @@ public class AdMobInterstitial extends AdMobAd {
                     setIsLoaded(true);
                     mInterstitialAd = interstitialAd;
                     loaded();
-                    log("%s Loaded. Adapter is %s.\n%s",getLogTag() , getLastWord(interstitialAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
+                    log("%s Loaded. Adapter is %s.\n%s", getLogTag(), getLastWord(interstitialAd.getResponseInfo().getMediationAdapterClassName()), thisToString());
                 }
             };
         }
         return mAdLoadCallBack;
-        
+
     }
 
     @Override
     public void show() {
         if (canShow() && shouldShow()) {
-            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdClicked() {
                     // Called when a click is recorded for an ad.
-                    log("%s Clicked.\n%s",getLogTag() , thisToString());
+                    log("%s Clicked.\n%s", getLogTag(), thisToString());
                 }
 
                 @Override
@@ -99,7 +99,7 @@ public class AdMobInterstitial extends AdMobAd {
                     setIsLoaded(false);
                     setIsLoading(false);
                     mInterstitialAd = null;
-                    
+
                     getAdsManager().onAdAction(AdMobInterstitial.this, AdAction.Dismissed);
 
                     final Timer timer = new Timer();
@@ -108,9 +108,9 @@ public class AdMobInterstitial extends AdMobAd {
                         public void run() {
                             getActivity().runOnUiThread(AdMobInterstitial.this::load);
                         }
-                    },500L);
+                    }, 500L);
 
-                    log("%s Dismissed.\n%s",getLogTag() , thisToString());
+                    log("%s Dismissed.\n%s", getLogTag(), thisToString());
                 }
 
                 @Override
@@ -120,7 +120,7 @@ public class AdMobInterstitial extends AdMobAd {
                     setIsShowing(false);
                     setIsLoaded(false);
                     setIsLoading(false);
-                    log("%s Failed to show. Reason is %s.\n%s",getLogTag() ,adError.getMessage(), thisToString());
+                    log("%s Failed to show. Reason is %s.\n%s", getLogTag(), adError.getMessage(), thisToString());
                 }
 
                 @Override
@@ -131,7 +131,7 @@ public class AdMobInterstitial extends AdMobAd {
                 @Override
                 public void onAdShowedFullScreenContent() {
                     setIsShowing(true);
-                    log("%s Showed.\n%s",getLogTag() , thisToString());
+                    log("%s Showed.\n%s", getLogTag(), thisToString());
                 }
             });
             mInterstitialAd.show(getActivity());

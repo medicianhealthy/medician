@@ -6,8 +6,8 @@
 
     <!-- Outer Glow/Circle -->
     <path
-        android:fillColor="?attr/colorPrimaryContainer"
         android:alpha="0.3"
+        android:fillColor="?attr/colorPrimaryContainer"
         android:pathData="M100,100m-90,0a90,90 0,1 1,180 0a90,90 0,1 1,-180 0" />
 
     <!-- Owl Body -->
@@ -35,10 +35,10 @@
 
     <!-- Stethoscope/Medical Sign -->
     <path
-        android:strokeColor="?attr/colorOnPrimary"
+        android:pathData="M80,120c0,10 40,10 40,0"
         android:strokeWidth="4"
-        android:strokeLineCap="round"
-        android:pathData="M80,120c0,10 40,10 40,0" />
+        android:strokeColor="?attr/colorOnPrimary"
+        android:strokeLineCap="round" />
     <path
         android:fillColor="?attr/colorError"
         android:pathData="M100,140m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />

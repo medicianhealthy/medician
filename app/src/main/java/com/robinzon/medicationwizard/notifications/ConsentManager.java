@@ -19,19 +19,9 @@ import com.robinzon.medicationwizard.utils.Logger;
 public class ConsentManager {
 
     /**
-     * Interface for listening to the completion of the consent gathering process.
-     */
-    public interface OnConsentFinishedListener {
-        /**
-         * Triggered when the consent flow is complete, regardless of the user's choice.
-         */
-        void onFinished();
-    }
-
-    /**
      * Gathers consent information and shows the consent form if required.
      * <p>
-     * Performance: Checks for existing consent information first and only requests 
+     * Performance: Checks for existing consent information first and only requests
      * a form if strictly necessary for the current region/status.
      * </p>
      *
@@ -58,9 +48,9 @@ public class ConsentManager {
                 activity,
                 params,
                 () -> {
-                    Logger.log("ConsentManager", "Consent info updated. Form available: " + consentInformation.isConsentFormAvailable() 
-                        + ", Status: " + consentInformation.getConsentStatus());
-                    
+                    Logger.log("ConsentManager", "Consent info updated. Form available: " + consentInformation.isConsentFormAvailable()
+                            + ", Status: " + consentInformation.getConsentStatus());
+
                     // Check if a consent form is available and required
                     if (consentInformation.isConsentFormAvailable()) {
                         loadAndShowForm(activity, listener);
@@ -93,5 +83,15 @@ public class ConsentManager {
                     if (listener != null) listener.onFinished();
                 }
         );
+    }
+
+    /**
+     * Interface for listening to the completion of the consent gathering process.
+     */
+    public interface OnConsentFinishedListener {
+        /**
+         * Triggered when the consent flow is complete, regardless of the user's choice.
+         */
+        void onFinished();
     }
 }

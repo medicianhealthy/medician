@@ -36,16 +36,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The primary dashboard fragment of the application. 
+ * The primary dashboard fragment of the application.
  */
 public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
+    private final Handler mInactivityHandler = new Handler(Looper.getMainLooper());
     private FragmentTodaysMedicationsBinding mBinding;
     private TodaysMedicationsViewModel mViewModel;
     private MedicationsAdapter mAdapter;
     private TodaysMedicationsViewModel.SortOrder mCurrentSortOrder;
-    
-    private final Handler mInactivityHandler = new Handler(Looper.getMainLooper());
     private Runnable mInactivityRunnable;
     private ValueAnimator mLightningAnimator;
 
@@ -59,16 +58,16 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         mCurrentSortOrder = mViewModel.getSortOrder();
-        
+
         if (mBinding != null) {
             if (mBinding.recyclerView != null) setPaddingForRecyclerView(mBinding.recyclerView);
             if (mBinding.emptyLayout != null && mBinding.emptyLayout.emptyStateContainer != null) {
                 setPaddingForRecyclerView(mBinding.emptyLayout.emptyStateContainer);
             }
         }
-        
+
         setupSwipeRefresh();
         setupEmptyView();
         setupRecyclerView();
@@ -92,9 +91,17 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             if (mBinding == null) return;
             List<DoseItem> grouped = groupDoses(instances, mCurrentSortOrder);
             mAdapter.setData(grouped);
-            updateUiState(instances.isEmpty());
-            mBinding.swipeRefresh.setRefreshing(false);
             
+            // Logic: Show sort chips only if there are more than 1 record
+            boolean showSort = instances != null && instances.size() > 1;
+            mBinding.scrollChips.setVisibility(showSort ? View.VISIBLE : View.GONE);
+            if (mBinding.txtSortHint != null) {
+                mBinding.txtSortHint.setVisibility(showSort ? View.VISIBLE : View.GONE);
+            }
+
+            updateUiState(instances == null || instances.isEmpty());
+            mBinding.swipeRefresh.setRefreshing(false);
+
             updateTodayStats(instances);
             updateStreakBadge();
             updateDailyTip();
@@ -103,27 +110,27 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     private void updateTodayStats(List<DoseInstanceEntity> instances) {
         if (mBinding == null) return;
-        
+
         // Use direct find to handle tablet landscape vs other layouts
         View progressCard = mBinding.getRoot().findViewById(R.id.card_today_progress);
         if (progressCard == null) return;
-        
+
         if (instances == null || instances.isEmpty()) {
             progressCard.setVisibility(View.GONE);
             return;
         }
-        
+
         progressCard.setVisibility(View.VISIBLE);
         int total = instances.size();
         int taken = 0;
         for (DoseInstanceEntity e : instances) {
             if ("TAKEN".equals(e.getStatus())) taken++;
         }
-        
-        com.google.android.material.progressindicator.CircularProgressIndicator progress = 
+
+        com.google.android.material.progressindicator.CircularProgressIndicator progress =
                 mBinding.getRoot().findViewById(R.id.progress_today);
         TextView summary = mBinding.getRoot().findViewById(R.id.txt_progress_summary);
-        
+
         if (progress != null) {
             progress.setMax(total);
             progress.setProgress(taken, true);
@@ -138,8 +145,8 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         // Search in hierarchy because view might be nested or from include
         TextView tipContent = mBinding.getRoot().findViewById(R.id.history_tip_content);
         if (tipContent == null) return;
-        
-        int[] tips = { R.string.history_tip_1, R.string.history_tip_2, R.string.history_tip_3, R.string.history_tip_4, R.string.history_tip_5, R.string.history_tip_6 };
+
+        int[] tips = {R.string.history_tip_1, R.string.history_tip_2, R.string.history_tip_3, R.string.history_tip_4, R.string.history_tip_5, R.string.history_tip_6};
         int dayOfYear = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR);
         tipContent.setText(tips[dayOfYear % tips.length]);
     }
@@ -150,11 +157,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             if (getActivity() == null) return;
             getActivity().runOnUiThread(() -> {
                 if (mBinding == null) return;
-                
+
                 // Re-lookup text view to ensure we have the live one (especially for tablets)
                 TextView streakText = mBinding.getRoot().findViewById(R.id.txtStreak);
                 if (streakText == null) return;
-                
+
                 boolean isTablet = getResources().getBoolean(R.bool.is_tablet);
                 if (isTablet) {
                     if (streakCount >= 1) {
@@ -211,9 +218,12 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         mBinding.chipGroupSort.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
             int checkedId = checkedIds.get(0);
-            if (checkedId == R.id.chip_sort_time) mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.TIME;
-            else if (checkedId == R.id.chip_sort_name) mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.NAME;
-            else if (checkedId == R.id.chip_sort_action) mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.ACTION_TIME;
+            if (checkedId == R.id.chip_sort_time)
+                mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.TIME;
+            else if (checkedId == R.id.chip_sort_name)
+                mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.NAME;
+            else if (checkedId == R.id.chip_sort_action)
+                mCurrentSortOrder = TodaysMedicationsViewModel.SortOrder.ACTION_TIME;
             mViewModel.setSortOrder(mCurrentSortOrder);
         });
     }
@@ -221,16 +231,59 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private void setupRecyclerView() {
         mAdapter = new MedicationsAdapter(new ArrayList<>());
         mAdapter.setOnMedicationActionListener(new MedicationsAdapter.OnMedicationActionListener() {
-            @Override public void onTake(DoseInstanceEntity i, int p) { updateInstanceStatus(i, "TAKEN"); }
-            @Override public void onSkip(DoseInstanceEntity i, int p) { updateInstanceStatus(i, "SKIPPED"); }
-            @Override public void onReschedule(DoseInstanceEntity i, int p) { showReschedulePicker(i); }
-            @Override public void onUntake(DoseInstanceEntity i, int p) { updateInstanceStatus(i, "SCHEDULED"); }
-            @Override public void onUnskip(DoseInstanceEntity i, int p) { updateInstanceStatus(i, "SCHEDULED"); }
-            @Override public void onTakeGroup(List<DoseInstanceEntity> d, int p) { for (DoseInstanceEntity x : d) updateInstanceStatus(x, "TAKEN"); triggerAdForGroupAction(d.size()); }
-            @Override public void onSkipGroup(List<DoseInstanceEntity> d, int p) { for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SKIPPED"); triggerAdForGroupAction(d.size()); }
-            @Override public void onRescheduleGroup(List<DoseInstanceEntity> d, int p) { showGroupReschedulePicker(d); }
-            @Override public void onUntakeGroup(List<DoseInstanceEntity> d, int p) { for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SCHEDULED"); triggerAdForGroupAction(d.size()); }
-            @Override public void onUnskipGroup(List<DoseInstanceEntity> d, int p) { for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SCHEDULED"); triggerAdForGroupAction(d.size()); }
+            @Override
+            public void onTake(DoseInstanceEntity i, int p) {
+                updateInstanceStatus(i, "TAKEN");
+            }
+
+            @Override
+            public void onSkip(DoseInstanceEntity i, int p) {
+                updateInstanceStatus(i, "SKIPPED");
+            }
+
+            @Override
+            public void onReschedule(DoseInstanceEntity i, int p) {
+                showReschedulePicker(i);
+            }
+
+            @Override
+            public void onUntake(DoseInstanceEntity i, int p) {
+                updateInstanceStatus(i, "SCHEDULED");
+            }
+
+            @Override
+            public void onUnskip(DoseInstanceEntity i, int p) {
+                updateInstanceStatus(i, "SCHEDULED");
+            }
+
+            @Override
+            public void onTakeGroup(List<DoseInstanceEntity> d, int p) {
+                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "TAKEN");
+                triggerAdForGroupAction(d.size());
+            }
+
+            @Override
+            public void onSkipGroup(List<DoseInstanceEntity> d, int p) {
+                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SKIPPED");
+                triggerAdForGroupAction(d.size());
+            }
+
+            @Override
+            public void onRescheduleGroup(List<DoseInstanceEntity> d, int p) {
+                showGroupReschedulePicker(d);
+            }
+
+            @Override
+            public void onUntakeGroup(List<DoseInstanceEntity> d, int p) {
+                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SCHEDULED");
+                triggerAdForGroupAction(d.size());
+            }
+
+            @Override
+            public void onUnskipGroup(List<DoseInstanceEntity> d, int p) {
+                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SCHEDULED");
+                triggerAdForGroupAction(d.size());
+            }
         });
         int cols = getResources().getInteger(R.integer.medication_grid_columns);
         mBinding.recyclerView.setLayoutManager(cols > 1 ? new GridLayoutManager(requireContext(), cols) : new LinearLayoutManager(requireContext()));
@@ -239,14 +292,19 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     private void updateInstanceStatus(DoseInstanceEntity instance, String status) {
         if ("TAKEN".equals(status)) {
-            checkAndClarifyTakeTiming(instance, () -> { applyStatusUpdate(instance, status); triggerAdIfEligible(); });
+            checkAndClarifyTakeTiming(instance, () -> {
+                applyStatusUpdate(instance, status);
+                triggerAdIfEligible();
+            });
         } else {
-            applyStatusUpdate(instance, status); triggerAdIfEligible();
+            applyStatusUpdate(instance, status);
+            triggerAdIfEligible();
         }
     }
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
-        if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).addInteractionScore(1.5f);
+        if (getActivity() instanceof MainActivity)
+            ((MainActivity) getActivity()).addInteractionScore(1.5f);
         instance.setStatus(status);
         if (instance.getActionTime() <= 0) {
             instance.setActionTime(System.currentTimeMillis());
@@ -265,7 +323,8 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
         Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), localizedStatus), Snackbar.LENGTH_LONG)
                 .setAction(R.string.button_undo, v -> {
-                    instance.setStatus("SCHEDULED"); instance.setActionTime(0);
+                    instance.setStatus("SCHEDULED");
+                    instance.setActionTime(0);
                     AppDatabase.databaseWriteExecutor.execute(() -> {
                         AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
                         com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
@@ -276,12 +335,14 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     private void requestReviewIfEligible() {
         final android.app.Activity activity = getActivity();
-        if (activity != null) new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(activity), 1000L);
+        if (activity != null)
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> com.robinzon.medicationwizard.utils.ReviewManager.requestReviewIfEligible(activity), 1000L);
     }
 
     private void triggerAdIfEligible() {
         if (getActivity() instanceof MainActivity main) {
-            if (com.robinzon.medicationwizard.utils.Statisticator.incrementActionsAndCheckAdEligibility(requireContext())) main.getAdsManager().showInterstitialAdWithCooldownOnly();
+            if (com.robinzon.medicationwizard.utils.Statisticator.incrementActionsAndCheckAdEligibility(requireContext()))
+                main.getAdsManager().showInterstitialAdWithCooldownOnly();
         }
     }
 
@@ -298,10 +359,15 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         picker.addOnPositiveButtonClickListener(v -> {
             java.util.Calendar now = java.util.Calendar.getInstance();
             java.util.Calendar target = java.util.Calendar.getInstance();
-            target.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour()); target.set(java.util.Calendar.MINUTE, picker.getMinute()); target.set(java.util.Calendar.SECOND, 0); target.set(java.util.Calendar.MILLISECOND, 0);
+            target.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour());
+            target.set(java.util.Calendar.MINUTE, picker.getMinute());
+            target.set(java.util.Calendar.SECOND, 0);
+            target.set(java.util.Calendar.MILLISECOND, 0);
             if (target.before(now)) target.add(java.util.Calendar.DAY_OF_YEAR, 1);
             com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
-            instance.setScheduledTime(target.getTimeInMillis()); instance.setStatus("SCHEDULED"); instance.setActionTime(0);
+            instance.setScheduledTime(target.getTimeInMillis());
+            instance.setStatus("SCHEDULED");
+            instance.setActionTime(0);
             AppDatabase.databaseWriteExecutor.execute(() -> {
                 AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
                 com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
@@ -317,11 +383,22 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         picker.addOnPositiveButtonClickListener(v -> {
             java.util.Calendar now = java.util.Calendar.getInstance();
             java.util.Calendar target = java.util.Calendar.getInstance();
-            target.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour()); target.set(java.util.Calendar.MINUTE, picker.getMinute()); target.set(java.util.Calendar.SECOND, 0); target.set(java.util.Calendar.MILLISECOND, 0);
+            target.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour());
+            target.set(java.util.Calendar.MINUTE, picker.getMinute());
+            target.set(java.util.Calendar.SECOND, 0);
+            target.set(java.util.Calendar.MILLISECOND, 0);
             if (target.before(now)) target.add(java.util.Calendar.DAY_OF_YEAR, 1);
-            for (DoseInstanceEntity d : doses) { com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, d.getId()); d.setScheduledTime(target.getTimeInMillis()); d.setStatus("SCHEDULED"); d.setActionTime(0); }
+            for (DoseInstanceEntity d : doses) {
+                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, d.getId());
+                d.setScheduledTime(target.getTimeInMillis());
+                d.setStatus("SCHEDULED");
+                d.setActionTime(0);
+            }
             AppDatabase.databaseWriteExecutor.execute(() -> {
-                for (DoseInstanceEntity d : doses) { AppDatabase.getDatabase(appContext).doseInstanceDao().update(d); com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, d); }
+                for (DoseInstanceEntity d : doses) {
+                    AppDatabase.getDatabase(appContext).doseInstanceDao().update(d);
+                    com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, d);
+                }
             });
             Snackbar.make(mBinding.getRoot(), R.string.button_reschedule_all, Snackbar.LENGTH_SHORT).show();
         });
@@ -330,22 +407,32 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     private void updateUiState(boolean isEmpty) {
         if (mBinding == null) return;
-        if (mBinding.emptyLayout != null && mBinding.emptyLayout.emptyView != null) mBinding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        if (mBinding.recyclerView != null) mBinding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        if (mBinding.emptyLayout != null && mBinding.emptyLayout.emptyView != null)
+            mBinding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if (mBinding.recyclerView != null)
+            mBinding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         boolean hasAnyMeds = com.robinzon.medicationwizard.entities.Medication.hasMedications(requireContext());
         if (isEmpty && mBinding.emptyLayout != null) {
             if (hasAnyMeds) {
-                if (mBinding.emptyLayout.emptyTitle != null) mBinding.emptyLayout.emptyTitle.setText(R.string.history_empty);
-                if (mBinding.emptyLayout.emptySubtitle != null) mBinding.emptyLayout.emptySubtitle.setText(R.string.history_empty_subtitle);
-                if (mBinding.emptyLayout.btnEmptyAction != null) mBinding.emptyLayout.btnEmptyAction.setVisibility(View.GONE);
+                if (mBinding.emptyLayout.emptyTitle != null)
+                    mBinding.emptyLayout.emptyTitle.setText(R.string.history_empty);
+                if (mBinding.emptyLayout.emptySubtitle != null)
+                    mBinding.emptyLayout.emptySubtitle.setText(R.string.history_empty_subtitle);
+                if (mBinding.emptyLayout.btnEmptyAction != null)
+                    mBinding.emptyLayout.btnEmptyAction.setVisibility(View.GONE);
             } else {
-                if (mBinding.emptyLayout.emptyTitle != null) mBinding.emptyLayout.emptyTitle.setText(R.string.empty_meds_title);
-                if (mBinding.emptyLayout.emptySubtitle != null) mBinding.emptyLayout.emptySubtitle.setText(R.string.empty_meds_subtitle);
-                if (mBinding.emptyLayout.btnEmptyAction != null) mBinding.emptyLayout.btnEmptyAction.setVisibility(View.VISIBLE);
+                if (mBinding.emptyLayout.emptyTitle != null)
+                    mBinding.emptyLayout.emptyTitle.setText(R.string.empty_meds_title);
+                if (mBinding.emptyLayout.emptySubtitle != null)
+                    mBinding.emptyLayout.emptySubtitle.setText(R.string.empty_meds_subtitle);
+                if (mBinding.emptyLayout.btnEmptyAction != null)
+                    mBinding.emptyLayout.btnEmptyAction.setVisibility(View.VISIBLE);
             }
-            startEmptyStateAnimations(mBinding.getRoot()); startLightningLogic();
+            startEmptyStateAnimations(mBinding.getRoot());
+            startLightningLogic();
         } else {
-            stopEmptyStateAnimations(); stopLightningLogic();
+            stopEmptyStateAnimations();
+            stopLightningLogic();
         }
         if (getActivity() instanceof MainActivity main) main.setFabVisible(!isEmpty || hasAnyMeds);
     }
@@ -354,21 +441,78 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         MaterialButton actionButton = mBinding.emptyLayout.btnEmptyAction;
         mInactivityRunnable = () -> {
             if (mLightningAnimator == null) {
-                mLightningAnimator = ValueAnimator.ofInt(0, 10, 0); mLightningAnimator.setDuration(1500); mLightningAnimator.setRepeatCount(3);
+                mLightningAnimator = ValueAnimator.ofInt(0, 10, 0);
+                mLightningAnimator.setDuration(1500);
+                mLightningAnimator.setRepeatCount(3);
                 mLightningAnimator.addUpdateListener(animation -> actionButton.setStrokeWidth((int) animation.getAnimatedValue()));
                 ObjectAnimator mascotAnim = ObjectAnimator.ofFloat(mBinding.emptyLayout.emptyMascot, "rotation", 0f, 10f, -10f, 0f);
-                mascotAnim.setDuration(1000); AnimatorSet set = new AnimatorSet(); set.playTogether(mLightningAnimator, mascotAnim); set.start();
+                mascotAnim.setDuration(1000);
+                AnimatorSet set = new AnimatorSet();
+                set.playTogether(mLightningAnimator, mascotAnim);
+                set.start();
                 mInactivityHandler.postDelayed(mInactivityRunnable, 15000);
             }
         };
         mInactivityHandler.postDelayed(mInactivityRunnable, 10000);
     }
 
-    private void stopLightningLogic() { mInactivityHandler.removeCallbacksAndMessages(null); if (mLightningAnimator != null) mLightningAnimator.cancel(); mLightningAnimator = null; }
+    private void stopLightningLogic() {
+        mInactivityHandler.removeCallbacksAndMessages(null);
+        if (mLightningAnimator != null) mLightningAnimator.cancel();
+        mLightningAnimator = null;
+    }
 
-    private void setupSwipeRefresh() { mBinding.swipeRefresh.setOnRefreshListener(() -> mBinding.swipeRefresh.setRefreshing(false)); }
+    private void setupSwipeRefresh() {
+        mBinding.swipeRefresh.setOnRefreshListener(() -> mBinding.swipeRefresh.setRefreshing(false));
+    }
 
-    private void setupEmptyView() { mBinding.emptyLayout.btnEmptyAction.setOnClickListener(v -> { AddMedicationBottomSheet bs = new AddMedicationBottomSheet(); bs.show(getChildFragmentManager(), "AddMedBottomSheet"); }); }
+    private void setupEmptyView() {
+        if (mBinding == null || mBinding.emptyLayout == null) return;
+        
+        final androidx.core.widget.NestedScrollView scrollView = mBinding.emptyLayout.getRoot().findViewById(R.id.empty_scroll_view);
+        final View scrollHint = mBinding.emptyLayout.getRoot().findViewById(R.id.empty_scroll_hint);
+        
+        if (scrollView != null && scrollHint != null) {
+            // Check if scroll is needed after layout
+            scrollView.post(() -> {
+                if (getContext() == null || !isAdded()) return;
+                boolean canScroll = scrollView.canScrollVertically(1);
+                scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
+                
+                if (canScroll) {
+                    android.view.animation.Animation bounce = new android.view.animation.TranslateAnimation(0, 0, 0, -15);
+                    bounce.setDuration(800);
+                    bounce.setRepeatMode(android.view.animation.Animation.REVERSE);
+                    bounce.setRepeatCount(android.view.animation.Animation.INFINITE);
+                    scrollHint.startAnimation(bounce);
+                    
+                    scrollHint.setOnClickListener(v -> scrollView.smoothScrollBy(0, 300));
+                }
+            });
 
-    @Override public void onDestroyView() { stopEmptyStateAnimations(); stopLightningLogic(); super.onDestroyView(); mBinding = null; }
+            scrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+                if (scrollY > 50 || !scrollView.canScrollVertically(1)) {
+                    scrollHint.animate().alpha(0f).setDuration(300).withEndAction(() -> {
+                        scrollHint.setVisibility(View.GONE);
+                        scrollHint.clearAnimation();
+                    }).start();
+                }
+            });
+        }
+
+        mBinding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                AddMedicationBottomSheet bs = new AddMedicationBottomSheet();
+                bs.show(getChildFragmentManager(), "AddMedBottomSheet");
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        stopEmptyStateAnimations();
+        stopLightningLogic();
+        super.onDestroyView();
+        mBinding = null;
+    }
 }

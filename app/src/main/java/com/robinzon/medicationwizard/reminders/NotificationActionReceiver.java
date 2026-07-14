@@ -80,7 +80,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             long newTime = System.currentTimeMillis() + (snoozeDuration * 60 * 1000L);
             instance.setScheduledTime(newTime);
             db.doseInstanceDao().update(instance);
-            
+
             // Re-schedule the alarm
             ReminderManager.scheduleReminder(context, instance);
         }

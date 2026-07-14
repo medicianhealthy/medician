@@ -125,6 +125,7 @@
     <string name="sort_scheduled">Scheduled</string>
     <string name="sort_name">Name</string>
     <string name="sort_action_time">Action Time</string>
+    <string name="sort_by_hint">Sort by:</string>
     <string name="fragment_add_med_title">New Medication</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
