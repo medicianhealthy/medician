@@ -124,11 +124,13 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             DoseInstanceEntity instance = single.entity;
             medNameText.setText(instance.getMedicationName());
 
-            // Icon logic
+            // Icon and Form logic
             int icon = R.drawable.ic_med_pill;
+            String localizedForm = instance.getForm() != null ? instance.getForm() : "";
             if (instance.getForm() != null) {
                 try {
                     EForm form = EForm.valueOf(instance.getForm());
+                    localizedForm = form.getLabel(itemView.getContext());
                     icon = switch (form) {
                         case Drops -> R.drawable.ic_med_drops;
                         case Injection -> R.drawable.ic_med_injection;
@@ -151,16 +153,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             String amount = instance.getAmount() == (long) instance.getAmount() ? String.valueOf((long) instance.getAmount()) : String.valueOf(instance.getAmount());
             quantityText.setText(amount);
             
-            String formName = instance.getForm() != null ? instance.getForm() : "";
-            if (instance.getAmount() > 1 && !formName.toLowerCase().endsWith("s")) formName += "s";
-            formText.setText(formName);
+            formText.setText(localizedForm);
 
             SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
             timeText.setText(timeFmt.format(new Date(instance.getScheduledTime())));
 
             if (instance.getInstruction() != null && !java.util.Objects.equals(instance.getInstruction(), "DOES_NOT_MATTER")) {
                 directionsText.setVisibility(View.VISIBLE);
-                try { directionsText.setText(EInstructions.valueOf(instance.getInstruction()).getDescription()); } 
+                try { directionsText.setText(EInstructions.valueOf(instance.getInstruction()).getDescription(itemView.getContext())); } 
                 catch (Exception e) { directionsText.setText(instance.getInstruction()); }
             } else {
                 directionsText.setVisibility(View.GONE);
@@ -186,7 +186,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 actualActionSummaryText.setVisibility(View.VISIBLE);
                 scheduledSummaryText.setText(itemView.getContext().getString(R.string.scheduled_for_format, timeFmt.format(new Date(instance.getScheduledTime()))));
                 String actTime = timeFmt.format(new Date(instance.getActionTime() > 0 ? instance.getActionTime() : instance.getScheduledTime()));
-                if (isTaken) actualActionSummaryText.setText(itemView.getContext().getString(R.string.took_format, amount, formName.toLowerCase(), actTime));
+                if (isTaken) actualActionSummaryText.setText(itemView.getContext().getString(R.string.took_format, amount, localizedForm, actTime));
                 else actualActionSummaryText.setText(itemView.getContext().getString(R.string.skipped_at_format, actTime));
             } else {
                 scheduledSummaryText.setVisibility(View.GONE);
@@ -259,23 +259,14 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 // Smart Detail String: "Med Name - Amount Form Strength"
                 String amountStr = d.getAmount() == (long) d.getAmount() ? String.valueOf((long) d.getAmount()) : String.valueOf(d.getAmount());
-                String formStr = d.getForm() != null ? d.getForm().toLowerCase() : "";
-                if (d.getAmount() > 1 && !formStr.isEmpty() && !formStr.endsWith("s")) formStr += "s";
                 
-                String strengthStr = "";
-                if (d.getStrength() > 0) {
-                    String sVal = d.getStrength() == (long) d.getStrength() ? String.valueOf((long) d.getStrength()) : String.valueOf(d.getStrength());
-                    strengthStr = sVal + (d.getUnit() != null ? " " + d.getUnit() : "");
-                }
-
-                String fullDetail = d.getMedicationName() + " (" + amountStr + " " + formStr + (strengthStr.isEmpty() ? "" : ", " + strengthStr) + ")";
-                nameTxt.setText(fullDetail);
-                
-                // Icon logic
+                // Icon and Form logic
                 int icon = R.drawable.ic_med_pill;
+                String localizedForm = d.getForm() != null ? d.getForm() : "";
                 if (d.getForm() != null) {
                     try {
                         EForm f = EForm.valueOf(d.getForm());
+                        localizedForm = f.getLabel(itemView.getContext());
                         icon = switch (f) {
                             case Drops -> R.drawable.ic_med_drops;
                             case Injection -> R.drawable.ic_med_injection;
@@ -288,19 +279,28 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     } catch (Exception ignored) {}
                 }
                 iconImg.setImageResource(icon);
+                
+                String strengthStr = "";
+                if (d.getStrength() > 0) {
+                    String sVal = d.getStrength() == (long) d.getStrength() ? String.valueOf((long) d.getStrength()) : String.valueOf(d.getStrength());
+                    strengthStr = sVal + (d.getUnit() != null ? " " + EMeasurementUnit.getLabelByName(itemView.getContext(), d.getUnit()) : "");
+                }
+
+                String fullDetail = d.getMedicationName() + " (" + amountStr + " " + localizedForm + (strengthStr.isEmpty() ? "" : ", " + strengthStr) + ")";
+                nameTxt.setText(fullDetail);
 
                 boolean isScheduled = "SCHEDULED".equals(d.getStatus());
                 boolean isTaken = "TAKEN".equals(d.getStatus());
                 boolean isSkipped = "SKIPPED".equals(d.getStatus());
 
-                statusTxt.setText(isScheduled ? "" : d.getStatus().toLowerCase());
+                statusTxt.setText(isScheduled ? "" : (isTaken ? itemView.getContext().getString(R.string.take) : itemView.getContext().getString(R.string.button_skip)));
                 doneImg.setVisibility(isScheduled ? View.GONE : View.VISIBLE);
                 rowView.setAlpha(isScheduled ? 1.0f : 0.6f);
                 
                 if (!isScheduled) {
                     actualActionSummaryTxt.setVisibility(View.VISIBLE);
                     String actTime = timeFmt.format(new Date(d.getActionTime() > 0 ? d.getActionTime() : d.getScheduledTime()));
-                    if (isTaken) actualActionSummaryTxt.setText(itemView.getContext().getString(R.string.took_format, amountStr, formStr.toLowerCase(), actTime));
+                    if (isTaken) actualActionSummaryTxt.setText(itemView.getContext().getString(R.string.took_format, amountStr, localizedForm, actTime));
                     else actualActionSummaryTxt.setText(itemView.getContext().getString(R.string.skipped_at_format, actTime));
                 } else {
                     actualActionSummaryTxt.setVisibility(View.GONE);
@@ -316,10 +316,10 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     divider.setVisibility(View.GONE);
                 }
 
-                takeBtn.setOnClickListener(v -> { if (actionListener != null) actionListener.onTake(d, position); });
-                skipBtn.setOnClickListener(v -> { if (actionListener != null) actionListener.onSkip(d, position); });
-                reschedBtn.setOnClickListener(v -> { if (actionListener != null) actionListener.onReschedule(d, position); });
-                untakeBtn.setOnClickListener(v -> {
+                takeBtn.setOnClickListener(vRow -> { if (actionListener != null) actionListener.onTake(d, position); });
+                skipBtn.setOnClickListener(vRow -> { if (actionListener != null) actionListener.onSkip(d, position); });
+                reschedBtn.setOnClickListener(vRow -> { if (actionListener != null) actionListener.onReschedule(d, position); });
+                untakeBtn.setOnClickListener(vRow -> {
                     if (actionListener != null) {
                         if (isTaken) actionListener.onUntake(d, position);
                         else actionListener.onUnskip(d, position);
@@ -372,7 +372,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (actionListener != null) actionListener.onSkipGroup(group.doses, position);
             });
             rescheduleAllBtn.setOnClickListener(v -> {
-                if (actionListener != null) actionListener.onRescheduleGroup(group.doses, position);
+                if (actionListener != null) {
+                    actionListener.onRescheduleGroup(group.doses, position);
+                }
             });
             untakeAllBtn.setOnClickListener(v -> {
                 if (actionListener != null) {

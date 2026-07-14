@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.entities;
 
-import androidx.annotation.NonNull;
+import android.content.Context;
+import com.robinzon.medicationwizard.R;
 
 /**
  * Enumeration of common consumption instructions for medications.
@@ -13,26 +14,26 @@ import androidx.annotation.NonNull;
 @SuppressWarnings("unused")
 public enum EInstructions {
     /** Take the dose on an empty stomach. */
-    BEFORE_EATING("Before eating"),
+    BEFORE_EATING(R.string.instruction_before_eating),
     /** Take the dose during a meal. */
-    WHILE_EATING("While eating"),
+    WHILE_EATING(R.string.instruction_while_eating),
     /** Take the dose on a full stomach. */
-    AFTER_EATING("After eating"),
+    AFTER_EATING(R.string.instruction_after_eating),
     /** Take the dose immediately before going to bed. */
-    BEFORE_SLEEP("Before sleep"),
+    BEFORE_SLEEP(R.string.instruction_before_sleep),
     /** No specific consumption rules apply. */
-    DOES_NOT_MATTER("Doesn't matter");
+    DOES_NOT_MATTER(R.string.instruction_no_preference);
 
-    private final String mDescription;
+    private final int mLabelResId;
 
-    EInstructions(@NonNull final String description) {
-        this.mDescription = description;
+    EInstructions(int labelResId) {
+        this.mLabelResId = labelResId;
     }
 
     /**
      * @return The localized, human-readable description of the instruction.
      */
-    public String getDescription() {
-        return mDescription;
+    public String getDescription(Context context) {
+        return context.getString(mLabelResId);
     }
 }

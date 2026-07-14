@@ -581,7 +581,14 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         dropdownForm.setOnClickListener(v -> dropdownForm.showDropDown());
         dropdownForm.setOnItemClickListener((parent, itemView, position, itemId) -> {
             hideKeyboard(dropdownForm);
-            final EForm selectedForm = EForm.values()[position];
+            final String selectedString = (String) parent.getItemAtPosition(position);
+            EForm selectedForm = EForm.Other;
+            for (EForm f : EForm.values()) {
+                if (getString(f.getLabelResId()).equals(selectedString)) {
+                    selectedForm = f;
+                    break;
+                }
+            }
             medication.setForm(selectedForm);
             
             // Move focus to the next field (Frequency)

@@ -173,14 +173,11 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                         String.format(Locale.getDefault(), "%d", (long) medication.getAmount()) :
                         String.format(Locale.getDefault(), "%.1f", medication.getAmount());
 
-                String formStr = medication.getForm() != null ? medication.getForm().name().toLowerCase() : "";
-                if (medication.getAmount() > 1 && !formStr.isEmpty()) {
-                    if (!formStr.endsWith("s")) formStr += "s";
-                }
+                String formStr = medication.getForm() != null ? medication.getForm().getLabel(binding.getRoot().getContext()) : "";
 
                 String instrStr = "";
                 if (medication.getInstruction() != null && medication.getInstruction() != EInstructions.DOES_NOT_MATTER) {
-                    instrStr = medication.getInstruction().getDescription().toLowerCase();
+                    instrStr = medication.getInstruction().getDescription(binding.getRoot().getContext());
                 }
 
                 binding.medInstructions.setText(String.format("%s %s %s", amountStr, formStr, instrStr).trim());

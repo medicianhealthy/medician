@@ -259,7 +259,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             }
         });
         com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(appContext);
-        Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), status.toLowerCase()), Snackbar.LENGTH_LONG)
+        String localizedStatus = status;
+        if ("TAKEN".equals(status)) localizedStatus = getString(R.string.take);
+        else if ("SKIPPED".equals(status)) localizedStatus = getString(R.string.button_skip);
+
+        Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), localizedStatus), Snackbar.LENGTH_LONG)
                 .setAction(R.string.button_undo, v -> {
                     instance.setStatus("SCHEDULED"); instance.setActionTime(0);
                     AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -302,7 +306,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                 AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
                 com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
             });
-            Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), getString(R.string.button_reschedule).toLowerCase()), Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), getString(R.string.button_reschedule)), Snackbar.LENGTH_SHORT).show();
         });
         picker.show(getChildFragmentManager(), "reschedule");
     }
