@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean isInitialLaunch;
     private long lastBackPressedTime;
     private Timer adCheckTimer;
+    private boolean mIsFabVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,6 +274,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (settingsMenuItem != null) {
                 settingsMenuItem.setVisible(currentDestinationId != R.id.nav_settings);
             }
+
+            // Show Top Bar '+' icon ONLY if the Floating Action Button is hidden
+            android.view.MenuItem addMedItem = menu.findItem(R.id.action_add_med);
+            if (addMedItem != null) {
+                addMedItem.setVisible(!mIsFabVisible);
+            }
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -294,6 +301,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         if (itemId == R.id.action_premium) {
             new com.robinzon.medicationwizard.ui.settings.PremiumBottomSheet().show(getSupportFragmentManager(), "PremiumMain");
+            return true;
+        }
+
+        if (itemId == R.id.action_add_med) {
+            new com.robinzon.medicationwizard.ui.AddMedicationBottomSheet().show(getSupportFragmentManager(), "AddMedMain");
             return true;
         }
 
@@ -337,10 +349,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void setFabVisible(boolean visible) {
+        mIsFabVisible = visible;
         final View fab = findViewById(R.id.fab);
         if (fab != null) {
             fab.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
+        invalidateOptionsMenu();
     }
 
     public void onMoveToForeground() {

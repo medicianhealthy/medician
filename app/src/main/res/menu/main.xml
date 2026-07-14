@@ -2,6 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_add_med"
+        android:icon="@drawable/ic_add"
+        android:orderInCategory="90"
+        android:title="@string/fragment_add_med_title"
+        app:iconTint="?attr/colorPrimary"
+        app:showAsAction="always"
+        android:visible="false" />
+
+    <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_settings"
         android:orderInCategory="100"
