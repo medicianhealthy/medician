@@ -16,10 +16,6 @@ import com.robinzon.medicationwizard.R;
 @SuppressWarnings("unused")
 public enum EMeasurementUnit {
     /**
-     * Grams.
-     */
-    Grams("g", R.string.unit_grams),
-    /**
      * Milligrams.
      */
     Milligram("mg", R.string.unit_mg),
@@ -35,6 +31,10 @@ public enum EMeasurementUnit {
      * Milliliters.
      */
     Milliliter("mL", R.string.unit_ml),
+    /**
+     * Grams.
+     */
+    Grams("g", R.string.unit_grams),
     /**
      * Percentage concentration (commonly used for topical solutions).
      */

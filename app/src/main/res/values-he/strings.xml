@@ -372,10 +372,10 @@
     <string name="snooze_unlimited">ללא הגבלה</string>
 
     <!-- Measurement Units -->
+    <string name="unit_mg">מ״ג</string>
+    <string name="unit_iu">יב״ל</string>
+    <string name="unit_mcg">מק״ג</string>
+    <string name="unit_ml">מ״ל</string>
     <string name="unit_grams">גרם</string>
-    <string name="unit_mg">מ"ג</string>
-    <string name="unit_iu">יב"ל</string>
-    <string name="unit_mcg">מק"ג</string>
-    <string name="unit_ml">מ"ל</string>
     <string name="unit_percentage">%</string>
 </resources>
