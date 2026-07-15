@@ -56,11 +56,15 @@ public class MedicationWizardApplication extends Application
 
     /**
      * Re-applies the saved language preference to the current application context.
+     * If no preference is saved, the app follows the system language.
      */
     private void applyLanguage() {
-        String langCode = SharedPreferencesManager.getInstance(this).getString(SettingsViewModel.KEY_APP_LANGUAGE, "en");
-        androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
-        AppCompatDelegate.setApplicationLocales(locales);
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(this);
+        if (sp.containsKey(SettingsViewModel.KEY_APP_LANGUAGE)) {
+            String langCode = sp.getString(SettingsViewModel.KEY_APP_LANGUAGE, "en");
+            androidx.core.os.LocaleListCompat locales = androidx.core.os.LocaleListCompat.forLanguageTags(langCode);
+            AppCompatDelegate.setApplicationLocales(locales);
+        }
     }
 
     /**

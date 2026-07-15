@@ -49,6 +49,7 @@
     <string name="theme_light">בהיר</string>
     <string name="theme_dark">כהה</string>
     <string name="theme_system">ברירת מחדל של המערכת</string>
+    <string name="lang_system">ברירת מחדל של המערכת</string>
 
     <string name="settings_language_title">שפת האפליקציה</string>
     <string name="settings_language_summary">בחר את השפה שבה יופיע הקסם.</string>

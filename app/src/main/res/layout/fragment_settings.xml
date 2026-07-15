@@ -682,6 +682,10 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <include
+            android:id="@+id/layout_language"
+            layout="@layout/layout_settings_language" />
+
         <!-- Category: Data -->
         <TextView
             android:layout_width="wrap_content"

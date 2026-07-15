@@ -125,7 +125,16 @@ public class SettingsViewModel extends AndroidViewModel {
         mFlashPattern.setValue(sp.getString(KEY_FLASH_PATTERN, "None"));
         mSnoozeDuration.setValue(sp.getInt(KEY_SNOOZE_DURATION_MINS, 10));
         mMaxSnoozes.setValue(sp.getInt(KEY_MAX_SNOOZES, 3));
-        mLanguageCode.setValue(sp.getString(KEY_APP_LANGUAGE, "en"));
+        
+        String currentLang = sp.getString(KEY_APP_LANGUAGE, "");
+        if (currentLang.isEmpty()) {
+            currentLang = getApplication().getResources().getConfiguration().getLocales().get(0).getLanguage();
+            // Safeguard: default to "en" if system language is not supported
+            if (!"en".equals(currentLang) && !"iw".equals(currentLang) && !"he".equals(currentLang)) {
+                currentLang = "en";
+            }
+        }
+        mLanguageCode.setValue(currentLang);
     }
 
     /**
@@ -315,11 +324,18 @@ public class SettingsViewModel extends AndroidViewModel {
     /**
      * Updates the application language and applies the change globally.
      *
-     * @param langCode The new ISO language code (e.g., "en", "iw").
+     * @param langCode The new ISO language code (e.g., "en", "iw"), or empty for system default.
      */
     public void setLanguage(String langCode) {
-        if (!"en".equals(langCode) && !"iw".equals(langCode)) {
-            langCode = "en"; // Safeguard for English and Hebrew only
+        if (langCode == null || langCode.isEmpty()) {
+            SharedPreferencesManager.getInstance(getApplication()).removeKey(KEY_APP_LANGUAGE);
+            androidx.appcompat.app.AppCompatDelegate.setApplicationLocales(androidx.core.os.LocaleListCompat.getEmptyLocaleList());
+            refreshSettings();
+            return;
+        }
+
+        if (!"en".equals(langCode) && !"iw".equals(langCode) && !"he".equals(langCode)) {
+            langCode = "en";
         }
         if (langCode.equals(mLanguageCode.getValue())) return;
 

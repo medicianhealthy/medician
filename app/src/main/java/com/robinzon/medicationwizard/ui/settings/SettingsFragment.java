@@ -38,6 +38,7 @@ import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.utils.BackupManager;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.Collections;
 
@@ -145,6 +146,21 @@ public class SettingsFragment extends MedicationWizardFragment {
                 dialog.show();
             }
         });
+
+        viewModel.getLanguageCode().observe(getViewLifecycleOwner(), lang -> {
+            if (binding != null && binding.layoutLanguage != null) {
+                String label = switch (lang) {
+                    case "en" -> getString(R.string.lang_english);
+                    case "iw", "he" -> getString(R.string.lang_hebrew);
+                    default -> getString(R.string.lang_system);
+                };
+                binding.layoutLanguage.txtCurrentLanguage.setText(label);
+            }
+        });
+
+        if (binding.layoutLanguage != null) {
+            binding.layoutLanguage.btnLanguage.setOnClickListener(v -> showLanguagePickerDialog());
+        }
 
         viewModel.getSoundName().observe(getViewLifecycleOwner(), name -> {
             if (binding != null && binding.txtSoundDesc != null) {
@@ -847,6 +863,29 @@ public class SettingsFragment extends MedicationWizardFragment {
         d.setMessage(getString(R.string.sign_in_required_message));
         d.setPositiveButton(getString(R.string.cloud_backup_title), (dialog, i) -> googleSignInLauncher.launch(googleSignInClient.getSignInIntent()));
         d.setNegativeButton(getString(R.string.button_not_now), null);
+        d.show();
+    }
+
+    private void showLanguagePickerDialog() {
+        String[] options = {getString(R.string.lang_system), getString(R.string.lang_english), getString(R.string.lang_hebrew)};
+        String[] codes = {"", "en", "iw"};
+        
+        int currentIdx = 0;
+        String currentLang = SharedPreferencesManager.getInstance(requireContext()).getString(SettingsViewModel.KEY_APP_LANGUAGE, "");
+        for (int i = 0; i < codes.length; i++) {
+            if (codes[i].equals(currentLang)) {
+                currentIdx = i;
+                break;
+            }
+        }
+
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        d.setTitle(getString(R.string.settings_language_title));
+        d.setSingleChoiceItems(options, currentIdx, (dialog, which) -> {
+            viewModel.setLanguage(codes[which]);
+            dialog.dismiss();
+            if (getActivity() instanceof MainActivity main) main.addInteractionScore(2.0f);
+        });
         d.show();
     }
 
