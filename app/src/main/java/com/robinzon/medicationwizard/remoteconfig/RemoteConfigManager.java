@@ -12,7 +12,6 @@ import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.utils.TimeManager;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class RemoteConfigManager {
     public static final float FETCH_INTERVAL_HOURS = 0.5F;
     public static final byte FETCH_TIMEOUT_SECONDS = 5;
     private static final String PREF_PREFIX = "rc_cache_";
-    public static WeakReference<RemoteConfigManager> sRemoteConfigManagerInstance;
+    private static RemoteConfigManager sRemoteConfigManagerInstance;
     private String LOG_REMOTE_CONFIG_VALUES;
     private Map<String, FirebaseRemoteConfigValue> mRemoteConfigValues;
 
@@ -39,11 +38,11 @@ public class RemoteConfigManager {
     }
 
     @NonNull
-    public static RemoteConfigManager getInstance() {
-        if (null == sRemoteConfigManagerInstance || null == sRemoteConfigManagerInstance.get()) {
-            sRemoteConfigManagerInstance = new WeakReference<>(new RemoteConfigManager());
+    public static synchronized RemoteConfigManager getInstance() {
+        if (null == sRemoteConfigManagerInstance) {
+            sRemoteConfigManagerInstance = new RemoteConfigManager();
         }
-        return sRemoteConfigManagerInstance.get();
+        return sRemoteConfigManagerInstance;
     }
 
     private long getMinimumFetchIntervalInSeconds() {

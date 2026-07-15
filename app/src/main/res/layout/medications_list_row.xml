@@ -24,15 +24,21 @@
             app:srcCompat="@drawable/ic_med_pill"
             app:tint="?attr/colorPrimary" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_content_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="52dp" />
+
         <!-- Vertical stack for all textual content to prevent overlap -->
         <LinearLayout
             android:id="@+id/text_content_stack"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toStartOf="@+id/icon_done"
-            app:layout_constraintStart_toEndOf="@id/med_icon"
+            app:layout_constraintStart_toStartOf="@id/guideline_content_start"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -186,7 +192,7 @@
         <!-- ACTION BUTTONS: Flow helper allows buttons to wrap if they exceed available width -->
         <androidx.constraintlayout.helper.widget.Flow
             android:id="@+id/button_flow"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:constraint_referenced_ids="take_btn,reschedule_btn,skip_btn"
@@ -196,8 +202,7 @@
             app:flow_verticalGap="8dp"
             app:flow_wrapMode="aligned"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/text_content_stack"
+            app:layout_constraintStart_toStartOf="@id/guideline_content_start"
             app:layout_constraintTop_toBottomOf="@id/text_content_stack" />
 
         <com.google.android.material.button.MaterialButton
@@ -205,6 +210,8 @@
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:minWidth="0dp"
@@ -218,6 +225,8 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:minWidth="0dp"
@@ -231,6 +240,8 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:minWidth="0dp"
@@ -244,6 +255,10 @@
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:insetLeft="0dp"
+            android:insetRight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/button_untake"
             android:textColor="?attr/colorError"
             android:visibility="gone"

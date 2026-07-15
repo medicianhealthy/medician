@@ -268,6 +268,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            holder.cancelAnimations();
             OnboardingPage page = pages.get(position);
             holder.title.setText(page.title);
             holder.desc.setText(page.description);
@@ -278,18 +279,20 @@ public class OnboardingActivity extends AppCompatActivity {
             holder.mascot.setImageResource(R.drawable.ic_wizard_high_def);
 
             // Apply balanced floating animations
-            startFloatingAnimation(holder.mascot, 0, -35f, 3200);
-            startFloatingAnimation(holder.acc1, 200, 25f, 3500);
-            startFloatingAnimation(holder.acc2, 400, -20f, 4000);
+            holder.animators.add(startFloatingAnimation(holder.mascot, 0, -35f, 3200));
+            holder.animators.add(startFloatingAnimation(holder.acc1, 200, 25f, 3500));
+            holder.animators.add(startFloatingAnimation(holder.acc2, 400, -20f, 4000));
 
             // Add twinkling animations to background stars
-            startTwinkleAnimation(holder.s1, 100);
-            startTwinkleAnimation(holder.s2, 500);
-            startTwinkleAnimation(holder.s3, 900);
-            startTwinkleAnimation(holder.s4, 1300);
+            holder.animators.addAll(startTwinkleAnimation(holder.s1, 100));
+            holder.animators.addAll(startTwinkleAnimation(holder.s2, 500));
+            holder.animators.addAll(startTwinkleAnimation(holder.s3, 900));
+            holder.animators.addAll(startTwinkleAnimation(holder.s4, 1300));
 
             // Handle Scroll Hint visibility
             holder.scrollView.post(() -> {
+                if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
+
                 boolean canScroll = holder.scrollView.canScrollVertically(1);
                 holder.scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
                 if (canScroll) {
@@ -299,6 +302,7 @@ public class OnboardingActivity extends AppCompatActivity {
                     bounce.setRepeatCount(ValueAnimator.INFINITE);
                     bounce.setInterpolator(new AccelerateDecelerateInterpolator());
                     bounce.start();
+                    holder.animators.add(bounce);
 
                     // FIX: Make the hint clickable to trigger actual scroll action
                     holder.scrollHint.setOnClickListener(v -> {
@@ -317,7 +321,8 @@ public class OnboardingActivity extends AppCompatActivity {
             });
         }
 
-        private void startTwinkleAnimation(View view, long delay) {
+        private List<ObjectAnimator> startTwinkleAnimation(View view, long delay) {
+            List<ObjectAnimator> anims = new ArrayList<>();
             ObjectAnimator alpha = ObjectAnimator.ofFloat(view, "alpha", 0.2f, 1.0f, 0.2f);
             ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.8f, 1.2f, 0.8f);
             ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.8f, 1.2f, 0.8f);
@@ -341,15 +346,27 @@ public class OnboardingActivity extends AppCompatActivity {
             alpha.start();
             scaleX.start();
             scaleY.start();
+
+            anims.add(alpha);
+            anims.add(scaleX);
+            anims.add(scaleY);
+            return anims;
         }
 
-        private void startFloatingAnimation(View view, long delay, float distance, long duration) {
+        private ObjectAnimator startFloatingAnimation(View view, long delay, float distance, long duration) {
             ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationY", 0f, distance, 0f);
             animator.setDuration(duration);
             animator.setStartDelay(delay);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.setRepeatCount(ValueAnimator.INFINITE);
             animator.start();
+            return animator;
+        }
+
+        @Override
+        public void onViewRecycled(@NonNull ViewHolder holder) {
+            super.onViewRecycled(holder);
+            holder.cancelAnimations();
         }
 
         @Override
@@ -363,6 +380,7 @@ public class OnboardingActivity extends AppCompatActivity {
             TextView title, desc;
             androidx.core.widget.NestedScrollView scrollView;
             View scrollHint;
+            final List<ObjectAnimator> animators = new ArrayList<>();
 
             ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -379,6 +397,13 @@ public class OnboardingActivity extends AppCompatActivity {
                 desc = itemView.findViewById(R.id.txt_description);
                 scrollView = itemView.findViewById(R.id.onboarding_scroll_view);
                 scrollHint = itemView.findViewById(R.id.scroll_hint);
+            }
+
+            void cancelAnimations() {
+                for (ObjectAnimator animator : animators) {
+                    animator.cancel();
+                }
+                animators.clear();
             }
         }
     }

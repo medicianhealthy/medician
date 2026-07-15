@@ -1,5 +1,5 @@
 [versions]
-agp = "9.2.1"
+agp = "9.3.0"
 appcompat = "1.7.1"
 billing = "9.1.0"
 comGoogleFirebase = "20.0.6"
