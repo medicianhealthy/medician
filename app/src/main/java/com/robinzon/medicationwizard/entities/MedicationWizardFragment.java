@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 
@@ -128,40 +129,63 @@ public class MedicationWizardFragment extends Fragment {
             return;
         }
 
-        scrollView.post(() -> {
-            if (getContext() == null || !isAdded()) return;
+        // Use GlobalLayoutListener for more reliable measurement after child views (like Calendar) are ready
+        ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (getContext() == null || !isAdded()) {
+                    scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    return;
+                }
 
-            // Double check pref inside post in case it was updated while waiting for the message queue
-            if (com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).getBoolean(prefKey, false)) {
-                scrollHint.setVisibility(View.GONE);
-                return;
-            }
-
-            boolean canScroll = scrollView.canScrollVertically(1);
-            scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
-
-            if (canScroll) {
-                // Ensure only one animation is running
-                scrollHint.clearAnimation();
-                android.view.animation.Animation bounce = new TranslateAnimation(0, 0, 0, -15);
-                bounce.setDuration(800);
-                bounce.setRepeatMode(android.view.animation.Animation.REVERSE);
-                bounce.setRepeatCount(android.view.animation.Animation.INFINITE);
-                scrollHint.startAnimation(bounce);
-
-                scrollHint.setOnClickListener(v -> {
-                    // Mark as seen immediately on tap
-                    com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).setBoolean(prefKey, true);
+                // Check pref again in case it changed
+                if (com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).getBoolean(prefKey, false)) {
                     scrollHint.setVisibility(View.GONE);
-                    scrollHint.clearAnimation();
+                    scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    return;
+                }
 
-                    View innerView = scrollView.getChildAt(0);
-                    if (innerView != null) {
-                        scrollView.smoothScrollTo(0, innerView.getBottom());
-                    }
-                });
-            } else {
-                scrollHint.clearAnimation();
+                boolean canScroll = scrollView.canScrollVertically(1);
+                scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
+
+                if (canScroll) {
+                    // Ensure only one animation is running
+                    scrollHint.clearAnimation();
+                    android.view.animation.Animation bounce = new TranslateAnimation(0, 0, 0, -15);
+                    bounce.setDuration(800);
+                    bounce.setRepeatMode(android.view.animation.Animation.REVERSE);
+                    bounce.setRepeatCount(android.view.animation.Animation.INFINITE);
+                    scrollHint.startAnimation(bounce);
+
+                    scrollHint.setOnClickListener(v -> {
+                        // Mark as seen immediately on tap
+                        com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).setBoolean(prefKey, true);
+                        scrollHint.setVisibility(View.GONE);
+                        scrollHint.clearAnimation();
+
+                        View innerView = scrollView.getChildAt(0);
+                        if (innerView != null) {
+                            scrollView.smoothScrollTo(0, innerView.getBottom());
+                        }
+                    });
+
+                    // We found it's scrollable and showed the hint, we can stop listening
+                    scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        };
+
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+        
+        // Ensure cleanup if view is detached before listener fires
+        scrollView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(@NonNull View v) {}
+
+            @Override
+            public void onViewDetachedFromWindow(@NonNull View v) {
+                scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(layoutListener);
+                scrollView.removeOnAttachStateChangeListener(this);
             }
         });
 
@@ -171,7 +195,7 @@ public class MedicationWizardFragment extends Fragment {
                 if (scrollHint.getVisibility() == View.VISIBLE && scrollHint.getAlpha() > 0) {
                     // Mark as seen if user scrolls manually
                     com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).setBoolean(prefKey, true);
-                    
+
                     scrollHint.animate().alpha(0f).setDuration(300).withEndAction(() -> {
                         scrollHint.setVisibility(View.GONE);
                         scrollHint.setAlpha(1f); // Reset for next time (though it won't be shown due to pref)

@@ -13,6 +13,7 @@ import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -269,6 +270,13 @@ public class OnboardingActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.cancelAnimations();
+            
+            // Reset recycled view state
+            holder.scrollHint.setAlpha(1.0f);
+            holder.scrollHint.setTranslationY(0f);
+            holder.scrollHint.setVisibility(View.GONE);
+            holder.scrollHint.clearAnimation();
+
             OnboardingPage page = pages.get(position);
             holder.title.setText(page.title);
             holder.desc.setText(page.description);
@@ -296,36 +304,60 @@ public class OnboardingActivity extends AppCompatActivity {
             if (SharedPreferencesManager.getInstance(context).getBoolean(prefKey, false)) {
                 holder.scrollHint.setVisibility(View.GONE);
             } else {
-                // Handle Scroll Hint visibility
-                holder.scrollView.post(() -> {
-                    if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
-                    if (SharedPreferencesManager.getInstance(context).getBoolean(prefKey, false)) {
-                        holder.scrollHint.setVisibility(View.GONE);
-                        return;
-                    }
+                // Use GlobalLayoutListener for reliable measurement
+                ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) {
+                            holder.scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            return;
+                        }
 
-                    boolean canScroll = holder.scrollView.canScrollVertically(1);
-                    holder.scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
-                    if (canScroll) {
-                        // Start subtle bouncing animation for the hint
-                        ObjectAnimator bounce = ObjectAnimator.ofFloat(holder.scrollHint, "translationY", 0f, -15f, 0f);
-                        bounce.setDuration(1500);
-                        bounce.setRepeatCount(ValueAnimator.INFINITE);
-                        bounce.setInterpolator(new AccelerateDecelerateInterpolator());
-                        bounce.start();
-                        holder.animators.add(bounce);
-
-                        // FIX: Make the hint clickable to trigger actual scroll action
-                        holder.scrollHint.setOnClickListener(v -> {
-                            SharedPreferencesManager.getInstance(context).setBoolean(prefKey, true);
+                        if (SharedPreferencesManager.getInstance(context).getBoolean(prefKey, false)) {
                             holder.scrollHint.setVisibility(View.GONE);
-                            holder.scrollHint.clearAnimation();
+                            holder.scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            return;
+                        }
 
-                            View innerView = holder.scrollView.getChildAt(0);
-                            if (innerView != null) {
-                                holder.scrollView.smoothScrollTo(0, innerView.getBottom());
-                            }
-                        });
+                        boolean canScroll = holder.scrollView.canScrollVertically(1);
+                        holder.scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
+                        if (canScroll) {
+                            // Start subtle bouncing animation for the hint
+                            ObjectAnimator bounce = ObjectAnimator.ofFloat(holder.scrollHint, "translationY", 0f, -15f, 0f);
+                            bounce.setDuration(1500);
+                            bounce.setRepeatCount(ValueAnimator.INFINITE);
+                            bounce.setInterpolator(new AccelerateDecelerateInterpolator());
+                            bounce.start();
+                            holder.animators.add(bounce);
+
+                            // FIX: Make the hint clickable to trigger actual scroll action
+                            holder.scrollHint.setOnClickListener(v -> {
+                                SharedPreferencesManager.getInstance(context).setBoolean(prefKey, true);
+                                holder.scrollHint.setVisibility(View.GONE);
+                                holder.scrollHint.clearAnimation();
+
+                                View innerView = holder.scrollView.getChildAt(0);
+                                if (innerView != null) {
+                                    holder.scrollView.smoothScrollTo(0, innerView.getBottom());
+                                }
+                            });
+                            
+                            // Stop listening once we've measured and shown it
+                            holder.scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    }
+                };
+                holder.scrollView.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+                
+                // Ensure cleanup if view is detached before listener fires
+                holder.scrollView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    @Override
+                    public void onViewAttachedToWindow(@NonNull View v) {}
+
+                    @Override
+                    public void onViewDetachedFromWindow(@NonNull View v) {
+                        holder.scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(layoutListener);
+                        holder.scrollView.removeOnAttachStateChangeListener(this);
                     }
                 });
             }
