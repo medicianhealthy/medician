@@ -1,20 +1,23 @@
 package com.robinzon.medicationwizard.utils;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.robinzon.medicationwizard.BuildConfig;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Utility class for tracking application usage statistics.
  * <p>
- * Performance: Operations are performed asynchronously using {@link AsyncTask}
+ * Performance: Operations are performed asynchronously using a dedicated background executor
  * to ensure that disk I/O for SharedPreferences does not block the UI thread.
  * </p>
  */
 public class Statisticator {
 
+    private static final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
     private static final String SPK_SESSION_COUNT = "spk_session_count";
     private static final String SPK_SESSION_TIME_MINUTES = "spk_session_time_minutes";
     private static final String SPK_USAGE_MINUTES_FOR_ADS = "spk_usage_minutes_for_ads";
@@ -38,7 +41,7 @@ public class Statisticator {
      * @param context Application context.
      */
     public static void onSessionStarted(final Context context) {
-        AsyncTask.execute(() -> {
+        sExecutor.execute(() -> {
             SharedPreferencesManager.getInstance(context).setInt(SPK_SESSION_COUNT, getSessionCount(context) + 1);
         });
     }
@@ -72,7 +75,7 @@ public class Statisticator {
      * @param context Application context.
      */
     public static void incrementDosesLogged(Context context) {
-        AsyncTask.execute(() -> {
+        sExecutor.execute(() -> {
             int count = SharedPreferencesManager.getInstance(context).getInt(SPK_TOTAL_DOSES_LOGGED, 0);
             SharedPreferencesManager.getInstance(context).setInt(SPK_TOTAL_DOSES_LOGGED, count + 1);
         });
@@ -168,7 +171,7 @@ public class Statisticator {
      * @param context Application context.
      */
     public static void resetUsageMinutesForAds(final Context context) {
-        AsyncTask.execute(() -> {
+        sExecutor.execute(() -> {
             SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
             // Reset the foreground anchor for ad usage so only future time counts
             mStartAdUsageActive = System.currentTimeMillis();
@@ -181,7 +184,7 @@ public class Statisticator {
      * @param context Application context.
      */
     public static void onMoveToBackground(final Context context) {
-        AsyncTask.execute(() -> {
+        sExecutor.execute(() -> {
             // Persist the live values which already include the elapsed foreground time
             SharedPreferencesManager.getInstance(context).setFloat(SPK_SESSION_TIME_MINUTES, getTotalUsageMinutes(context));
             SharedPreferencesManager.getInstance(context).setFloat(SPK_USAGE_MINUTES_FOR_ADS, getUsageMinutesForAds(context));
@@ -198,7 +201,7 @@ public class Statisticator {
      * @param context Application context.
      */
     public static void onMoveToForeground(final Context context) {
-        AsyncTask.execute(() -> {
+        sExecutor.execute(() -> {
             long now = System.currentTimeMillis();
             mStartUserActive = now;
             mStartAdUsageActive = now;

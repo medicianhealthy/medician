@@ -1,20 +1,17 @@
 package com.robinzon.medicationwizard.utils;
 
-import java.lang.ref.WeakReference;
-
 public class TimeManager {
 
-    public static WeakReference<TimeManager> sInstance;
+    private static TimeManager sInstance;
 
     private TimeManager() {
     }
 
-    public static TimeManager getInstance() {
-        if (null == sInstance || null == sInstance.get()) {
-            final TimeManager timeManager = new TimeManager();
-            sInstance = new WeakReference<>(timeManager);
+    public static synchronized TimeManager getInstance() {
+        if (null == sInstance) {
+            sInstance = new TimeManager();
         }
-        return sInstance.get();
+        return sInstance;
     }
 
     //Milliseconds

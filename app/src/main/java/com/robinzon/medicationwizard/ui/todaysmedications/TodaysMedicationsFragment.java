@@ -437,27 +437,39 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         if (getActivity() instanceof MainActivity main) main.setFabVisible(!isEmpty || hasAnyMeds);
     }
 
+    private final List<AnimatorSet> mLightningAnimators = new ArrayList<>();
+
     private void startLightningLogic() {
         MaterialButton actionButton = mBinding.emptyLayout.btnEmptyAction;
         mInactivityRunnable = () -> {
-            if (mLightningAnimator == null) {
-                mLightningAnimator = ValueAnimator.ofInt(0, 10, 0);
-                mLightningAnimator.setDuration(1500);
-                mLightningAnimator.setRepeatCount(3);
-                mLightningAnimator.addUpdateListener(animation -> actionButton.setStrokeWidth((int) animation.getAnimatedValue()));
-                ObjectAnimator mascotAnim = ObjectAnimator.ofFloat(mBinding.emptyLayout.emptyMascot, "rotation", 0f, 10f, -10f, 0f);
-                mascotAnim.setDuration(1000);
-                AnimatorSet set = new AnimatorSet();
-                set.playTogether(mLightningAnimator, mascotAnim);
-                set.start();
-                mInactivityHandler.postDelayed(mInactivityRunnable, 15000);
-            }
+            if (mBinding == null || !isAdded()) return;
+
+            mLightningAnimator = ValueAnimator.ofInt(0, 10, 0);
+            mLightningAnimator.setDuration(1500);
+            mLightningAnimator.setRepeatCount(3);
+            mLightningAnimator.addUpdateListener(animation -> {
+                if (mBinding != null) actionButton.setStrokeWidth((int) animation.getAnimatedValue());
+            });
+
+            ObjectAnimator mascotAnim = ObjectAnimator.ofFloat(mBinding.emptyLayout.emptyMascot, "rotation", 0f, 10f, -10f, 0f);
+            mascotAnim.setDuration(1000);
+
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(mLightningAnimator, mascotAnim);
+            set.start();
+            mLightningAnimators.add(set);
+
+            mInactivityHandler.postDelayed(mInactivityRunnable, 15000);
         };
         mInactivityHandler.postDelayed(mInactivityRunnable, 10000);
     }
 
     private void stopLightningLogic() {
         mInactivityHandler.removeCallbacksAndMessages(null);
+        for (AnimatorSet set : mLightningAnimators) {
+            set.cancel();
+        }
+        mLightningAnimators.clear();
         if (mLightningAnimator != null) mLightningAnimator.cancel();
         mLightningAnimator = null;
     }

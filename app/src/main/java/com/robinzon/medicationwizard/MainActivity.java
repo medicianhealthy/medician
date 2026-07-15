@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
@@ -37,9 +39,6 @@ import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.PermissionManager;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * The main entry point and hosting activity for the Medication Wizard application.
  */
@@ -51,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private NavController navController;
     private boolean isInitialLaunch;
     private long lastBackPressedTime;
-    private Timer adCheckTimer;
+    private final Handler adCheckHandler = new Handler(Looper.getMainLooper());
+    private Runnable adCheckRunnable;
     private boolean mIsFabVisible = true;
 
     @Override
@@ -158,24 +158,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      * Periodically checks for ad availability and eligibility.
      */
     private void startAdCheckTimer() {
-        if (adCheckTimer != null) adCheckTimer.cancel();
-        adCheckTimer = new Timer();
-        adCheckTimer.schedule(new TimerTask() {
+        if (adCheckRunnable != null) return;
+        adCheckRunnable = new Runnable() {
             @Override
             public void run() {
-                runOnUiThread(() -> {
-                    if (null != adsManager) {
-                        adsManager.loadAds(); // Check for banner/interstitial eligibility based on real-time usage
-                    }
-                });
+                if (null != adsManager) {
+                    adsManager.loadAds(); // Check for banner/interstitial eligibility based on real-time usage
+                }
+                adCheckHandler.postDelayed(this, 10000L);
             }
-        }, 10000L, 10000L); // Check every 10 seconds
+        };
+        adCheckHandler.postDelayed(adCheckRunnable, 10000L); // Check every 10 seconds
     }
 
     private void stopAdCheckTimer() {
-        if (adCheckTimer != null) {
-            adCheckTimer.cancel();
-            adCheckTimer = null;
+        if (adCheckRunnable != null) {
+            adCheckHandler.removeCallbacks(adCheckRunnable);
+            adCheckRunnable = null;
         }
     }
 
@@ -359,15 +358,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     public void onMoveToForeground() {
         if (isInitialLaunch) {
-            final Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(() -> {
-                        if (!isFinishing() && !isDestroyed() && getAdsManager() != null) {
-                            getAdsManager().showAppOpenAd();
-                        }
-                    });
+            adCheckHandler.postDelayed(() -> {
+                if (!isFinishing() && !isDestroyed() && getAdsManager() != null) {
+                    getAdsManager().showAppOpenAd();
                 }
             }, 300L);
         }

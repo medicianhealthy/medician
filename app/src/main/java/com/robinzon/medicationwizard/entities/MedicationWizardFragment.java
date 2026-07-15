@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard.entities;
 
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -30,7 +31,7 @@ import java.util.List;
  */
 public class MedicationWizardFragment extends Fragment {
 
-    private final List<AnimatorSet> mActiveAnimators = new ArrayList<>();
+    private final List<Animator> mActiveAnimators = new ArrayList<>();
 
     /**
      * Triggers the synchronized animations for empty states (Breathing button + Twinkling stars).
@@ -107,8 +108,8 @@ public class MedicationWizardFragment extends Fragment {
      * Stops and clears all active animations to prevent memory leaks.
      */
     protected void stopEmptyStateAnimations() {
-        for (AnimatorSet set : mActiveAnimators) {
-            set.cancel();
+        for (Animator animator : mActiveAnimators) {
+            animator.cancel();
         }
         mActiveAnimators.clear();
     }
