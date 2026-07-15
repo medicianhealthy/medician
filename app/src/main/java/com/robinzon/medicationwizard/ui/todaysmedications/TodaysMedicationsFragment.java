@@ -429,6 +429,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                     mBinding.emptyLayout.btnEmptyAction.setVisibility(View.VISIBLE);
             }
             startEmptyStateAnimations(mBinding.getRoot());
+            triggerScrollHintCheck(mBinding.emptyLayout.emptyScrollView, mBinding.emptyLayout.emptyScrollHint, "hint_seen_today");
             startLightningLogic();
         } else {
             stopEmptyStateAnimations();
@@ -479,39 +480,6 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     private void setupEmptyView() {
-        if (mBinding == null || mBinding.emptyLayout == null) return;
-        
-        final androidx.core.widget.NestedScrollView scrollView = mBinding.emptyLayout.getRoot().findViewById(R.id.empty_scroll_view);
-        final View scrollHint = mBinding.emptyLayout.getRoot().findViewById(R.id.empty_scroll_hint);
-        
-        if (scrollView != null && scrollHint != null) {
-            // Check if scroll is needed after layout
-            scrollView.post(() -> {
-                if (getContext() == null || !isAdded()) return;
-                boolean canScroll = scrollView.canScrollVertically(1);
-                scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
-                
-                if (canScroll) {
-                    android.view.animation.Animation bounce = new android.view.animation.TranslateAnimation(0, 0, 0, -15);
-                    bounce.setDuration(800);
-                    bounce.setRepeatMode(android.view.animation.Animation.REVERSE);
-                    bounce.setRepeatCount(android.view.animation.Animation.INFINITE);
-                    scrollHint.startAnimation(bounce);
-                    
-                    scrollHint.setOnClickListener(v -> scrollView.smoothScrollBy(0, 300));
-                }
-            });
-
-            scrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-                if (scrollY > 50 || !scrollView.canScrollVertically(1)) {
-                    scrollHint.animate().alpha(0f).setDuration(300).withEndAction(() -> {
-                        scrollHint.setVisibility(View.GONE);
-                        scrollHint.clearAnimation();
-                    }).start();
-                }
-            });
-        }
-
         mBinding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
             if (getActivity() != null) {
                 AddMedicationBottomSheet bs = new AddMedicationBottomSheet();

@@ -87,6 +87,7 @@ public class HistoryFragment extends MedicationWizardFragment {
             }
 
             startEmptyStateAnimations(binding.getRoot());
+            triggerScrollHintCheck(binding.emptyLayout.emptyScrollView, binding.emptyLayout.emptyScrollHint, "hint_seen_history");
             binding.cardSummary.setVisibility(View.GONE);
         } else {
             stopEmptyStateAnimations();

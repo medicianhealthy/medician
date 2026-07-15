@@ -289,32 +289,54 @@ public class OnboardingActivity extends AppCompatActivity {
             holder.animators.addAll(startTwinkleAnimation(holder.s3, 900));
             holder.animators.addAll(startTwinkleAnimation(holder.s4, 1300));
 
-            // Handle Scroll Hint visibility
-            holder.scrollView.post(() -> {
-                if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
+            // Logic: The scroll hint should only be shown once per page
+            final String prefKey = "hint_seen_onboarding_" + position;
+            final android.content.Context context = holder.itemView.getContext();
 
-                boolean canScroll = holder.scrollView.canScrollVertically(1);
-                holder.scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
-                if (canScroll) {
-                    // Start subtle bouncing animation for the hint
-                    ObjectAnimator bounce = ObjectAnimator.ofFloat(holder.scrollHint, "translationY", 0f, -15f, 0f);
-                    bounce.setDuration(1500);
-                    bounce.setRepeatCount(ValueAnimator.INFINITE);
-                    bounce.setInterpolator(new AccelerateDecelerateInterpolator());
-                    bounce.start();
-                    holder.animators.add(bounce);
+            if (SharedPreferencesManager.getInstance(context).getBoolean(prefKey, false)) {
+                holder.scrollHint.setVisibility(View.GONE);
+            } else {
+                // Handle Scroll Hint visibility
+                holder.scrollView.post(() -> {
+                    if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
+                    if (SharedPreferencesManager.getInstance(context).getBoolean(prefKey, false)) {
+                        holder.scrollHint.setVisibility(View.GONE);
+                        return;
+                    }
 
-                    // FIX: Make the hint clickable to trigger actual scroll action
-                    holder.scrollHint.setOnClickListener(v -> {
-                        holder.scrollView.smoothScrollBy(0, 300); // Scroll down by 300px
-                    });
-                }
-            });
+                    boolean canScroll = holder.scrollView.canScrollVertically(1);
+                    holder.scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
+                    if (canScroll) {
+                        // Start subtle bouncing animation for the hint
+                        ObjectAnimator bounce = ObjectAnimator.ofFloat(holder.scrollHint, "translationY", 0f, -15f, 0f);
+                        bounce.setDuration(1500);
+                        bounce.setRepeatCount(ValueAnimator.INFINITE);
+                        bounce.setInterpolator(new AccelerateDecelerateInterpolator());
+                        bounce.start();
+                        holder.animators.add(bounce);
+
+                        // FIX: Make the hint clickable to trigger actual scroll action
+                        holder.scrollHint.setOnClickListener(v -> {
+                            SharedPreferencesManager.getInstance(context).setBoolean(prefKey, true);
+                            holder.scrollHint.setVisibility(View.GONE);
+                            holder.scrollHint.clearAnimation();
+
+                            View innerView = holder.scrollView.getChildAt(0);
+                            if (innerView != null) {
+                                holder.scrollView.smoothScrollTo(0, innerView.getBottom());
+                            }
+                        });
+                    }
+                });
+            }
 
             holder.scrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                 // Hide hint as soon as user starts scrolling down significantly
                 if (scrollY > 50) {
-                    holder.scrollHint.animate().alpha(0f).setDuration(300).withEndAction(() -> holder.scrollHint.setVisibility(View.GONE)).start();
+                    if (holder.scrollHint.getVisibility() == View.VISIBLE) {
+                        SharedPreferencesManager.getInstance(context).setBoolean(prefKey, true);
+                        holder.scrollHint.animate().alpha(0f).setDuration(300).withEndAction(() -> holder.scrollHint.setVisibility(View.GONE)).start();
+                    }
                 } else if (!holder.scrollView.canScrollVertically(1)) {
                     holder.scrollHint.setVisibility(View.GONE);
                 }

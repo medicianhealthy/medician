@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.TranslateAnimation;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -112,6 +113,73 @@ public class MedicationWizardFragment extends Fragment {
             animator.cancel();
         }
         mActiveAnimators.clear();
+    }
+
+    /**
+     * Re-evaluates if the empty state content is scrollable and shows the hint if needed.
+     * Call this whenever the empty state becomes visible or its layout constraints change.
+     */
+    protected void triggerScrollHintCheck(androidx.core.widget.NestedScrollView scrollView, View scrollHint, String prefKey) {
+        if (scrollView == null || scrollHint == null || prefKey == null) return;
+
+        // Check if user has already interacted with this hint
+        if (com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).getBoolean(prefKey, false)) {
+            scrollHint.setVisibility(View.GONE);
+            return;
+        }
+
+        scrollView.post(() -> {
+            if (getContext() == null || !isAdded()) return;
+
+            // Double check pref inside post in case it was updated while waiting for the message queue
+            if (com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).getBoolean(prefKey, false)) {
+                scrollHint.setVisibility(View.GONE);
+                return;
+            }
+
+            boolean canScroll = scrollView.canScrollVertically(1);
+            scrollHint.setVisibility(canScroll ? View.VISIBLE : View.GONE);
+
+            if (canScroll) {
+                // Ensure only one animation is running
+                scrollHint.clearAnimation();
+                android.view.animation.Animation bounce = new TranslateAnimation(0, 0, 0, -15);
+                bounce.setDuration(800);
+                bounce.setRepeatMode(android.view.animation.Animation.REVERSE);
+                bounce.setRepeatCount(android.view.animation.Animation.INFINITE);
+                scrollHint.startAnimation(bounce);
+
+                scrollHint.setOnClickListener(v -> {
+                    // Mark as seen immediately on tap
+                    com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).setBoolean(prefKey, true);
+                    scrollHint.setVisibility(View.GONE);
+                    scrollHint.clearAnimation();
+
+                    View innerView = scrollView.getChildAt(0);
+                    if (innerView != null) {
+                        scrollView.smoothScrollTo(0, innerView.getBottom());
+                    }
+                });
+            } else {
+                scrollHint.clearAnimation();
+            }
+        });
+
+        // Initialize scroll listener once
+        scrollView.setOnScrollChangeListener((View.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (scrollY > 50 || !scrollView.canScrollVertically(1)) {
+                if (scrollHint.getVisibility() == View.VISIBLE && scrollHint.getAlpha() > 0) {
+                    // Mark as seen if user scrolls manually
+                    com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext()).setBoolean(prefKey, true);
+                    
+                    scrollHint.animate().alpha(0f).setDuration(300).withEndAction(() -> {
+                        scrollHint.setVisibility(View.GONE);
+                        scrollHint.setAlpha(1f); // Reset for next time (though it won't be shown due to pref)
+                        scrollHint.clearAnimation();
+                    }).start();
+                }
+            }
+        });
     }
 
     /**

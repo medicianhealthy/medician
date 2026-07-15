@@ -116,6 +116,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
         if (isEmpty) {
             startEmptyStateAnimations(binding.getRoot());
+            triggerScrollHintCheck(binding.emptyLayout.emptyScrollView, binding.emptyLayout.emptyScrollHint, "hint_seen_list");
         } else {
             stopEmptyStateAnimations();
         }
