@@ -567,6 +567,10 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <include
+                    android:id="@+id/layout_language"
+                    layout="@layout/layout_settings_language" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
