@@ -165,12 +165,18 @@ public class HistoryFragment extends MedicationWizardFragment {
 
             @Override
             public void onTakeGroup(List<DoseInstanceEntity> doses, int position) {
-                for (DoseInstanceEntity d : doses) updateStatus(d, "TAKEN");
+                for (DoseInstanceEntity d : doses) applyStatusUpdate(d, "TAKEN");
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).addInteractionScore(2.0f);
+                }
             }
 
             @Override
             public void onSkipGroup(List<DoseInstanceEntity> doses, int position) {
-                for (DoseInstanceEntity d : doses) updateStatus(d, "SKIPPED");
+                for (DoseInstanceEntity d : doses) applyStatusUpdate(d, "SKIPPED");
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).addInteractionScore(1.0f);
+                }
             }
 
             @Override
@@ -179,12 +185,12 @@ public class HistoryFragment extends MedicationWizardFragment {
 
             @Override
             public void onUntakeGroup(List<DoseInstanceEntity> doses, int position) {
-                for (DoseInstanceEntity d : doses) updateStatus(d, "SCHEDULED");
+                for (DoseInstanceEntity d : doses) applyStatusUpdate(d, "SCHEDULED");
             }
 
             @Override
             public void onUnskipGroup(List<DoseInstanceEntity> doses, int position) {
-                for (DoseInstanceEntity d : doses) updateStatus(d, "SCHEDULED");
+                for (DoseInstanceEntity d : doses) applyStatusUpdate(d, "SCHEDULED");
             }
         });
         binding.recyclerHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -193,16 +199,24 @@ public class HistoryFragment extends MedicationWizardFragment {
 
     private void updateStatus(DoseInstanceEntity instance, String status) {
         if ("TAKEN".equals(status)) {
-            checkAndClarifyTakeTiming(instance, () -> applyStatusUpdate(instance, status));
+            final boolean[] success = {false};
+            checkAndClarifyTakeTiming(instance, () -> {
+                applyStatusUpdate(instance, status);
+                success[0] = true;
+            }, dialog -> {
+                if (success[0] && getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).addInteractionScore(1.5f);
+                }
+            });
         } else {
             applyStatusUpdate(instance, status);
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).addInteractionScore(1.5f);
+            }
         }
     }
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).addInteractionScore(1.5f);
-        }
         instance.setStatus(status);
         if ("TAKEN".equals(status)) {
             if (instance.getActionTime() <= 0) {

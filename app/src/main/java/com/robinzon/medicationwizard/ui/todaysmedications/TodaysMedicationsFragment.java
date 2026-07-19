@@ -258,13 +258,45 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
             @Override
             public void onTakeGroup(List<DoseInstanceEntity> d, int p) {
-                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "TAKEN");
-                triggerAdForGroupAction(d.size());
+                // Find the first med that requires timing clarification
+                DoseInstanceEntity repMed = null;
+                for (DoseInstanceEntity x : d) {
+                    if (isTimingClarificationRequired(x)) {
+                        repMed = x;
+                        break;
+                    }
+                }
+
+                if (repMed != null) {
+                    final boolean[] success = {false};
+                    // Show confirmation for the whole group, representing with the problematic one
+                    checkAndClarifyTakeTiming(repMed, () -> {
+                        for (DoseInstanceEntity x : d) applyStatusUpdate(x, "TAKEN");
+                        success[0] = true;
+                    }, dialog -> {
+                        if (success[0]) {
+                            // Add group interaction score once
+                            if (getActivity() instanceof MainActivity main) {
+                                main.addInteractionScore(2.0f);
+                            }
+                            triggerAdForGroupAction(d.size());
+                        }
+                    });
+                } else {
+                    for (DoseInstanceEntity x : d) applyStatusUpdate(x, "TAKEN");
+                    if (getActivity() instanceof MainActivity main) {
+                        main.addInteractionScore(2.0f);
+                    }
+                    triggerAdForGroupAction(d.size());
+                }
             }
 
             @Override
             public void onSkipGroup(List<DoseInstanceEntity> d, int p) {
-                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SKIPPED");
+                for (DoseInstanceEntity x : d) applyStatusUpdate(x, "SKIPPED");
+                if (getActivity() instanceof MainActivity main) {
+                    main.addInteractionScore(1.0f);
+                }
                 triggerAdForGroupAction(d.size());
             }
 
@@ -275,13 +307,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
             @Override
             public void onUntakeGroup(List<DoseInstanceEntity> d, int p) {
-                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SCHEDULED");
+                for (DoseInstanceEntity x : d) applyStatusUpdate(x, "SCHEDULED");
                 triggerAdForGroupAction(d.size());
             }
 
             @Override
             public void onUnskipGroup(List<DoseInstanceEntity> d, int p) {
-                for (DoseInstanceEntity x : d) updateInstanceStatus(x, "SCHEDULED");
+                for (DoseInstanceEntity x : d) applyStatusUpdate(x, "SCHEDULED");
                 triggerAdForGroupAction(d.size());
             }
         });
@@ -290,21 +322,56 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         mBinding.recyclerView.setAdapter(mAdapter);
     }
 
+    private boolean isTimingClarificationRequired(DoseInstanceEntity instance) {
+        long now = System.currentTimeMillis();
+        long scheduled = instance.getScheduledTime();
+        long diffMins = (now - scheduled) / 60000;
+
+        com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm =
+                com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
+
+        int defaultEarly = rcm.getEarlyTakeThresholdMins();
+        int defaultLate = rcm.getLateTakeThresholdMins();
+        if (defaultEarly <= 0) defaultEarly = 60;
+        if (defaultLate <= 0) defaultLate = 180;
+
+        int earlyThreshold = defaultEarly;
+        int lateThreshold = defaultLate;
+
+        boolean unlocked = com.robinzon.medicationwizard.AppConfig.isFeatureUnlocked(requireContext(), com.robinzon.medicationwizard.AppConfig.FeaturePassType.DOSE_WINDOW);
+        if (unlocked) {
+            com.robinzon.medicationwizard.utils.SharedPreferencesManager sp = com.robinzon.medicationwizard.utils.SharedPreferencesManager.getInstance(requireContext());
+            earlyThreshold = sp.getInt(com.robinzon.medicationwizard.ui.settings.SettingsViewModel.KEY_CUSTOM_EARLY_THRESHOLD, defaultEarly);
+            lateThreshold = sp.getInt(com.robinzon.medicationwizard.ui.settings.SettingsViewModel.KEY_CUSTOM_LATE_THRESHOLD, defaultLate);
+        }
+
+        return diffMins < -earlyThreshold || diffMins > lateThreshold;
+    }
+
     private void updateInstanceStatus(DoseInstanceEntity instance, String status) {
         if ("TAKEN".equals(status)) {
+            final boolean[] success = {false};
             checkAndClarifyTakeTiming(instance, () -> {
                 applyStatusUpdate(instance, status);
-                triggerAdIfEligible();
+                success[0] = true;
+            }, dialog -> {
+                if (success[0]) {
+                    if (getActivity() instanceof MainActivity main) {
+                        main.addInteractionScore(1.5f);
+                    }
+                    triggerAdIfEligible();
+                }
             });
         } else {
             applyStatusUpdate(instance, status);
+            if (getActivity() instanceof MainActivity main) {
+                main.addInteractionScore(1.5f);
+            }
             triggerAdIfEligible();
         }
     }
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
-        if (getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).addInteractionScore(1.5f);
         instance.setStatus(status);
         if (instance.getActionTime() <= 0) {
             instance.setActionTime(System.currentTimeMillis());

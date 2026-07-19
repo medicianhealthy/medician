@@ -250,11 +250,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      * @param score The amount of points to add (e.g., 1.5 for main items, 1.0 for sub-items).
      */
     public void addInteractionScore(float score) {
-        if (com.robinzon.medicationwizard.utils.Statisticator.addInteractionScoreAndCheck(this, score)) {
+        if (addInteractionScoreOnly(score)) {
             // Threshold met, trigger interstitial show
             Logger.log("Ads", "Score threshold reached, requesting interstitial");
             adsManager.showInterstitialAd();
         }
+    }
+
+    /**
+     * Adds the interaction score without immediately triggering an ad.
+     * @return True if the threshold was met.
+     */
+    public boolean addInteractionScoreOnly(float score) {
+        return com.robinzon.medicationwizard.utils.Statisticator.addInteractionScoreAndCheck(this, score);
     }
 
     @Override

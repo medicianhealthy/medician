@@ -255,6 +255,10 @@ public class MedicationWizardFragment extends Fragment {
      * @param callback Logic to execute if confirmed.
      */
     protected void checkAndClarifyTakeTiming(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback) {
+        checkAndClarifyTakeTiming(instance, callback, null);
+    }
+
+    protected void checkAndClarifyTakeTiming(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback, android.content.DialogInterface.OnDismissListener dismissListener) {
         long now = System.currentTimeMillis();
         long scheduled = instance.getScheduledTime();
 
@@ -290,11 +294,12 @@ public class MedicationWizardFragment extends Fragment {
         }
 
         if (diffMins < -earlyThreshold) {
-            showTimingClarificationDialog(instance, callback, getString(R.string.take_early_warning));
+            showTimingClarificationDialog(instance, callback, getString(R.string.take_early_warning), dismissListener);
         } else if (diffMins > lateThreshold) {
-            showTimingClarificationDialog(instance, callback, getString(R.string.take_late_warning));
+            showTimingClarificationDialog(instance, callback, getString(R.string.take_late_warning), dismissListener);
         } else {
             callback.onApply();
+            if (dismissListener != null) dismissListener.onDismiss(null);
         }
     }
 
@@ -306,7 +311,7 @@ public class MedicationWizardFragment extends Fragment {
      * @param callback Logic to execute if the timing is valid or user confirms.
      */
 
-    private void showTimingClarificationDialog(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback, String message) {
+    private void showTimingClarificationDialog(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback, String message, android.content.DialogInterface.OnDismissListener dismissListener) {
         com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog =
                 new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
         dialog.setTitle(instance.getMedicationName());
@@ -320,6 +325,7 @@ public class MedicationWizardFragment extends Fragment {
                 main.addInteractionScore(1.0f);
             }
         });
+        if (dismissListener != null) dialog.setOnDismissListener(dismissListener);
         dialog.show();
     }
 
