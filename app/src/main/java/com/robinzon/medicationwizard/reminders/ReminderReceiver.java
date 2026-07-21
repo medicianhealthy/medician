@@ -57,6 +57,9 @@ public class ReminderReceiver extends BroadcastReceiver {
             playAlertSoundSync(context);
             triggerVibrationSync(context);
             triggerFlashSync(context);
+            
+            // Consumes single-use feature passes now that they've been used for this reminder
+            com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
         }).start();
     }
 

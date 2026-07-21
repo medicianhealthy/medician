@@ -3,6 +3,7 @@ package com.robinzon.medicationwizard.managers;
 import android.content.Context;
 
 import com.robinzon.medicationwizard.AppConfig;
+import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.Calendar;
@@ -54,11 +55,10 @@ public class FeaturePassManager {
         prefs.setBoolean(AppConfig.KEY_PASS_VIBRATION_ACTIVE, false);
         prefs.setBoolean(AppConfig.KEY_PASS_STICKY_ACTIVE, false);
 
-        // Also explicitly disable the functional switches in preferences
-        // to ensure the UI stays in sync after consumption.
-        prefs.setBoolean("bypass_system_volume", false);
-        prefs.setBoolean("vibration_enabled", false);
-        prefs.setBoolean("sticky_notif_enabled", false);
+        // Use constants to ensure UI stays in sync after consumption.
+        prefs.setBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
+        prefs.setBoolean(SettingsViewModel.KEY_VIBRATION_ENABLED, false);
+        prefs.setBoolean(SettingsViewModel.KEY_STICKY_NOTIF_ENABLED, false);
     }
 
     /**
