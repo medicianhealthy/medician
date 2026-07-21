@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.BidiFormatter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.robinzon.medicationwizard.R;
@@ -128,7 +129,8 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
          * @param isExpanded True if the detailed view should be visible.
          */
         public void bind(Medication medication, boolean isExpanded) {
-            binding.medName.setText(medication.getCommercialName());
+            BidiFormatter bidi = BidiFormatter.getInstance();
+            binding.medName.setText(bidi.unicodeWrap(medication.getCommercialName()));
 
             // Smart Strength Formatting: Hides 0 values and formats decimals nicely.
             if (medication.getStrength() <= 0) {
@@ -139,9 +141,9 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                         String.format(Locale.getDefault(), "%d", (long) medication.getStrength()) :
                         String.format(Locale.getDefault(), "%.1f", medication.getStrength());
 
-                binding.medStrength.setText(String.format(Locale.getDefault(), "%s %s",
+                binding.medStrength.setText(bidi.unicodeWrap(String.format(Locale.getDefault(), "%s %s",
                         strengthStr,
-                        medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getLabel(binding.getRoot().getContext()) : ""));
+                        medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getLabel(binding.getRoot().getContext()) : "")));
             }
 
             // Sync icon with medication form (e.g., Drops icon for drops)
@@ -188,7 +190,11 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                     instrStr = medication.getInstruction().getDescription(binding.getRoot().getContext());
                 }
 
-                binding.medInstructions.setText(String.format("%s %s %s", amountStr, formStr, instrStr).trim());
+                String amountPart = bidi.unicodeWrap(amountStr);
+                String formPart = bidi.unicodeWrap(formStr);
+                String instrPart = instrStr.isEmpty() ? "" : bidi.unicodeWrap(instrStr);
+
+                binding.medInstructions.setText(String.format("%s %s %s", amountPart, formPart, instrPart).trim());
 
                 // Build a list of all daily scheduled times
                 StringBuilder timesBuilder = new StringBuilder();

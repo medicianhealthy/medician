@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.text.BidiFormatter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.robinzon.medicationwizard.R;
@@ -130,7 +131,8 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         void bind(DoseItem.Single single, int position) {
             DoseInstanceEntity instance = single.entity;
-            medNameText.setText(instance.getMedicationName());
+            BidiFormatter bidi = BidiFormatter.getInstance();
+            medNameText.setText(bidi.unicodeWrap(instance.getMedicationName()));
 
             // Icon and Form logic
             int icon = R.drawable.ic_med_pill;
@@ -156,13 +158,13 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             // Formatting
             String strength = instance.getStrength() > 0 ? (instance.getStrength() == (long) instance.getStrength() ? String.valueOf((long) instance.getStrength()) : String.valueOf(instance.getStrength())) : "";
             String unitLabel = EMeasurementUnit.getLabelByName(itemView.getContext(), instance.getUnit());
-            strengthText.setText(strength + (unitLabel.isEmpty() ? "" : " " + unitLabel));
+            strengthText.setText(bidi.unicodeWrap(strength + (unitLabel.isEmpty() ? "" : " " + unitLabel)));
             strengthText.setVisibility(instance.getStrength() > 0 ? View.VISIBLE : View.GONE);
 
             String amount = instance.getAmount() == (long) instance.getAmount() ? String.valueOf((long) instance.getAmount()) : String.valueOf(instance.getAmount());
-            quantityText.setText(amount);
+            quantityText.setText(bidi.unicodeWrap(amount));
 
-            formText.setText(localizedForm);
+            formText.setText(bidi.unicodeWrap(localizedForm));
 
             SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
             timeText.setText(timeFmt.format(new Date(instance.getScheduledTime())));
@@ -306,7 +308,10 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     strengthStr = sVal + (d.getUnit() != null ? " " + EMeasurementUnit.getLabelByName(itemView.getContext(), d.getUnit()) : "");
                 }
 
-                String fullDetail = d.getMedicationName() + " (" + amountStr + " " + localizedForm + (strengthStr.isEmpty() ? "" : ", " + strengthStr) + ")";
+                BidiFormatter bidi = BidiFormatter.getInstance();
+                String name = bidi.unicodeWrap(d.getMedicationName());
+                String details = bidi.unicodeWrap(amountStr + " " + localizedForm + (strengthStr.isEmpty() ? "" : ", " + strengthStr));
+                String fullDetail = name + " (" + details + ")";
                 nameTxt.setText(fullDetail);
 
                 boolean isScheduled = "SCHEDULED".equals(d.getStatus());
