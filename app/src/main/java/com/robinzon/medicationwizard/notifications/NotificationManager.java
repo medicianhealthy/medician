@@ -54,6 +54,8 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
             // This prevents the "Double Sound" issue.
             channel.setSound(null, null);
             channel.enableVibration(true);
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(android.app.Notification.VISIBILITY_PUBLIC);
 
             if (manager != null) {
                 manager.createNotificationChannel(channel);

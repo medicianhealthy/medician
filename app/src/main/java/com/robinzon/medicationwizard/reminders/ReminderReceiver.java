@@ -1,13 +1,12 @@
 package com.robinzon.medicationwizard.reminders;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.camera2.CameraManager;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +20,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.entities.EForm;
+import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
@@ -85,15 +85,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
     private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
         NotificationManagerCompat nm = NotificationManagerCompat.from(context);
-        String channelId = "med_reminders";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, context.getString(R.string.notification_channel_name), android.app.NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription(context.getString(R.string.notification_channel_desc));
-            channel.enableVibration(true);
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            nm.createNotificationChannel(channel);
-        }
+        String channelId = NotificationManager.CHANNEL_ID;
 
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
         String formStr;
@@ -160,17 +152,25 @@ public class ReminderReceiver extends BroadcastReceiver {
         boolean bypassPref = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
 
         int volumePercent = sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
-        float volume = volumePercent / 100f;
+        float volumeMultiplier = volumePercent / 100f;
 
         MediaPlayer mp = new MediaPlayer();
         try {
             mp.setDataSource(context, soundUri);
             if (bypassPref) {
-                mp.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+                mp.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build());
+                // Force max volume for this player if bypass is enabled
+                mp.setVolume(1.0f, 1.0f);
             } else {
-                mp.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+                mp.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build());
+                mp.setVolume(volumeMultiplier, volumeMultiplier);
             }
-            mp.setVolume(volume, volume);
             mp.prepare();
             mp.start();
             mp.setOnCompletionListener(MediaPlayer::release);
