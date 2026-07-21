@@ -121,10 +121,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 @Override
                 public void handleOnBackPressed() {
                     if (drawer.isDrawerOpen(GravityCompat.START)) {
+                        // 1. Close drawer if open
                         drawer.closeDrawer(GravityCompat.START);
+                    } else if (navController.popBackStack()) {
+                        // 2. Go back naturally in the fragment stack (e.g. from sub-screens)
                     } else if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() != R.id.nav_home) {
-                        navController.popBackStack(R.id.nav_home, false);
+                        // 3. Root screen that isn't Home: go to Home ("All roads lead to Home")
+                        navController.navigate(R.id.nav_home);
                     } else {
+                        // 4. Already at Home: guard against accidental exit
                         if (lastBackPressedTime + 2000 > System.currentTimeMillis()) {
                             finish();
                         } else {
