@@ -165,15 +165,13 @@ public class ReminderReceiver extends BroadcastReceiver {
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                         .build());
-                // Force max volume for this player if bypass is enabled
-                mp.setVolume(1.0f, 1.0f);
             } else {
                 mp.setAudioAttributes(new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_NOTIFICATION)
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                         .build());
-                mp.setVolume(volumeMultiplier, volumeMultiplier);
             }
+            mp.setVolume(volumeMultiplier, volumeMultiplier);
             mp.prepare();
             mp.start();
             mp.setOnCompletionListener(MediaPlayer::release);
