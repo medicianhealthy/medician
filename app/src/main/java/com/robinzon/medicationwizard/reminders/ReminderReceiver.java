@@ -54,7 +54,7 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         // Effects (Sound, Vibration, Flash)
         new Thread(() -> {
-            playAlertSoundSync(context);
+            ReminderAlertManager.getInstance().startAlarm(context);
             triggerVibrationSync(context);
             triggerFlashSync(context);
             
@@ -145,38 +145,6 @@ public class ReminderReceiver extends BroadcastReceiver {
         try {
             nm.notify(instanceId, builder.build());
         } catch (SecurityException ignored) {
-        }
-    }
-
-    private void playAlertSoundSync(Context context) {
-        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
-        String uriStr = sp.getString(SettingsViewModel.KEY_NOTIF_SOUND_URI, "");
-        Uri soundUri = uriStr.isEmpty() ? android.provider.Settings.System.DEFAULT_NOTIFICATION_URI : Uri.parse(uriStr);
-        boolean bypassPref = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
-
-        int volumePercent = sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
-        float volumeMultiplier = volumePercent / 100f;
-
-        MediaPlayer mp = new MediaPlayer();
-        try {
-            mp.setDataSource(context, soundUri);
-            if (bypassPref) {
-                mp.setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_ALARM)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build());
-            } else {
-                mp.setAudioAttributes(new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build());
-            }
-            mp.setVolume(volumeMultiplier, volumeMultiplier);
-            mp.prepare();
-            mp.start();
-            mp.setOnCompletionListener(MediaPlayer::release);
-        } catch (Exception e) {
-            mp.release();
         }
     }
 

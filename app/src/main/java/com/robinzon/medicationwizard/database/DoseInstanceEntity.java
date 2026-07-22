@@ -104,6 +104,7 @@ public class DoseInstanceEntity {
         entity.scheduledTime = instance.getScheduledTime();
         entity.status = instance.getStatus() != null ? instance.getStatus().name() : null;
         entity.instruction = instance.getInstruction() != null ? instance.getInstruction().name() : null;
+        entity.snoozeCount = instance.getSnoozeCount();
         return entity;
     }
 

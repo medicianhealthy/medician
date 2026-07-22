@@ -29,6 +29,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         int instanceId = intent.getIntExtra(EXTRA_INSTANCE_ID, -1);
         if (instanceId == -1) return;
 
+        // NEW: Stop the reminder sound immediately upon any interaction
+        ReminderAlertManager.getInstance().stopAlarm();
+
         // Dismiss the notification immediately
         com.robinzon.medicationwizard.notifications.NotificationManager.dismissNotification(context, instanceId);
 
@@ -67,8 +70,10 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         int snoozeDuration = sp.getInt(SettingsViewModel.KEY_SNOOZE_DURATION_MINS, 10);
 
         int currentSnoozes = instance.getSnoozeCount();
+        com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Snoozing " + instance.getMedicationName() + ". Current: " + currentSnoozes + ", Max: " + maxSnoozes);
 
         if (maxSnoozes != -1 && currentSnoozes >= maxSnoozes) {
+            com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Limit reached for " + instance.getMedicationName() + ". Marking as SKIPPED.");
             // Reached limit, mark as skipped
             instance.setStatus("SKIPPED");
             instance.setActionTime(System.currentTimeMillis());
@@ -81,6 +86,7 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             instance.setScheduledTime(newTime);
             db.doseInstanceDao().update(instance);
 
+            com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Alarm rescheduled to " + newTime + " (Count: " + (currentSnoozes + 1) + ")");
             // Re-schedule the alarm
             ReminderManager.scheduleReminder(context, instance);
         }

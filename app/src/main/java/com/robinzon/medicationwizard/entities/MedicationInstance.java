@@ -16,6 +16,8 @@ public class MedicationInstance extends Medication {
 
     private Status status;
     private long scheduledTime;
+    private int snoozeCount;
+
     /**
      * Default constructor for serialization.
      */
@@ -90,6 +92,14 @@ public class MedicationInstance extends Medication {
         this.status = status;
     }
 
+    public int getSnoozeCount() {
+        return snoozeCount;
+    }
+
+    public void setSnoozeCount(int snoozeCount) {
+        this.snoozeCount = snoozeCount;
+    }
+
     /**
      * Serializes this instance to a JSONObject, including both base medication
      * details and instance-specific status/timing.
@@ -102,6 +112,7 @@ public class MedicationInstance extends Medication {
         try {
             json.put("status", status.name());
             json.put("scheduledTime", scheduledTime);
+            json.put("snoozeCount", snoozeCount);
         } catch (org.json.JSONException e) {
             e.printStackTrace();
         }
