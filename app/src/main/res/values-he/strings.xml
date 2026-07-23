@@ -63,6 +63,9 @@
     <string name="lang_japanese">日本語</string>
     <string name="lang_portuguese">Português (Brasil)</string>
     <string name="lang_korean">한국어</string>
+    <string name="lang_hindi">हिन्दी</string>
+    <string name="lang_indonesian">Bahasa Indonesia</string>
+    <string name="lang_russian">Русский</string>
 
     <string name="settings_category_data">נתונים ופרטיות</string>
     <string name="settings_backup_title">גיבוי ושחזור</string>

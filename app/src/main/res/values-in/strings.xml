@@ -1,0 +1,377 @@
+<resources>
+    <string name="app_name">Penyihir Obat</string>
+    <string name="navigation_drawer_open">Buka menu navigasi</string>
+    <string name="navigation_drawer_close">Tutup menu navigasi</string>
+    <string name="nav_header_title">Penyihir Obat</string>
+    <string name="nav_header_subtitle">Teman kesehatan ajaibmu</string>
+    <string name="nav_header_desc">Header navigasi</string>
+    <string name="action_settings">Pengaturan</string>
+
+    <string name="menu_home">Jadwal obat hari ini</string>
+    <string name="menu_gallery">Daftar obat</string>
+    <string name="menu_history">Riwayat</string>
+    <string name="menu_settings">Pengaturan</string>
+
+    <string name="history_title">Riwayat Pengobatan</string>
+    <string name="history_empty">Tidak ada catatan obat untuk hari ini.</string>
+    <string name="history_empty_subtitle">Sepertinya kamu tidak memiliki dosis yang dijadwalkan atau dicatat pada tanggal ini.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">Pengingat</string>
+    <string name="settings_notifications_disabled_summary">Ketuk di sini untuk izinkan pengingat dan tetap sehat.</string>
+    <string name="settings_notifications_manage_prompt">Untuk mematikan atau mengatur peringatan kesehatan, silakan gunakan pengaturan sistem.</string>
+    <string name="settings_notifications_title">Peringatan Kesehatan</string>
+    <string name="settings_notifications_summary">Aktifkan pengingat agar kamu tidak pernah melewatkan dosis. Tetap sehat!</string>
+
+    <string name="settings_quiet_hours_title">Jam Istirahat</string>
+    <string name="settings_quiet_hours_summary">Jangan beri tahu saya saat sedang tidur.</string>
+    <string name="settings_quiet_hours_format">Jangan beri tahu saya saat sedang tidur (%1$s).</string>
+
+    <string name="settings_snooze_duration_title">Durasi Tunda</string>
+    <string name="settings_snooze_duration_summary">Tunggu %1$d menit sebelum mengingatkan lagi.</string>
+    <string name="settings_max_snoozes_title">Batas Tunda Maksimal</string>
+    <string name="settings_max_snoozes_summary">Berhenti mengingatkan setelah %1$s kali tunda.</string>
+    <string name="settings_max_snoozes_unlimited_summary">Jangan berhenti mengingatkan sampai saya mengambil tindakan.</string>
+    <string name="max_snoozes_unlimited">Tanpa Batas</string>
+
+    <string name="settings_sound_title">Suara Peringatan</string>
+    <string name="settings_sound_summary">Suara saat ini: %1$s</string>
+
+    <string name="settings_bypass_title">Abaikan Volume Sistem</string>
+    <string name="settings_bypass_summary">Pengingat akan berbunyi meskipun ponsel dalam mode senyap.</string>
+
+    <string name="settings_volume_title">Volume Peringatan</string>
+
+    <string name="settings_category_appearance">Tampilan</string>
+    <string name="settings_theme_title">Tema Aplikasi</string>
+    <string name="settings_theme_summary">Pilih antara mode terang, gelap, atau biarkan sistem yang menentukan.</string>
+    <string name="theme_light">Terang</string>
+    <string name="theme_dark">Gelap</string>
+    <string name="theme_system">Sistem</string>
+    <string name="lang_system">Default Sistem</string>
+
+    <string name="settings_language_title">Bahasa Aplikasi</string>
+    <string name="settings_language_summary">Pilih bahasa agar keajaiban terjadi.</string>
+    <string name="settings_language_restart_warning">Aplikasi akan dimulai ulang untuk menerapkan bahasa baru.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hebrew">עברית</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_portuguese">Português (Brasil)</string>
+    <string name="lang_korean">한국어</string>
+    <string name="lang_hindi">हिन्दी</string>
+    <string name="lang_indonesian">Bahasa Indonesia</string>
+    <string name="lang_russian">Русский</string>
+
+    <string name="settings_category_data">Data &amp; Privasi</string>
+    <string name="settings_backup_title">Cadangkan &amp; Pulihkan</string>
+    <string name="settings_backup_summary">Simpan datamu dengan aman atau pindahkan ke perangkat baru.</string>
+    <string name="backup_export">Ekspor Data</string>
+    <string name="backup_import">Impor Data</string>
+    <string name="backup_restore_warning">Memulihkan cadangan akan menghapus semua obat dan riwayat saat ini. Ini tidak bisa dibatalkan. Kamu yakin?</string>
+    <string name="medication_delete_warning">Ini akan menghapus obat ini dan semua riwayatnya secara permanen. Ini tidak bisa dibatalkan. Kamu yakin?</string>
+
+    <string name="settings_clear_data_title">Mulai dari Awal</string>
+    <string name="settings_clear_data_message">Ini akan menghapus semua obat, riwayat, dan cadangan cloud secara permanen. Ini tidak bisa dibatalkan. Kamu yakin?</string>
+    <string name="settings_clear_data_message_no_cloud">Ini akan menghapus semua obat dan riwayat secara permanen. Ini tidak bisa dibatalkan. Kamu yakin?</string>
+    <string name="settings_clear_data_summary">Hapus semua obat dan riwayat. Hati-hati, ini tidak bisa dibatalkan!</string>
+
+    <string name="settings_category_about">Tentang</string>
+    <string name="settings_version_title">Versi Aplikasi</string>
+    <string name="settings_version_summary">Kamu menggunakan versi %1$s</string>
+
+    <string name="settings_support_title">Butuh bantuan?</string>
+    <string name="settings_support_summary">Dukungan premium untuk komunitas ajaib kami. Ada pertanyaan atau menemukan bug?</string>
+
+    <string name="take">Minum</string>
+    <string name="permission_rational_notification_title">Jangan Sampai Terlewat!</string>
+    <string name="permission_rational_notification_message">Agar kamu ingat jadwal dosisnya, aku ingin mengirimkan pengingat saat waktunya tiba. Oke?</string>
+    <string name="button_sure">Tentu</string>
+    <string name="button_not_now">Nanti saja</string>
+    <string name="button_never">Jangan pernah</string>
+    <string name="notification_missing">Tidak ada izin notifikasi</string>
+    <string name="button_allow">Izinkan</string>
+    <string name="button_grant">Berikan Izin</string>
+    <string name="button_ok">Oke</string>
+    <string name="button_select">Pilih</string>
+    <string name="button_skip">Lewati</string>
+    <string name="button_snooze">Tunda</string>
+    <string name="button_untake">Batal minum</string>
+    <string name="button_unskip">Batal lewati</string>
+    <string name="button_take_all">Minum Semua</string>
+    <string name="button_skip_all">Lewati Semua</string>
+    <string name="button_reschedule_all">Jadwalkan Ulang</string>
+    <string name="button_untake_all">Batal Semua</string>
+    <string name="button_unskip_all">Pulihkan Semua</string>
+    <string name="button_reset_all">Atur Ulang Semua</string>
+    <string name="group_title_format">Pengingat Jam %1$s</string>
+    <string name="group_status_taken">Semua sudah diminum</string>
+    <string name="group_status_skipped">Semua sudah dilewati</string>
+    <string name="group_status_mixed">Status campuran</string>
+    <string name="sort_scheduled">Terjadwal</string>
+    <string name="sort_name">Nama</string>
+    <string name="sort_action_time">Waktu Tindakan</string>
+    <string name="sort_by_hint">Urutkan berdasarkan:</string>
+    <string name="fragment_add_med_title">Obat Baru</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Hapus</string>
+    <string name="once_a_day">Sekali sehari</string>
+    <string name="twice_a_day">Dua kali sehari</string>
+    <string name="times_a_day">%1$d kali sehari</string>
+    <string name="scheduled_at">Dijadwalkan pada: %1$s</string>
+    <string name="scheduled_for_format">Dijadwalkan untuk %1$s</string>
+    <string name="took_format">Minum %1$s %2$s pada %3$s</string>
+    <string name="skipped_at_format">Dilewati pada %1$s</string>
+    <string name="no_instructions">Tidak ada instruksi</string>
+    <string name="medication_icon_desc">Ikon Obat</string>
+    <string name="empty_meds_title">Penyihir sedang menunggu!</string>
+    <string name="empty_meds_subtitle">Aku siap membantumu memantau obat-obatanmu. Ayo tambahkan obat pertamamu dan mulai keajaibannya!</string>
+    <string name="empty_meds_action">Tambah obat pertamaku</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">Berikutnya</string>
+    <string name="onboarding_btn_skip">Lewati</string>
+    <string name="onboarding_btn_finish">Mulai</string>
+    <string name="back_to_exit">Klik kembali lagi untuk keluar</string>
+
+    <string name="onboarding_title_1">Kenalan dengan Penyihir</string>
+    <string name="onboarding_desc_1">Teman kesehatan pribadimu ada di sini untuk membantumu mengelola obat-obatan dengan sentuhan ajaib.</string>
+
+    <string name="onboarding_title_2">Pengingat Pintar</string>
+    <string name="onboarding_desc_2">Jangan pernah melewatkan dosis lagi. Kami akan mengirimkan pengingat tepat waktu yang menghargai jadwal tidurmu.</string>
+
+    <string name="onboarding_title_3">Pantau Kemajuanmu</string>
+    <string name="onboarding_desc_3">Simpan riwayat detail perjalanan kesehatanmu. Sangat cocok untuk dibagikan dengan doktermu.</string>
+    <string name="onboarding_terms_agree"><![CDATA[Saya setuju dengan <a href="%1$s">Ketentuan Penggunaan</a> dan <a href="%2$s">Kebijakan Privasi</a>]]></string>
+    <string name="onboarding_error_terms">Harap setujui Ketentuan dan Kebijakan Privasi untuk melanjutkan keajaiban.</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
+    <string name="legal_terms_title">Ketentuan Penggunaan</string>
+    <string name="legal_privacy_title">Kebijakan Privasi</string>
+
+    <!-- Premium -->
+    <string name="premium_title">Buka Keajaiban Penuh!</string>
+    <string name="premium_benefit_ad_free_title">Ajaib Tanpa Iklan</string>
+    <string name="premium_benefit_ad_free_desc">Fokus pada kesehatanmu tanpa gangguan atau distraksi apa pun.</string>
+    <string name="premium_benefit_cloud_title">Perlindungan Cloud</string>
+    <string name="premium_benefit_cloud_desc">Sinkronkan obat dan riwayatmu dengan aman di semua perangkatmu.</string>
+    <string name="premium_benefit_backup_title">Perlindungan Data</string>
+    <string name="premium_benefit_backup_desc">Ekspor dan impor data obatmu agar tetap aman.</string>
+    <string name="premium_benefit_rest_title">Istirahat Tenang</string>
+    <string name="premium_benefit_rest_desc">Aktifkan Jam Istirahat untuk memastikan tidurmu tidak pernah terganggu.</string>
+    <string name="premium_benefit_support_title">Dukungan Prioritas</string>
+    <string name="premium_benefit_support_desc">Dapatkan dukungan cepat dan ajukan fitur baru langsung ke penyihir kami.</string>
+    <string name="premium_description">Upgrade ke Premium dan nikmati fitur canggih seperti Cadangan Cloud, Jam Istirahat, Dukungan VIP, dan pengalaman tanpa iklan.</string>
+    <string name="premium_description_local">Upgrade ke Premium dan nikmati fitur canggih seperti Cadangan Data, Jam Istirahat, Dukungan VIP, dan pengalaman tanpa iklan.</string>
+    <string name="premium_upgrade_button">Upgrade Sekarang</string>
+    <string name="premium_maybe_later">Mungkin Nanti</string>
+    <string name="menu_go_premium">Jadi Premium</string>
+    <string name="streak_format">Streak Ajaib %1$d Hari!</string>
+    <string name="history_percent_format">%1$d%% Selesai</string>
+    <string name="history_doses_format">%1$d dari %2$d dosis diminum</string>
+    <string name="history_select_date_title">Pilih Tanggal</string>
+    <string name="history_stats_title">Statistik Kesehatan</string>
+    <string name="history_tip_title">Tips Kesehatan Ajaib</string>
+    <string name="history_tip_1">Konsistensi adalah kunci kesehatan ajaib. Jaga streak-mu tetap aktif!</string>
+    <string name="history_tip_2">Seorang penyihir tidak pernah lupa obatnya. Gunakan pengingat agar tetap terjadwal!</string>
+    <string name="history_tip_3">Minum obat dengan makanan? Cek instruksimu untuk efek ajaib terbaik.</string>
+    <string name="history_tip_4">Tetap terhidrasi! Keajaiban bekerja paling baik saat tubuh cukup air.</string>
+    <string name="history_tip_5">Istirahat adalah mantra yang kuat. Gunakan Jam Istirahat untuk melindungi tidurmu.</string>
+    <string name="history_tip_6">Pantau setiap dosis. Riwayat lengkap adalah gulungan berharga bagi doktermu.</string>
+    <string name="streak_empty">Mulai streak ajaibmu hari ini!</string>
+    <string name="settings_title">Pengaturan</string>
+
+    <string name="notif_already_active">Notifikasi sudah aktif!</string>
+    <string name="data_cleared">Data dihapus.</string>
+    <string name="support_coming_soon">Dukungan akan segera hadir!</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="support_dialog_title">Dukungan Ajaib</string>
+    <string name="support_dialog_message">Apakah ada gangguan pada keajaibannya (Bug) atau punya ide besar untuk mantra baru (Permintaan Fitur)?</string>
+    <string name="support_option_bug">Gangguan (Bug)</string>
+    <string name="support_option_feature">Mantra Baru (Fitur)</string>
+    <string name="support_subject_bug">Laporan Gangguan: [%1$s]</string>
+    <string name="support_subject_feature">Ide Mantra Baru: [%1$s]</string>
+    <string name="support_no_email_client">Aplikasi email tidak ditemukan. Silakan hubungi kami di medicationwizard@gmail.com</string>
+    <string name="support_body_header">--- Detail Gulungan Ajaib ---</string>
+    <string name="support_body_version">Versi Aplikasi: %1$s</string>
+    <string name="support_body_device">Perangkat: %1$s</string>
+    <string name="support_body_os">Versi Android: %1$s</string>
+    <string name="support_body_locale">Bahasa: %1$s</string>
+    <string name="support_body_message_hint">--- Jelaskan keajaibannya di sini ---</string>
+    <string name="sign_in_first">Harap masuk terlebih dahulu</string>
+    <string name="backing_up_drive">Mencadangkan ke Google Drive&#8230;</string>
+    <string name="restoring_cloud">Memulihkan dari cloud&#8230;</string>
+    <string name="restore_success">Pemulihan berhasil!</string>
+    <string name="no_backup_found">Cadangan cloud tidak ditemukan.</string>
+    <string name="restore_failed_format">Pemulihan gagal: %1$s</string>
+    <string name="invalid_code">Kode tidak valid</string>
+    <string name="signed_in_as_format">Masuk sebagai %1$s</string>
+    <string name="sign_in_failed_format">Gagal masuk: %1$s</string>
+
+    <string name="sign_in_required_title">Perlu Masuk</string>
+    <string name="sign_in_required_message">Silakan masuk dengan akun Google kamu untuk mengaktifkan fitur cadangan cloud dan sinkronisasi.</string>
+    <string name="cloud_restore_title">Pulihkan dari Cloud</string>
+    <string name="cloud_restore_message">Ini akan mengganti semua obat dan riwayat lokalmu dengan versi cloud. Lanjutkan?</string>
+    <string name="button_restore">Pulihkan</string>
+    <string name="medication_status_format">%1$s ditandai sebagai %2$s</string>
+    <string name="button_undo">Batal</string>
+
+    <string name="sound_picker_title">Pilih Suara Peringatan</string>
+    <string name="extra_details_label">Detail Tambahan (opsional)</string>
+    <string name="instructions_label">Instruksi (opsional)</string>
+    <string name="instruction_before_eating">Sebelum makan</string>
+    <string name="instruction_after_eating">Sesudah makan</string>
+    <string name="instruction_while_eating">Saat makan</string>
+    <string name="instruction_before_sleep">Sebelum tidur</string>
+    <string name="instruction_no_preference">Tidak masalah</string>
+    <string name="button_save_medication">Simpan Obat</string>
+    <string name="time_picker_title">Pilih Waktu</string>
+    <string name="at_label">pukul</string>
+    <string name="button_reschedule">Jadwalkan Ulang</string>
+    <string name="button_take">Minum</string>
+    <string name="button_pick_time">Pilih waktu tepat</string>
+    <string name="button_sign_in">Masuk</string>
+
+    <string name="hint_med_name">Nama Obat</string>
+    <string name="hint_amount">Jumlah</string>
+    <string name="hint_form">Jenis</string>
+    <string name="hint_frequency">Seberapa sering?</string>
+    <string name="hint_strength">Dosis/Kekuatan (opsional)</string>
+    <string name="hint_unit">Satuan (opsional)</string>
+
+    <string name="frequency_once">Sekali sehari</string>
+    <string name="frequency_twice">Dua kali sehari</string>
+    <string name="frequency_3_times">3 kali sehari</string>
+    <string name="frequency_4_times">4 kali sehari</string>
+    <string name="frequency_5_times">5 kali sehari</string>
+    <string name="time_set_format">Waktu diatur: %1$s</string>
+    <string name="select_time_index_format">Pilih Waktu %1$d</string>
+    <string name="error_pick_time_title">Pilih waktu</string>
+    <string name="error_pick_time_message">Cukup tekan tombol pilih waktu dan tentukan jamnya</string>
+    <string name="error_duplicate_times_title">Waktu Duplikat</string>
+    <string name="error_duplicate_times_message">Kamu telah memilih waktu yang sama lebih dari sekali. Harap pilih waktu yang berbeda.</string>
+    <string name="error_required">Wajib diisi</string>
+    <string name="time_picker_med_title">Pilih Waktu Minum Obat</string>
+
+    <string name="form_pill">Pil</string>
+    <string name="form_solution">Larutan</string>
+    <string name="form_injection">Suntikan</string>
+    <string name="form_powder">Bubuk</string>
+    <string name="form_drops">Tetes</string>
+    <string name="form_inhaler">Inhaler</string>
+    <string name="form_other">Lainnya</string>
+
+    <string name="medication_deleted_format">telah dihapus</string>
+    <string name="notification_reminder_title">Pengingat Obat</string>
+    <string name="notification_permission_reminder_title">Notifikasi Mati</string>
+    <string name="notification_permission_reminder_message">Kamu tidak akan menerima pengingat sampai kamu mengaktifkan izin notifikasi di pengaturan perangkat.</string>
+    <string name="notification_reminder_message">Waktunya minum %1$s %2$s %3$s</string>
+    <string name="notification_reminder_dose">dosis</string>
+    <string name="notification_channel_name">Pengingat Obat</string>
+    <string name="notification_channel_desc">Pengingat untuk meminum obat yang sudah dijadwalkan</string>
+    <string name="premium_only_feature">Fitur khusus Premium</string>
+    <string name="premium_pass_title">Passe Ajaib %1$dj</string>
+    <string name="premium_pass_summary">Tonton video pendek untuk buka semua keajaiban Premium selama %1$d jam!</string>
+    <string name="premium_pass_active">Passe Ajaib Aktif</string>
+    <string name="premium_pass_remaining_format">Tersisa %1$02dj %2$02dm</string>
+    <string name="loading_magic">Memuat keajaiban&#8230; harap tunggu.</string>
+    <string name="reward_ad_not_ready_title">Video Belum Siap</string>
+    <string name="reward_ad_not_ready_dialog">Video belum siap. Pastikan kamu terhubung ke internet dan coba lagi nanti.</string>
+    <string name="reward_ad_dismissed_early_title">Tonton Sampai Selesai</string>
+    <string name="reward_ad_dismissed_early_message">Kamu perlu menonton video sampai selesai untuk %s</string>
+
+    <string name="benefit_theme">kustomisasi tema aplikasimu selama 1 jam ke depan</string>
+    <string name="benefit_support">akses Dukungan VIP selama 1 jam</string>
+    <string name="benefit_backup">aktifkan Cadangan dan Pemulihan Cloud selama 1 jam</string>
+    <string name="benefit_backup_local">aktifkan Cadangan dan Pemulihan selama 1 jam</string>
+    <string name="benefit_bypass">aktifkan Abaikan Volume untuk pengingat terjadwal berikutnya</string>
+    <string name="benefit_vibration">aktifkan getaran kustom dan peringatan lampu untuk pengingat berikutnya</string>
+    <string name="benefit_sticky">buat pengingat berikutnya tetap muncul sampai kamu mencatat dosisnya</string>
+    <string name="benefit_dose_window">kustomisasi batas peringatan waktu minum selama 1 jam</string>
+    <string name="benefit_quiet_hours">aktifkan Jam Istirahat sampai pukul 08:00 besok pagi</string>
+    <string name="reward_ad_not_ready">Keajaibannya belum siap. Silakan coba lagi dalam beberapa detik.</string>
+    <string name="theme_unlock_title">Buka Tema Ini</string>
+    <string name="theme_unlock_prompt">Tonton video pendek untuk buka tema ini dan semua keajaiban Premium lainnya selama %1$d jam!</string>
+    <string name="premium_pass_btn_watch">Tonton Video</string>
+    <string name="cloud_backup_title">Cadangan Cloud</string>
+    <string name="cloud_backup_summary">Lindungi datamu dengan Google Drive</string>
+    <string name="cloud_backup_sign_in_hint">Cadangkan datamu ke Google Drive</string>
+    <string name="cloud_backup_sign_out">Keluar</string>
+    <string name="cloud_backup_auto_title">Cadangan Cloud Otomatis</string>
+    <string name="cloud_backup_auto_summary">Sinkronisasi data otomatis ke Google Drive</string>
+    <string name="sign_in_error_title">Masalah Koneksi Ajaib</string>
+    <string name="sign_in_error_network">Kami tidak dapat menjangkau awan ajaib. Harap periksa koneksi internetmu.</string>
+    <string name="sign_in_error_cancelled">Proses masuk terhenti. Ingin mencoba lagi?</string>
+    <string name="sign_in_error_dev">Portal ajaib sedang dalam pemeliharaan. Penyihir kami sedang menanganinya.</string>
+    <string name="sign_in_error_generic">Terjadi sesuatu yang tidak terduga saat menghubungkan ke akunmu. Harap coba lagi nanti.</string>
+    <string name="sign_in_error_btn_retry">Coba Lagi</string>
+    <string name="cloud_backup_wifi_title">Cadangan hanya via Wi-Fi</string>
+    <string name="cloud_backup_wifi_summary">Hemat data seluler</string>
+    <string name="cloud_backup_now">Cadangkan ke Cloud Sekarang</string>
+    <string name="cloud_backup_success">Cadangan ke cloud berhasil!</string>
+    <string name="cloud_backup_failed">Gagal mencadangkan ke cloud.</string>
+
+    <string name="alarm_permission_title">Perlu Alamat Tepat</string>
+    <string name="alarm_permission_message">Untuk memastikan pengingat obatmu berbunyi tepat waktu, silakan izinkan aplikasi untuk menjadwalkan alarm yang tepat.</string>
+    <string name="take_early_warning">Masih agak awal untuk dosis ini. Tetap minum?</string>
+    <string name="take_late_warning">Dosis ini seharusnya diminum lebih awal. Tandai sudah diminum sekarang?</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">Buka Keajaiban</string>
+    <string name="premium_rational_btn_watch">Tonton Video</string>
+    <string name="premium_rational_theme_msg">Tonton video pendek untuk kustomisasi tema selama 1 jam. Akan kembali ke sistem setelah waktu habis.</string>
+    <string name="premium_rational_support_msg">Tonton video pendek untuk akses Dukungan VIP selama 1 jam.</string>
+    <string name="premium_rational_backup_msg">Tonton video pendek untuk aktifkan Cadangan dan Pemulihan Cloud selama 1 jam.</string>
+    <string name="premium_rational_backup_local_msg">Tonton video pendek untuk aktifkan Cadangan dan Pemulihan selama 1 jam.</string>
+    <string name="premium_rational_bypass_msg">Tonton video pendek untuk aktifkan Abaikan Volume hanya pada pengingat berikutnya.</string>
+    <string name="premium_rational_vibration_msg">Tonton video pendek untuk aktifkan getaran kustom dan peringatan lampu hanya pada pengingat berikutnya.</string>
+    <string name="premium_rational_sticky_msg">Tonton video pendek agar pengingat berikutnya tetap muncul sampai kamu mencatatnya.</string>
+    <string name="premium_rational_dose_window_msg">Tonton video pendek untuk kustomisasi batas peringatan waktu minum selama 1 jam.</string>
+    <string name="premium_rational_quiet_hours_msg">Tonton video pendek untuk aktifkan Jam Istirahat sampai pukul 08:00 besok pagi.</string>
+
+    <string name="settings_category_advanced">Kontrol Presisi</string>
+    <string name="settings_vibration_title">Getaran &amp; Lampu</string>
+    <string name="settings_vibration_summary">Getarkan ponsel dan kedipkan lampu saat waktunya tiba.</string>
+    <string name="settings_vibration_pattern_title">Pola Getaran</string>
+    <string name="settings_flash_pattern_title">Pola Lampu Kilat</string>
+
+    <string name="settings_sticky_title">Pengingat Menempel</string>
+    <string name="settings_sticky_summary">Pengingat tetap aktif sampai kamu mencatat dosisnya secara manual.</string>
+
+    <string name="settings_dose_window_title">Pengaturan Batas Waktu</string>
+    <string name="settings_dose_window_summary">Atur seberapa awal atau terlambat kamu bisa minum obat tanpa peringatan.</string>
+    <string name="settings_early_threshold_title">Peringatan Minum Lebih Awal</string>
+    <string name="settings_late_threshold_title">Peringatan Minum Terlambat</string>
+    <string name="settings_threshold_format">%1$d menit</string>
+
+    <string name="feature_active_label">Aktif</string>
+    <string name="onboarding_scroll_hint">Gulir untuk lainnya</string>
+    <string name="active_until_format">Aktif sampai %1$s</string>
+    <string name="active_for_next_reminder">Aktif untuk pengingat berikutnya</string>
+    <string name="active_for_next_take_outside_window">Aktif untuk tindakan di luar batas waktu berikutnya</string>
+    <string name="feature_unlocked_toast">%1$s terbuka!</string>
+
+    <string name="button_cancel">Batal</string>
+    <string name="button_confirm">Konfirmasi</string>
+    <string name="button_delete">Hapus</string>
+    <string name="snooze_5_min">5 menit</string>
+    <string name="snooze_10_min">10 menit</string>
+    <string name="snooze_15_min">15 menit</string>
+    <string name="snooze_20_min">20 menit</string>
+    <string name="snooze_30_min">30 menit</string>
+    <string name="snooze_1_time">1 kali</string>
+    <string name="snooze_2_times">2 kali</string>
+    <string name="snooze_3_times">3 kali</string>
+    <string name="snooze_5_times">5 kali</string>
+    <string name="snooze_unlimited">Tanpa Batas</string>
+
+    <!-- Measurement Units -->
+    <string name="unit_grams">g</string>
+    <string name="unit_mg">mg</string>
+    <string name="unit_iu">IU</string>
+    <string name="unit_mcg">mcg</string>
+    <string name="unit_ml">mL</string>
+    <string name="unit_percentage">%</string>
+</resources>

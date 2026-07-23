@@ -1,0 +1,377 @@
+<resources>
+    <string name="app_name">Мастер Лекарств</string>
+    <string name="navigation_drawer_open">Открыть меню</string>
+    <string name="navigation_drawer_close">Закрыть меню</string>
+    <string name="nav_header_title">Мастер Лекарств</string>
+    <string name="nav_header_subtitle">Ваш личный помощник по здоровью</string>
+    <string name="nav_header_desc">Заголовок навигации</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="menu_home">Лекарства на сегодня</string>
+    <string name="menu_gallery">Список лекарств</string>
+    <string name="menu_history">История</string>
+    <string name="menu_settings">Настройки</string>
+
+    <string name="history_title">История приемов</string>
+    <string name="history_empty">На этот день записей нет.</string>
+    <string name="history_empty_subtitle">Похоже, на эту дату не было запланированных или записанных доз.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">Напоминания</string>
+    <string name="settings_notifications_disabled_summary">Нажмите здесь, чтобы включить напоминания и быть здоровым.</string>
+    <string name="settings_notifications_manage_prompt">Чтобы управлять уведомлениями, используйте системные настройки.</string>
+    <string name="settings_notifications_title">Уведомления о здоровье</string>
+    <string name="settings_notifications_summary">Не отключайте напоминания, чтобы не пропустить прием дозы. Будьте здоровы!</string>
+
+    <string name="settings_quiet_hours_title">Режим тишины</string>
+    <string name="settings_quiet_hours_summary">Не беспокоить меня во время сна.</string>
+    <string name="settings_quiet_hours_format">Не беспокоить меня во время сна (%1$s).</string>
+
+    <string name="settings_snooze_duration_title">Время откладывания</string>
+    <string name="settings_snooze_duration_summary">Подождать %1$d мин. перед повторным напоминанием.</string>
+    <string name="settings_max_snoozes_title">Макс. количество откладываний</string>
+    <string name="settings_max_snoozes_summary">Перестать напоминать после %1$s попыток.</string>
+    <string name="settings_max_snoozes_unlimited_summary">Напоминать постоянно, пока не будет отмечен прием.</string>
+    <string name="max_snoozes_unlimited">Без ограничений</string>
+
+    <string name="settings_sound_title">Звук уведомления</string>
+    <string name="settings_sound_summary">Текущий звук: %1$s</string>
+
+    <string name="settings_bypass_title">Громкий сигнал</string>
+    <string name="settings_bypass_summary">Напоминания будут звучать даже в беззвучном режиме.</string>
+
+    <string name="settings_volume_title">Громкость сигнала</string>
+
+    <string name="settings_category_appearance">Внешний вид</string>
+    <string name="settings_theme_title">Тема приложения</string>
+    <string name="settings_theme_summary">Светлая, темная или как в системе.</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Темная</string>
+    <string name="theme_system">Системная</string>
+    <string name="lang_system">Системный язык</string>
+
+    <string name="settings_language_title">Язык приложения</string>
+    <string name="settings_language_summary">Выберите язык, на котором будет твориться магия.</string>
+    <string name="settings_language_restart_warning">Приложение перезапустится для смены языка.</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hebrew">עברית</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_portuguese">Português (Brasil)</string>
+    <string name="lang_korean">한국어</string>
+    <string name="lang_hindi">हिन्दी</string>
+    <string name="lang_indonesian">Bahasa Indonesia</string>
+    <string name="lang_russian">Русский</string>
+
+    <string name="settings_category_data">Данные и конфиденциальность</string>
+    <string name="settings_backup_title">Резервное копирование</string>
+    <string name="settings_backup_summary">Сохраните свои данные или перенесите их на новое устройство.</string>
+    <string name="backup_export">Экспорт данных</string>
+    <string name="backup_import">Импорт данных</string>
+    <string name="backup_restore_warning">Восстановление данных удалит все текущие лекарства и историю. Это нельзя отменить. Продолжить?</string>
+    <string name="medication_delete_warning">Это навсегда удалит лекарство и всю его историю. Продолжить?</string>
+
+    <string name="settings_clear_data_title">Начать с чистого листа</string>
+    <string name="settings_clear_data_message">Это удалит все лекарства, историю и облачные копии. Отменить это действие нельзя. Продолжить?</string>
+    <string name="settings_clear_data_message_no_cloud">Это удалит все лекарства и историю. Отменить это действие нельзя. Продолжить?</string>
+    <string name="settings_clear_data_summary">Удалить все данные. Осторожно, это необратимо!</string>
+
+    <string name="settings_category_about">О приложении</string>
+    <string name="settings_version_title">Версия приложения</string>
+    <string name="settings_version_summary">Вы используете версию %1$s</string>
+
+    <string name="settings_support_title">Нужна помощь?</string>
+    <string name="settings_support_summary">Премиум-поддержка для нашего сообщества. Есть вопросы или нашли ошибку?</string>
+
+    <string name="take">Принять</string>
+    <string name="permission_rational_notification_title">Не сбивайтесь с ритма!</string>
+    <string name="permission_rational_notification_message">Чтобы вы не забывали о приеме, я буду присылать дружеские напоминания. Идет?</string>
+    <string name="button_sure">Конечно</string>
+    <string name="button_not_now">Не сейчас</string>
+    <string name="button_never">Никогда</string>
+    <string name="notification_missing">Нет разрешения на уведомления</string>
+    <string name="button_allow">Разрешить</string>
+    <string name="button_grant">Дать доступ</string>
+    <string name="button_ok">ОК</string>
+    <string name="button_select">Выбрать</string>
+    <string name="button_skip">Пропустить</string>
+    <string name="button_snooze">Отложить</string>
+    <string name="button_untake">Отменить прием</string>
+    <string name="button_unskip">Вернуть</string>
+    <string name="button_take_all">Принять все</string>
+    <string name="button_skip_all">Пропустить все</string>
+    <string name="button_reschedule_all">Перенести</string>
+    <string name="button_untake_all">Отменить все</string>
+    <string name="button_unskip_all">Вернуть все</string>
+    <string name="button_reset_all">Сбросить все</string>
+    <string name="group_title_format">Напоминания на %1$s</string>
+    <string name="group_status_taken">Все принято</string>
+    <string name="group_status_skipped">Все пропущено</string>
+    <string name="group_status_mixed">Разный статус</string>
+    <string name="sort_scheduled">По расписанию</string>
+    <string name="sort_name">По названию</string>
+    <string name="sort_action_time">По времени действия</string>
+    <string name="sort_by_hint">Сортировка:</string>
+    <string name="fragment_add_med_title">Новое лекарство</string>
+    <string name="edit">Правка</string>
+    <string name="delete">Удалить</string>
+    <string name="once_a_day">Раз в день</string>
+    <string name="twice_a_day">Дважды в день</string>
+    <string name="times_a_day">%1$d раза в день</string>
+    <string name="scheduled_at">Запланировано на: %1$s</string>
+    <string name="scheduled_for_format">План на %1$s</string>
+    <string name="took_format">Принято %1$s %2$s в %3$s</string>
+    <string name="skipped_at_format">Пропущено в %1$s</string>
+    <string name="no_instructions">Без инструкций</string>
+    <string name="medication_icon_desc">Иконка лекарства</string>
+    <string name="empty_meds_title">Мастер ждет!</string>
+    <string name="empty_meds_subtitle">Я готов помочь вам следить за приемом лекарств. Добавьте первое, и магия начнется!</string>
+    <string name="empty_meds_action">Добавить первое лекарство</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">Далее</string>
+    <string name="onboarding_btn_skip">Пропустить</string>
+    <string name="onboarding_btn_finish">Начать</string>
+    <string name="back_to_exit">Нажмите «Назад» еще раз для выхода</string>
+
+    <string name="onboarding_title_1">Встречайте Мастера</string>
+    <string name="onboarding_desc_1">Ваш личный помощник поможет управлять приемом лекарств с капелькой магии.</string>
+
+    <string name="onboarding_title_2">Умные уведомления</string>
+    <string name="onboarding_desc_2">Больше никаких пропусков. Мы пришлем напоминание, которое не нарушит ваш сон.</string>
+
+    <string name="onboarding_title_3">Следите за прогрессом</string>
+    <string name="onboarding_desc_3">Ведите подробную историю своего пути к здоровью. Это полезно для вашего врача.</string>
+    <string name="onboarding_terms_agree"><![CDATA[Я согласен с <a href="%1$s">Условиями</a> и <a href="%2$s">Конфиденциальностью</a>]]></string>
+    <string name="onboarding_error_terms">Пожалуйста, примите условия, чтобы продолжить магию.</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
+    <string name="legal_terms_title">Условия использования</string>
+    <string name="legal_privacy_title">Конфиденциальность</string>
+
+    <!-- Premium -->
+    <string name="premium_title">Открой всю магию!</string>
+    <string name="premium_benefit_ad_free_title">Магия без рекламы</string>
+    <string name="premium_benefit_ad_free_desc">Фокусируйтесь на здоровье без помех.</string>
+    <string name="premium_benefit_cloud_title">Облачная защита</string>
+    <string name="premium_benefit_cloud_desc">Безопасно синхронизируйте данные между всеми устройствами.</string>
+    <string name="premium_benefit_backup_title">Защита данных</string>
+    <string name="premium_benefit_backup_desc">Экспорт и импорт данных для их сохранности.</string>
+    <string name="premium_benefit_rest_title">Уважительный отдых</string>
+    <string name="premium_benefit_rest_desc">Режим тишины гарантирует спокойный сон.</string>
+    <string name="premium_benefit_support_title">Приоритет Мастера</string>
+    <string name="premium_benefit_support_desc">Быстрая помощь и возможность предлагать новые идеи.</string>
+    <string name="premium_description">Перейдите на Premium: облако, режим тишины, VIP-поддержка и никакой рекламы.</string>
+    <string name="premium_description_local">Перейдите на Premium: бэкап данных, режим тишины, VIP-поддержка и никакой рекламы.</string>
+    <string name="premium_upgrade_button">Улучшить сейчас</string>
+    <string name="premium_maybe_later">Может быть, позже</string>
+    <string name="menu_go_premium">Стать Premium</string>
+    <string name="streak_format">Магическая серия: %1$d дн.!</string>
+    <string name="history_percent_format">%1$d%% выполнено</string>
+    <string name="history_doses_format">Принято %1$d из %2$d доз</string>
+    <string name="history_select_date_title">Выбрать дату</string>
+    <string name="history_stats_title">Статистика здоровья</string>
+    <string name="history_tip_title">Магический совет</string>
+    <string name="history_tip_1">Постоянство — ключ к здоровью. Продолжайте серию!</string>
+    <string name="history_tip_2">Мастер никогда не забывает о лекарствах. Пользуйтесь напоминаниями!</string>
+    <string name="history_tip_3">Принимаете с едой? Проверьте инструкции для лучшего эффекта.</string>
+    <string name="history_tip_4">Пейте воду! Магия лучше всего работает в гидратированном теле.</string>
+    <string name="history_tip_5">Отдых — это сила. Используйте режим тишины для защиты сна.</string>
+    <string name="history_tip_6">Отмечайте каждую дозу. Полная история — важный свиток для вашего врача.</string>
+    <string name="streak_empty">Начните свою серию сегодня!</string>
+    <string name="settings_title">Настройки</string>
+
+    <string name="notif_already_active">Уведомления уже активны!</string>
+    <string name="data_cleared">Данные стерты.</string>
+    <string name="support_coming_soon">Поддержка скоро появится!</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="support_dialog_title">Магическая поддержка</string>
+    <string name="support_dialog_message">В магии случился сбой (ошибка) или есть идея для нового заклинания (функция)?</string>
+    <string name="support_option_bug">Ошибка (Bug)</string>
+    <string name="support_option_feature">Идея (Feature)</string>
+    <string name="support_subject_bug">Отчет об ошибке: [%1$s]</string>
+    <string name="support_subject_feature">Идея новой функции: [%1$s]</string>
+    <string name="support_no_email_client">Почтовый клиент не найден. Пишите на medicationwizard@gmail.com</string>
+    <string name="support_body_header">--- Детали магического свитка ---</string>
+    <string name="support_body_version">Версия приложения: %1$s</string>
+    <string name="support_body_device">Устройство: %1$s</string>
+    <string name="support_body_os">Версия Android: %1$s</string>
+    <string name="support_body_locale">Язык: %1$s</string>
+    <string name="support_body_message_hint">--- Опишите здесь проблему или идею ---</string>
+    <string name="sign_in_first">Пожалуйста, сначала войдите в аккаунт</string>
+    <string name="backing_up_drive">Сохранение на Google Диск&#8230;</string>
+    <string name="restoring_cloud">Восстановление из облака&#8230;</string>
+    <string name="restore_success">Восстановление завершено!</string>
+    <string name="no_backup_found">Копия в облаке не найдена.</string>
+    <string name="restore_failed_format">Ошибка восстановления: %1$s</string>
+    <string name="invalid_code">Неверный код</string>
+    <string name="signed_in_as_format">Вход выполнен: %1$s</string>
+    <string name="sign_in_failed_format">Ошибка входа: %1$s</string>
+
+    <string name="sign_in_required_title">Нужен вход в аккаунт</string>
+    <string name="sign_in_required_message">Войдите через Google для работы с облаком и синхронизации.</string>
+    <string name="cloud_restore_title">Восстановить из облака</string>
+    <string name="cloud_restore_message">Это заменит все локальные данные облачной версией. Продолжить?</string>
+    <string name="button_restore">Восстановить</string>
+    <string name="medication_status_format">%1$s: отмечено как %2$s</string>
+    <string name="button_undo">Отмена</string>
+
+    <string name="sound_picker_title">Выбрать звук сигнала</string>
+    <string name="extra_details_label">Доп. детали (необязательно)</string>
+    <string name="instructions_label">Инструкции (необязательно)</string>
+    <string name="instruction_before_eating">До еды</string>
+    <string name="instruction_after_eating">После еды</string>
+    <string name="instruction_while_eating">Во время еды</string>
+    <string name="instruction_before_sleep">Перед сном</string>
+    <string name="instruction_no_preference">Неважно</string>
+    <string name="button_save_medication">Сохранить</string>
+    <string name="time_picker_title">Выбор времени</string>
+    <string name="at_label">в</string>
+    <string name="button_reschedule">Перенести</string>
+    <string name="button_take">Принять</string>
+    <string name="button_pick_time">Точное время</string>
+    <string name="button_sign_in">Войти</string>
+
+    <string name="hint_med_name">Название лекарства</string>
+    <string name="hint_amount">Количество</string>
+    <string name="hint_form">Тип</string>
+    <string name="hint_frequency">Как часто?</string>
+    <string name="hint_strength">Дозировка (опционально)</string>
+    <string name="hint_unit">Ед. изм. (опционально)</string>
+
+    <string name="frequency_once">Раз в день</string>
+    <string name="frequency_twice">Дважды в день</string>
+    <string name="frequency_3_times">3 раза в день</string>
+    <string name="frequency_4_times">4 раза в день</string>
+    <string name="frequency_5_times">5 раз в день</string>
+    <string name="time_set_format">Время: %1$s</string>
+    <string name="select_time_index_format">Время %1$d</string>
+    <string name="error_pick_time_title">Выберите время</string>
+    <string name="error_pick_time_message">Нажмите кнопку выбора и укажите время</string>
+    <string name="error_duplicate_times_title">Повтор времени</string>
+    <string name="error_duplicate_times_message">Вы выбрали одно и то же время дважды.</string>
+    <string name="error_required">Обязательно</string>
+    <string name="time_picker_med_title">Время приема лекарства</string>
+
+    <string name="form_pill">Таблетка</string>
+    <string name="form_solution">Раствор</string>
+    <string name="form_injection">Инъекция</string>
+    <string name="form_powder">Порошок</string>
+    <string name="form_drops">Капли</string>
+    <string name="form_inhaler">Ингалятор</string>
+    <string name="form_other">Другое</string>
+
+    <string name="medication_deleted_format">удалено</string>
+    <string name="notification_reminder_title">Время приема лекарства</string>
+    <string name="notification_permission_reminder_title">Уведомления выключены</string>
+    <string name="notification_permission_reminder_message">Вы не будете получать напоминания, пока не дадите разрешение в настройках.</string>
+    <string name="notification_reminder_message">Пора принять %1$s %2$s (%3$s)</string>
+    <string name="notification_reminder_dose">доза</string>
+    <string name="notification_channel_name">Напоминания о лекарствах</string>
+    <string name="notification_channel_desc">Напоминания о графике приема ваших лекарств</string>
+    <string name="premium_only_feature">Функция только для Premium</string>
+    <string name="premium_pass_title">Магический пас на %1$d ч.</string>
+    <string name="premium_pass_summary">Посмотрите видео, чтобы открыть Premium-магию на %1$d ч.!</string>
+    <string name="premium_pass_active">Магический пас активен</string>
+    <string name="premium_pass_remaining_format">Осталось %1$02d ч. %2$02d мин.</string>
+    <string name="loading_magic">Загрузка магии&#8230; подождите.</string>
+    <string name="reward_ad_not_ready_title">Видео не готово</string>
+    <string name="reward_ad_not_ready_dialog">Видео загружается. Проверьте интернет и попробуйте позже.</string>
+    <string name="reward_ad_dismissed_early_title">Досмотрите до конца</string>
+    <string name="reward_ad_dismissed_early_message">Нужно досмотреть видео до конца, чтобы: %s</string>
+
+    <string name="benefit_theme">менять тему приложения (1 час)</string>
+    <string name="benefit_support">получить доступ к VIP-поддержке (1 час)</string>
+    <string name="benefit_backup">включить Облачное сохранение (1 час)</string>
+    <string name="benefit_backup_local">включить Бэкап данных (1 час)</string>
+    <string name="benefit_bypass">включить Громкий сигнал для следующего приема</string>
+    <string name="benefit_vibration">включить вибрацию и вспышку для следующего приема</string>
+    <string name="benefit_sticky">сделать следующее напоминание «Закрепленным»</string>
+    <string name="benefit_dose_window">настроить пороги предупреждений (1 час)</string>
+    <string name="benefit_quiet_hours">включить Режим тишины до 08:00 завтра</string>
+    <string name="reward_ad_not_ready">Магия еще не готова. Попробуйте через пару секунд.</string>
+    <string name="theme_unlock_title">Открыть эту тему</string>
+    <string name="theme_unlock_prompt">Посмотрите видео, чтобы открыть эту тему и весь Premium на %1$d ч.!</string>
+    <string name="premium_pass_btn_watch">Смотреть видео</string>
+    <string name="cloud_backup_title">Облачное сохранение</string>
+    <string name="cloud_backup_summary">Защита данных через Google Диск</string>
+    <string name="cloud_backup_sign_in_hint">Войдите для сохранения данных</string>
+    <string name="cloud_backup_sign_out">Выйти</string>
+    <string name="cloud_backup_auto_title">Автосохранение</string>
+    <string name="cloud_backup_auto_summary">Автоматическая синхронизация с Google Диском</string>
+    <string name="sign_in_error_title">Проблема соединения</string>
+    <string name="sign_in_error_network">Не удалось связаться с облаками. Проверьте интернет.</string>
+    <string name="sign_in_error_cancelled">Вход прерван. Попробовать еще раз?</string>
+    <string name="sign_in_error_dev">Портал на техобслуживании. Наши мастера уже чинят его.</string>
+    <string name="sign_in_error_generic">Произошла ошибка при подключении. Повторите попытку позже.</string>
+    <string name="sign_in_error_btn_retry">Повторить</string>
+    <string name="cloud_backup_wifi_title">Только через Wi-Fi</string>
+    <string name="cloud_backup_wifi_summary">Экономия мобильного трафика</string>
+    <string name="cloud_backup_now">Сохранить в облако сейчас</string>
+    <string name="cloud_backup_success">Данные успешно сохранены!</string>
+    <string name="cloud_backup_failed">Ошибка сохранения в облако.</string>
+
+    <string name="alarm_permission_title">Нужны точные сигналы</string>
+    <string name="alarm_permission_message">Чтобы напоминания срабатывали вовремя, разрешите приложению использовать точные сигналы.</string>
+    <string name="take_early_warning">Еще рановато для приема. Принять все равно?</string>
+    <string name="take_late_warning">Время приема уже прошло. Отметить как принятое?</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">Открыть магию</string>
+    <string name="premium_rational_btn_watch">Смотреть видео</string>
+    <string name="premium_rational_theme_msg">Видео даст возможность сменить тему на 1 час. Потом вернется системная.</string>
+    <string name="premium_rational_support_msg">Видео даст доступ к VIP-поддержке на 1 час.</string>
+    <string name="premium_rational_backup_msg">Видео включит Облачное сохранение на 1 час.</string>
+    <string name="premium_rational_backup_local_msg">Видео включит Бэкап данных на 1 час.</string>
+    <string name="premium_rational_bypass_msg">Видео включит Громкий сигнал только для следующего раза.</string>
+    <string name="premium_rational_vibration_msg">Видео включит вибрацию и вспышку только для следующего раза.</string>
+    <string name="premium_rational_sticky_msg">Видео сделает напоминание «липким» (не убирается без действия).</string>
+    <string name="premium_rational_dose_window_msg">Видео позволит настроить пороги предупреждений на 1 час.</string>
+    <string name="premium_rational_quiet_hours_msg">Видео включит Режим тишины до 08:00 завтра.</string>
+
+    <string name="settings_category_advanced">Точный контроль</string>
+    <string name="settings_vibration_title">Вибро и вспышка</string>
+    <string name="settings_vibration_summary">Вибрация и мигание при наступлении времени приема.</string>
+    <string name="settings_vibration_pattern_title">Тип вибрации</string>
+    <string name="settings_flash_pattern_title">Режим вспышки</string>
+
+    <string name="settings_sticky_title">Липкие уведомления</string>
+    <string name="settings_sticky_summary">Уведомление не исчезнет, пока вы не отметите прием.</string>
+
+    <string name="settings_dose_window_title">Окно приема</string>
+    <string name="settings_dose_window_summary">Настройка времени, когда прием считается вовремя без предупреждения.</string>
+    <string name="settings_early_threshold_title">Порог раннего приема</string>
+    <string name="settings_late_threshold_title">Порог позднего приема</string>
+    <string name="settings_threshold_format">%1$d мин.</string>
+
+    <string name="feature_active_label">Активно</string>
+    <string name="onboarding_scroll_hint">Листайте дальше</string>
+    <string name="active_until_format">До %1$s</string>
+    <string name="active_for_next_reminder">На след. прием</string>
+    <string name="active_for_next_take_outside_window">На след. внеплановый прием</string>
+    <string name="feature_unlocked_toast">%1$s: доступ открыт!</string>
+
+    <string name="button_cancel">Отмена</string>
+    <string name="button_confirm">ОК</string>
+    <string name="button_delete">Удалить</string>
+    <string name="snooze_5_min">5 минут</string>
+    <string name="snooze_10_min">10 минут</string>
+    <string name="snooze_15_min">15 минут</string>
+    <string name="snooze_20_min">20 минут</string>
+    <string name="snooze_30_min">30 минут</string>
+    <string name="snooze_1_time">1 раз</string>
+    <string name="snooze_2_times">2 раза</string>
+    <string name="snooze_3_times">3 раза</string>
+    <string name="snooze_5_times">5 раз</string>
+    <string name="snooze_unlimited">Безлимитно</string>
+
+    <!-- Measurement Units -->
+    <string name="unit_grams">г</string>
+    <string name="unit_mg">мг</string>
+    <string name="unit_iu">МЕ</string>
+    <string name="unit_mcg">мкг</string>
+    <string name="unit_ml">мл</string>
+    <string name="unit_percentage">%</string>
+</resources>

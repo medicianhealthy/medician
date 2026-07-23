@@ -152,6 +152,15 @@ public class SettingsFragment extends MedicationWizardFragment {
                 String label = switch (lang) {
                     case "en" -> getString(R.string.lang_english);
                     case "iw", "he" -> getString(R.string.lang_hebrew);
+                    case "ar" -> getString(R.string.lang_arabic);
+                    case "es" -> getString(R.string.lang_spanish);
+                    case "fr" -> getString(R.string.lang_french);
+                    case "de" -> getString(R.string.lang_german);
+                    case "ja" -> getString(R.string.lang_japanese);
+                    case "pt", "pt-BR" -> getString(R.string.lang_portuguese);
+                    case "hi" -> getString(R.string.lang_hindi);
+                    case "in" -> getString(R.string.lang_indonesian);
+                    case "ru" -> getString(R.string.lang_russian);
                     default -> getString(R.string.lang_system);
                 };
                 binding.layoutLanguage.txtCurrentLanguage.setText(label);
@@ -437,7 +446,11 @@ public class SettingsFragment extends MedicationWizardFragment {
                             main.addInteractionScore(1.5f);
                     }
                 }
-                case BYPASS_VOLUME -> viewModel.setBypassVolume(true);
+                case BYPASS_VOLUME -> {
+                    viewModel.setBypassVolume(true);
+                    // Force UI refresh to show volume slider immediately
+                    updateFeatureEntitlements();
+                }
                 case QUIET_HOURS -> showQuietHoursPickers();
                 case SUPPORT -> showSupportOptionsDialog();
                 case BACKUP -> {
@@ -445,7 +458,11 @@ public class SettingsFragment extends MedicationWizardFragment {
                         updateCloudUi(GoogleAccountManager.getInstance(requireContext()), CloudBackupSettings.getInstance(requireContext()));
                     }
                 }
-                case VIBRATION -> viewModel.setVibration(true);
+                case VIBRATION -> {
+                    viewModel.setVibration(true);
+                    // Force UI refresh to expand details immediately
+                    updateFeatureEntitlements();
+                }
                 case STICKY_NOTIF -> viewModel.setStickyNotif(true);
                 case DOSE_WINDOW -> binding.containerDoseWindowDetails.setVisibility(View.VISIBLE);
             }
@@ -867,8 +884,21 @@ public class SettingsFragment extends MedicationWizardFragment {
     }
 
     private void showLanguagePickerDialog() {
-        String[] options = {getString(R.string.lang_system), getString(R.string.lang_english), getString(R.string.lang_hebrew)};
-        String[] codes = {"", "en", "iw"};
+        String[] options = {
+                getString(R.string.lang_system),
+                getString(R.string.lang_english),
+                getString(R.string.lang_hebrew),
+                getString(R.string.lang_arabic),
+                getString(R.string.lang_spanish),
+                getString(R.string.lang_french),
+                getString(R.string.lang_german),
+                getString(R.string.lang_japanese),
+                getString(R.string.lang_portuguese),
+                getString(R.string.lang_hindi),
+                getString(R.string.lang_indonesian),
+                getString(R.string.lang_russian)
+        };
+        String[] codes = {"", "en", "iw", "ar", "es", "fr", "de", "ja", "pt-BR", "hi", "in", "ru"};
         
         int currentIdx = 0;
         String currentLang = SharedPreferencesManager.getInstance(requireContext()).getString(SettingsViewModel.KEY_APP_LANGUAGE, "");

@@ -4,6 +4,10 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.os.VibratorManager;
 
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.Logger;
@@ -17,6 +21,7 @@ public class ReminderAlertManager {
 
     private static ReminderAlertManager sInstance;
     private MediaPlayer mMediaPlayer;
+    private Vibrator mVibrator;
 
     private ReminderAlertManager() {}
 
@@ -58,11 +63,57 @@ public class ReminderAlertManager {
             mMediaPlayer.setLooping(true); // Loop until user interacts
             mMediaPlayer.prepare();
             mMediaPlayer.start();
-            Logger.log("ReminderAlertManager", "Alarm started: " + soundUri);
+            Logger.log("ReminderAlertManager", "Alarm started: %s", soundUri);
+
+            // Handle Vibration
+            startVibration(context, bypassPref);
         } catch (Exception e) {
-            Logger.log("ReminderAlertManager", "Error starting alarm: " + e.getMessage());
+            Logger.log("ReminderAlertManager", "Error starting alarm: %s", e.getMessage());
             releasePlayer();
         }
+    }
+
+    private void startVibration(Context context, boolean isAlarm) {
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+        // Ensure we respect both the functional toggle and the premium pass
+        boolean isVibrationEnabled = sp.getBoolean(SettingsViewModel.KEY_VIBRATION_ENABLED, false);
+        
+        if (!isVibrationEnabled) {
+            Logger.log("ReminderAlertManager", "Vibration disabled in settings.");
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            VibratorManager vm = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+            if (vm != null) {
+                mVibrator = vm.getDefaultVibrator();
+            }
+        } else {
+            mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        }
+
+        if (mVibrator == null || !mVibrator.hasVibrator()) {
+            Logger.log("ReminderAlertManager", "Vibrator not available on this device.");
+            return;
+        }
+
+        String patternName = sp.getString(SettingsViewModel.KEY_VIBRATION_PATTERN, "Standard");
+        long[] pattern = switch (patternName) {
+            case "Heartbeat" -> new long[]{0, 200, 100, 200, 100, 200, 500};
+            case "SOS" ->
+                    new long[]{0, 100, 100, 100, 100, 100, 300, 300, 100, 300, 100, 300, 300, 100, 100, 100, 100, 100, 500};
+            case "Long Pulse" -> new long[]{0, 800, 200, 800, 200};
+            default -> new long[]{0, 500, 200, 500, 200};
+        };
+
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(isAlarm ? AudioAttributes.USAGE_ALARM : AudioAttributes.USAGE_NOTIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        // Android 9+ (minSdk 28) supports VibrationEffect
+        mVibrator.vibrate(VibrationEffect.createWaveform(pattern, 0), attrs);
+        Logger.log("ReminderAlertManager", "Vibration started: %s (isAlarm: %b)", patternName, isAlarm);
     }
 
     /**
@@ -77,6 +128,12 @@ public class ReminderAlertManager {
             } catch (Exception ignored) {}
             releasePlayer();
             Logger.log("ReminderAlertManager", "Alarm stopped and released.");
+        }
+        
+        if (mVibrator != null) {
+            mVibrator.cancel();
+            mVibrator = null;
+            Logger.log("ReminderAlertManager", "Vibration stopped.");
         }
     }
 

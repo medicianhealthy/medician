@@ -1,0 +1,377 @@
+<resources>
+    <string name="app_name">मेडिकेशन विजार्ड</string>
+    <string name="navigation_drawer_open">मेन्यू खोलें</string>
+    <string name="navigation_drawer_close">मेन्यू बंद करें</string>
+    <string name="nav_header_title">मेडिकेशन विजार्ड</string>
+    <string name="nav_header_subtitle">आपका स्वास्थ्य साथी</string>
+    <string name="nav_header_desc">नेविगेशन हेडर</string>
+    <string name="action_settings">सेटिंग्स</string>
+
+    <string name="menu_home">आज की दवाएं</string>
+    <string name="menu_gallery">दवाओं की सूची</string>
+    <string name="menu_history">इतिहास</string>
+    <string name="menu_settings">सेटिंग्स</string>
+
+    <string name="history_title">दवा का इतिहास</string>
+    <string name="history_empty">आज कोई दवा दर्ज नहीं की गई।</string>
+    <string name="history_empty_subtitle">ऐसा लगता है कि इस तारीख को आपकी कोई खुराक निर्धारित नहीं थी।</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">रिमाइंडर</string>
+    <string name="settings_notifications_disabled_summary">रिमाइंडर चालू करने और स्वस्थ रहने के लिए यहाँ टैप करें।</string>
+    <string name="settings_notifications_manage_prompt">अपने स्वास्थ्य अलर्ट को प्रबंधित करने के लिए कृपया सिस्टम सेटिंग्स का उपयोग करें।</string>
+    <string name="settings_notifications_title">स्वास्थ्य अलर्ट</string>
+    <string name="settings_notifications_summary">अपने रिमाइंडर चालू रखें ताकि आप कभी भी खुराक न भूलें। स्वस्थ रहें!</string>
+
+    <string name="settings_quiet_hours_title">शांति का समय (Quiet Hours)</string>
+    <string name="settings_quiet_hours_summary">सोते समय मुझे परेशान न करें।</string>
+    <string name="settings_quiet_hours_format">सोते समय मुझे परेशान न करें (%1$s)।</string>
+
+    <string name="settings_snooze_duration_title">स्नूज़ की अवधि</string>
+    <string name="settings_snooze_duration_summary">दोबारा याद दिलाने से पहले %1$d मिनट प्रतीक्षा करें।</string>
+    <string name="settings_max_snoozes_title">अधिकतम स्नूज़</string>
+    <string name="settings_max_snoozes_summary">%1$s बार स्नूज़ के बाद याद दिलाना बंद करें।</string>
+    <string name="settings_max_snoozes_unlimited_summary">जब तक मैं दवा न ले लूँ, याद दिलाना बंद न करें।</string>
+    <string name="max_snoozes_unlimited">अनलिमिटेड</string>
+
+    <string name="settings_sound_title">अलर्ट साउंड</string>
+    <string name="settings_sound_summary">अभी का साउंड: %1$s</string>
+
+    <string name="settings_bypass_title">बायपास वॉल्यूम</string>
+    <string name="settings_bypass_summary">फोन साइलेंट होने पर भी रिमाइंडर बजेंगे।</string>
+
+    <string name="settings_volume_title">अलर्ट वॉल्यूम</string>
+
+    <string name="settings_category_appearance">दिखावट (Appearance)</string>
+    <string name="settings_theme_title">ऐप थीम</string>
+    <string name="settings_theme_summary">लाइट, डार्क या सिस्टम डिफॉल्ट में से चुनें।</string>
+    <string name="theme_light">लाइट</string>
+    <string name="theme_dark">डार्क</string>
+    <string name="theme_system">सिस्टम डिफॉल्ट</string>
+    <string name="lang_system">सिस्टम डिफॉल्ट</string>
+
+    <string name="settings_language_title">ऐप की भाषा</string>
+    <string name="settings_language_summary">जादू शुरू करने के लिए अपनी भाषा चुनें।</string>
+    <string name="settings_language_restart_warning">नई भाषा लागू करने के लिए ऐप फिर से शुरू होगा।</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hebrew">עבריत</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_portuguese">Português (Brasil)</string>
+    <string name="lang_korean">한국어</string>
+    <string name="lang_hindi">हिन्दी</string>
+    <string name="lang_indonesian">Bahasa Indonesia</string>
+    <string name="lang_russian">Русский</string>
+
+    <string name="settings_category_data">डेटा और गोपनीयता</string>
+    <string name="settings_backup_title">बैकअप और रिस्टोर</string>
+    <string name="settings_backup_summary">अपना डेटा सुरक्षित रखें या नए डिवाइस पर ले जाएं।</string>
+    <string name="backup_export">डेटा एक्सपोर्ट करें</string>
+    <string name="backup_import">डेटा इम्पोर्ट करें</string>
+    <string name="backup_restore_warning">बैकअप रिस्टोर करने से आपकी वर्तमान दवाएं और इतिहास मिट जाएगा। इसे वापस नहीं लिया जा सकता। क्या आप सुनिश्चित हैं?</string>
+    <string name="medication_delete_warning">यह दवा और इसका सारा इतिहास स्थायी रूप से मिटा दिया जाएगा। क्या आप सुनिश्चित हैं?</string>
+
+    <string name="settings_clear_data_title">फिर से शुरू करें</string>
+    <string name="settings_clear_data_message">आपकी सभी दवाएं, इतिहास और क्लाउड बैकअप स्थायी रूप से मिटा दिए जाएंगे। क्या आप सुनिश्चित हैं?</string>
+    <string name="settings_clear_data_message_no_cloud">आपकी सभी दवाएं और इतिहास स्थायी रूप से मिटा दिए जाएंगे। क्या आप सुनिश्चित हैं?</string>
+    <string name="settings_clear_data_summary">सभी दवाएं और इतिहास मिटाएं। सावधान, इसे बदला नहीं जा सकता!</string>
+
+    <string name="settings_category_about">के बारे में</string>
+    <string name="settings_version_title">ऐप वर्जन</string>
+    <string name="settings_version_summary">आप वर्जन %1$s का उपयोग कर रहे हैं</string>
+
+    <string name="settings_support_title">मदद चाहिए?</string>
+    <string name="settings_support_summary">हमारे समुदाय के लिए प्रीमियम सपोर्ट। कोई सवाल है या बग मिला?</string>
+
+    <string name="take">ले ली</string>
+    <string name="permission_rational_notification_title">सही रास्ते पर रहें!</string>
+    <string name="permission_rational_notification_message">खुराक याद दिलाने के लिए, मैं आपको समय पर संदेश भेजना चाहूंगा। क्या यह सही है?</string>
+    <string name="button_sure">जरूर</string>
+    <string name="button_not_now">अभी नहीं</string>
+    <string name="button_never">कभी नहीं</string>
+    <string name="notification_missing">नोटिफिकेशन की अनुमति नहीं है</string>
+    <string name="button_allow">अनुमति दें</string>
+    <string name="button_grant">अनुमति दें</string>
+    <string name="button_ok">ठीक है</string>
+    <string name="button_select">चुनें</string>
+    <string name="button_skip">छोड़ें (Skip)</string>
+    <string name="button_snooze">स्नूज़</string>
+    <string name="button_untake">वापस लें</string>
+    <string name="button_unskip">अन-स्किप</string>
+    <string name="button_take_all">सब ले लीं</string>
+    <string name="button_skip_all">सब छोड़ दीं</string>
+    <string name="button_reschedule_all">समय बदलें</string>
+    <string name="button_untake_all">सब वापस लें</string>
+    <string name="button_unskip_all">सब रिस्टोर करें</string>
+    <string name="button_reset_all">सब रिसेट करें</string>
+    <string name="group_title_format">%1$s रिमाइंडर</string>
+    <string name="group_status_taken">सब ले ली गई हैं</string>
+    <string name="group_status_skipped">सब छोड़ दी गई हैं</string>
+    <string name="group_status_mixed">मिश्रित स्थिति</string>
+    <string name="sort_scheduled">शेड्यूल के अनुसार</string>
+    <string name="sort_name">नाम</string>
+    <string name="sort_action_time">कार्रवाई का समय</string>
+    <string name="sort_by_hint">क्रमबद्ध करें:</string>
+    <string name="fragment_add_med_title">नई दवा जोड़ें</string>
+    <string name="edit">एडिट</string>
+    <string name="delete">मिटाएं</string>
+    <string name="once_a_day">दिन में एक बार</string>
+    <string name="twice_a_day">दिन में दो बार</string>
+    <string name="times_a_day">दिन में %1$d बार</string>
+    <string name="scheduled_at">शेड्यूल समय: %1$s</string>
+    <string name="scheduled_for_format">%1$s के लिए निर्धारित</string>
+    <string name="took_format">%1$s %2$s, %3$s बजे ली</string>
+    <string name="skipped_at_format">%1$s पर छोड़ दी</string>
+    <string name="no_instructions">कोई निर्देश नहीं</string>
+    <string name="medication_icon_desc">दवा का आइकन</string>
+    <string name="empty_meds_title">विजार्ड इंतजार कर रहा है!</string>
+    <string name="empty_meds_subtitle">मैं आपकी दवाओं को ट्रैक करने में मदद के लिए तैयार हूँ। अपनी पहली दवा जोड़ें!</string>
+    <string name="empty_meds_action">पहली दवा जोड़ें</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">आगे</string>
+    <string name="onboarding_btn_skip">छोड़ें</string>
+    <string name="onboarding_btn_finish">शुरू करें</string>
+    <string name="back_to_exit">बाहर निकलने के लिए फिर से बैक दबाएं</string>
+
+    <string name="onboarding_title_1">विजार्ड से मिलें</string>
+    <string name="onboarding_desc_1">आपका निजी स्वास्थ्य साथी जादू के स्पर्श के साथ दवाओं के प्रबंधन में मदद करने के लिए यहाँ है।</string>
+
+    <string name="onboarding_title_2">स्मार्ट रिमाइंडर</string>
+    <string name="onboarding_desc_2">कभी भी खुराक न भूलें। हम आपको समय पर रिमाइंडर भेजेंगे जो आपकी नींद का ख्याल रखेंगे।</string>
+
+    <string name="onboarding_title_3">अपनी प्रगति ट्रैक करें</string>
+    <string name="onboarding_desc_3">अपनी स्वास्थ्य यात्रा का विस्तृत इतिहास रखें। यह आपके डॉक्टर के साथ साझा करने के लिए उत्तम है।</string>
+    <string name="onboarding_terms_agree"><![CDATA[मैं <a href="%1$s">उपयोग की शर्तों</a> और <a href="%2$s">गोपनीयता नीति</a> से सहमत हूँ]]></string>
+    <string name="onboarding_error_terms">कृपया जारी रखने के लिए शर्तों और नीति से सहमत हों।</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
+    <string name="legal_terms_title">उपयोग की शर्तें</string>
+    <string name="legal_privacy_title">गोपनीयता नीति</string>
+
+    <!-- Premium -->
+    <string name="premium_title">पूर्ण जादू अनलॉक करें!</string>
+    <string name="premium_benefit_ad_free_title">बिना विज्ञापनों का जादू</string>
+    <string name="premium_benefit_ad_free_desc">बिना किसी रुकावट के अपने स्वास्थ्य पर ध्यान दें।</string>
+    <string name="premium_benefit_cloud_title">क्लाउड सुरक्षा</string>
+    <string name="premium_benefit_cloud_desc">अपनी दवाओं और इतिहास को सभी डिवाइस पर सुरक्षित रूप से सिंक करें।</string>
+    <string name="premium_benefit_backup_title">डेटा सुरक्षा</string>
+    <string name="premium_benefit_backup_desc">अपने डेटा को सुरक्षित रखने के लिए एक्सपोर्ट और इम्पोर्ट करें।</string>
+    <string name="premium_benefit_rest_title">सुकून भरी नींद</string>
+    <string name="premium_benefit_rest_desc">सोते समय शांति के लिए क्वाइट आवर्स चालू करें।</string>
+    <string name="premium_benefit_support_title">प्रायोरिटी विजार्ड्री</string>
+    <string name="premium_benefit_support_desc">तेजी से मदद पाएं और नई सुविधाओं का सुझाव दें।</string>
+    <string name="premium_description">प्रीमियम में अपग्रेड करें और क्लाउड बैकअप, क्वाइट आवर्स और विज्ञापन-मुक्त अनुभव का आनंद लें।</string>
+    <string name="premium_description_local">प्रीमियम में अपग्रेड करें और बैकअप, क्वाइट आवर्स और विज्ञापन-मुक्त अनुभव का आनंद लें।</string>
+    <string name="premium_upgrade_button">अभी अपग्रेड करें</string>
+    <string name="premium_maybe_later">बाद में देखेंगे</string>
+    <string name="menu_go_premium">प्रीमियम लें</string>
+    <string name="streak_format">%1$d दिनों का मैजिक स्ट्रीक!</string>
+    <string name="history_percent_format">%1$d%% पूरा हुआ</string>
+    <string name="history_doses_format">%2$d में से %1$d खुराक ली गई</string>
+    <string name="history_select_date_title">तारीख चुनें</string>
+    <string name="history_stats_title">स्वास्थ्य आंकड़े</string>
+    <string name="history_tip_title">मैजिक हेल्थ टिप</string>
+    <string name="history_tip_1">निरंतरता ही स्वास्थ्य की कुंजी है। अपनी स्ट्रीक जारी रखें!</string>
+    <string name="history_tip_2">एक विजार्ड अपनी दवा कभी नहीं भूलता। ट्रैक पर रहने के लिए रिमाइंडर का उपयोग करें!</string>
+    <string name="history_tip_3">भोजन के साथ दवा? बेहतर प्रभाव के लिए निर्देशों की जांच करें।</string>
+    <string name="history_tip_4">खूब पानी पिएं! शरीर हाइड्रेटेड रहने पर जादू सबसे अच्छा काम करता है।</string>
+    <string name="history_tip_5">आराम एक शक्तिशाली मंत्र है। नींद की सुरक्षा के लिए क्वाइट आवर्स का उपयोग करें।</string>
+    <string name="history_tip_6">हर खुराक को ट्रैक करें। पूरा इतिहास आपके डॉक्टर के लिए बहुत मददगार होता है।</string>
+    <string name="streak_empty">आज ही अपनी स्ट्रीक शुरू करें!</string>
+    <string name="settings_title">सेटिंग्स</string>
+
+    <string name="notif_already_active">नोटिफिकेशन पहले से ही चालू हैं!</string>
+    <string name="data_cleared">डेटा मिटा दिया गया।</string>
+    <string name="support_coming_soon">सपोर्ट जल्द ही आ रहा है!</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="support_dialog_title">मैजिक सपोर्ट</string>
+    <string name="support_dialog_message">क्या कोई बग (Glitch) है या आपके पास किसी नई सुविधा (Feature) का विचार है?</string>
+    <string name="support_option_bug">एक बग (Bug)</string>
+    <string name="support_option_feature">नई सुविधा (Feature)</string>
+    <string name="support_subject_bug">बग रिपोर्ट: [%1$s]</string>
+    <string name="support_subject_feature">नई सुविधा का विचार: [%1$s]</string>
+    <string name="support_no_email_client">कोई ईमेल ऐप नहीं मिला। कृपया medicationwizard@gmail.com पर संपर्क करें</string>
+    <string name="support_body_header">--- मैजिक स्क्रॉल विवरण ---</string>
+    <string name="support_body_version">ऐप वर्जन: %1$s</string>
+    <string name="support_body_device">डिवाइस: %1$s</string>
+    <string name="support_body_os">एंड्रॉइड वर्जन: %1$s</string>
+    <string name="support_body_locale">भाषा: %1$s</string>
+    <string name="support_body_message_hint">--- यहाँ अपनी बात लिखें ---</string>
+    <string name="sign_in_first">कृपया पहले साइन इन करें</string>
+    <string name="backing_up_drive">गूगल ड्राइव पर बैकअप ले रहे हैं&#8230;</string>
+    <string name="restoring_cloud">क्लाउड से रिस्टोर कर रहे हैं&#8230;</string>
+    <string name="restore_success">रिस्टोर सफल रहा!</string>
+    <string name="no_backup_found">कोई क्लाउड बैकअप नहीं मिला।</string>
+    <string name="restore_failed_format">रिस्टोर विफल: %1$s</string>
+    <string name="invalid_code">अमान्य कोड</string>
+    <string name="signed_in_as_format">%1$s के रूप में साइन इन हैं</string>
+    <string name="sign_in_failed_format">साइन-इन विफल: %1$s</string>
+
+    <string name="sign_in_required_title">साइन-इन आवश्यक</string>
+    <string name="sign_in_required_message">क्लाउड बैकअप और सिंक सक्षम करने के लिए कृपया अपने गूगल अकाउंट से साइन इन करें।</string>
+    <string name="cloud_restore_title">क्लाउड से रिस्टोर करें</string>
+    <string name="cloud_restore_message">यह आपके स्थानीय डेटा को क्लाउड वर्जन से बदल देगा। क्या आप जारी रखना चाहते हैं?</string>
+    <string name="button_restore">रिस्टोर</string>
+    <string name="medication_status_format">%1$s को %2$s के रूप में चिह्नित किया गया</string>
+    <string name="button_undo">वापस (Undo)</string>
+
+    <string name="sound_picker_title">अलर्ट साउंड चुनें</string>
+    <string name="extra_details_label">अतिरिक्त विवरण (वैकल्पिक)</string>
+    <string name="instructions_label">निर्देश (वैकल्पिक)</string>
+    <string name="instruction_before_eating">खाने से पहले</string>
+    <string name="instruction_after_eating">खाने के बाद</string>
+    <string name="instruction_while_eating">खाने के साथ</string>
+    <string name="instruction_before_sleep">सोने से पहले</string>
+    <string name="instruction_no_preference">कोई फर्क नहीं पड़ता</string>
+    <string name="button_save_medication">दवा सेव करें</string>
+    <string name="time_picker_title">समय चुनें</string>
+    <string name="at_label">बजे</string>
+    <string name="button_reschedule">समय बदलें</string>
+    <string name="button_take">ले ली</string>
+    <string name="button_pick_time">सटीक समय चुनें</string>
+    <string name="button_sign_in">साइन इन करें</string>
+
+    <string name="hint_med_name">दवा का नाम</string>
+    <string name="hint_amount">मात्रा</string>
+    <string name="hint_form">प्रकार</string>
+    <string name="hint_frequency">कितनी बार?</string>
+    <string name="hint_strength">शक्ति (वैकल्पिक)</string>
+    <string name="hint_unit">यूनिट (वैकल्पिक)</string>
+
+    <string name="frequency_once">दिन में एक बार</string>
+    <string name="frequency_twice">दिन में दो बार</string>
+    <string name="frequency_3_times">दिन में 3 बार</string>
+    <string name="frequency_4_times">दिन में 4 बार</string>
+    <string name="frequency_5_times">दिन में 5 बार</string>
+    <string name="time_set_format">निर्धारित समय: %1$s</string>
+    <string name="select_time_index_format">समय %1$d चुनें</string>
+    <string name="error_pick_time_title">समय चुनें</string>
+    <string name="error_pick_time_message">बस बटन दबाएं और एक समय चुनें</string>
+    <string name="error_duplicate_times_title">एक ही समय</string>
+    <string name="error_duplicate_times_message">आपने एक ही समय एक से अधिक बार चुना है।</string>
+    <string name="error_required">आवश्यक</string>
+    <string name="time_picker_med_title">दवा का समय चुनें</string>
+
+    <string name="form_pill">गोली</string>
+    <string name="form_solution">घोल</string>
+    <string name="form_injection">इंजेक्शन</string>
+    <string name="form_powder">पाउडर</string>
+    <string name="form_drops">बूंदें</string>
+    <string name="form_inhaler">इनहेलर</string>
+    <string name="form_other">अन्य</string>
+
+    <string name="medication_deleted_format">मिटा दी गई</string>
+    <string name="notification_reminder_title">दवा रिमाइंडर</string>
+    <string name="notification_permission_reminder_title">नोटिफिकेशन बंद हैं</string>
+    <string name="notification_permission_reminder_message">जब तक आप अनुमति नहीं देंगे, आपको रिमाइंडर नहीं मिलेंगे।</string>
+    <string name="notification_reminder_message">%3$s की %1$s %2$s लेने का समय</string>
+    <string name="notification_reminder_dose">खुराक</string>
+    <string name="notification_channel_name">मेडिकेशन रिमाइंडर्स</string>
+    <string name="notification_channel_desc">दवा लेने की याद दिलाने के लिए</string>
+    <string name="premium_only_feature">केवल प्रीमियम फीचर</string>
+    <string name="premium_pass_title">%1$dh मैजिक पास</string>
+    <string name="premium_pass_summary">प्रीमियम सुविधाओं को %1$d घंटों के लिए अनलॉक करने के लिए एक वीडियो देखें!</string>
+    <string name="premium_pass_active">मैजिक पास सक्रिय है</string>
+    <string name="premium_pass_remaining_format">%1$02dh %2$02dm शेष</string>
+    <string name="loading_magic">जादू लोड हो रहा है&#8230; प्रतीक्षा करें।</string>
+    <string name="reward_ad_not_ready_title">वीडियो तैयार नहीं है</string>
+    <string name="reward_ad_not_ready_dialog">वीडियो अभी तैयार नहीं है। कृपया थोड़ी देर बाद फिर से प्रयास करें।</string>
+    <string name="reward_ad_dismissed_early_title">पूरा देखें</string>
+    <string name="reward_ad_dismissed_early_message">अनलॉक करने के लिए आपको वीडियो अंत तक देखना होगा: %s</string>
+
+    <string name="benefit_theme">अगले 1 घंटे के लिए ऐप थीम बदलें</string>
+    <string name="benefit_support">1 घंटे के लिए प्रीमियम सपोर्ट पाएं</string>
+    <string name="benefit_backup">1 घंटे के लिए क्लाउड बैकअप सक्षम करें</string>
+    <string name="benefit_backup_local">1 घंटे के लिए बैकअप सक्षम करें</string>
+    <string name="benefit_bypass">अगले रिमाइंडर के लिए बायपास वॉल्यूम सक्षम करें</string>
+    <string name="benefit_vibration">अगले रिमाइंडर के लिए वाइब्रेशन और फ्लैश सक्षम करें</string>
+    <string name="benefit_sticky">अगले रिमाइंडर को "स्टिकी" बनाएं</string>
+    <string name="benefit_dose_window">1 घंटे के लिए अर्निंग थ्रेशोल्ड बदलें</string>
+    <string name="benefit_quiet_hours">कल सुबह 08:00 बजे तक क्वाइट आवर्स सक्षम करें</string>
+    <string name="reward_ad_not_ready">जादू तैयार नहीं है। कृपया कुछ सेकंड में फिर से प्रयास करें।</string>
+    <string name="theme_unlock_title">यह थीम अनलॉक करें</string>
+    <string name="theme_unlock_prompt">इस थीम और अन्य प्रीमियम जादू को %1$d घंटों के लिए अनलॉक करने के लिए एक वीडियो देखें!</string>
+    <string name="premium_pass_btn_watch">वीडियो देखें</string>
+    <string name="cloud_backup_title">क्लाउड बैकअप</string>
+    <string name="cloud_backup_summary">गूगल ड्राइव से अपना डेटा सुरक्षित करें</string>
+    <string name="cloud_backup_sign_in_hint">डेटा बैकअप के लिए साइन इन करें</string>
+    <string name="cloud_backup_sign_out">साइन आउट</string>
+    <string name="cloud_backup_auto_title">ऑटो क्लाउड बैकअप</string>
+    <string name="cloud_backup_auto_summary">डेटा को ऑटोमैटिक सिंक करें</string>
+    <string name="sign_in_error_title">कनेक्शन समस्या</string>
+    <string name="sign_in_error_network">हम क्लाउड तक नहीं पहुँच सके। कृपया इंटरनेट चेक करें।</string>
+    <string name="sign_in_error_cancelled">साइन-इन रोक दिया गया। क्या फिर से कोशिश करेंगे?</string>
+    <string name="sign_in_error_dev">पोर्टल पर काम चल रहा है। हमारे विजार्ड्स इसे देख रहे हैं।</string>
+    <string name="sign_in_error_generic">कुछ गलत हुआ। कृपया थोड़ी देर बाद कोशिश करें।</string>
+    <string name="sign_in_error_btn_retry">फिर से कोशिश करें</string>
+    <string name="cloud_backup_wifi_title">केवल वाई-फाई पर बैकअप</string>
+    <string name="cloud_backup_wifi_summary">मोबाइल डेटा बचाएं</string>
+    <string name="cloud_backup_now">अभी बैकअप लें</string>
+    <string name="cloud_backup_success">बैकअप सफल रहा!</string>
+    <string name="cloud_backup_failed">बैकअप विफल रहा।</string>
+
+    <string name="alarm_permission_title">सटीक अलार्म आवश्यक</string>
+    <string name="alarm_permission_message">दवा रिमाइंडर सही समय पर बजने के लिए कृपया सटीक अलार्म की अनुमति दें।</string>
+    <string name="take_early_warning">इस खुराक के लिए अभी थोड़ा जल्दी है। फिर भी लेना चाहते हैं?</string>
+    <string name="take_late_warning">यह खुराक पहले की थी। क्या अब इसे ली गई मान लें?</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">जादू अनलॉक करें</string>
+    <string name="premium_rational_btn_watch">वीडियो देखें</string>
+    <string name="premium_rational_theme_msg">1 घंटे के लिए थीम बदलने के लिए वीडियो देखें। समय पूरा होने पर यह वापस सिस्टम पर सेट हो जाएगा।</string>
+    <string name="premium_rational_support_msg">1 घंटे के लिए प्रीमियम सपोर्ट पाने के लिए वीडियो देखें।</string>
+    <string name="premium_rational_backup_msg">1 घंटे के लिए क्लाउड बैकअप सक्षम करने के लिए वीडियो देखें।</string>
+    <string name="premium_rational_backup_local_msg">1 घंटे के लिए बैकअप सक्षम करने के लिए वीडियो देखें।</string>
+    <string name="premium_rational_bypass_msg">केवल अगले रिमाइंडर के लिए बायपास वॉल्यूम सक्षम करने के लिए वीडियो देखें।</string>
+    <string name="premium_rational_vibration_msg">केवल अगले रिमाइंडर के लिए वाइब्रेशन और फ्लैश सक्षम करने के लिए वीडियो देखें।</string>
+    <string name="premium_rational_sticky_msg">केवल अगले रिमाइंडर को "स्टिकी" बनाने के लिए वीडियो देखें।</string>
+    <string name="premium_rational_dose_window_msg">1 घंटे के लिए अपनी चेतावनियों को कस्टमाइज करने के लिए वीडियो देखें।</string>
+    <string name="premium_rational_quiet_hours_msg">कल सुबह 08:00 बजे तक क्वाइट आवर्स सक्षम करने के लिए वीडियो देखें।</string>
+
+    <string name="settings_category_advanced">सटीक नियंत्रण</string>
+    <string name="settings_vibration_title">वाइब्रेशन और फ्लैश</string>
+    <string name="settings_vibration_summary">समय होने पर फोन वाइब्रेट करें और लाइट जलाएं।</string>
+    <string name="settings_vibration_pattern_title">वाइब्रेशन पैटर्न</string>
+    <string name="settings_flash_pattern_title">फ्लैश पैटर्न</string>
+
+    <string name="settings_sticky_title">स्टिकी रिमाइंडर</string>
+    <string name="settings_sticky_summary">जब तक आप खुराक दर्ज नहीं करते, रिमाइंडर सक्रिय रहता है।</string>
+
+    <string name="settings_dose_window_title">डोज़ विंडो ट्यूनिंग</string>
+    <string name="settings_dose_window_summary">बिना चेतावनी के आप कितनी जल्दी या देरी से दवा ले सकते हैं।</string>
+    <string name="settings_early_threshold_title">जल्द दवा लेने की चेतावनी</string>
+    <string name="settings_late_threshold_title">देरी से दवा लेने की चेतावनी</string>
+    <string name="settings_threshold_format">%1$d मिनट</string>
+
+    <string name="feature_active_label">सक्रिय</string>
+    <string name="onboarding_scroll_hint">और देखने के लिए स्क्रॉल करें</string>
+    <string name="active_until_format">%1$s तक सक्रिय</string>
+    <string name="active_for_next_reminder">अगले रिमाइंडर के लिए सक्रिय</string>
+    <string name="active_for_next_take_outside_window">अगली बाहरी खुराक के लिए सक्रिय</string>
+    <string name="feature_unlocked_toast">%1$s अनलॉक हो गया!</string>
+
+    <string name="button_cancel">रद्द करें</string>
+    <string name="button_confirm">पुष्टि करें</string>
+    <string name="button_delete">मिटाएं</string>
+    <string name="snooze_5_min">5 मिनट</string>
+    <string name="snooze_10_min">10 मिनट</string>
+    <string name="snooze_15_min">15 मिनट</string>
+    <string name="snooze_20_min">20 मिनट</string>
+    <string name="snooze_30_min">30 मिनट</string>
+    <string name="snooze_1_time">1 बार</string>
+    <string name="snooze_2_times">2 बार</string>
+    <string name="snooze_3_times">3 बार</string>
+    <string name="snooze_5_times">5 बार</string>
+    <string name="snooze_unlimited">अनलिमिटेड</string>
+
+    <!-- Measurement Units -->
+    <string name="unit_grams">ग्राम</string>
+    <string name="unit_mg">मिलीग्राम</string>
+    <string name="unit_iu">IU</string>
+    <string name="unit_mcg">mcg</string>
+    <string name="unit_ml">मिलीलीटर</string>
+    <string name="unit_percentage">%</string>
+</resources>

@@ -55,7 +55,6 @@ public class ReminderReceiver extends BroadcastReceiver {
         // Effects (Sound, Vibration, Flash)
         new Thread(() -> {
             ReminderAlertManager.getInstance().startAlarm(context);
-            triggerVibrationSync(context);
             triggerFlashSync(context);
             
             // Consumes single-use feature passes now that they've been used for this reminder
@@ -145,36 +144,6 @@ public class ReminderReceiver extends BroadcastReceiver {
         try {
             nm.notify(instanceId, builder.build());
         } catch (SecurityException ignored) {
-        }
-    }
-
-    private void triggerVibrationSync(Context context) {
-        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
-        if (!sp.getBoolean(SettingsViewModel.KEY_VIBRATION_ENABLED, false)) return;
-
-        Vibrator vibrator;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            VibratorManager vm = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
-            vibrator = vm.getDefaultVibrator();
-        } else {
-            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        }
-
-        if (vibrator == null || !vibrator.hasVibrator()) return;
-
-        String patternName = sp.getString(SettingsViewModel.KEY_VIBRATION_PATTERN, "Standard");
-        long[] pattern = switch (patternName) {
-            case "Heartbeat" -> new long[]{0, 200, 100, 200, 100, 200, 500};
-            case "SOS" ->
-                    new long[]{0, 100, 100, 100, 100, 100, 300, 300, 100, 300, 100, 300, 300, 100, 100, 100, 100, 100, 500};
-            case "Long Pulse" -> new long[]{0, 800, 200, 800, 200};
-            default -> new long[]{0, 500, 200, 500, 200};
-        };
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1));
-        } else {
-            vibrator.vibrate(pattern, -1);
         }
     }
 

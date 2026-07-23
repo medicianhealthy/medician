@@ -1,0 +1,377 @@
+<resources>
+    <string name="app_name">お薬の魔法使い</string>
+    <string name="navigation_drawer_open">メニューを開く</string>
+    <string name="navigation_drawer_close">メニューを閉じる</string>
+    <string name="nav_header_title">お薬の魔法使い</string>
+    <string name="nav_header_subtitle">あなたの健康のパートナー</string>
+    <string name="nav_header_desc">ナビゲーションヘッダー</string>
+    <string name="action_settings">設定</string>
+
+    <string name="menu_home">今日のお薬</string>
+    <string name="menu_gallery">お薬リスト</string>
+    <string name="menu_history">履歴</string>
+    <string name="menu_settings">設定</string>
+
+    <string name="history_title">服用履歴</string>
+    <string name="history_empty">本日の記録はありません。</string>
+    <string name="history_empty_subtitle">この日に予定されている、または記録された服用はありません。</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_category_reminders">リマインダー</string>
+    <string name="settings_notifications_disabled_summary">ここをタップしてリマインダーを許可し、健康を維持しましょう。</string>
+    <string name="settings_notifications_manage_prompt">通知の設定を変更するには、システムの「設定」を使用してください。</string>
+    <string name="settings_notifications_title">健康通知</string>
+    <string name="settings_notifications_summary">リマインダーを有効にして、お薬の飲み忘れを防ぎましょう。</string>
+
+    <string name="settings_quiet_hours_title">おやすみモード</string>
+    <string name="settings_quiet_hours_summary">就寝中は通知をオフにします。</string>
+    <string name="settings_quiet_hours_format">就寝中は通知しません (%1$s)。</string>
+
+    <string name="settings_snooze_duration_title">スヌーズの間隔</string>
+    <string name="settings_snooze_duration_summary">次回の通知まで %1$d 分待ちます。</string>
+    <string name="settings_max_snoozes_title">スヌーズの回数制限</string>
+    <string name="settings_max_snoozes_summary">%1$s 回スヌーズした後は通知を停止します。</string>
+    <string name="settings_max_snoozes_unlimited_summary">確認するまでリマインダーを出し続けます。</string>
+    <string name="max_snoozes_unlimited">無制限</string>
+
+    <string name="settings_sound_title">通知音</string>
+    <string name="settings_sound_summary">現在の音: %1$s</string>
+
+    <string name="settings_bypass_title">音量を強制する</string>
+    <string name="settings_bypass_summary">マナーモード中でもリマインダーを鳴らします。</string>
+
+    <string name="settings_volume_title">通知音量</string>
+
+    <string name="settings_category_appearance">外観</string>
+    <string name="settings_theme_title">アプリのテーマ</string>
+    <string name="settings_theme_summary">ライト、ダーク、またはシステム設定に従います。</string>
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">ダーク</string>
+    <string name="theme_system">システム設定</string>
+    <string name="lang_system">システム設定</string>
+
+    <string name="settings_language_title">アプリの言語</string>
+    <string name="settings_language_summary">魔法が使える言語を選んでください。</string>
+    <string name="settings_language_restart_warning">言語を適用するためにアプリを再起動します。</string>
+    <string name="lang_english">English</string>
+    <string name="lang_hebrew">עברית</string>
+    <string name="lang_arabic">العربية</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_french">Français</string>
+    <string name="lang_german">Deutsch</string>
+    <string name="lang_japanese">日本語</string>
+    <string name="lang_portuguese">Português (Brasil)</string>
+    <string name="lang_korean">한국어</string>
+    <string name="lang_hindi">हिन्दी</string>
+    <string name="lang_indonesian">Bahasa Indonesia</string>
+    <string name="lang_russian">Русский</string>
+
+    <string name="settings_category_data">データとプライバシー</string>
+    <string name="settings_backup_title">バックアップと復元</string>
+    <string name="settings_backup_summary">データを安全に保管、または新しい端末へ移行します。</string>
+    <string name="backup_export">データを書き出す</string>
+    <string name="backup_import">データを読み込む</string>
+    <string name="backup_restore_warning">バックアップを復元すると、現在のお薬と履歴がすべて上書きされます。よろしいですか？</string>
+    <string name="medication_delete_warning">このお薬とすべての履歴が完全に削除されます。よろしいですか？</string>
+
+    <string name="settings_clear_data_title">初期化する</string>
+    <string name="settings_clear_data_message">お薬、履歴、クラウドバックアップをすべて削除します。よろしいですか？</string>
+    <string name="settings_clear_data_message_no_cloud">お薬と履歴をすべて完全に削除します。元に戻すことはできません。よろしいですか？</string>
+    <string name="settings_clear_data_summary">すべてのお薬と履歴を消去します。ご注意ください！</string>
+
+    <string name="settings_category_about">このアプリについて</string>
+    <string name="settings_version_title">アプリのバージョン</string>
+    <string name="settings_version_summary">現在バージョン %1$s を使用しています</string>
+
+    <string name="settings_support_title">お困りですか？</string>
+    <string name="settings_support_summary">魔法のコミュニティへのサポート。ご質問やバグの報告はこちらから。</string>
+
+    <string name="take">飲みました</string>
+    <string name="permission_rational_notification_title">飲み忘れを防ぎましょう！</string>
+    <string name="permission_rational_notification_message">お薬の時間を忘れないよう、時間になったら魔法のリマインダーをお送りします。よろしいですか？</string>
+    <string name="button_sure">はい</string>
+    <string name="button_not_now">後で</string>
+    <string name="button_never">許可しない</string>
+    <string name="notification_missing">通知の権限がありません</string>
+    <string name="button_allow">許可する</string>
+    <string name="button_grant">権限を与える</string>
+    <string name="button_ok">OK</string>
+    <string name="button_select">選択</string>
+    <string name="button_skip">スキップ</string>
+    <string name="button_snooze">スヌーズ</string>
+    <string name="button_untake">服用を取消</string>
+    <string name="button_unskip">スキップを取消</string>
+    <string name="button_take_all">すべて服用</string>
+    <string name="button_skip_all">すべてスキップ</string>
+    <string name="button_reschedule_all">時間を変更</string>
+    <string name="button_untake_all">服用をすべて取消</string>
+    <string name="button_unskip_all">すべて元に戻す</string>
+    <string name="button_reset_all">すべてリセット</string>
+    <string name="group_title_format">%1$sのリマインダー</string>
+    <string name="group_status_taken">すべて服用済み</string>
+    <string name="group_status_skipped">すべてスキップ済み</string>
+    <string name="group_status_mixed">混合</string>
+    <string name="sort_scheduled">時間順</string>
+    <string name="sort_name">名前順</string>
+    <string name="sort_action_time">記録時間順</string>
+    <string name="sort_by_hint">並び替え:</string>
+    <string name="fragment_add_med_title">お薬を追加</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
+    <string name="once_a_day">1日1回</string>
+    <string name="twice_a_day">1日2回</string>
+    <string name="times_a_day">1日 %1$d 回</string>
+    <string name="scheduled_at">予定時間: %1$s</string>
+    <string name="scheduled_for_format">%1$s に予定</string>
+    <string name="took_format">%3$s に %1$s %2$s 服用しました</string>
+    <string name="skipped_at_format">%1$s にスキップしました</string>
+    <string name="no_instructions">指示なし</string>
+    <string name="medication_icon_desc">お薬のアイコン</string>
+    <string name="empty_meds_title">魔法使いが待っています！</string>
+    <string name="empty_meds_subtitle">お薬の管理をお手伝いします。最初のお薬を追加して、魔法を始めましょう！</string>
+    <string name="empty_meds_action">最初のお薬を追加</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_btn_next">次へ</string>
+    <string name="onboarding_btn_skip">スキップ</string>
+    <string name="onboarding_btn_finish">はじめる</string>
+    <string name="back_to_exit">終了するにはもう一度戻るを押してください</string>
+
+    <string name="onboarding_title_1">魔法使いに会おう</string>
+    <string name="onboarding_desc_1">魔法の力で、あなたの健康管理をしっかりとお手伝いします。</string>
+
+    <string name="onboarding_title_2">スマート通知</string>
+    <string name="onboarding_desc_2">もう飲み忘れはありません。睡眠時間を考慮した優しいリマインダーをお送りします。</string>
+
+    <string name="onboarding_title_3">進捗を確認</string>
+    <string name="onboarding_desc_3">健康の歩みを詳しく記録します。お医者様との相談時にも役立ちます。</string>
+    <string name="onboarding_terms_agree"><![CDATA[<a href="%1$s">利用規約</a>と<a href="%2$s">プライバシーポリシー</a>に同意します]]></string>
+    <string name="onboarding_error_terms">続行するには規約とポリシーに同意してください。</string>
+    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
+    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
+    <string name="legal_terms_title">利用規約</string>
+    <string name="legal_privacy_title">プライバシーポリシー</string>
+
+    <!-- Premium -->
+    <string name="premium_title">魔法をフル活用！</string>
+    <string name="premium_benefit_ad_free_title">広告なしの魔法</string>
+    <string name="premium_benefit_ad_free_desc">邪魔されることなく健康管理に集中できます。</string>
+    <string name="premium_benefit_cloud_title">クラウド保護</string>
+    <string name="premium_benefit_cloud_desc">すべてのお薬と履歴をデバイス間で安全に同期します。</string>
+    <string name="premium_benefit_backup_title">データ保護</string>
+    <string name="premium_benefit_backup_desc">データの書き出し・読み込みで大切な記録を守ります。</string>
+    <string name="premium_benefit_rest_title">安らかな眠り</string>
+    <string name="premium_benefit_rest_desc">おやすみモードを有効にして、睡眠を守りましょう。</string>
+    <string name="premium_benefit_support_title">優先サポート</string>
+    <string name="premium_benefit_support_desc">魔法使いに直接、新しい魔法のリクエストができます。</string>
+    <string name="premium_description">プレミアムにアップグレードして、クラウド同期やおやすみモード、広告なしの体験を楽しみましょう。</string>
+    <string name="premium_description_local">プレミアムにアップグレードして、バックアップ機能やおやすみモード、広告なしの体験を楽しみましょう。</string>
+    <string name="premium_upgrade_button">今すぐアップグレード</string>
+    <string name="premium_maybe_later">後で</string>
+    <string name="menu_go_premium">プレミアム版</string>
+    <string name="streak_format">魔法の継続 %1$d 日目！</string>
+    <string name="history_percent_format">達成率 %1$d%%</string>
+    <string name="history_doses_format">%2$d回中 %1$d回服用</string>
+    <string name="history_select_date_title">日付を選択</string>
+    <string name="history_stats_title">健康統計</string>
+    <string name="history_tip_title">健康の知恵</string>
+    <string name="history_tip_1">継続は魔法のような健康への鍵です。記録を続けましょう！</string>
+    <string name="history_tip_2">魔法使いはお薬を忘れません。リマインダーを活用しましょう！</string>
+    <string name="history_tip_3">食事と一緒に飲みますか？最大の効果を得るために指示を確認しましょう。</string>
+    <string name="history_tip_4">水分をしっかり取りましょう！体内の巡りが良くなると魔法も冴えます。</string>
+    <string name="history_tip_5">休息も魔法の一部です。おやすみモードで睡眠を守りましょう。</string>
+    <string name="history_tip_6">毎回の服用を記録しましょう。完全な履歴はお医者様にとっても貴重な情報です。</string>
+    <string name="streak_empty">今日から魔法を始めましょう！</string>
+    <string name="settings_title">設定</string>
+
+    <string name="notif_already_active">通知はすでに有効です！</string>
+    <string name="data_cleared">データを消去しました。</string>
+    <string name="support_coming_soon">サポートは近日公開予定です！</string>
+    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
+    <string name="support_dialog_title">魔法のサポート</string>
+    <string name="support_dialog_message">魔法に不具合（バグ）がありますか？それとも新しい魔法（機能）のアイデアがありますか？</string>
+    <string name="support_option_bug">バグの報告</string>
+    <string name="support_option_feature">機能のリクエスト</string>
+    <string name="support_subject_bug">バグ報告: [%1$s]</string>
+    <string name="support_subject_feature">新機能の提案: [%1$s]</string>
+    <string name="support_no_email_client">メールアプリが見つかりません。medicationwizard@gmail.com までご連絡ください。</string>
+    <string name="support_body_header">--- 魔法の記録詳細 ---</string>
+    <string name="support_body_version">アプリバージョン: %1$s</string>
+    <string name="support_body_device">端末: %1$s</string>
+    <string name="support_body_os">Androidバージョン: %1$s</string>
+    <string name="support_body_locale">言語: %1$s</string>
+    <string name="support_body_message_hint">--- こちらに詳細を入力してください ---</string>
+    <string name="sign_in_first">先にログインしてください</string>
+    <string name="backing_up_drive">Google ドライブへ保存中&#8230;</string>
+    <string name="restoring_cloud">クラウドから復元中&#8230;</string>
+    <string name="restore_success">復元に成功しました！</string>
+    <string name="no_backup_found">クラウドバックアップが見つかりません。</string>
+    <string name="restore_failed_format">復元失敗: %1$s</string>
+    <string name="invalid_code">無効なコード</string>
+    <string name="signed_in_as_format">%1$s としてログイン中</string>
+    <string name="sign_in_failed_format">ログイン失敗: %1$s</string>
+
+    <string name="sign_in_required_title">ログインが必要です</string>
+    <string name="sign_in_required_message">クラウド保存と同期を有効にするには、Google アカウントでログインしてください。</string>
+    <string name="cloud_restore_title">クラウドから復元</string>
+    <string name="cloud_restore_message">現在のデータをクラウドのデータで上書きします。よろしいですか？</string>
+    <string name="button_restore">復元する</string>
+    <string name="medication_status_format">%1$s を %2$s と記録しました</string>
+    <string name="button_undo">元に戻す</string>
+
+    <string name="sound_picker_title">通知音を選択</string>
+    <string name="extra_details_label">詳細（オプション）</string>
+    <string name="instructions_label">服用指示（オプション）</string>
+    <string name="instruction_before_eating">食前</string>
+    <string name="instruction_after_eating">食後</string>
+    <string name="instruction_while_eating">食中</string>
+    <string name="instruction_before_sleep">就寝前</string>
+    <string name="instruction_no_preference">指定なし</string>
+    <string name="button_save_medication">お薬を保存</string>
+    <string name="time_picker_title">時間を選択</string>
+    <string name="at_label">:</string>
+    <string name="button_reschedule">時間を変更</string>
+    <string name="button_take">服用</string>
+    <string name="button_pick_time">正確な時間を選択</string>
+    <string name="button_sign_in">ログイン</string>
+
+    <string name="hint_med_name">お薬の名前</string>
+    <string name="hint_amount">量</string>
+    <string name="hint_form">形</string>
+    <string name="hint_frequency">頻度</string>
+    <string name="hint_strength">含有量（オプション）</string>
+    <string name="hint_unit">単位（オプション）</string>
+
+    <string name="frequency_once">1日1回</string>
+    <string name="frequency_twice">1日2回</string>
+    <string name="frequency_3_times">1日3回</string>
+    <string name="frequency_4_times">1日4回</string>
+    <string name="frequency_5_times">1日5回</string>
+    <string name="time_set_format">設定時間: %1$s</string>
+    <string name="select_time_index_format">服用時間 %1$d</string>
+    <string name="error_pick_time_title">時間を選択</string>
+    <string name="error_pick_time_message">時間選択ボタンを押して設定してください</string>
+    <string name="error_duplicate_times_title">時間の重複</string>
+    <string name="error_duplicate_times_message">同じ時間が選択されています。別の時間を選んでください。</string>
+    <string name="error_required">必須</string>
+    <string name="time_picker_med_title">服用時間を選択</string>
+
+    <string name="form_pill">錠剤</string>
+    <string name="form_solution">液剤</string>
+    <string name="form_injection">注射</string>
+    <string name="form_powder">粉末</string>
+    <string name="form_drops">点眼・点鼻</string>
+    <string name="form_inhaler">吸入剤</string>
+    <string name="form_other">その他</string>
+
+    <string name="medication_deleted_format">を削除しました</string>
+    <string name="notification_reminder_title">お薬の時間です</string>
+    <string name="notification_permission_reminder_title">通知がオフになっています</string>
+    <string name="notification_permission_reminder_message">通知権限を許可するまで、リマインダーを受け取ることができません。</string>
+    <string name="notification_reminder_message">%3$s を %1$s %2$s 服用する時間です</string>
+    <string name="notification_reminder_dose">分</string>
+    <string name="notification_channel_name">服用リマインダー</string>
+    <string name="notification_channel_desc">お薬の服用を促す通知</string>
+    <string name="premium_only_feature">プレミアム限定機能</string>
+    <string name="premium_pass_title">魔法のパス（%1$d時間）</string>
+    <string name="premium_pass_summary">短い動画を視聴して、%1$d 時間すべての機能を解放しましょう！</string>
+    <string name="premium_pass_active">魔法のパス有効中</string>
+    <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
+    <string name="loading_magic">魔法を準備中&#8230; 少々お待ちください。</string>
+    <string name="reward_ad_not_ready_title">準備中</string>
+    <string name="reward_ad_not_ready_dialog">動画の準備ができていません。接続を確認して、少し待ってから再度お試しください。</string>
+    <string name="reward_ad_dismissed_early_title">視聴を完了してください</string>
+    <string name="reward_ad_dismissed_early_message">魔法を使うには、動画を最後まで視聴する必要があります: %s</string>
+
+    <string name="benefit_theme">1時間テーマをカスタマイズできます</string>
+    <string name="benefit_support">1時間優先サポートを受けられます</string>
+    <string name="benefit_backup">1時間クラウド保存・復元ができます</string>
+    <string name="benefit_backup_local">1時間バックアップ・復元ができます</string>
+    <string name="benefit_bypass">次回の通知をマナーモード時でも鳴らせます</string>
+    <string name="benefit_vibration">次回の通知で特別な振動とフラッシュを使えます</string>
+    <string name="benefit_sticky">次回の通知を記録するまで表示し続けます</string>
+    <string name="benefit_dose_window">1時間アラートの感度を調整できます</string>
+    <string name="benefit_quiet_hours">明日の朝 08:00 までおやすみモードを使えます</string>
+    <string name="reward_ad_not_ready">魔法の準備がまだです。数秒後に再度お試しください。</string>
+    <string name="theme_unlock_title">このテーマを解放</string>
+    <string name="theme_unlock_prompt">短い動画を見て、このテーマとすべての機能を %1$d 時間解放しましょう！</string>
+    <string name="premium_pass_btn_watch">動画を見る</string>
+    <string name="cloud_backup_title">クラウドバックアップ</string>
+    <string name="cloud_backup_summary">Google ドライブでデータを守る</string>
+    <string name="cloud_backup_sign_in_hint">データをバックアップしましょう</string>
+    <string name="cloud_backup_sign_out">ログアウト</string>
+    <string name="cloud_backup_auto_title">自動クラウド保存</string>
+    <string name="cloud_backup_auto_summary">Google ドライブへ自動で同期</string>
+    <string name="sign_in_error_title">通信エラー</string>
+    <string name="sign_in_error_network">魔法の雲に届きませんでした。接続を確認して再度お試しください。</string>
+    <string name="sign_in_error_cancelled">ログインが中断されました。もう一度お試しになりますか？</string>
+    <string name="sign_in_error_dev">メンテナンス中です。魔法使いが修復を試みています。</string>
+    <string name="sign_in_error_generic">ログイン中にエラーが発生しました。時間を置いてお試しください。</string>
+    <string name="sign_in_error_btn_retry">再試行</string>
+    <string name="cloud_backup_wifi_title">Wi-Fi時のみ保存</string>
+    <string name="cloud_backup_wifi_summary">通信量を節約します</string>
+    <string name="cloud_backup_now">今すぐバックアップ</string>
+    <string name="cloud_backup_success">バックアップに成功しました！</string>
+    <string name="cloud_backup_failed">バックアップに失敗しました。</string>
+
+    <string name="alarm_permission_title">正確なアラームが必要です</string>
+    <string name="alarm_permission_message">お薬の時間を正確にお知らせするために、アラームの設定を許可してください。</string>
+    <string name="take_early_warning">少し早いですが、服用しますか？</string>
+    <string name="take_late_warning">予定時間を過ぎています。今服用したことにしますか？</string>
+    <!-- Feature Specific Passes -->
+    <string name="premium_rational_title">魔法を解放</string>
+    <string name="premium_rational_btn_watch">動画を見る</string>
+    <string name="premium_rational_theme_msg">動画を見て、1時間テーマを解放します。時間が過ぎるとシステム設定に戻ります。</string>
+    <string name="premium_rational_support_msg">動画を見て、1時間優先サポートを受けられます。</string>
+    <string name="premium_rational_backup_msg">動画を見て、1時間クラウド保存・復元ができます。</string>
+    <string name="premium_rational_backup_local_msg">動画を見て、1時間バックアップ・復元ができます。</string>
+    <string name="premium_rational_bypass_msg">動画を見て、次回の通知音を強制的に鳴らします。</string>
+    <string name="premium_rational_vibration_msg">動画を見て、次回の通知で特別な振動とライトを使えます。</string>
+    <string name="premium_rational_sticky_msg">動画を見て、記録するまで消えない通知を作成します。</string>
+    <string name="premium_rational_dose_window_msg">動画を見て、1時間アラートの感度を細かく設定できます。</string>
+    <string name="premium_rational_quiet_hours_msg">動画を見て、明日の朝 08:00 までおやすみモードを解放します。</string>
+
+    <string name="settings_category_advanced">高度な設定</string>
+    <string name="settings_vibration_title">振動とフラッシュ</string>
+    <string name="settings_vibration_summary">時間になったら振動と光でお知らせします。</string>
+    <string name="settings_vibration_pattern_title">振動パターン</string>
+    <string name="settings_flash_pattern_title">フラッシュパターン</string>
+
+    <string name="settings_sticky_title">固定通知</string>
+    <string name="settings_sticky_summary">記録するまで通知を消さずに残します。</string>
+
+    <string name="settings_dose_window_title">警告のタイミング</string>
+    <string name="settings_dose_window_summary">警告を出さずに服用できる時間の幅を調整します。</string>
+    <string name="settings_early_threshold_title">早期服用の警告</string>
+    <string name="settings_late_threshold_title">遅延服用の警告</string>
+    <string name="settings_threshold_format">%1$d 分</string>
+
+    <string name="feature_active_label">有効中</string>
+    <string name="onboarding_scroll_hint">スクロールして続きを見る</string>
+    <string name="active_until_format">%1$s まで有効</string>
+    <string name="active_for_next_reminder">次回の通知で有効</string>
+    <string name="active_for_next_take_outside_window">次回のイレギュラーな服用で有効</string>
+    <string name="feature_unlocked_toast">%1$s を解放しました！</string>
+
+    <string name="button_cancel">キャンセル</string>
+    <string name="button_confirm">確認</string>
+    <string name="button_delete">削除</string>
+    <string name="snooze_5_min">5分</string>
+    <string name="snooze_10_min">10分</string>
+    <string name="snooze_15_min">15分</string>
+    <string name="snooze_20_min">20分</string>
+    <string name="snooze_30_min">30分</string>
+    <string name="snooze_1_time">1回</string>
+    <string name="snooze_2_times">2回</string>
+    <string name="snooze_3_times">3回</string>
+    <string name="snooze_5_times">5回</string>
+    <string name="snooze_unlimited">無制限</string>
+
+    <!-- Measurement Units -->
+    <string name="unit_grams">g</string>
+    <string name="unit_mg">mg</string>
+    <string name="unit_iu">IU</string>
+    <string name="unit_mcg">mcg</string>
+    <string name="unit_ml">mL</string>
+    <string name="unit_percentage">%</string>
+</resources>

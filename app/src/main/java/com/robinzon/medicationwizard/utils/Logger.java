@@ -44,7 +44,13 @@ public class Logger {
         if (IS_LOGGING_ENABLED &&
                 !TextUtils.isEmpty(tag) &&
                 !TextUtils.isEmpty(message)) {
-            Log.i(tag, String.format(message, params));
+            // FIX: Only attempt to format if parameters are actually provided.
+            // This prevents crashes if the message contains '%' (like URI encoded characters)
+            // but no params are passed to satisfy the format specifier.
+            String formattedMessage = (params.length > 0)
+                    ? String.format(message, params)
+                    : message;
+            Log.i(tag, formattedMessage);
         }
 
     }

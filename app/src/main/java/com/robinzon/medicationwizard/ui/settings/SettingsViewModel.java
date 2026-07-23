@@ -129,10 +129,6 @@ public class SettingsViewModel extends AndroidViewModel {
         String currentLang = sp.getString(KEY_APP_LANGUAGE, "");
         if (currentLang.isEmpty()) {
             currentLang = getApplication().getResources().getConfiguration().getLocales().get(0).getLanguage();
-            // Safeguard: default to "en" if system language is not supported
-            if (!"en".equals(currentLang) && !"iw".equals(currentLang) && !"he".equals(currentLang)) {
-                currentLang = "en";
-            }
         }
         mLanguageCode.setValue(currentLang);
     }
@@ -334,9 +330,6 @@ public class SettingsViewModel extends AndroidViewModel {
             return;
         }
 
-        if (!"en".equals(langCode) && !"iw".equals(langCode) && !"he".equals(langCode)) {
-            langCode = "en";
-        }
         if (langCode.equals(mLanguageCode.getValue())) return;
 
         mLanguageCode.setValue(langCode);
