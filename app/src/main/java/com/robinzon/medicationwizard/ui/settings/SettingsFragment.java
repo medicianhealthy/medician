@@ -867,8 +867,26 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         d.setMessage(getString(messageRes));
         d.setPositiveButton(getString(android.R.string.yes), (dialog, i) -> {
+            // 1. If cloud is enabled and user is signed in, delete the cloud backup
+            if (cloudEnabled) {
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(requireContext());
+                if (account != null) {
+                    GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(requireContext(), Collections.singleton(DriveScopes.DRIVE_APPDATA));
+                    credential.setSelectedAccount(account.getAccount());
+                    Drive service = new Drive.Builder(new NetHttpTransport(), new GsonFactory(), credential).setApplicationName("Medication Wizard").build();
+                    CloudBackupManager manager = new CloudBackupManager(requireContext(), new DriveServiceHelper(service));
+                    manager.deleteBackup();
+                }
+            }
+
+            // 2. Perform the local wipe
             Medication.clearAllMedications(requireContext());
             Snackbar.make(binding.getRoot(), R.string.data_cleared, Snackbar.LENGTH_SHORT).show();
+
+            // 3. Restart the activity to ensure all ViewModels/UI reflect the empty state
+            if (getActivity() != null) {
+                getActivity().recreate();
+            }
         });
         d.setNegativeButton(getString(android.R.string.no), null);
         d.show();

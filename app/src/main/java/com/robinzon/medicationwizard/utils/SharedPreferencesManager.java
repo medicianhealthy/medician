@@ -98,14 +98,19 @@ public class SharedPreferencesManager {
 
     /**
      * Serializes and saves a {@link JSONArray} as a String.
+     * If the provided array is null, the key will be removed.
      *
      * @param key       The storage key.
-     * @param jsonArray The data to save.
+     * @param jsonArray The data to save, or null to clear.
      */
-    public void setJsonArray(@Nullable final String key, @NonNull final JSONArray jsonArray) {
+    public void setJsonArray(@Nullable final String key, @Nullable final JSONArray jsonArray) {
         final SharedPreferences.Editor editor = getEditor();
         if (null != editor && !TextUtils.isEmpty(key)) {
-            editor.putString(key, jsonArray.toString()).apply();
+            if (jsonArray == null) {
+                editor.remove(key).apply();
+            } else {
+                editor.putString(key, jsonArray.toString()).apply();
+            }
         }
     }
 

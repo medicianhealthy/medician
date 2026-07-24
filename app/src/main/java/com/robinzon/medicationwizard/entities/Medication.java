@@ -105,10 +105,16 @@ public class Medication implements Comparable<Medication> {
      * @param context Application context.
      */
     public static void clearAllMedications(final Context context) {
-        // 1. SharedPreferences
-        SharedPreferencesManager.getInstance(context).setJsonArray(PREF_MEDICATION_LIST, null);
+        // 1. SharedPreferences: Clear the main list and relevant stats
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
+        sp.removeKey(PREF_MEDICATION_LIST);
+        
+        // Also clear interaction scores and dose logs to ensure a truly fresh start
+        sp.removeKey("spk_total_doses_logged");
+        sp.removeKey("spk_interstitial_score");
+        sp.removeKey("spk_actions_for_interstitial");
 
-        // 2. Room
+        // 2. Room: Cancel all alarms and wipe the table
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase db = AppDatabase.getDatabase(context);
             List<DoseInstanceEntity> instances = db.doseInstanceDao().getAllInstancesInternal();

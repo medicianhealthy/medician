@@ -388,6 +388,8 @@
     <string name="snooze_5_times">5 times</string>
     <string name="snooze_unlimited">Unlimited</string>
 
+    <string name="time_range_format" translatable="false">\u200E%1$s \u2013 %2$s</string>
+
     <!-- Measurement Units -->
     <string name="unit_grams">g</string>
     <string name="unit_mg">mg</string>

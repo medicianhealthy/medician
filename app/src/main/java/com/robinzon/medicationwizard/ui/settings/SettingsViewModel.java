@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 /**
@@ -116,7 +117,7 @@ public class SettingsViewModel extends AndroidViewModel {
 
         String start = sp.getString(KEY_QUIET_HOURS_START, "23:00");
         String end = sp.getString(KEY_QUIET_HOURS_END, "07:00");
-        mQuietHoursRange.setValue(start + " - " + end);
+        mQuietHoursRange.setValue(getApplication().getString(R.string.time_range_format, start, end));
 
         mNotifVolume.setValue(sp.getInt(KEY_NOTIF_VOLUME, 70));
         mSoundName.setValue(sp.getString(KEY_NOTIF_SOUND_NAME, "Default"));
@@ -360,7 +361,7 @@ public class SettingsViewModel extends AndroidViewModel {
         SharedPreferencesManager.getInstance(getApplication()).setString(KEY_QUIET_HOURS_START, start);
         SharedPreferencesManager.getInstance(getApplication()).setString(KEY_QUIET_HOURS_END, end);
 
-        mQuietHoursRange.setValue(start + " - " + end);
+        mQuietHoursRange.setValue(getApplication().getString(R.string.time_range_format, start, end));
     }
 
     /**
