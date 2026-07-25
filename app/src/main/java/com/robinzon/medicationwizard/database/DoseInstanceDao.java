@@ -156,6 +156,9 @@ public interface DoseInstanceDao {
     @Query("SELECT * FROM dose_instances WHERE medicationId = :medicationId AND status = 'SCHEDULED'")
     List<DoseInstanceEntity> getScheduledByMedicationId(String medicationId);
 
+    @Query("SELECT * FROM dose_instances WHERE scheduledTime = :time AND status = 'SCHEDULED'")
+    List<DoseInstanceEntity> getScheduledAtTime(long time);
+
     @Query("SELECT * FROM dose_instances WHERE medicationId = :medicationId AND scheduledTime >= :startOfDay AND scheduledTime <= :endOfDay AND status = 'SCHEDULED' LIMIT 1")
     DoseInstanceEntity getScheduledInstanceForDay(String medicationId, long startOfDay, long endOfDay);
 

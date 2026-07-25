@@ -39,25 +39,31 @@ public class ReminderReceiver extends BroadcastReceiver {
         if (!ACTION_REMIND.equals(intent.getAction())) return;
 
         int instanceId = intent.getIntExtra(EXTRA_INSTANCE_ID, -1);
-        String medName = intent.getStringExtra(EXTRA_MED_NAME);
-        float amount = intent.getFloatExtra(EXTRA_AMOUNT, 1.0f);
-        String form = intent.getStringExtra(EXTRA_FORM);
+        if (instanceId == -1) return;
 
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         boolean quietHoursEnabled = sp.getBoolean(SettingsViewModel.KEY_QUIET_HOURS_ENABLED, false);
         if (quietHoursEnabled && isInQuietHours(sp)) {
-            // Log or silent handle
             return;
         }
 
-        showNotification(context, medName, amount, form, instanceId);
-
-        // Effects (Sound, Vibration, Flash)
+        // Logic for unified notifications:
+        // 1. Fetch all medications due at the exact same time
         new Thread(() -> {
+            com.robinzon.medicationwizard.database.AppDatabase db = com.robinzon.medicationwizard.database.AppDatabase.getDatabase(context);
+            com.robinzon.medicationwizard.database.DoseInstanceEntity current = db.doseInstanceDao().getInstanceById(instanceId);
+            if (current == null) return;
+
+            long scheduledTime = current.getScheduledTime();
+            java.util.List<com.robinzon.medicationwizard.database.DoseInstanceEntity> dosesAtTime = db.doseInstanceDao().getScheduledAtTime(scheduledTime);
+
+            // 2. Show notification (unified or single)
+            android.os.Handler mainHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+            mainHandler.post(() -> showNotification(context, dosesAtTime, scheduledTime));
+
+            // 3. Effects
             ReminderAlertManager.getInstance().startAlarm(context);
             triggerFlashSync(context);
-            
-            // Consumes single-use feature passes now that they've been used for this reminder
             com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
         }).start();
     }
@@ -85,66 +91,101 @@ public class ReminderReceiver extends BroadcastReceiver {
         }
     }
 
-    private void showNotification(Context context, String medName, float amount, String form, int instanceId) {
+    private void showNotification(Context context, java.util.List<com.robinzon.medicationwizard.database.DoseInstanceEntity> doses, long scheduledTime) {
+        if (doses == null || doses.isEmpty()) return;
+
         NotificationManagerCompat nm = NotificationManagerCompat.from(context);
         String channelId = NotificationManager.CHANNEL_ID;
 
-        String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
-        String formStr;
-        if (form != null) {
-            try {
-                EForm eForm = EForm.valueOf(form);
-                formStr = eForm.getLabel(context);
-            } catch (Exception e) {
-                formStr = form;
-            }
-        } else {
-            formStr = context.getString(R.string.notification_reminder_dose);
-        }
+        // Stable notification ID based on the exact minute
+        int notificationId = (int) (scheduledTime / 60000);
 
-        String message = context.getString(R.string.notification_reminder_message, amountStr, formStr, medName);
+        String title;
+        String message;
+        int[] instanceIds = new int[doses.size()];
+
+        if (doses.size() == 1) {
+            com.robinzon.medicationwizard.database.DoseInstanceEntity dose = doses.get(0);
+            title = context.getString(R.string.notification_reminder_title);
+            message = formatDoseMessage(context, dose);
+            instanceIds[0] = dose.getId();
+        } else {
+            title = context.getString(R.string.notification_reminder_title) + " (" + doses.size() + ")";
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < doses.size(); i++) {
+                com.robinzon.medicationwizard.database.DoseInstanceEntity dose = doses.get(i);
+                sb.append("• ").append(formatDoseMessage(context, dose));
+                if (i < doses.size() - 1) sb.append("\n");
+                instanceIds[i] = dose.getId();
+            }
+            message = sb.toString();
+        }
 
         // Content Intent
         Intent contentIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, instanceId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, notificationId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         // Action Intents
         Intent takeIntent = new Intent(context, NotificationActionReceiver.class);
-        takeIntent.setAction(NotificationActionReceiver.ACTION_TAKE);
-        takeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
-        PendingIntent takePI = PendingIntent.getBroadcast(context, instanceId + 1000, takeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        takeIntent.setAction(doses.size() > 1 ? NotificationActionReceiver.ACTION_TAKE_ALL : NotificationActionReceiver.ACTION_TAKE);
+        takeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceIds[0]);
+        takeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_IDS, instanceIds);
+        takeIntent.putExtra(NotificationActionReceiver.EXTRA_NOTIFICATION_ID, notificationId);
+        PendingIntent takePI = PendingIntent.getBroadcast(context, notificationId + 1, takeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Intent snoozeIntent = new Intent(context, NotificationActionReceiver.class);
-        snoozeIntent.setAction(NotificationActionReceiver.ACTION_SNOOZE);
-        snoozeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
-        PendingIntent snoozePI = PendingIntent.getBroadcast(context, instanceId + 2000, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        snoozeIntent.setAction(doses.size() > 1 ? NotificationActionReceiver.ACTION_SNOOZE_ALL : NotificationActionReceiver.ACTION_SNOOZE);
+        snoozeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceIds[0]);
+        snoozeIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_IDS, instanceIds);
+        snoozeIntent.putExtra(NotificationActionReceiver.EXTRA_NOTIFICATION_ID, notificationId);
+        PendingIntent snoozePI = PendingIntent.getBroadcast(context, notificationId + 2, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Intent skipIntent = new Intent(context, NotificationActionReceiver.class);
-        skipIntent.setAction(NotificationActionReceiver.ACTION_SKIP);
-        skipIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceId);
-        PendingIntent skipPI = PendingIntent.getBroadcast(context, instanceId + 3000, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        skipIntent.setAction(doses.size() > 1 ? NotificationActionReceiver.ACTION_SKIP_ALL : NotificationActionReceiver.ACTION_SKIP);
+        skipIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_ID, instanceIds[0]);
+        skipIntent.putExtra(NotificationActionReceiver.EXTRA_INSTANCE_IDS, instanceIds);
+        skipIntent.putExtra(NotificationActionReceiver.EXTRA_NOTIFICATION_ID, notificationId);
+        PendingIntent skipPI = PendingIntent.getBroadcast(context, notificationId + 3, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         boolean stickyEnabled = sp.getBoolean(SettingsViewModel.KEY_STICKY_NOTIF_ENABLED, false);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_med_pill)
-                .setContentTitle(context.getString(R.string.notification_reminder_title))
-                .setContentText(message)
+                .setContentTitle(title)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setContentText(doses.size() == 1 ? message : context.getString(R.string.times_a_day, doses.size()))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setFullScreenIntent(pendingIntent, true)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .setOngoing(stickyEnabled)
-                .addAction(R.drawable.ic_done_pill, context.getString(R.string.button_take), takePI)
+                .addAction(R.drawable.ic_done_pill, doses.size() > 1 ? context.getString(R.string.button_take_all) : context.getString(R.string.button_take), takePI)
                 .addAction(R.drawable.ic_clock, context.getString(R.string.button_snooze), snoozePI)
-                .addAction(R.drawable.ic_med_other, context.getString(R.string.button_skip), skipPI);
+                .addAction(R.drawable.ic_med_other, doses.size() > 1 ? context.getString(R.string.button_skip_all) : context.getString(R.string.button_skip), skipPI);
 
         try {
-            nm.notify(instanceId, builder.build());
+            nm.notify(notificationId, builder.build());
         } catch (SecurityException ignored) {
         }
+    }
+
+    private String formatDoseMessage(Context context, com.robinzon.medicationwizard.database.DoseInstanceEntity dose) {
+        float amount = dose.getAmount();
+        String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
+        String formStr;
+        if (dose.getForm() != null) {
+            try {
+                EForm eForm = EForm.valueOf(dose.getForm());
+                formStr = eForm.getLabel(context);
+            } catch (Exception e) {
+                formStr = dose.getForm();
+            }
+        } else {
+            formStr = context.getString(R.string.notification_reminder_dose);
+        }
+        return context.getString(R.string.notification_reminder_message, amountStr, formStr, dose.getMedicationName());
     }
 
     private void triggerFlashSync(Context context) {
