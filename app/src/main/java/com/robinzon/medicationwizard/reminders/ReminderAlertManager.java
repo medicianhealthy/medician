@@ -5,6 +5,8 @@ import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
@@ -19,9 +21,13 @@ import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
  */
 public class ReminderAlertManager {
 
+    private static final long ALARM_TIMEOUT_MS = 10000; // 10 seconds safety timeout
+
     private static ReminderAlertManager sInstance;
     private MediaPlayer mMediaPlayer;
     private Vibrator mVibrator;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mTimeoutRunnable = this::stopAlarm;
 
     private ReminderAlertManager() {}
 
@@ -60,13 +66,17 @@ public class ReminderAlertManager {
                         .build());
             }
             mMediaPlayer.setVolume(volumeMultiplier, volumeMultiplier);
-            mMediaPlayer.setLooping(true); // Loop until user interacts
+            mMediaPlayer.setLooping(false); // Play only once
+            mMediaPlayer.setOnCompletionListener(mp -> stopAlarm()); // Stop vibration when sound ends
             mMediaPlayer.prepare();
             mMediaPlayer.start();
             Logger.log("ReminderAlertManager", "Alarm started: %s", soundUri);
 
             // Handle Vibration
             startVibration(context, bypassPref);
+
+            // Safety timeout
+            mHandler.postDelayed(mTimeoutRunnable, ALARM_TIMEOUT_MS);
         } catch (Exception e) {
             Logger.log("ReminderAlertManager", "Error starting alarm: %s", e.getMessage());
             releasePlayer();
@@ -120,6 +130,8 @@ public class ReminderAlertManager {
      * Stops and releases the active reminder sound.
      */
     public synchronized void stopAlarm() {
+        mHandler.removeCallbacks(mTimeoutRunnable);
+
         if (mMediaPlayer != null) {
             try {
                 if (mMediaPlayer.isPlaying()) {

@@ -25,41 +25,52 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     public static final String ACTION_TAKE_ALL = "com.robinzon.medicationwizard.ACTION_TAKE_ALL";
     public static final String ACTION_SNOOZE_ALL = "com.robinzon.medicationwizard.ACTION_SNOOZE_ALL";
     public static final String ACTION_SKIP_ALL = "com.robinzon.medicationwizard.ACTION_SKIP_ALL";
+    public static final String ACTION_STOP_ALARM = "com.robinzon.medicationwizard.ACTION_STOP_ALARM";
     public static final String EXTRA_INSTANCE_ID = "extra_instance_id";
     public static final String EXTRA_INSTANCE_IDS = "extra_instance_ids";
     public static final String EXTRA_NOTIFICATION_ID = "extra_notification_id";
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        if (action == null) return;
+
         int singleId = intent.getIntExtra(EXTRA_INSTANCE_ID, -1);
         int[] instanceIds = intent.getIntArrayExtra(EXTRA_INSTANCE_IDS);
         int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, singleId);
 
-        if (singleId == -1 && (instanceIds == null || instanceIds.length == 0)) return;
-
         // NEW: Stop the reminder sound immediately upon any interaction
         ReminderAlertManager.getInstance().stopAlarm();
+
+        if (ACTION_STOP_ALARM.equals(action)) return;
+
+        if (singleId == -1 && (instanceIds == null || instanceIds.length == 0)) return;
 
         // Dismiss the notification immediately
         com.robinzon.medicationwizard.notifications.NotificationManager.dismissNotification(context, notificationId);
 
-        String action = intent.getAction();
-        if (action == null) return;
+        final PendingResult pendingResult = goAsync();
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase db = AppDatabase.getDatabase(context);
+            try {
+                AppDatabase db = AppDatabase.getDatabase(context);
 
-            if (instanceIds != null && instanceIds.length > 0) {
-                for (int id : instanceIds) {
-                    DoseInstanceEntity instance = db.doseInstanceDao().getInstanceById(id);
+                if (instanceIds != null && instanceIds.length > 0) {
+                    for (int id : instanceIds) {
+                        DoseInstanceEntity instance = db.doseInstanceDao().getInstanceById(id);
+                        if (instance != null) {
+                            processAction(context, db, instance, action);
+                        }
+                    }
+                } else {
+                    DoseInstanceEntity instance = db.doseInstanceDao().getInstanceById(singleId);
                     if (instance != null) {
                         processAction(context, db, instance, action);
                     }
                 }
-            } else {
-                DoseInstanceEntity instance = db.doseInstanceDao().getInstanceById(singleId);
-                if (instance != null) {
-                    processAction(context, db, instance, action);
+            } finally {
+                if (pendingResult != null) {
+                    pendingResult.finish();
                 }
             }
         });

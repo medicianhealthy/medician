@@ -292,6 +292,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (addMedItem != null) {
                 addMedItem.setVisible(!mIsFabVisible);
             }
+
+            // Hide Premium icon if already purchased
+            android.view.MenuItem premiumItem = menu.findItem(R.id.action_premium);
+            if (premiumItem != null) {
+                premiumItem.setVisible(!com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(this));
+            }
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -332,6 +338,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onResume() {
         super.onResume();
+
+        // NEW: Ensure any active reminder sound is stopped when user enters the app
+        com.robinzon.medicationwizard.reminders.ReminderAlertManager.getInstance().stopAlarm();
 
         // Ensure theme and other feature passes haven't expired
         SettingsViewModel.enforceEntitlements(this);

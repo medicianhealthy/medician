@@ -41,30 +41,55 @@ public class ReminderReceiver extends BroadcastReceiver {
         int instanceId = intent.getIntExtra(EXTRA_INSTANCE_ID, -1);
         if (instanceId == -1) return;
 
+        com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Alarm received for ID: " + instanceId);
+
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         boolean quietHoursEnabled = sp.getBoolean(SettingsViewModel.KEY_QUIET_HOURS_ENABLED, false);
         if (quietHoursEnabled && isInQuietHours(sp)) {
+            com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Silent during quiet hours.");
             return;
         }
+
+        final PendingResult pendingResult = goAsync();
 
         // Logic for unified notifications:
         // 1. Fetch all medications due at the exact same time
         new Thread(() -> {
-            com.robinzon.medicationwizard.database.AppDatabase db = com.robinzon.medicationwizard.database.AppDatabase.getDatabase(context);
-            com.robinzon.medicationwizard.database.DoseInstanceEntity current = db.doseInstanceDao().getInstanceById(instanceId);
-            if (current == null) return;
+            try {
+                com.robinzon.medicationwizard.database.AppDatabase db = com.robinzon.medicationwizard.database.AppDatabase.getDatabase(context);
+                com.robinzon.medicationwizard.database.DoseInstanceEntity current = db.doseInstanceDao().getInstanceById(instanceId);
+                
+                if (current == null) {
+                    com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Error: Dose instance not found in DB: " + instanceId);
+                    return;
+                }
 
-            long scheduledTime = current.getScheduledTime();
-            java.util.List<com.robinzon.medicationwizard.database.DoseInstanceEntity> dosesAtTime = db.doseInstanceDao().getScheduledAtTime(scheduledTime);
+                long scheduledTime = current.getScheduledTime();
+                java.util.List<com.robinzon.medicationwizard.database.DoseInstanceEntity> dosesAtTime = db.doseInstanceDao().getScheduledAtTime(scheduledTime);
 
-            // 2. Show notification (unified or single)
-            android.os.Handler mainHandler = new android.os.Handler(android.os.Looper.getMainLooper());
-            mainHandler.post(() -> showNotification(context, dosesAtTime, scheduledTime));
+                com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Unified check: Found " + dosesAtTime.size() + " doses for time " + scheduledTime);
 
-            // 3. Effects
-            ReminderAlertManager.getInstance().startAlarm(context);
-            triggerFlashSync(context);
-            com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
+                // 2. Show notification (unified or single)
+                android.os.Handler mainHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+                mainHandler.post(() -> {
+                    try {
+                        showNotification(context, dosesAtTime, scheduledTime);
+                    } catch (Exception e) {
+                        com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Error showing notification: " + e.getMessage());
+                    }
+                });
+
+                // 3. Effects
+                ReminderAlertManager.getInstance().startAlarm(context);
+                triggerFlashSync(context);
+                com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
+            } catch (Exception e) {
+                com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Background error: " + e.getMessage());
+            } finally {
+                if (pendingResult != null) {
+                    pendingResult.finish();
+                }
+            }
         }).start();
     }
 
@@ -150,6 +175,11 @@ public class ReminderReceiver extends BroadcastReceiver {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         boolean stickyEnabled = sp.getBoolean(SettingsViewModel.KEY_STICKY_NOTIF_ENABLED, false);
 
+        // Delete Intent: Stop alarm if user swipes away the notification
+        Intent stopIntent = new Intent(context, NotificationActionReceiver.class);
+        stopIntent.setAction(NotificationActionReceiver.ACTION_STOP_ALARM);
+        PendingIntent stopPI = PendingIntent.getBroadcast(context, notificationId + 4, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_med_pill)
                 .setContentTitle(title)
@@ -159,6 +189,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setFullScreenIntent(pendingIntent, true)
                 .setContentIntent(pendingIntent)
+                .setDeleteIntent(stopPI)
                 .setAutoCancel(true)
                 .setOngoing(stickyEnabled)
                 .addAction(R.drawable.ic_done_pill, doses.size() > 1 ? context.getString(R.string.button_take_all) : context.getString(R.string.button_take), takePI)
