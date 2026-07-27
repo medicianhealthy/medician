@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private AppBarConfiguration appBarConfiguration;
     private AdsManager adsManager;
     private NavController navController;
-    private boolean isInitialLaunch;
     private long lastBackPressedTime;
     private final Handler adCheckHandler = new Handler(Looper.getMainLooper());
     private Runnable adCheckRunnable;
@@ -155,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             });
         });
 
-        isInitialLaunch = true;
         checkExactAlarmPermission();
     }
 
@@ -380,14 +378,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     public void onMoveToForeground() {
-        if (isInitialLaunch) {
-            adCheckHandler.postDelayed(() -> {
-                if (!isFinishing() && !isDestroyed() && getAdsManager() != null) {
-                    getAdsManager().showAppOpenAd();
-                }
-            }, 300L);
-        }
-        isInitialLaunch = false;
+        adCheckHandler.postDelayed(() -> {
+            if (!isFinishing() && !isDestroyed() && getAdsManager() != null) {
+                getAdsManager().showAppOpenAd();
+            }
+        }, 300L);
     }
 
     @Override

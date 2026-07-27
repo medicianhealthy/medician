@@ -24,7 +24,7 @@ public class RemoteConfigKeysAndDefaults {
     static {
         Map<String, Object> map = new java.util.HashMap<>();
         map.put(NUM_OF_MEDS_TO_SHOW_RV, 3);
-        map.put(AD_SHOULD_SHOW_APP_OPEN, Boolean.FALSE);
+        map.put(AD_SHOULD_SHOW_APP_OPEN, Boolean.TRUE);
         map.put(AD_INTERSTITIAL_COOL_DOWN_SECONDS, 60);
         map.put(MIN_SESSIONS_INTERSTITIAL, 2);
         map.put(MIN_SESSIONS_APP_OPEN, 3);
