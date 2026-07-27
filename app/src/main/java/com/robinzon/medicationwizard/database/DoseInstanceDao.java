@@ -60,6 +60,9 @@ public interface DoseInstanceDao {
     @Query("SELECT * FROM dose_instances WHERE id = :instanceId")
     DoseInstanceEntity getInstanceById(int instanceId);
 
+    @Query("UPDATE dose_instances SET medicationName = :name, amount = :amount, strength = :strength, unit = :unit, form = :form, instruction = :instruction WHERE medicationId = :id")
+    void updateMetadataForAllDoses(String id, String name, float amount, float strength, String unit, String form, String instruction);
+
     /**
      * @return Observable list of all historical and future dose instances.
      */
@@ -158,6 +161,9 @@ public interface DoseInstanceDao {
 
     @Query("SELECT * FROM dose_instances WHERE scheduledTime = :time AND status = 'SCHEDULED'")
     List<DoseInstanceEntity> getScheduledAtTime(long time);
+
+    @Query("SELECT * FROM dose_instances WHERE medicationId = :medicationId AND scheduledTime >= :start AND scheduledTime <= :end LIMIT 1")
+    DoseInstanceEntity getAnyInstanceInWindow(String medicationId, long start, long end);
 
     @Query("SELECT * FROM dose_instances WHERE medicationId = :medicationId AND scheduledTime >= :startOfDay AND scheduledTime <= :endOfDay AND status = 'SCHEDULED' LIMIT 1")
     DoseInstanceEntity getScheduledInstanceForDay(String medicationId, long startOfDay, long endOfDay);

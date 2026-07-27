@@ -277,15 +277,27 @@ public class Medication implements Comparable<Medication> {
             final SparseArray<SimpleDayTime> activeTimes = getTimesADay();
             if (activeTimes == null || activeTimes.size() == 0) return;
 
-            // Step A: CLEAN SLATE for future doses
+            // Step A: Synchronize METADATA for ALL existing doses (History + Future)
+            db.doseInstanceDao().updateMetadataForAllDoses(
+                    id,
+                    commercialName,
+                    amount,
+                    strength,
+                    measurementUnit != null ? measurementUnit.getName() : null,
+                    form != null ? form.name() : null,
+                    instruction != null ? instruction.name() : null
+            );
+
+            // Step B: CLEAN SLATE for future "un-acted" doses
             // This prevents "ghost" notifications if times were changed.
+            // We only delete 'SCHEDULED' doses.
             List<DoseInstanceEntity> currentScheduled = db.doseInstanceDao().getScheduledByMedicationId(id);
             for (DoseInstanceEntity e : currentScheduled) {
                 ReminderManager.cancelReminder(context, e.getId());
             }
             db.doseInstanceDao().deleteScheduledByMedicationId(id);
 
-            // Step B: Ensure we have doses for the scheduling window (Today + future)
+            // Step C: Ensure we have doses for the scheduling window (Today + future)
             List<DoseInstanceEntity> newEntities = new ArrayList<>();
             for (int i = 0; i < AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE; i++) {
                 for (int k = 0; k < activeTimes.size(); k++) {
@@ -293,17 +305,13 @@ public class Medication implements Comparable<Medication> {
                     MedicationInstance instance = getMedicationInstance(i, time);
                     long targetTime = instance.getScheduledTime();
 
-                    // Check for snoozed match: Is there any dose today that is likely this slot?
-                    // For simplicity, we only add if NO dose exists for this day/slot combination
-                    // that hasn't been handled.
-                    
-                    // We use a 2-hour window around the target time to find potential snoozed/rescheduled instances
-                    // that should represent this slot.
+                    // Logic for duplicate prevention:
+                    // Check if ANY dose exists for this time slot (Taken, Skipped, Snoozed, or exact match)
+                    // We use a 2-hour window around the target time to catch shifted/acted-upon doses.
                     long startWindow = targetTime - (30 * 60 * 1000L); // 30 mins before
                     long endWindow = targetTime + (120 * 60 * 1000L); // 2 hours after (snooze range)
-                    
-                    DoseInstanceEntity existing = db.doseInstanceDao().getScheduledInstanceForDay(id, startWindow, endWindow);
-                    if (existing == null) {
+
+                    if (db.doseInstanceDao().getAnyInstanceInWindow(id, startWindow, endWindow) == null) {
                         newEntities.add(DoseInstanceEntity.fromInstance(instance));
                     }
                 }
@@ -314,7 +322,7 @@ public class Medication implements Comparable<Medication> {
                 Logger.log("Room", "Added " + newEntities.size() + " new doses for " + commercialName);
             }
 
-            // Step C: Re-schedule Android alarms for all future doses
+            // Step D: Re-schedule Android alarms for all future doses
             long now = System.currentTimeMillis();
             List<DoseInstanceEntity> futureDoses = db.doseInstanceDao().getInstancesInRangeInternal(now, now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L));
             for (DoseInstanceEntity e : futureDoses) {
