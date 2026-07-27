@@ -81,6 +81,22 @@
         tools:text="Took 1 pill at 12:15"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/directions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="start"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/med_name"
+        app:layout_constraintTop_toBottomOf="@id/txt_actual_action_summary"
+        tools:text="After eating"
+        tools:visibility="visible" />
+
     <!-- FLOW: Using wrapMode="none" to force same line and bias="0" to align to start (Right in Hebrew) -->
     <androidx.constraintlayout.helper.widget.Flow
         android:id="@+id/individual_actions_flow"
@@ -94,7 +110,7 @@
         app:flow_verticalGap="4dp"
         app:flow_wrapMode="none"
         app:layout_constraintStart_toStartOf="@id/guideline_content_start"
-        app:layout_constraintTop_toBottomOf="@id/txt_actual_action_summary" />
+        app:layout_constraintTop_toBottomOf="@id/directions" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_take"

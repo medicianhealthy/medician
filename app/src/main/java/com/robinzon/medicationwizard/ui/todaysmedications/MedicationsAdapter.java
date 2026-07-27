@@ -276,6 +276,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 AppCompatButton reschedBtn = rowView.findViewById(R.id.btn_reschedule);
                 AppCompatButton untakeBtn = rowView.findViewById(R.id.btn_untake);
                 TextView actualActionSummaryTxt = rowView.findViewById(R.id.txt_actual_action_summary);
+                TextView directionsTxt = rowView.findViewById(R.id.directions);
                 View divider = rowView.findViewById(R.id.divider);
 
                 // Smart Detail String: "Med Name - Amount Form Strength"
@@ -331,6 +332,17 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         actualActionSummaryTxt.setText(itemView.getContext().getString(R.string.skipped_at_format, actTime));
                 } else {
                     actualActionSummaryTxt.setVisibility(View.GONE);
+                }
+
+                if (d.getInstruction() != null && !java.util.Objects.equals(d.getInstruction(), "DOES_NOT_MATTER")) {
+                    directionsTxt.setVisibility(View.VISIBLE);
+                    try {
+                        directionsTxt.setText(EInstructions.valueOf(d.getInstruction()).getDescription(itemView.getContext()));
+                    } catch (Exception e) {
+                        directionsTxt.setText(d.getInstruction());
+                    }
+                } else {
+                    directionsTxt.setVisibility(View.GONE);
                 }
 
                 takeBtn.setVisibility(isScheduled ? View.VISIBLE : View.GONE);
