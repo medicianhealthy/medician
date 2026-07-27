@@ -107,8 +107,8 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         int currentSnoozes = instance.getSnoozeCount();
         com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Snoozing " + instance.getMedicationName() + ". Current: " + currentSnoozes + ", Max: " + maxSnoozes);
 
-        if (maxSnoozes != -1 && currentSnoozes >= maxSnoozes) {
-            com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Limit reached for " + instance.getMedicationName() + ". Marking as SKIPPED.");
+        if (maxSnoozes != -1 && currentSnoozes + 1 >= maxSnoozes) {
+            com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Limit reached for " + instance.getMedicationName() + ". Marking as SKIPPED on this snooze attempt.");
             // Reached limit, mark as skipped
             instance.setStatus("SKIPPED");
             instance.setActionTime(System.currentTimeMillis());

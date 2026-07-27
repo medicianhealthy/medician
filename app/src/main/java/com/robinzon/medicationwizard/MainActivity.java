@@ -287,10 +287,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 settingsMenuItem.setVisible(currentDestinationId != R.id.nav_settings);
             }
 
-            // Show Top Bar '+' icon ONLY if the Floating Action Button is hidden
+            // Show Top Bar '+' icon ONLY if the Floating Action Button is hidden AND there are existing medications
             android.view.MenuItem addMedItem = menu.findItem(R.id.action_add_med);
             if (addMedItem != null) {
-                addMedItem.setVisible(!mIsFabVisible);
+                boolean hasMeds = com.robinzon.medicationwizard.entities.Medication.hasMedications(this);
+                addMedItem.setVisible(!mIsFabVisible && hasMeds);
             }
 
             // Hide Premium icon if already purchased
