@@ -38,7 +38,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_sparkle"
+                app:srcCompat="@drawable/ic_language"
                 app:tint="?attr/colorOnSurface" />
 
             <TextView
