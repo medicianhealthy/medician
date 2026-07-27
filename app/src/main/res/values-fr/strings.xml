@@ -108,6 +108,8 @@
     <string name="button_untake_all">Tout annuler</string>
     <string name="button_unskip_all">Tout restaurer</string>
     <string name="button_reset_all">Tout réinitialiser</string>
+    <string name="button_expand_all">Tout développer</string>
+    <string name="button_collapse_all">Tout réduire</string>
     <string name="group_title_format">Rappels de %1$s</string>
     <string name="group_status_taken">Tous marqués comme pris</string>
     <string name="group_status_skipped">Tous marqués comme sautés</string>

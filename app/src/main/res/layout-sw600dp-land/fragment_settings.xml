@@ -139,11 +139,11 @@
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btn_play_sound"
                                 style="?attr/materialIconButtonStyle"
-                                android:layout_width="56dp"
-                                android:layout_height="56dp"
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
                                 android:contentDescription="@string/settings_sound_preview_desc"
                                 app:icon="@drawable/ic_play"
-                                app:iconSize="32dp"
+                                app:iconSize="36dp"
                                 app:iconTint="?attr/colorPrimary" />
                         </LinearLayout>
 

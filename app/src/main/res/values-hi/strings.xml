@@ -108,6 +108,8 @@
     <string name="button_untake_all">सब वापस लें</string>
     <string name="button_unskip_all">सब रिस्टोर करें</string>
     <string name="button_reset_all">सब रिसेट करें</string>
+    <string name="button_expand_all">सब फैलाएं</string>
+    <string name="button_collapse_all">सब समेटें</string>
     <string name="group_title_format">%1$s रिमाइंडर</string>
     <string name="group_status_taken">सब ले ली गई हैं</string>
     <string name="group_status_skipped">सब छोड़ दी गई हैं</string>

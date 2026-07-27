@@ -109,6 +109,8 @@
     <string name="button_untake_all">בטל לקיחה לכולם</string>
     <string name="button_unskip_all">בטל דילוג לכולם</string>
     <string name="button_reset_all">אפס הכל</string>
+    <string name="button_expand_all">פתח הכל</string>
+    <string name="button_collapse_all">סגור הכל</string>
     <string name="group_title_format">תזכורות לשעה %1$s</string>
     <string name="group_status_taken">הכל סומן כנלקח</string>
     <string name="group_status_skipped">הכל סומן כדולג</string>

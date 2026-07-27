@@ -14,8 +14,10 @@ import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.Medication;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Adapter for the master medication library list.
@@ -35,9 +37,9 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
     private final List<Medication> medications = new ArrayList<>();
 
     /**
-     * The position of the currently expanded card (-1 if none).
+     * The set of medication IDs that are currently expanded.
      */
-    private int expandedPosition = -1;
+    private final Set<String> expandedIds = new HashSet<>();
 
     /**
      * Listener for edit and delete actions.
@@ -83,7 +85,26 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
 
     @Override
     public void onBindViewHolder(@NonNull MedicationViewHolder holder, int position) {
-        holder.bind(medications.get(position), position == expandedPosition);
+        Medication medication = medications.get(position);
+        holder.bind(medication, expandedIds.contains(medication.getId()));
+    }
+
+    /**
+     * Expands all medication cards in the list.
+     */
+    public void expandAll() {
+        for (Medication med : medications) {
+            expandedIds.add(med.getId());
+        }
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Collapses all medication cards in the list.
+     */
+    public void collapseAll() {
+        expandedIds.clear();
+        notifyDataSetChanged();
     }
 
     @Override
@@ -209,17 +230,13 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
 
             // Click listener for expansion/collapsing
             binding.cardView.setOnClickListener(v -> {
-                int position = getBindingAdapterPosition();
-                if (position == RecyclerView.NO_POSITION) return;
-
-                int previousExpanded = expandedPosition;
-                if (isExpanded) {
-                    expandedPosition = -1;
+                String id = medication.getId();
+                if (expandedIds.contains(id)) {
+                    expandedIds.remove(id);
                 } else {
-                    expandedPosition = position;
+                    expandedIds.add(id);
                 }
-                notifyItemChanged(previousExpanded);
-                notifyItemChanged(expandedPosition);
+                notifyItemChanged(getBindingAdapterPosition());
             });
 
             binding.btnEdit.setOnClickListener(v -> {

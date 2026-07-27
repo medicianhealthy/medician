@@ -123,6 +123,8 @@
     <string name="button_untake_all">Un-take All</string>
     <string name="button_unskip_all">Un-skip All</string>
     <string name="button_reset_all">Reset All</string>
+    <string name="button_expand_all">Expand All</string>
+    <string name="button_collapse_all">Collapse All</string>
     <string name="group_title_format">%1$s Reminders</string>
     <string name="group_status_taken">All marked as taken</string>
     <string name="group_status_skipped">All marked as skipped</string>

@@ -108,6 +108,8 @@
     <string name="button_untake_all">Deshacer todas</string>
     <string name="button_unskip_all">Restaurar todas</string>
     <string name="button_reset_all">Reiniciar todo</string>
+    <string name="button_expand_all">Expandir todas</string>
+    <string name="button_collapse_all">Contraer todas</string>
     <string name="group_title_format">Recordatorios de las %1$s</string>
     <string name="group_status_taken">Todas marcadas como tomadas</string>
     <string name="group_status_skipped">Todas marcadas como omitidas</string>

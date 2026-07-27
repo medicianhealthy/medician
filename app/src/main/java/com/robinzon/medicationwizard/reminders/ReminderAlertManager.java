@@ -15,6 +15,9 @@ import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Singleton manager to coordinate reminder sounds.
  * Ensures only one sound plays at a time and allows stopping the sound from different entry points.
@@ -28,6 +31,7 @@ public class ReminderAlertManager {
     private Vibrator mVibrator;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable mTimeoutRunnable = this::stopAlarm;
+    private final List<OnAlarmStateChangedListener> mListeners = new ArrayList<>();
 
     private ReminderAlertManager() {}
 
@@ -71,6 +75,8 @@ public class ReminderAlertManager {
             mMediaPlayer.prepare();
             mMediaPlayer.start();
             Logger.log("ReminderAlertManager", "Alarm started: %s", soundUri);
+
+            notifyListeners(true);
 
             // Handle Vibration
             startVibration(context, bypassPref);
@@ -130,6 +136,7 @@ public class ReminderAlertManager {
      * Stops and releases the active reminder sound.
      */
     public synchronized void stopAlarm() {
+        notifyListeners(false);
         mHandler.removeCallbacks(mTimeoutRunnable);
 
         if (mMediaPlayer != null) {
@@ -147,6 +154,8 @@ public class ReminderAlertManager {
             mVibrator = null;
             Logger.log("ReminderAlertManager", "Vibration stopped.");
         }
+
+        notifyListeners(false);
     }
 
     private void releasePlayer() {
@@ -161,5 +170,29 @@ public class ReminderAlertManager {
      */
     public synchronized boolean isPlaying() {
         return mMediaPlayer != null && mMediaPlayer.isPlaying();
+    }
+
+    public synchronized void addListener(OnAlarmStateChangedListener listener) {
+        if (listener != null && !mListeners.contains(listener)) {
+            mListeners.add(listener);
+        }
+    }
+
+    public synchronized void removeListener(OnAlarmStateChangedListener listener) {
+        mListeners.remove(listener);
+    }
+
+    private void notifyListeners(boolean isPlaying) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            synchronized (this) {
+                for (OnAlarmStateChangedListener listener : mListeners) {
+                    listener.onAlarmStateChanged(isPlaying);
+                }
+            }
+        });
+    }
+
+    public interface OnAlarmStateChangedListener {
+        void onAlarmStateChanged(boolean isPlaying);
     }
 }

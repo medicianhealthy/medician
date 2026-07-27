@@ -108,6 +108,8 @@
     <string name="button_untake_all">Desfazer todos</string>
     <string name="button_unskip_all">Restaurar todos</string>
     <string name="button_reset_all">Resetar tudo</string>
+    <string name="button_expand_all">Expandir todos</string>
+    <string name="button_collapse_all">Recolher todos</string>
     <string name="group_title_format">Lembretes das %1$s</string>
     <string name="group_status_taken">Todos marcados como tomados</string>
     <string name="group_status_skipped">Todos marcados como pulados</string>

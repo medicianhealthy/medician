@@ -108,6 +108,8 @@
     <string name="button_untake_all">Alle widerrufen</string>
     <string name="button_unskip_all">Alle wiederherstellen</string>
     <string name="button_reset_all">Alles zurücksetzen</string>
+    <string name="button_expand_all">Alle ausklappen</string>
+    <string name="button_collapse_all">Alle einklappen</string>
     <string name="group_title_format">Erinnerungen um %1$s</string>
     <string name="group_status_taken">Alle als eingenommen markiert</string>
     <string name="group_status_skipped">Alle als ausgelassen markiert</string>

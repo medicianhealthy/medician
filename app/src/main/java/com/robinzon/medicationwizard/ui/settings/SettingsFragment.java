@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.ui.settings;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import com.robinzon.medicationwizard.databinding.FragmentSettingsBinding;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
+import com.robinzon.medicationwizard.reminders.ReminderAlertManager;
 import com.robinzon.medicationwizard.utils.BackupManager;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
@@ -77,7 +79,8 @@ public class SettingsFragment extends MedicationWizardFragment {
     private boolean isThemeReverting = false;
     private int cheatTapCount = 0;
     private android.content.res.ColorStateList defaultCardBgColor;
-    private int defaultCardStrokeWidth;    private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
+    private int defaultCardStrokeWidth;
+    private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 com.google.android.gms.tasks.Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
@@ -89,6 +92,8 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
     );
     private android.content.res.ColorStateList defaultCardStrokeColor;
+
+    private final ReminderAlertManager.OnAlarmStateChangedListener alarmListener = this::updatePlayButtonIcon;
 
     @Nullable
     @Override
@@ -188,17 +193,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         });
 
         binding.btnPlaySound.setOnClickListener(v -> {
-            com.robinzon.medicationwizard.reminders.ReminderAlertManager manager = com.robinzon.medicationwizard.reminders.ReminderAlertManager.getInstance();
+            ReminderAlertManager manager = ReminderAlertManager.getInstance();
             if (manager.isPlaying()) {
                 manager.stopAlarm();
-                updatePlayButtonIcon(false);
             } else {
                 manager.startAlarm(requireContext());
-                updatePlayButtonIcon(true);
-                // Automatically revert to play icon after 10s or when sound finishes
-                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-                    updatePlayButtonIcon(false);
-                }, 10500); // Slightly more than the 10s cap
             }
         });
 
@@ -961,6 +960,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     @Override
     public void onResume() {
         super.onResume();
+        ReminderAlertManager.getInstance().addListener(alarmListener);
         viewModel.refreshSettings(); // Sync with potential pass consumption
         updateNotificationStatus();
         updateFeatureEntitlements();
@@ -973,6 +973,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     @Override
     public void onPause() {
         super.onPause();
+        ReminderAlertManager.getInstance().removeListener(alarmListener);
         MainActivity main = (MainActivity) getActivity();
         if (main != null) {
             main.getAdsManager().removeAdAvailabilityListener(this::updateFeatureEntitlements);

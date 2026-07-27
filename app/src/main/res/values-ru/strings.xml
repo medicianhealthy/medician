@@ -108,6 +108,8 @@
     <string name="button_untake_all">Отменить все</string>
     <string name="button_unskip_all">Вернуть все</string>
     <string name="button_reset_all">Сбросить все</string>
+    <string name="button_expand_all">Развернуть все</string>
+    <string name="button_collapse_all">Свернуть все</string>
     <string name="group_title_format">Напоминания на %1$s</string>
     <string name="group_status_taken">Все принято</string>
     <string name="group_status_skipped">Все пропущено</string>

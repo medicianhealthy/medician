@@ -108,6 +108,8 @@
     <string name="button_untake_all">Batal Semua</string>
     <string name="button_unskip_all">Pulihkan Semua</string>
     <string name="button_reset_all">Atur Ulang Semua</string>
+    <string name="button_expand_all">Buka Semua</string>
+    <string name="button_collapse_all">Tutup Semua</string>
     <string name="group_title_format">Pengingat Jam %1$s</string>
     <string name="group_status_taken">Semua sudah diminum</string>
     <string name="group_status_skipped">Semua sudah dilewati</string>

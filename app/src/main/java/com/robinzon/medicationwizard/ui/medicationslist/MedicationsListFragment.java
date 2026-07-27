@@ -113,6 +113,9 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
         binding.emptyLayout.emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         binding.recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        if (binding.layoutControls != null) {
+            binding.layoutControls.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        }
 
         if (isEmpty) {
             startEmptyStateAnimations(binding.getRoot());
@@ -148,6 +151,17 @@ public class MedicationsListFragment extends MedicationWizardFragment {
      * </p>
      */
     private void setupRecyclerView() {
+        if (binding.btnExpandAll != null) {
+            binding.btnExpandAll.setOnClickListener(v -> {
+                if (adapter != null) adapter.expandAll();
+            });
+        }
+        if (binding.btnCollapseAll != null) {
+            binding.btnCollapseAll.setOnClickListener(v -> {
+                if (adapter != null) adapter.collapseAll();
+            });
+        }
+
         adapter = new MedicationsListAdapter();
         adapter.setOnMedicationActionListener(new MedicationsListAdapter.OnMedicationActionListener() {
             @Override

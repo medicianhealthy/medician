@@ -108,6 +108,8 @@
     <string name="button_untake_all">服用をすべて取消</string>
     <string name="button_unskip_all">すべて元に戻す</string>
     <string name="button_reset_all">すべてリセット</string>
+    <string name="button_expand_all">すべて展開</string>
+    <string name="button_collapse_all">すべて折りたたむ</string>
     <string name="group_title_format">%1$sのリマインダー</string>
     <string name="group_status_taken">すべて服用済み</string>
     <string name="group_status_skipped">すべてスキップ済み</string>

@@ -108,6 +108,8 @@
     <string name="button_untake_all">تراجع عن الكل</string>
     <string name="button_unskip_all">استعادة الكل</string>
     <string name="button_reset_all">إعادة ضبط الكل</string>
+    <string name="button_expand_all">توسيع الكل</string>
+    <string name="button_collapse_all">طي الكل</string>
     <string name="group_title_format">تذكيرات الساعة %1$s</string>
     <string name="group_status_taken">تم تحديد الكل كمتناول</string>
     <string name="group_status_skipped">تم تحديد الكل كمتجاوز</string>
