@@ -47,10 +47,10 @@ public class MedicationWizardApplication extends Application
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         NotificationManager.createNotificationChannel(this);
+        BillingManager.getInstance(this); // Initialize billing and check entitlements FIRST
         applyTheme();
         applyLanguage();
         scheduleHistoryCleanup();
-        BillingManager.getInstance(this); // Initialize billing and check entitlements
         NetworkMonitor.getInstance(this).start();
     }
 

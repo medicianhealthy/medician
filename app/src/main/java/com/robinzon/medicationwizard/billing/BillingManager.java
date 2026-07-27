@@ -158,13 +158,11 @@ public class BillingManager implements PurchasesUpdatedListener {
                             }
                         }
 
-                        // Performance: Cache the verified status and reset offline counter
-                        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(mContext);
-                        sp.setBoolean(KEY_CACHED_PREMIUM, owned);
-                        sp.setInt(KEY_OFFLINE_COUNT, 0);
-
                         // Only update global flag if a developer cheat is not active
+                        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(mContext);
                         if (!sp.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, false)) {
+                            sp.setBoolean(KEY_CACHED_PREMIUM, owned);
+                            sp.setInt(KEY_OFFLINE_COUNT, 0);
                             AppConfig.IS_PREMIUM = owned;
                         }
 
