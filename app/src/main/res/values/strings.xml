@@ -294,10 +294,6 @@
     <string name="notification_channel_name">Medication Reminders</string>
     <string name="notification_channel_desc">Reminders to take your scheduled medications</string>
     <string name="premium_only_feature">Premium only feature</string>
-    <string name="premium_pass_title">%1$dh Magic Pass</string>
-    <string name="premium_pass_summary">Watch a short video to unlock all Premium magic for %1$d hours!</string>
-    <string name="premium_pass_active">Magic Pass Active</string>
-    <string name="premium_pass_remaining_format">%1$02dh %2$02dm remaining</string>
     <string name="loading_magic">Loading magic... please wait.</string>
     <string name="reward_ad_not_ready_title">Video Not Ready</string>
     <string name="reward_ad_not_ready_dialog">The video is not ready yet. Make sure you\'re connected to the internet and check back later.</string>

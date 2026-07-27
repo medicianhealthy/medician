@@ -89,7 +89,7 @@ public class AppConfig {
      *
      * @param context Application context for string resources.
      * @param feature The feature type to check.
-     * @return A string like "Active until 14:00" or "Active for next reminder", or empty if not active.
+     * @return A string like " Active until 14:00" or "Active for next reminder", or empty if not active.
      */
     public static String getFeatureExpiryLabel(Context context, FeaturePassType feature) {
         if (isPremiumPurchased(context)) return "";

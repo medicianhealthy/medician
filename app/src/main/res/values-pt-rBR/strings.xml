@@ -272,10 +272,6 @@
     <string name="notification_channel_name">Lembretes de Medicação</string>
     <string name="notification_channel_desc">Alertas para tomar seus remédios agendados</string>
     <string name="premium_only_feature">Recurso exclusivo Premium</string>
-    <string name="premium_pass_title">Passe Mágico %1$dh</string>
-    <string name="premium_pass_summary">Assista a um vídeo curto para liberar toda a magia Premium por %1$d horas!</string>
-    <string name="premium_pass_active">Passe Mágico Ativo</string>
-    <string name="premium_pass_remaining_format">Restam %1$02dh %2$02dm</string>
     <string name="loading_magic">Carregando magia&#8230; aguarde.</string>
     <string name="reward_ad_not_ready_title">Vídeo não pronto</string>
     <string name="reward_ad_not_ready_dialog">O vídeo ainda não está pronto. Verifique sua conexão e tente novamente.</string>

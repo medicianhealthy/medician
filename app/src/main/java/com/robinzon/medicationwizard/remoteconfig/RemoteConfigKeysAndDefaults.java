@@ -31,7 +31,6 @@ public class RemoteConfigKeysAndDefaults {
         map.put(MIN_APP_TIME_INTERSTITIAL_MINS, 1);
         map.put(MIN_APP_TIME_APP_OPEN_MINS, 2);
         map.put(MIN_APP_TIME_BANNER_MINS, 1);
-        map.put(MAGIC_PASS_DURATION_HOURS, 8);
         map.put(HISTORY_RETENTION_DAYS, 30);
         map.put(EARLY_TAKE_THRESHOLD_MINS, 60);
         map.put(LATE_TAKE_THRESHOLD_MINS, 180);

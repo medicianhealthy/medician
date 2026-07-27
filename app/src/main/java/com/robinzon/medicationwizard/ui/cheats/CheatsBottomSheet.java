@@ -96,8 +96,7 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         builder.append("Min Sessions (AppOpen): ").append(remoteConfigManager.getMinSessionsAppOpen()).append("\n");
         builder.append("Min Usage (AppOpen): ").append(remoteConfigManager.getMinAppTimeAppOpenMins()).append("m\n");
         builder.append("Min Usage (Int): ").append(remoteConfigManager.getMinAppTimeForInterstitialMins()).append("m\n");
-        builder.append("Min Usage (Banner): ").append(remoteConfigManager.getMinAppTimeForBannerMins()).append("m\n");
-        builder.append("Magic Pass Duration: ").append(remoteConfigManager.getMagicPassDurationHours()).append("h\n");
+        builder.append("Min Usage (BANNER): ").append(remoteConfigManager.getMinAppTimeForBannerMins()).append("m\n");
         builder.append("History Retention: ").append(remoteConfigManager.getHistoryRetentionDays()).append("d\n");
         builder.append("Early Take: ").append(remoteConfigManager.getEarlyTakeThresholdMins()).append("m\n");
         builder.append("Late Take: ").append(remoteConfigManager.getLateTakeThresholdMins()).append("m\n");

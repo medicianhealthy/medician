@@ -280,10 +280,6 @@
     <string name="notification_channel_name">תזכורות תרופות</string>
     <string name="notification_channel_desc">תזכורות לקחת את התרופות שנקבעו</string>
     <string name="premium_only_feature">פיצ\'ר למנויי פרימיום בלבד</string>
-    <string name="premium_pass_title">מנוי קסם ל-%1$d שעות</string>
-    <string name="premium_pass_summary">צפה בסרטון קצר כדי לפתוח את כל קסמי הפרימיום ל-%1$d שעות!</string>
-    <string name="premium_pass_active">מנוי קסם פעיל</string>
-    <string name="premium_pass_remaining_format">נותרו %1$02d ש\' ו-%2$02d ד\'</string>
     <string name="loading_magic">טוען קסם... אנא המתן.</string>
     <string name="reward_ad_not_ready_title">הסרטון לא מוכן</string>
     <string name="reward_ad_not_ready_dialog">הסרטון עדיין לא מוכן. וודא שאתה מחובר לאינטרנט ונסה שוב מאוחר יותר.</string>

@@ -272,10 +272,6 @@
     <string name="notification_channel_name">Recordatorios de Medicina</string>
     <string name="notification_channel_desc">Avisos para tomar tus medicinas programadas</string>
     <string name="premium_only_feature">Función solo para Premium</string>
-    <string name="premium_pass_title">Pase Mágico %1$dh</string>
-    <string name="premium_pass_summary">¡Mira un vídeo corto para desbloquear toda la magia Premium por %1$d horas!</string>
-    <string name="premium_pass_active">Pase Mágico Activo</string>
-    <string name="premium_pass_remaining_format">Quedan %1$02dh %2$02dm</string>
     <string name="loading_magic">Cargando magia... espera, por favor.</string>
     <string name="reward_ad_not_ready_title">Vídeo no listo</string>
     <string name="reward_ad_not_ready_dialog">El vídeo aún no está listo. Asegúrate de tener conexión y vuelve a intentarlo.</string>

@@ -273,10 +273,6 @@
     <string name="notification_channel_name">Pengingat Obat</string>
     <string name="notification_channel_desc">Pengingat untuk meminum obat yang sudah dijadwalkan</string>
     <string name="premium_only_feature">Fitur khusus Premium</string>
-    <string name="premium_pass_title">Passe Ajaib %1$dj</string>
-    <string name="premium_pass_summary">Tonton video pendek untuk buka semua keajaiban Premium selama %1$d jam!</string>
-    <string name="premium_pass_active">Passe Ajaib Aktif</string>
-    <string name="premium_pass_remaining_format">Tersisa %1$02dj %2$02dm</string>
     <string name="loading_magic">Memuat keajaiban&#8230; harap tunggu.</string>
     <string name="reward_ad_not_ready_title">Video Belum Siap</string>
     <string name="reward_ad_not_ready_dialog">Video belum siap. Pastikan kamu terhubung ke internet dan coba lagi nanti.</string>

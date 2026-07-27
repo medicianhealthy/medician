@@ -273,10 +273,6 @@
     <string name="notification_channel_name">服用リマインダー</string>
     <string name="notification_channel_desc">お薬の服用を促す通知</string>
     <string name="premium_only_feature">プレミアム限定機能</string>
-    <string name="premium_pass_title">魔法のパス（%1$d時間）</string>
-    <string name="premium_pass_summary">短い動画を視聴して、%1$d 時間すべての機能を解放しましょう！</string>
-    <string name="premium_pass_active">魔法のパス有効中</string>
-    <string name="premium_pass_remaining_format">残り %1$02d時間 %2$02d分</string>
     <string name="loading_magic">魔法を準備中&#8230; 少々お待ちください。</string>
     <string name="reward_ad_not_ready_title">準備中</string>
     <string name="reward_ad_not_ready_dialog">動画の準備ができていません。接続を確認して、少し待ってから再度お試しください。</string>

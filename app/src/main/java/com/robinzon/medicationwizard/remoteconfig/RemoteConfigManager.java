@@ -253,13 +253,6 @@ public class RemoteConfigManager {
     }
 
     /**
-     * @return Duration in hours for a temporary Magic Pass.
-     */
-    public int getMagicPassDurationHours() {
-        return getIntValue(RemoteConfigKeysAndDefaults.MAGIC_PASS_DURATION_HOURS);
-    }
-
-    /**
      * @return Number of user actions required between Interstitial ads.
      */
     public int getActionsPerInterstitial() {

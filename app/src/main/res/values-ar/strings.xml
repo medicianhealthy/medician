@@ -273,10 +273,6 @@
     <string name="notification_channel_name">تذكيرات الأدوية</string>
     <string name="notification_channel_desc">تذكيرات لتناول أدويتك المجدولة</string>
     <string name="premium_only_feature">ميزة بريميوم فقط</string>
-    <string name="premium_pass_title">بطاقة سحرية لـ %1$d ساعة</string>
-    <string name="premium_pass_summary">شاهد فيديو قصير لفتح كل السحر البريميوم لـ %1$d ساعات!</string>
-    <string name="premium_pass_active">البطاقة السحرية مفعلة</string>
-    <string name="premium_pass_remaining_format">متبقي %1$02d ساعة و%2$02d دقيقة</string>
     <string name="loading_magic">تحميل السحر&#8230; يرجى الانتظار.</string>
     <string name="reward_ad_not_ready_title">الفيديو غير جاهز</string>
     <string name="reward_ad_not_ready_dialog">الفيديو غير جاهز بعد. تأكد من اتصالك بالإنترنت وتحقق مرة أخرى لاحقًا.</string>

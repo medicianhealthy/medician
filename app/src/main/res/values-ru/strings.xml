@@ -273,10 +273,6 @@
     <string name="notification_channel_name">Напоминания о лекарствах</string>
     <string name="notification_channel_desc">Напоминания о графике приема ваших лекарств</string>
     <string name="premium_only_feature">Функция только для Premium</string>
-    <string name="premium_pass_title">Магический пас на %1$d ч.</string>
-    <string name="premium_pass_summary">Посмотрите видео, чтобы открыть Premium-магию на %1$d ч.!</string>
-    <string name="premium_pass_active">Магический пас активен</string>
-    <string name="premium_pass_remaining_format">Осталось %1$02d ч. %2$02d мин.</string>
     <string name="loading_magic">Загрузка магии&#8230; подождите.</string>
     <string name="reward_ad_not_ready_title">Видео не готово</string>
     <string name="reward_ad_not_ready_dialog">Видео загружается. Проверьте интернет и попробуйте позже.</string>

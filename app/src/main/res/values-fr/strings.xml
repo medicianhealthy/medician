@@ -273,10 +273,6 @@
     <string name="notification_channel_name">Rappels de Médication</string>
     <string name="notification_channel_desc">Rappels pour prendre vos médicaments prévus</string>
     <string name="premium_only_feature">Fonction Premium uniquement</string>
-    <string name="premium_pass_title">Pass Magique %1$dh</string>
-    <string name="premium_pass_summary">Regardez une courte vidéo pour débloquer toute la magie Premium pendant %1$d heures !</string>
-    <string name="premium_pass_active">Pass Magique Actif</string>
-    <string name="premium_pass_remaining_format">%1$02dh %2$02dm restants</string>
     <string name="loading_magic">Chargement de la magie&#8230; patience.</string>
     <string name="reward_ad_not_ready_title">Vidéo Non Prête</string>
     <string name="reward_ad_not_ready_dialog">La vidéo n\'est pas encore prête. Vérifiez votre connexion et réessayez plus tard.</string>

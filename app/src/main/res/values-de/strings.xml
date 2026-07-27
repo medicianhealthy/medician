@@ -273,10 +273,6 @@
     <string name="notification_channel_name">Medikamenten-Erinnerungen</string>
     <string name="notification_channel_desc">Erinnerungen an deine geplanten Medikamente</string>
     <string name="premium_only_feature">Nur für Premium-Nutzer</string>
-    <string name="premium_pass_title">%1$dh Magie-Pass</string>
-    <string name="premium_pass_summary">Schau ein kurzes Video, um alle Premium-Funktionen für %1$d Stunden freizuschalten!</string>
-    <string name="premium_pass_active">Magie-Pass aktiv</string>
-    <string name="premium_pass_remaining_format">%1$02dh %2$02dm verbleibend</string>
     <string name="loading_magic">Magie wird geladen&#8230; bitte warten.</string>
     <string name="reward_ad_not_ready_title">Video nicht bereit</string>
     <string name="reward_ad_not_ready_dialog">Das Video ist noch nicht bereit. Prüfe dein Internet und versuche es gleich noch einmal.</string>
