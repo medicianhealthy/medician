@@ -36,6 +36,7 @@
 
     <string name="settings_sound_title">صوت التنبيه</string>
     <string name="settings_sound_summary">الصوت الحالي: %1$s</string>
+    <string name="settings_sound_preview_desc">معاينة الصوت</string>
 
     <string name="settings_bypass_title">تجاوز مستوى الصوت</string>
     <string name="settings_bypass_summary">ستعمل التذكيرات حتى لو كان هاتفك في وضع الصامت.</string>

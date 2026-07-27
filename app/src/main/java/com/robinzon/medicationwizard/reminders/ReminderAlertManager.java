@@ -155,4 +155,11 @@ public class ReminderAlertManager {
             mMediaPlayer = null;
         }
     }
+
+    /**
+     * @return True if a reminder sound is currently playing.
+     */
+    public synchronized boolean isPlaying() {
+        return mMediaPlayer != null && mMediaPlayer.isPlaying();
+    }
 }

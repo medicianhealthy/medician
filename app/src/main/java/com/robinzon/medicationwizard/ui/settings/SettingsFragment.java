@@ -187,6 +187,21 @@ public class SettingsFragment extends MedicationWizardFragment {
             picker.show(getChildFragmentManager(), "SoundPicker");
         });
 
+        binding.btnPlaySound.setOnClickListener(v -> {
+            com.robinzon.medicationwizard.reminders.ReminderAlertManager manager = com.robinzon.medicationwizard.reminders.ReminderAlertManager.getInstance();
+            if (manager.isPlaying()) {
+                manager.stopAlarm();
+                updatePlayButtonIcon(false);
+            } else {
+                manager.startAlarm(requireContext());
+                updatePlayButtonIcon(true);
+                // Automatically revert to play icon after 10s or when sound finishes
+                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                    updatePlayButtonIcon(false);
+                }, 10500); // Slightly more than the 10s cap
+            }
+        });
+
         viewModel.getBypassVolume().observe(getViewLifecycleOwner(), bypass -> {
             if (binding == null) return;
             binding.switchBypass.setChecked(bypass);
@@ -467,6 +482,12 @@ public class SettingsFragment extends MedicationWizardFragment {
                 case DOSE_WINDOW -> binding.containerDoseWindowDetails.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void updatePlayButtonIcon(boolean isPlaying) {
+        if (binding != null && binding.btnPlaySound != null) {
+            binding.btnPlaySound.setIconResource(isPlaying ? R.drawable.ic_stop : R.drawable.ic_play);
+        }
     }
 
     private void showThresholdPicker(boolean isEarly) {

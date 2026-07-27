@@ -113,23 +113,40 @@
                                 android:layout_height="wrap_content"
                                 android:background="?attr/selectableItemBackground"
                                 android:clickable="true"
-                                android:orientation="vertical"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
                                 android:padding="20dp">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/settings_sound_title"
-                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
 
-                                <TextView
-                                    android:id="@+id/txt_sound_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="2dp"
-                                    android:textAppearance="?attr/textAppearanceBodySmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant"
-                                    tools:text="Default" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/settings_sound_title"
+                                        android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                                    <TextView
+                                        android:id="@+id/txt_sound_desc"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorOnSurfaceVariant"
+                                        tools:text="Default" />
+                                </LinearLayout>
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_play_sound"
+                                    style="?attr/materialIconButtonStyle"
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:contentDescription="@string/settings_sound_preview_desc"
+                                    app:icon="@drawable/ic_play"
+                                    app:iconTint="?attr/colorPrimary" />
                             </LinearLayout>
 
                             <LinearLayout

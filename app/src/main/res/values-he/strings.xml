@@ -37,6 +37,7 @@
 
     <string name="settings_sound_title">צליל התראה</string>
     <string name="settings_sound_summary">צליל נוכחי: %1$s</string>
+    <string name="settings_sound_preview_desc">תצוגה מקדימה של צליל</string>
 
     <string name="settings_bypass_title">עקיפת עוצמת קול</string>
     <string name="settings_bypass_summary">התזכורות יושמעו גם אם הטלפון במצב שקט.</string>

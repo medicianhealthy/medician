@@ -36,6 +36,7 @@
 
     <string name="settings_sound_title">Son d\'Alerte</string>
     <string name="settings_sound_summary">Son actuel : %1$s</string>
+    <string name="settings_sound_preview_desc">Aperçu du son</string>
 
     <string name="settings_bypass_title">Forcer le Volume</string>
     <string name="settings_bypass_summary">Les rappels sonneront même si le téléphone est en mode silencieux.</string>

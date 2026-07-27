@@ -36,6 +36,7 @@
 
     <string name="settings_sound_title">अलर्ट साउंड</string>
     <string name="settings_sound_summary">अभी का साउंड: %1$s</string>
+    <string name="settings_sound_preview_desc">ध्वनि पूर्वावलोकन</string>
 
     <string name="settings_bypass_title">बायपास वॉल्यूम</string>
     <string name="settings_bypass_summary">फोन साइलेंट होने पर भी रिमाइंडर बजेंगे।</string>

@@ -36,6 +36,7 @@
 
     <string name="settings_sound_title">Som de Alerta</string>
     <string name="settings_sound_summary">Som atual: %1$s</string>
+    <string name="settings_sound_preview_desc">Prévia do som</string>
 
     <string name="settings_bypass_title">Forçar Volume</string>
     <string name="settings_bypass_summary">Lembretes tocarão mesmo se o telefone estiver no silencioso.</string>
