@@ -93,8 +93,8 @@ public class BackupManager {
                 JSONObject backup = new JSONObject(stringBuilder.toString());
                 // int version = backup.optInt(KEY_VERSION, 0);
 
-                // 2. Clear current data
-                Medication.clearAllMedications(context);
+                // 2. Clear current data (Synchronous wipe ensures clean slate for import)
+                Medication.clearAllMedicationsInternal(context);
 
                 // 3. Restore Medications
                 JSONArray medsArray = backup.optJSONArray(KEY_MEDICATIONS);
@@ -119,7 +119,7 @@ public class BackupManager {
 
                 // 5. Reschedule all alarms for future doses
                 long now = System.currentTimeMillis();
-                List<DoseInstanceEntity> futureDoses = AppDatabase.getDatabase(context).doseInstanceDao().getInstancesInRangeInternal(now, now + (30 * 24 * 60 * 60 * 1000L));
+                List<DoseInstanceEntity> futureDoses = AppDatabase.getDatabase(context).doseInstanceDao().getInstancesInRangeInternal(now, now + (com.robinzon.medicationwizard.AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L));
                 for (DoseInstanceEntity doseInstance : futureDoses) {
                     ReminderManager.scheduleReminder(context, doseInstance);
                 }

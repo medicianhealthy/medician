@@ -100,29 +100,33 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * Wipes all user data (Medications and Schedules).
+     * Synchronously wipes all medication data (Definitions and History).
+     * Preserves user settings and usage statistics.
      *
      * @param context Application context.
      */
-    public static void clearAllMedications(final Context context) {
-        // 1. SharedPreferences: Clear the main list and relevant stats
+    public static void clearAllMedicationsInternal(final Context context) {
+        // 1. SharedPreferences: Clear ONLY the medication list
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         sp.removeKey(PREF_MEDICATION_LIST);
-        
-        // Also clear interaction scores and dose logs to ensure a truly fresh start
-        sp.removeKey("spk_total_doses_logged");
-        sp.removeKey("spk_interstitial_score");
-        sp.removeKey("spk_actions_for_interstitial");
 
         // 2. Room: Cancel all alarms and wipe the table
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase db = AppDatabase.getDatabase(context);
-            List<DoseInstanceEntity> instances = db.doseInstanceDao().getAllInstancesInternal();
-            for (DoseInstanceEntity e : instances) {
-                ReminderManager.cancelReminder(context, e.getId());
-            }
-            db.doseInstanceDao().deleteAll();
-        });
+        AppDatabase db = AppDatabase.getDatabase(context);
+        List<DoseInstanceEntity> instances = db.doseInstanceDao().getAllInstancesInternal();
+        for (DoseInstanceEntity e : instances) {
+            ReminderManager.cancelReminder(context, e.getId());
+        }
+        db.doseInstanceDao().deleteAll();
+    }
+
+    /**
+     * Asynchronously wipes all medication data.
+     * Preserves user settings and usage statistics.
+     *
+     * @param context Application context.
+     */
+    public static void clearAllMedicationsAsync(final Context context) {
+        AppDatabase.databaseWriteExecutor.execute(() -> clearAllMedicationsInternal(context));
     }
 
     /**

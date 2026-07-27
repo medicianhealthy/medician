@@ -393,4 +393,9 @@
     <string name="unit_mcg">mcg</string>
     <string name="unit_ml">mL</string>
     <string name="unit_percentage">%</string>
+
+    <!-- Dose Recovery -->
+    <string name="recovery_dialog_title">Dose Recovery</string>
+    <string name="recovery_dialog_message">This dose was scheduled for %1$s. How would you like to proceed?</string>
+    <string name="button_mark_pending">Mark as Pending</string>
 </resources>

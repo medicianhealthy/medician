@@ -248,12 +248,12 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
             @Override
             public void onUntake(DoseInstanceEntity i, int p) {
-                updateInstanceStatus(i, "SCHEDULED");
+                handleScheduledTransition(i);
             }
 
             @Override
             public void onUnskip(DoseInstanceEntity i, int p) {
-                updateInstanceStatus(i, "SCHEDULED");
+                handleScheduledTransition(i);
             }
 
             @Override
@@ -307,19 +307,91 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
             @Override
             public void onUntakeGroup(List<DoseInstanceEntity> d, int p) {
-                for (DoseInstanceEntity x : d) applyStatusUpdate(x, "SCHEDULED");
+                handleScheduledTransition(d);
                 triggerAdForGroupAction(d.size());
             }
 
             @Override
             public void onUnskipGroup(List<DoseInstanceEntity> d, int p) {
-                for (DoseInstanceEntity x : d) applyStatusUpdate(x, "SCHEDULED");
+                handleScheduledTransition(d);
                 triggerAdForGroupAction(d.size());
             }
         });
         int cols = getResources().getInteger(R.integer.medication_grid_columns);
         mBinding.recyclerView.setLayoutManager(cols > 1 ? new GridLayoutManager(requireContext(), cols) : new LinearLayoutManager(requireContext()));
         mBinding.recyclerView.setAdapter(mAdapter);
+    }
+
+    private void handleScheduledTransition(DoseInstanceEntity instance) {
+        handleScheduledTransition(java.util.Collections.singletonList(instance));
+    }
+
+    private void handleScheduledTransition(List<DoseInstanceEntity> doses) {
+        if (doses == null || doses.isEmpty()) return;
+
+        long now = System.currentTimeMillis();
+        boolean hasPastDose = false;
+        for (DoseInstanceEntity d : doses) {
+            // Allow 1 min grace for "just passed"
+            if (d.getScheduledTime() < now - 60000) {
+                hasPastDose = true;
+                break;
+            }
+        }
+
+        if (hasPastDose) {
+            showRecoveryDialog(doses);
+        } else {
+            for (DoseInstanceEntity d : doses) {
+                applyScheduledState(d);
+            }
+            if (getActivity() instanceof MainActivity main) main.addInteractionScore(1.0f);
+        }
+    }
+
+    private void applyScheduledState(DoseInstanceEntity instance) {
+        instance.setStatus("SCHEDULED");
+        instance.setActionTime(0);
+        final Context appContext = requireContext().getApplicationContext();
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            AppDatabase db = AppDatabase.getDatabase(appContext);
+            db.doseInstanceDao().update(instance);
+            com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
+        });
+    }
+
+    private void showRecoveryDialog(List<DoseInstanceEntity> doses) {
+        if (doses == null || doses.isEmpty()) return;
+        DoseInstanceEntity rep = doses.get(0);
+
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
+        String timeStr = sdf.format(new java.util.Date(rep.getScheduledTime()));
+
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.recovery_dialog_title));
+        dialog.setMessage(getString(R.string.recovery_dialog_message, timeStr));
+
+        dialog.setPositiveButton(getString(R.string.button_take), (d, w) -> {
+            for (DoseInstanceEntity dose : doses) {
+                updateInstanceStatus(dose, "TAKEN");
+            }
+        });
+
+        dialog.setNegativeButton(getString(R.string.button_reschedule), (d, w) -> {
+            if (doses.size() == 1) {
+                showReschedulePicker(doses.get(0));
+            } else {
+                showGroupReschedulePicker(doses);
+            }
+        });
+
+        dialog.setNeutralButton(getString(R.string.button_mark_pending), (d, w) -> {
+            for (DoseInstanceEntity dose : doses) {
+                applyScheduledState(dose);
+            }
+        });
+
+        dialog.show();
     }
 
     private boolean isTimingClarificationRequired(DoseInstanceEntity instance) {

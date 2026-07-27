@@ -880,7 +880,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             }
 
             // 2. Perform the local wipe
-            Medication.clearAllMedications(requireContext());
+            Medication.clearAllMedicationsAsync(requireContext());
             Snackbar.make(binding.getRoot(), R.string.data_cleared, Snackbar.LENGTH_SHORT).show();
 
             // 3. Restart the activity to ensure all ViewModels/UI reflect the empty state
