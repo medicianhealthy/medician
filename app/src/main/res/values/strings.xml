@@ -206,6 +206,8 @@
     <string name="cheats_title">Developer Cheats</string>
     <string name="cheats_is_premium">Is Premium</string>
     <string name="cheats_show_ads">Show Ads (Force)</string>
+    <string name="cheats_set_fake_time" translatable="false">Set Fake Time</string>
+    <string name="cheats_clear_fake_time" translatable="false">Clear Fake Time</string>
     <string name="cheats_apply_restart">Apply &amp; Restart</string>
 
     <string name="notif_already_active">Notifications are already active!</string>
@@ -401,4 +403,14 @@
     <string name="recovery_dialog_title">Dose Recovery</string>
     <string name="recovery_dialog_message">This dose was scheduled for %1$s. How would you like to proceed?</string>
     <string name="button_mark_pending">Mark as Pending</string>
+    <string name="benefit_photo">add or change a medication photo for 1 hour</string>
+    <string name="btn_take_photo">Take Photo</string>
+    <string name="btn_upload_photo">Upload Photo</string>
+    <string name="photo_feature_rational">Watch a short video to add or change a medication photo for 1 hour.</string>
+    <string name="photo_unlocked_toast">Photo feature unlocked!</string>
+    <string name="placeholder_add_photo">Add a photo of your med</string>
+    <string name="btn_rotate_left">Rotate Left</string>
+    <string name="btn_rotate_right">Rotate Right</string>
+    <string name="btn_remove_photo">Remove Photo</string>
+    <string name="locked_photo_hint">Tap to Unlock</string>
 </resources>

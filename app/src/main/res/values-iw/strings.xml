@@ -380,4 +380,14 @@
     <string name="unit_ml">מ״ל</string>
     <string name="unit_grams">גרם</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">להוסיף או לשנות תמונת תרופה למשך שעה אחת</string>
+    <string name="btn_take_photo">צלם תמונה</string>
+    <string name="btn_upload_photo">העלה תמונה</string>
+    <string name="photo_feature_rational">צפה בסרטון קצר כדי להוסיף או לשנות תמונת תרופה למשך שעה אחת.</string>
+    <string name="photo_unlocked_toast">תכונת הצילום נפתחה!</string>
+    <string name="placeholder_add_photo">הוסף תמונה של התרופה שלך</string>
+    <string name="btn_rotate_left">סובב שמאלה</string>
+    <string name="btn_rotate_right">סובב ימינה</string>
+    <string name="btn_remove_photo">הסר תמונה</string>
+    <string name="locked_photo_hint">הקש לפתיחה</string>
 </resources>

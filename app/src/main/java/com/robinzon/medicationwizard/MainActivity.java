@@ -129,11 +129,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         navController.navigate(R.id.nav_home);
                     } else {
                         // 4. Already at Home: guard against accidental exit
-                        if (lastBackPressedTime + 2000 > System.currentTimeMillis()) {
+                        if (lastBackPressedTime + 2000 > com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal()) {
                             finish();
                         } else {
                             Toast.makeText(MainActivity.this, R.string.back_to_exit, Toast.LENGTH_SHORT).show();
-                            lastBackPressedTime = System.currentTimeMillis();
+                            lastBackPressedTime = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
                         }
                     }
                 }

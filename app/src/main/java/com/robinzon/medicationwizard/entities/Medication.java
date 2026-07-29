@@ -46,6 +46,7 @@ public class Medication implements Comparable<Medication> {
     private int amountLeft;
     private EInstructions instruction;
     private EMeasurementUnit measurementUnit;
+    private String imagePath;
 
     /**
      * Constructs a new medication with a unique random UUID.
@@ -173,6 +174,7 @@ public class Medication implements Comparable<Medication> {
         med.setStrength((float) json.optDouble(JsonKeys.STRENGTH, 0));
         med.setMedicalCondition(json.optString(JsonKeys.MEDICAL_CONDITION));
         med.setAmountLeft(json.optInt(JsonKeys.AMOUNT_LEFT, 0));
+        med.setImagePath(json.optString(JsonKeys.IMAGE_PATH, null));
 
         if (!json.isNull(JsonKeys.FORM)) {
             try {
@@ -285,7 +287,8 @@ public class Medication implements Comparable<Medication> {
                     strength,
                     measurementUnit != null ? measurementUnit.getName() : null,
                     form != null ? form.name() : null,
-                    instruction != null ? instruction.name() : null
+                    instruction != null ? instruction.name() : null,
+                    imagePath
             );
 
             // Step B: CLEAN SLATE for future "un-acted" doses
@@ -323,7 +326,7 @@ public class Medication implements Comparable<Medication> {
             }
 
             // Step D: Re-schedule Android alarms for all future doses
-            long now = System.currentTimeMillis();
+            long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
             List<DoseInstanceEntity> futureDoses = db.doseInstanceDao().getInstancesInRangeInternal(now, now + (AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L));
             for (DoseInstanceEntity e : futureDoses) {
                 if (id.equals(e.getMedicationId()) && "SCHEDULED".equals(e.getStatus())) {
@@ -542,6 +545,14 @@ public class Medication implements Comparable<Medication> {
         this.instruction = instruction;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public int compareTo(Medication other) {
         if (this.commercialName == null) return -1;
@@ -575,6 +586,7 @@ public class Medication implements Comparable<Medication> {
             json.put(JsonKeys.STRENGTH, (double) strength);
             json.put(JsonKeys.MEDICAL_CONDITION, medicalCondition);
             json.put(JsonKeys.AMOUNT_LEFT, amountLeft);
+            json.put(JsonKeys.IMAGE_PATH, imagePath);
             if (form != null) json.put(JsonKeys.FORM, form.name());
             if (instruction != null) json.put(JsonKeys.INSTRUCTIONS, instruction.name());
             if (measurementUnit != null)
@@ -619,5 +631,6 @@ public class Medication implements Comparable<Medication> {
         public static final String AMOUNT_LEFT = "mAmountLeft";
         public static final String INSTRUCTIONS = "mInstruction";
         public static final String MEASUREMENT_UNIT = "mMeasurementUnit";
+        public static final String IMAGE_PATH = "mImagePath";
     }
 }

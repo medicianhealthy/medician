@@ -156,6 +156,81 @@
                     tools:text="Scheduled at: 08:00, 20:00" />
             </LinearLayout>
 
+            <!-- Medication Photo -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_med_photo"
+                style="@style/Widget.Material3.CardView.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="8dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/photo_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/med_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintDimensionRatio="H,16:9"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@tools:sample/backgrounds/scenic" />
+
+                    <LinearLayout
+                        android:id="@+id/photo_placeholder"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:background="?attr/colorSurfaceVariant"
+                        app:layout_constraintDimensionRatio="H,16:9"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            app:srcCompat="@drawable/ic_med_pill"
+                            app:tint="?attr/colorPrimary"
+                            android:alpha="0.2"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+
+                    <!-- Lock Overlay for Expired Passes -->
+                    <LinearLayout
+                        android:id="@+id/layout_photo_locked"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:background="#99000000"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@id/med_photo"
+                        app:layout_constraintEnd_toEndOf="@id/med_photo"
+                        app:layout_constraintStart_toStartOf="@id/med_photo"
+                        app:layout_constraintTop_toTopOf="@id/med_photo"
+                        tools:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_crown"
+                            app:tint="@android:color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/locked_photo_hint"
+                            android:textAppearance="?attr/textAppearanceLabelLarge"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -20,12 +20,13 @@ public class FeaturePassManager {
      */
     public static void grantPass(Context context, AppConfig.FeaturePassType feature) {
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
-        long now = System.currentTimeMillis();
+        long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
 
         switch (feature) {
             case THEME -> prefs.setLong(AppConfig.KEY_PASS_THEME_EXPIRY, now + HOUR_IN_MILLIS);
             case SUPPORT -> prefs.setLong(AppConfig.KEY_PASS_SUPPORT_EXPIRY, now + HOUR_IN_MILLIS);
             case BACKUP -> prefs.setLong(AppConfig.KEY_PASS_BACKUP_EXPIRY, now + HOUR_IN_MILLIS);
+            case PHOTO -> prefs.setLong(AppConfig.KEY_PASS_PHOTO_EXPIRY, now + HOUR_IN_MILLIS);
             case DOSE_WINDOW -> prefs.setBoolean(AppConfig.KEY_PASS_DOSE_WINDOW_ACTIVE, true);
             case BYPASS_VOLUME -> prefs.setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, true);
             case VIBRATION -> prefs.setBoolean(AppConfig.KEY_PASS_VIBRATION_ACTIVE, true);

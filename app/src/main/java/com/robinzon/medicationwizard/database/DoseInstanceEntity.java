@@ -82,6 +82,11 @@ public class DoseInstanceEntity {
     private int snoozeCount;
 
     /**
+     * Path to the medication photo in internal storage.
+     */
+    private String imagePath;
+
+    /**
      * Empty constructor required by Room.
      */
     public DoseInstanceEntity() {
@@ -222,6 +227,14 @@ public class DoseInstanceEntity {
 
     public void setSnoozeCount(int snoozeCount) {
         this.snoozeCount = snoozeCount;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     /**

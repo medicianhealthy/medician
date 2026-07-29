@@ -259,7 +259,7 @@ public class MedicationWizardFragment extends Fragment {
     }
 
     protected void checkAndClarifyTakeTiming(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback, android.content.DialogInterface.OnDismissListener dismissListener) {
-        long now = System.currentTimeMillis();
+        long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
         long scheduled = instance.getScheduledTime();
 
         // Difference in minutes: positive if late, negative if early

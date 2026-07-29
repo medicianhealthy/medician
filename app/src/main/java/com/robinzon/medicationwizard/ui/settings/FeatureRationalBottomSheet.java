@@ -166,6 +166,10 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                 iconView.setImageResource(R.drawable.ic_clock);
                 descView.setText(R.string.premium_rational_dose_window_msg);
             }
+            case PHOTO -> {
+                iconView.setImageResource(android.R.drawable.ic_menu_camera);
+                descView.setText(R.string.photo_feature_rational);
+            }
         }
 
         String pkg = requireContext().getPackageName();
@@ -187,6 +191,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case VIBRATION -> getString(R.string.settings_vibration_title);
             case STICKY_NOTIF -> getString(R.string.settings_sticky_title);
             case DOSE_WINDOW -> getString(R.string.settings_dose_window_title);
+            case PHOTO -> getString(R.string.btn_take_photo);
         };
     }
 
@@ -201,6 +206,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case VIBRATION -> getString(R.string.benefit_vibration);
             case STICKY_NOTIF -> getString(R.string.benefit_sticky);
             case DOSE_WINDOW -> getString(R.string.benefit_dose_window);
+            case PHOTO -> getString(R.string.benefit_photo);
         };
     }
 }

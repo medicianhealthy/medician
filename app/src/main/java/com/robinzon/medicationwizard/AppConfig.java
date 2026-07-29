@@ -33,6 +33,8 @@ public class AppConfig {
     public static final String KEY_PASS_VIBRATION_ACTIVE = "pass_vibration_active";
     public static final String KEY_PASS_STICKY_ACTIVE = "pass_sticky_active";
     public static final String KEY_PASS_DOSE_WINDOW_ACTIVE = "pass_dose_window_active";
+    public static final String KEY_PASS_PHOTO_EXPIRY = "pass_photo_expiry";
+
     /**
      * Master flag for purchased Premium status.
      */
@@ -58,7 +60,7 @@ public class AppConfig {
         if (isPremiumPurchased(context)) return true;
 
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
-        long now = System.currentTimeMillis();
+        long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
 
         return switch (feature) {
             case THEME -> prefs.getLong(KEY_PASS_THEME_EXPIRY, 0) > now;
@@ -69,6 +71,7 @@ public class AppConfig {
             case VIBRATION -> prefs.getBoolean(KEY_PASS_VIBRATION_ACTIVE, false);
             case STICKY_NOTIF -> prefs.getBoolean(KEY_PASS_STICKY_ACTIVE, false);
             case DOSE_WINDOW -> prefs.getBoolean(KEY_PASS_DOSE_WINDOW_ACTIVE, false);
+            case PHOTO -> prefs.getLong(KEY_PASS_PHOTO_EXPIRY, 0) > now;
         };
     }
 
@@ -112,11 +115,12 @@ public class AppConfig {
                     context.getString(R.string.active_for_next_reminder) : "";
             case STICKY_NOTIF -> prefs.getBoolean(KEY_PASS_STICKY_ACTIVE, false) ?
                     context.getString(R.string.active_for_next_reminder) : "";
+            case PHOTO -> formatExpiry(context, prefs.getLong(KEY_PASS_PHOTO_EXPIRY, 0));
         };
     }
 
     private static String formatExpiry(Context context, long expiry) {
-        if (expiry <= System.currentTimeMillis()) return "";
+        if (expiry <= com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal()) return "";
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
         return context.getString(R.string.active_until_format, sdf.format(new java.util.Date(expiry)));
     }
@@ -125,6 +129,6 @@ public class AppConfig {
      * Enum to distinguish between premium features for pass logic.
      */
     public enum FeaturePassType {
-        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW
+        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW, PHOTO
     }
 }

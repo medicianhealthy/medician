@@ -187,6 +187,12 @@
     <string name="streak_empty">ابدأ سلسلتك السحرية اليوم!</string>
     <string name="settings_title">الإعدادات</string>
 
+    <!-- Developer Cheats -->
+    <string name="cheats_title">ميزات المطورين</string>
+    <string name="cheats_is_premium">مستخدم بريميوم</string>
+    <string name="cheats_show_ads">إظهار الإعلانات (إجباري)</string>
+    <string name="cheats_apply_restart">تطبيق وإعادة تشغيل</string>
+
     <string name="notif_already_active">التنبيهات مفعلة بالفعل!</string>
     <string name="data_cleared">تم مسح البيانات.</string>
     <string name="support_coming_soon">الدعم سيتوفر قريبًا!</string>
@@ -373,4 +379,14 @@
     <string name="unit_mcg">ميكروجم</string>
     <string name="unit_ml">مل</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">إضافة أو تغيير صورة الدواء لمدة ساعة واحدة</string>
+    <string name="btn_take_photo">التقاط صورة</string>
+    <string name="btn_upload_photo">تحميل صورة</string>
+    <string name="photo_feature_rational">شاهد فيديو قصير لإضافة أو تغيير صورة الدواء لمدة ساعة واحدة.</string>
+    <string name="photo_unlocked_toast">تم فتح ميزة الصور!</string>
+    <string name="placeholder_add_photo">أضف صورة لدوائك</string>
+    <string name="btn_rotate_left">تدوير لليسار</string>
+    <string name="btn_rotate_right">تدوير لليمين</string>
+    <string name="btn_remove_photo">إزالة الصورة</string>
+    <string name="locked_photo_hint">اضغط للفتح</string>
 </resources>

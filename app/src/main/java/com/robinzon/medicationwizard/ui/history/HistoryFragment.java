@@ -220,7 +220,7 @@ public class HistoryFragment extends MedicationWizardFragment {
         instance.setStatus(status);
         if ("TAKEN".equals(status)) {
             if (instance.getActionTime() <= 0) {
-                instance.setActionTime(System.currentTimeMillis());
+                instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
             }
         } else if ("SCHEDULED".equals(status)) {
             instance.setActionTime(0);

@@ -28,7 +28,7 @@ public class HistoryViewModel extends AndroidViewModel {
     /**
      * The date currently selected by the user in the calendar (epoch millis).
      */
-    private final MutableLiveData<Long> mSelectedDate = new MutableLiveData<>(System.currentTimeMillis());
+    private final MutableLiveData<Long> mSelectedDate = new MutableLiveData<>(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
 
     /**
      * Reactive stream of medication instances for the selected date.

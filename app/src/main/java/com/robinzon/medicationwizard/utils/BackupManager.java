@@ -118,7 +118,7 @@ public class BackupManager {
                 }
 
                 // 5. Reschedule all alarms for future doses
-                long now = System.currentTimeMillis();
+                long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
                 List<DoseInstanceEntity> futureDoses = AppDatabase.getDatabase(context).doseInstanceDao().getInstancesInRangeInternal(now, now + (com.robinzon.medicationwizard.AppConfig.NUMBER_OF_DAYS_TO_SCHEDULE * 24 * 60 * 60 * 1000L));
                 for (DoseInstanceEntity doseInstance : futureDoses) {
                     ReminderManager.scheduleReminder(context, doseInstance);

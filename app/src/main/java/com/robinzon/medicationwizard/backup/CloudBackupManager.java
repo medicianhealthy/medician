@@ -50,7 +50,7 @@ public class CloudBackupManager {
             try {
                 JSONObject backup = new JSONObject();
                 backup.put("version", 1);
-                backup.put("timestamp", System.currentTimeMillis());
+                backup.put("timestamp", com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
 
                 JSONArray medsArray = SharedPreferencesManager.getInstance(mContext).getJsonArray(Medication.PREF_MEDICATION_LIST, null);
                 backup.put("medications", medsArray != null ? medsArray : new JSONArray());

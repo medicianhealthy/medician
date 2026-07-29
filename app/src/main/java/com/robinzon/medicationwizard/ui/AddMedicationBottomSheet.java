@@ -1,11 +1,18 @@
 package com.robinzon.medicationwizard.ui;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,80 +24,106 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.helper.widget.Flow;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.transition.TransitionManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 import com.robinzon.medicationwizard.entities.Medication;
+import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
 import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * A highly interactive Material 3 BottomSheet for adding or editing medications.
- * <p>
- * This dialog handles the complex data entry flow for a {@link Medication} object, including:
- * - Real-time validation of fields (Name, Amount, Frequency).
- * - Dynamic generation of time picker buttons based on dose frequency.
- * - Integration with modern Material components like AutoComplete dropdowns and Chips.
- * - Dual-mode operation: "New Medication" and "Edit Medication".
- * </p>
- * <p>
- * Performance: Uses customized window attributes to ensure a sharp, centered
- * card look that opens fully on all devices.
- * </p>
  */
 public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
 
-    /**
-     * Map of dose index to the user-selected time.
-     */
     private final SparseArray<SimpleDayTime> dosesInDay = new SparseArray<>();
-    /**
-     * Layout container where dynamic time picker buttons are added.
-     */
     private ConstraintLayout timesContainer;
-    /**
-     * The medication object being built or edited.
-     */
     private Medication medication = new Medication();
-    /**
-     * Flag to enable aggressive validation after the first save attempt.
-     */
     private boolean hasAttemptedSave;
-    /**
-     * True if the sheet is in 'Edit' mode (modifying an existing medication).
-     */
     private boolean isEditMode = false;
 
-    /**
-     * Factory method to create a new instance of the sheet, optionally pre-filled with
-     * medication data for editing.
-     *
-     * @param medication The medication to edit, or null for a new entry.
-     * @return A configured fragment instance.
-     */
+    // Photo related
+    private Uri tempCameraUri;
+    private ConstraintLayout photoContainer;
+    private ShapeableImageView imgPreview;
+    private View layoutPlaceholder;
+    private View btnRotateLeft, btnRotateRight, btnRemovePhoto;
+    private Runnable pendingPhotoAction;
+
+    private final ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    if (pendingPhotoAction != null) {
+                        pendingPhotoAction.run();
+                        pendingPhotoAction = null;
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_LONG).show();
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.TakePicture(),
+            success -> {
+                if (success && tempCameraUri != null) {
+                    processAndSetImage(tempCameraUri);
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    processAndSetImage(uri);
+                }
+            }
+    );
+
     public static AddMedicationBottomSheet newInstance(@Nullable Medication medication) {
         AddMedicationBottomSheet fragment = new AddMedicationBottomSheet();
         if (medication != null) {
@@ -101,21 +134,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         return fragment;
     }
 
-    /**
-     * Standard lifecycle method to define the dialog's visual style.
-     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialog);
     }
 
-    /**
-     * Configures the behavior and constraints of the bottom sheet once it starts.
-     * <p>
-     * Performance: Forces full expansion and adheres to Material 3 standard anchoring.
-     * </p>
-     */
     @Override
     public void onStart() {
         super.onStart();
@@ -136,41 +160,66 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         return inflater.inflate(R.layout.fragment_add_medication, container, false);
     }
 
-    /**
-     * Initializes the UI.
-     * Handles argument parsing for Edit mode and sets up all interactive listeners.
-     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Check for Edit Mode data
-        if (getArguments() != null && getArguments().containsKey("medication_json")) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey("medication_state")) {
+                try {
+                    medication = Medication.fromJson(new JSONObject(savedInstanceState.getString("medication_state")));
+                    if (medication.getTimesADay() != null) {
+                        dosesInDay.clear();
+                        for (int i = 0; i < medication.getTimesADay().size(); i++) {
+                            int key = medication.getTimesADay().keyAt(i);
+                            dosesInDay.put(key, medication.getTimesADay().valueAt(i));
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+            if (savedInstanceState.containsKey("temp_camera_uri")) {
+                tempCameraUri = savedInstanceState.getParcelable("temp_camera_uri");
+            }
+            isEditMode = savedInstanceState.getBoolean("is_edit_mode", false);
+        } else if (getArguments() != null && getArguments().containsKey("medication_json")) {
             try {
                 String json = getArguments().getString("medication_json");
                 if (json != null) {
                     medication = Medication.fromJson(new JSONObject(json));
                     isEditMode = true;
+                    if (medication.getTimesADay() != null) {
+                        for (int i = 0; i < medication.getTimesADay().size(); i++) {
+                            int key = medication.getTimesADay().keyAt(i);
+                            dosesInDay.put(key, medication.getTimesADay().valueAt(i));
+                        }
+                    }
                 }
             } catch (JSONException ignored) {
             }
         }
 
         setupDropdowns(view);
-
-        // Fix for disappearing hint: explicitly re-set it after dropdown setup
         TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
-        if (layoutForm != null) {
-            layoutForm.setHint(R.string.hint_form);
-        }
+        if (layoutForm != null) layoutForm.setHint(R.string.hint_form);
 
         setupInstructions(view);
         setTextChangeListeners(view);
         timesContainer = view.findViewById(R.id.times_container);
+        photoContainer = view.findViewById(R.id.photo_inner_container);
+        imgPreview = view.findViewById(R.id.img_med_photo_preview);
+        layoutPlaceholder = view.findViewById(R.id.layout_photo_placeholder);
+        btnRotateLeft = view.findViewById(R.id.btn_rotate_left);
+        btnRotateRight = view.findViewById(R.id.btn_rotate_right);
+        btnRemovePhoto = view.findViewById(R.id.btn_remove_photo);
+
+        setupPhotoButtons(view);
 
         if (isEditMode) {
             preFillData(view);
         }
+
+        updatePhotoUi(false);
 
         view.findViewById(R.id.btn_save).setOnClickListener(v -> {
             trySaveMedication(view);
@@ -178,38 +227,228 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         });
     }
 
-    /**
-     * Populates all UI fields with data from an existing medication.
-     * Used exclusively in Edit mode.
-     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (getView() != null) {
+            populateMedication(getView());
+        }
+        outState.putString("medication_state", medication.toJson().toString());
+        if (tempCameraUri != null) {
+            outState.putParcelable("temp_camera_uri", tempCameraUri);
+        }
+        outState.putBoolean("is_edit_mode", isEditMode);
+    }
+
+    private void setupPhotoButtons(View view) {
+        view.findViewById(R.id.btn_camera).setOnClickListener(v -> checkSystemPermissionAndAct(Manifest.permission.CAMERA, () -> {
+            checkFeaturePassAndAct(() -> {
+                File tempFile = new File(requireContext().getCacheDir(), "temp_camera_" + System.currentTimeMillis() + ".jpg");
+                tempCameraUri = FileProvider.getUriForFile(requireContext(), requireContext().getPackageName() + ".fileprovider", tempFile);
+                cameraLauncher.launch(tempCameraUri);
+            });
+        }));
+
+        view.findViewById(R.id.btn_gallery).setOnClickListener(v -> checkFeaturePassAndAct(() -> {
+            galleryLauncher.launch("image/*");
+        }));
+
+        if (btnRotateLeft != null) {
+            btnRotateLeft.setOnClickListener(v -> checkFeaturePassAndAct(() -> rotateImage(-90)));
+        }
+        if (btnRotateRight != null) {
+            btnRotateRight.setOnClickListener(v -> checkFeaturePassAndAct(() -> rotateImage(90)));
+        }
+        if (btnRemovePhoto != null) {
+            btnRemovePhoto.setOnClickListener(v -> removePhoto());
+        }
+    }
+
+    private void checkSystemPermissionAndAct(String permission, Runnable action) {
+        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+            action.run();
+        } else {
+            pendingPhotoAction = action;
+            permissionLauncher.launch(permission);
+        }
+    }
+
+    private void checkFeaturePassAndAct(Runnable action) {
+        if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.PHOTO)) {
+            action.run();
+        } else {
+            FeatureRationalBottomSheet.newInstance(AppConfig.FeaturePassType.PHOTO).show(getChildFragmentManager(), "PhotoRational");
+            getChildFragmentManager().setFragmentResultListener("feature_unlocked", getViewLifecycleOwner(), (key, bundle) -> {
+                String type = bundle.getString("feature_type");
+                if (AppConfig.FeaturePassType.PHOTO.name().equals(type)) {
+                    action.run();
+                }
+            });
+        }
+    }
+
+    private void processAndSetImage(Uri uri) {
+        String savedPath = saveImageLocally(uri);
+        if (savedPath != null) {
+            medication.setImagePath(savedPath);
+            updatePhotoUi(true);
+        }
+    }
+
+    private void updatePhotoUi(boolean animate) {
+        if (imgPreview == null || layoutPlaceholder == null) return;
+
+        if (medication.getImagePath() != null) {
+            imgPreview.setVisibility(View.VISIBLE);
+            layoutPlaceholder.setVisibility(View.GONE);
+            if (btnRotateLeft != null) btnRotateLeft.setVisibility(View.VISIBLE);
+            if (btnRotateRight != null) btnRotateRight.setVisibility(View.VISIBLE);
+            if (btnRemovePhoto != null) btnRemovePhoto.setVisibility(View.VISIBLE);
+
+            File file = new File(medication.getImagePath());
+
+            // Detect orientation for correct ratio
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+            updatePreviewRatio(options.outHeight > options.outWidth, animate);
+
+            Glide.with(this)
+                    .load(file)
+                    .signature(new ObjectKey(file.lastModified()))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(imgPreview);
+        } else {
+            imgPreview.setVisibility(View.GONE);
+            layoutPlaceholder.setVisibility(View.VISIBLE);
+            if (btnRotateLeft != null) btnRotateLeft.setVisibility(View.GONE);
+            if (btnRotateRight != null) btnRotateRight.setVisibility(View.GONE);
+            if (btnRemovePhoto != null) btnRemovePhoto.setVisibility(View.GONE);
+        }
+    }
+
+    private void removePhoto() {
+        if (medication.getImagePath() != null) {
+            File file = new File(medication.getImagePath());
+            if (file.exists()) {
+                file.delete();
+            }
+            medication.setImagePath(null);
+            updatePhotoUi(true);
+        }
+    }
+
+    private void updatePreviewRatio(boolean isPortrait, boolean animate) {
+        if (photoContainer == null || imgPreview == null) return;
+
+        if (animate) {
+            TransitionManager.beginDelayedTransition(photoContainer);
+        }
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(photoContainer);
+        // Force wrap_content for height when in portrait to allow the container to grow, 
+        // but keep the ratio constraint to define the box shape.
+        constraintSet.setDimensionRatio(imgPreview.getId(), isPortrait ? "H,9:16" : "H,16:9");
+        constraintSet.applyTo(photoContainer);
+    }
+
+    private void rotateImage(int degrees) {
+        if (medication.getImagePath() == null || imgPreview == null) return;
+
+        // 1. Visual Animation
+        imgPreview.animate()
+                .rotationBy(degrees)
+                .setDuration(300)
+                .withEndAction(() -> {
+                    try {
+                        // 2. Physical Rotation
+                        File file = new File(medication.getImagePath());
+                        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                        if (bitmap == null) return;
+
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(degrees);
+                        Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+                        FileOutputStream out = new FileOutputStream(file);
+                        rotated.compress(Bitmap.CompressFormat.JPEG, 85, out);
+                        out.close();
+
+                        // 3. Reset View Properties & Reload
+                        imgPreview.setRotation(0); // Reset rotation property because image itself is now rotated
+                        updatePhotoUi(true); // This will also handle the ratio update
+
+                        bitmap.recycle();
+                        rotated.recycle();
+                    } catch (IOException e) {
+                        Toast.makeText(requireContext(), "Error rotating image", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .start();
+    }
+
+    private String saveImageLocally(Uri sourceUri) {
+        try {
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(sourceUri);
+            if (inputStream == null) return null;
+            Bitmap original = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+            if (original == null) return null;
+
+            int width = original.getWidth();
+            int height = original.getHeight();
+            float ratio = (float) width / (float) height;
+            if (width > 1280 || height > 1280) {
+                if (width > height) {
+                    width = 1280;
+                    height = (int) (width / ratio);
+                } else {
+                    height = 1280;
+                    width = (int) (height * ratio);
+                }
+            }
+            Bitmap resized = Bitmap.createScaledBitmap(original, width, height, true);
+            File dir = new File(requireContext().getFilesDir(), "med_photos");
+            if (!dir.exists()) dir.mkdirs();
+            String fileName = "med_" + UUID.randomUUID().toString() + ".jpg";
+            File file = new File(dir, fileName);
+            FileOutputStream out = new FileOutputStream(file);
+            resized.compress(Bitmap.CompressFormat.JPEG, 85, out);
+            out.close();
+            return file.getAbsolutePath();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     private void preFillData(View view) {
         TextView titleView = getTitleTextView(view);
         if (titleView != null) titleView.setText(medication.getCommercialName());
-
         TextInputEditText nameEdit = getCommercialNameInputEditText(view);
         if (nameEdit != null) nameEdit.setText(medication.getCommercialName());
-
         TextInputEditText amountEdit = getAmountInputEditText(view);
         if (amountEdit != null) {
             String val = medication.getAmount() == (long) medication.getAmount() ?
                     String.valueOf((long) medication.getAmount()) : String.valueOf(medication.getAmount());
             amountEdit.setText(val);
         }
-
         AutoCompleteTextView formEdit = getFormInputEditText(view);
         if (formEdit != null && medication.getForm() != null) {
-            formEdit.setText(medication.getForm().name(), false);
+            formEdit.setText(getString(medication.getForm().getLabelResId()), false);
             final TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
             if (layoutForm != null) {
-                switch (medication.getForm()) {
-                    case Pill -> layoutForm.setStartIconDrawable(R.drawable.ic_med_pill);
-                    case Drops -> layoutForm.setStartIconDrawable(R.drawable.ic_med_drops);
-                    case Injection -> layoutForm.setStartIconDrawable(R.drawable.ic_med_injection);
-                    case Solution -> layoutForm.setStartIconDrawable(R.drawable.ic_med_solution);
-                    case Inhaler -> layoutForm.setStartIconDrawable(R.drawable.ic_med_inhaler);
-                    case Powder -> layoutForm.setStartIconDrawable(R.drawable.ic_med_powder);
-                    case Other -> layoutForm.setStartIconDrawable(R.drawable.ic_med_other);
-                }
+                int icon = switch (medication.getForm()) {
+                    case Pill -> R.drawable.ic_med_pill;
+                    case Drops -> R.drawable.ic_med_drops;
+                    case Injection -> R.drawable.ic_med_injection;
+                    case Solution -> R.drawable.ic_med_solution;
+                    case Inhaler -> R.drawable.ic_med_inhaler;
+                    case Powder -> R.drawable.ic_med_powder;
+                    case Other -> R.drawable.ic_med_other;
+                };
+                layoutForm.setStartIconDrawable(icon);
                 int onSurfaceAttr = com.google.android.material.R.attr.colorOnSurface;
                 int iconColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
                 layoutForm.setStartIconTintList(ColorStateList.valueOf(iconColor));
@@ -235,8 +474,10 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                     SimpleDayTime time = medication.getTimesADay().valueAt(k);
                     dosesInDay.put(key, time);
                     if (k < timesContainer.getChildCount()) {
-                        Button btn = (Button) timesContainer.getChildAt(k);
-                        btn.setText(getString(R.string.time_set_format, time.toString()));
+                        View child = timesContainer.getChildAt(k);
+                        if (child instanceof Button) {
+                            ((Button) child).setText(getString(R.string.time_set_format, time.toString()));
+                        }
                     }
                 }
             }
@@ -248,12 +489,10 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                     String.valueOf((long) medication.getStrength()) : String.valueOf(medication.getStrength());
             strengthEdit.setText(val);
         }
-
         AutoCompleteTextView unitEdit = view.findViewById(R.id.dropdown_unit);
         if (unitEdit != null && medication.getMeasurementUnit() != null) {
             unitEdit.setText(medication.getMeasurementUnit().getLabel(requireContext()), false);
         }
-
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_instructions);
         if (chipGroup != null && medication.getInstruction() != null) {
             int chipId = switch (medication.getInstruction()) {
@@ -265,45 +504,33 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             };
             chipGroup.check(chipId);
         }
+        updatePhotoUi(false);
     }
 
-
-    /**
-     * Attaches live validators to the text input fields.
-     */
     private void setTextChangeListeners(@NonNull final View mainView) {
         final TextInputEditText commercialNameInputEditText = getCommercialNameInputEditText(mainView);
         if (null != commercialNameInputEditText) {
             commercialNameInputEditText.addTextChangedListener(getTextWatcher(commercialNameInputEditText, mainView));
         }
-
         final TextInputEditText amountEditText = getAmountInputEditText(mainView);
         if (null != amountEditText) {
             amountEditText.addTextChangedListener(getTextWatcher(amountEditText, mainView));
         }
-
         final AutoCompleteTextView frequencyEditText = getFrequencyInputEditText(mainView);
         if (null != frequencyEditText) {
             frequencyEditText.addTextChangedListener(getTextWatcher(frequencyEditText, mainView));
         }
-
         final AutoCompleteTextView formEditText = getFormInputEditText(mainView);
         if (null != formEditText) {
             formEditText.addTextChangedListener(getTextWatcher(formEditText, mainView));
         }
     }
 
-    /**
-     * Factory for {@link TextWatcher} that handles both error highlighting and
-     * live title updates.
-     */
     private TextWatcher getTextWatcher(@NonNull final EditText editText, @NonNull View mainView) {
         return new TextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
                 final String trimmedInput = editable.toString().trim();
-
-                // Aggressive validation logic after first failed save attempt
                 if (hasAttemptedSave) {
                     final int editTextId = editText.getId();
                     if (editTextId == R.id.med_name_fragment_add_med) {
@@ -319,8 +546,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                         highLightInValidFields(editText, trimmedInput.isEmpty(), false);
                     }
                 }
-
-                // Update the bottom sheet title live as the user types the name
                 TextView titleView = getTitleTextView(mainView);
                 if (titleView != null && editText.getId() == R.id.med_name_fragment_add_med) {
                     if (trimmedInput.isEmpty()) {
@@ -341,20 +566,14 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         };
     }
 
-
-    /**
-     * Configures the ChipGroup for consumption instructions.
-     */
     private void setupInstructions(View view) {
         ChipGroup chipGroup = view.findViewById(R.id.chip_group_instructions);
         if (chipGroup == null) return;
-
         chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) {
                 medication.setInstruction(null);
                 return;
             }
-
             int checkedId = checkedIds.get(0);
             if (checkedId == R.id.chip_before_eating) {
                 medication.setInstruction(EInstructions.BEFORE_EATING);
@@ -370,14 +589,9 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         });
     }
 
-
-    /**
-     * Initializes all AutoComplete dropdown menus (Form, Unit, Frequency).
-     */
     private void setupDropdowns(View view) {
         setFormDropDown(view);
         setUnitDropDown(view);
-
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
         String[] frequencies = new String[]{
                 getString(R.string.frequency_once),
@@ -388,21 +602,18 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         };
         ArrayAdapter<String> freqAdapter = new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_menu, frequencies);
         dropdownFrequency.setAdapter(freqAdapter);
-        dropdownFrequency.setThreshold(Integer.MAX_VALUE); // Disable filtering
-
+        dropdownFrequency.setThreshold(Integer.MAX_VALUE);
         dropdownFrequency.setOnClickListener(v -> dropdownFrequency.showDropDown());
         dropdownFrequency.setOnItemClickListener((parent, itemView, position, itemId) -> {
             hideKeyboard(dropdownFrequency);
             int timesPerDay = position + 1;
             medication.setDailyFrequency(timesPerDay);
             generateTimePickers(timesPerDay);
-
-            // Move focus to the dynamic buttons container or first button
             timesContainer.postDelayed(() -> {
                 if (timesContainer.getChildCount() > 0) {
                     View row = timesContainer.getChildAt(0);
-                    if (row instanceof LinearLayout && ((LinearLayout) row).getChildCount() > 0) {
-                        ((LinearLayout) row).getChildAt(0).requestFocus();
+                    if (row instanceof MaterialButton) {
+                        row.requestFocus();
                     }
                 }
             }, 100);
@@ -418,28 +629,14 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
-    /**
-     * Final validation and save logic.
-     * <p>
-     * Checks:
-     * 1. Basic field validity via {@link Medication#isValid()}.
-     * 2. Matches frequency to picked times (e.g., if "Twice a day", must have 2 times).
-     * 3. Ensures no duplicate times are picked.
-     * 4. Persists the medication and dismisses the sheet.
-     * </p>
-     */
     private void trySaveMedication(@NonNull View mainView) {
-
         populateMedication(mainView);
-
         if (!medication.isValid()) {
             showInputErrorsOnViews(mainView);
             return;
         }
-
         final int frequency = medication.getDailyFrequency();
         final SparseArray<SimpleDayTime> activeTimes = new SparseArray<>();
-
         for (int i = 1; i <= frequency; i++) {
             SimpleDayTime time = dosesInDay.get(i);
             if (time == null) {
@@ -448,8 +645,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             }
             activeTimes.put(i, time);
         }
-
-        // Logical validation: Doses must be at different times
         Set<SimpleDayTime> uniqueTimes = new HashSet<>();
         for (int i = 0; i < activeTimes.size(); i++) {
             if (!uniqueTimes.add(activeTimes.valueAt(i))) {
@@ -457,33 +652,19 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 return;
             }
         }
-
         medication.addTimeStampsForDay(activeTimes);
         medication.addToMedicationList(requireContext().getApplicationContext());
-
         dismiss();
-
-        // Handle post-save logic (Ads and Permissions) after a delay to allow the database to commit
-        // and the BottomSheet to finish its exit animation, ensuring a clean UI transition.
-        // We wait 1200ms to ensure the background fragment is fully settled and DB write is done.
         if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity) {
             final com.robinzon.medicationwizard.MainActivity mainActivity = (com.robinzon.medicationwizard.MainActivity) getActivity();
             new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
                 if (mainActivity.isFinishing() || mainActivity.isDestroyed()) return;
-
-                // 1. Trigger interstitial ad (if eligible)
                 mainActivity.getAdsManager().showInterstitialAd();
-
-                // 2. Request notification permissions (Android 13+) 
-                // We do this after the ad trigger to avoid overlapping system dialogs.
                 com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(mainActivity).requestWithRationale();
             }, 1200);
         }
     }
 
-    /**
-     * Highlights all invalid fields with a shake animation and error text.
-     */
     private void showInputErrorsOnViews(@NonNull View mainView) {
         if (TextUtils.isEmpty(medication.getCommercialName())) {
             highLightInValidFields(getCommercialNameInputEditText(mainView), true);
@@ -499,13 +680,9 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
-    /**
-     * Shows a robust Material Design 3 error dialog.
-     */
     private void showErrorDialog(@NonNull String title, @NonNull String message) {
         Context context = getContext();
         if (context == null) return;
-
         com.robinzon.medicationwizard.ui.CustomMaterialDialog errorDialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(context);
         errorDialog.setTitle(title);
         errorDialog.setMessage(message);
@@ -513,18 +690,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         errorDialog.show();
     }
 
-
     private void highLightInValidFields(@Nullable View view, boolean isInvalid) {
         highLightInValidFields(view, isInvalid, true);
     }
 
-    /**
-     * Applies Material 3 error styling to a specific input field.
-     * Uses {@link TextInputLayout#setError(CharSequence)} for standard Material feedback.
-     */
     private void highLightInValidFields(@Nullable View view, boolean isInvalid, boolean animate) {
         if (null == view) return;
-
         TextInputLayout layout = null;
         if (view instanceof TextInputLayout) {
             layout = (TextInputLayout) view;
@@ -533,7 +704,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         } else if (view.getParent().getParent() instanceof TextInputLayout) {
             layout = (TextInputLayout) view.getParent().getParent();
         }
-
         if (isInvalid) {
             if (animate) {
                 View target = (layout != null) ? layout : view;
@@ -541,7 +711,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 animator.setDuration(400);
                 animator.start();
             }
-
             if (layout != null) {
                 layout.setError(getString(R.string.error_required));
                 layout.setErrorEnabled(true);
@@ -554,19 +723,13 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
-    /**
-     * Configures the drug form dropdown and updates the start icon dynamically
-     * based on selection (e.g., show a pill icon for "Pill").
-     */
     private void setFormDropDown(View view) {
         final AutoCompleteTextView dropdownForm = view.findViewById(R.id.med_form_fragment_add_med);
         if (null == dropdownForm) return;
-
         dropdownForm.setOnTouchListener((v, event) -> {
             hideKeyboard(v);
             return false;
         });
-
         String[] forms = new String[]{
                 getString(R.string.form_pill),
                 getString(R.string.form_solution),
@@ -576,21 +739,14 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 getString(R.string.form_inhaler),
                 getString(R.string.form_other)
         };
-
-        // Use a standard layout and disable filtering to prevent hint/text clearance issues
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                R.layout.item_dropdown_menu, forms);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_menu, forms);
         dropdownForm.setAdapter(adapter);
-        dropdownForm.setThreshold(Integer.MAX_VALUE); // Disable filtering by typing
-
-        // Ensure hint is visible initially if no value
+        dropdownForm.setThreshold(Integer.MAX_VALUE);
         if (TextUtils.isEmpty(dropdownForm.getText())) {
             dropdownForm.setText(null);
         }
-
         final TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
         if (null == layoutForm) return;
-
         dropdownForm.setOnClickListener(v -> dropdownForm.showDropDown());
         dropdownForm.setOnItemClickListener((parent, itemView, position, itemId) -> {
             hideKeyboard(dropdownForm);
@@ -603,11 +759,8 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 }
             }
             medication.setForm(selectedForm);
-
-            // Move focus to the next field (Frequency)
             View next = view.findViewById(R.id.med_frequency_fragment_add_med);
             if (next != null) next.requestFocus();
-
             int icon = switch (selectedForm) {
                 case Pill -> R.drawable.ic_med_pill;
                 case Drops -> R.drawable.ic_med_drops;
@@ -618,8 +771,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 case Other -> R.drawable.ic_med_other;
             };
             layoutForm.setStartIconDrawable(icon);
-
-            // Apply theme-aware tint instead of hardcoded white
             int onSurfaceAttr = com.google.android.material.R.attr.colorOnSurface;
             int iconColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
             layoutForm.setStartIconTintList(ColorStateList.valueOf(iconColor));
@@ -632,83 +783,59 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         for (EMeasurementUnit unit : EMeasurementUnit.values()) {
             measurementUnits.add(unit.getLabel(requireContext()));
         }
-
         if (null != dropdownUnit) {
             dropdownUnit.setAdapter(new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_menu, measurementUnits));
             dropdownUnit.setOnClickListener(v -> dropdownUnit.showDropDown());
             dropdownUnit.setOnItemClickListener((parent, itemView, position, itemId) -> {
                 hideKeyboard(dropdownUnit);
                 medication.setMeasurementUnit(EMeasurementUnit.values()[position]);
-
-                // Move focus to instructions group or save button
                 View next = view.findViewById(R.id.chip_group_instructions);
                 if (next != null) next.requestFocus();
             });
         }
     }
 
-    /**
-     * Generates a list of buttons in the UI, one for each scheduled dose
-     * defined by the 'Frequency' dropdown.
-     * Uses ConstraintLayout Flow for automatic wrapping and RTL support.
-     */
     private void generateTimePickers(final int amount) {
         timesContainer.removeAllViews();
-
         final Context context = requireContext();
         final float density = context.getResources().getDisplayMetrics().density;
         final int gap = (int) (8 * density);
-
-        // Create the Flow helper
         Flow flow = new Flow(context);
         flow.setId(View.generateViewId());
         flow.setLayoutParams(new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT));
-
         flow.setHorizontalGap(gap);
         flow.setVerticalGap(gap);
         flow.setWrapMode(Flow.WRAP_CHAIN);
         flow.setHorizontalStyle(Flow.CHAIN_PACKED);
-        flow.setHorizontalBias(0f); // Align to start (Right in Hebrew)
-
+        flow.setHorizontalBias(0f);
         int[] viewIds = new int[amount];
-
         for (int i = 1; i <= amount; i++) {
             MaterialButton timeButton = (MaterialButton) LayoutInflater.from(context)
                     .inflate(R.layout.item_time_picker, timesContainer, false);
-
             int viewId = View.generateViewId();
             timeButton.setId(viewId);
             viewIds[i - 1] = viewId;
-
-            // Preserve existing time if available
             SimpleDayTime existingTime = dosesInDay.get(i);
             if (existingTime != null) {
                 timeButton.setText(getString(R.string.time_set_format, existingTime.toString()));
             } else {
                 timeButton.setText(getString(R.string.select_time_index_format, i));
             }
-
             int finalIndex = i;
             timeButton.setOnClickListener(v -> showTimePicker(finalIndex, timeButton));
-
             timesContainer.addView(timeButton);
         }
-
         flow.setReferencedIds(viewIds);
         timesContainer.addView(flow);
     }
 
-    /**
-     * Scrapes all manual text entry fields and populates the medication object.
-     */
     private void populateMedication(@NonNull View view) {
         final TextInputEditText nameInputEditText = getCommercialNameInputEditText(view);
         if (nameInputEditText != null && nameInputEditText.getText() != null) {
             medication.setCommercialName(nameInputEditText.getText().toString());
         }
-
         final TextInputEditText amountTextView = getAmountInputEditText(view);
         if (amountTextView != null && amountTextView.getText() != null) {
             String amountStr = amountTextView.getText().toString().replace(',', '.').trim();
@@ -719,6 +846,37 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                     medication.setAmount(Float.parseFloat(amountStr));
                 } catch (NumberFormatException ignored) {
                     medication.setAmount(0);
+                }
+            }
+        }
+
+        // Robust mapping for Form from UI text
+        final AutoCompleteTextView formDropdown = getFormInputEditText(view);
+        if (formDropdown != null && !TextUtils.isEmpty(formDropdown.getText())) {
+            String currentFormText = formDropdown.getText().toString().trim();
+            for (EForm f : EForm.values()) {
+                if (getString(f.getLabelResId()).trim().equalsIgnoreCase(currentFormText)) {
+                    medication.setForm(f);
+                    break;
+                }
+            }
+        }
+
+        // Robust mapping for Frequency from UI text
+        final AutoCompleteTextView freqDropdown = getFrequencyInputEditText(view);
+        if (freqDropdown != null && !TextUtils.isEmpty(freqDropdown.getText())) {
+            String currentFreqText = freqDropdown.getText().toString().trim();
+            String[] frequencies = new String[]{
+                    getString(R.string.frequency_once).trim(),
+                    getString(R.string.frequency_twice).trim(),
+                    getString(R.string.frequency_3_times).trim(),
+                    getString(R.string.frequency_4_times).trim(),
+                    getString(R.string.frequency_5_times).trim()
+            };
+            for (int i = 0; i < frequencies.length; i++) {
+                if (frequencies[i].equalsIgnoreCase(currentFreqText)) {
+                    medication.setDailyFrequency(i + 1);
+                    break;
                 }
             }
         }
@@ -735,7 +893,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 }
             }
         }
-
         final AutoCompleteTextView unitDropdown = view.findViewById(R.id.dropdown_unit);
         if (unitDropdown != null && unitDropdown.getText() != null) {
             String unitName = unitDropdown.getText().toString();
@@ -746,12 +903,13 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 }
             }
         }
+
+        // Sync dosesInDay back to medication object
+        if (dosesInDay.size() > 0) {
+            medication.addTimeStampsForDay(dosesInDay);
+        }
     }
 
-    /**
-     * Opens the standard Android Material Time Picker.
-     * Upon confirmation, updates the medication's schedule and the button text.
-     */
     private void showTimePicker(final int finalIndex, final Button buttonToUpdate) {
         final MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)
@@ -759,16 +917,11 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 .setMinute(0)
                 .setTitleText(R.string.time_picker_med_title)
                 .build();
-
         picker.addOnPositiveButtonClickListener(v -> {
             String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", picker.getHour(), picker.getMinute());
             buttonToUpdate.setText(getString(R.string.time_set_format, formattedTime));
             dosesInDay.put(finalIndex, new SimpleDayTime((byte) picker.getHour(), (byte) picker.getMinute()));
-
-            // Explicitly stay on the button or move to next
             buttonToUpdate.requestFocus();
-
-            // If this was the last time button, move to Strength field after a small delay
             if (finalIndex == medication.getDailyFrequency()) {
                 View nextView = getView() != null ? getView().findViewById(R.id.medication_strength) : null;
                 if (nextView != null) {
@@ -776,7 +929,6 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 }
             }
         });
-
         picker.show(getParentFragmentManager(), "timePicker");
     }
 

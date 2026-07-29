@@ -1,18 +1,30 @@
 package com.robinzon.medicationwizard.ui.medicationslist;
 
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.text.BidiFormatter;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
+import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.databinding.ItemMedicationListBinding;
 import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.Medication;
+import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,54 +33,23 @@ import java.util.Set;
 
 /**
  * Adapter for the master medication library list.
- * <p>
- * This adapter handles complex Material 3 interactions, including:
- * - Expandable cards to show/hide detailed medication info.
- * - Dynamic icon switching based on medication form.
- * - Smart formatting of strength, quantity, and instructions.
- * - High-quality delete animations (slide + fade) with audio feedback.
- * </p>
  */
 public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsListAdapter.MedicationViewHolder> {
 
-    /**
-     * Current list of medications to display.
-     */
     private final List<Medication> medications = new ArrayList<>();
-
-    /**
-     * The set of medication IDs that are currently expanded.
-     */
     private final Set<String> expandedIds = new HashSet<>();
-
-    /**
-     * Listener for edit and delete actions.
-     */
     private OnMedicationActionListener listener;
 
-    /**
-     * Sets the action listener.
-     */
     public void setOnMedicationActionListener(OnMedicationActionListener listener) {
         this.listener = listener;
     }
 
-    /**
-     * Updates the full dataset and refreshes the list.
-     *
-     * @param medications The new list of medications.
-     */
     public void setMedications(List<Medication> medications) {
         this.medications.clear();
         this.medications.addAll(medications);
         notifyDataSetChanged();
     }
 
-    /**
-     * Removes an item from the internal list and triggers the removal animation.
-     *
-     * @param position The position to remove.
-     */
     public void removeItem(int position) {
         if (position >= 0 && position < medications.size()) {
             medications.remove(position);
@@ -89,9 +70,6 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
         holder.bind(medication, expandedIds.contains(medication.getId()));
     }
 
-    /**
-     * Expands all medication cards in the list.
-     */
     public void expandAll() {
         for (Medication med : medications) {
             expandedIds.add(med.getId());
@@ -99,9 +77,6 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
         notifyDataSetChanged();
     }
 
-    /**
-     * Collapses all medication cards in the list.
-     */
     public void collapseAll() {
         expandedIds.clear();
         notifyDataSetChanged();
@@ -112,29 +87,11 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
         return medications.size();
     }
 
-    /**
-     * Interface for handling actions triggered from individual medication cards.
-     */
     public interface OnMedicationActionListener {
-        /**
-         * Triggered when the user clicks the delete button.
-         *
-         * @param medication The medication to delete.
-         * @param position   The adapter position.
-         */
         void onDelete(Medication medication, int position);
-
-        /**
-         * Triggered when the user clicks the edit button.
-         *
-         * @param medication The medication to edit.
-         */
         void onEdit(Medication medication);
     }
 
-    /**
-     * ViewHolder that manages the lifecycle and binding logic for a single medication card.
-     */
     class MedicationViewHolder extends RecyclerView.ViewHolder {
         private final ItemMedicationListBinding binding;
 
@@ -143,17 +100,10 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
             this.binding = binding;
         }
 
-        /**
-         * Binds medication data to the card UI.
-         *
-         * @param medication The medication data.
-         * @param isExpanded True if the detailed view should be visible.
-         */
         public void bind(Medication medication, boolean isExpanded) {
             BidiFormatter bidi = BidiFormatter.getInstance();
             binding.medName.setText(bidi.unicodeWrap(medication.getCommercialName()));
 
-            // Smart Strength Formatting: Hides 0 values and formats decimals nicely.
             if (medication.getStrength() <= 0) {
                 binding.medStrength.setVisibility(View.GONE);
             } else {
@@ -167,7 +117,6 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                         medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getLabel(binding.getRoot().getContext()) : "")));
             }
 
-            // Sync icon with medication form (e.g., Drops icon for drops)
             int formIconRes = R.drawable.ic_med_pill;
             if (medication.getForm() != null) {
                 formIconRes = switch (medication.getForm()) {
@@ -183,12 +132,10 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
             binding.medIcon.setImageResource(formIconRes);
             binding.medInstructionsIcon.setImageResource(formIconRes);
 
-            // Handle card expansion visibility
             binding.expandedDetails.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
             binding.expandIcon.setRotation(isExpanded ? 180f : 0f);
 
             if (isExpanded) {
-                // Populate human-readable frequency
                 String frequencyText;
                 if (medication.getDailyFrequency() == 1) {
                     frequencyText = binding.getRoot().getContext().getString(R.string.once_a_day);
@@ -199,25 +146,16 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                 }
                 binding.medFrequency.setText(frequencyText);
 
-                // Build modern instruction string: "Quantity Form Instruction"
                 String amountStr = medication.getAmount() == (long) medication.getAmount() ?
                         String.format(Locale.getDefault(), "%d", (long) medication.getAmount()) :
                         String.format(Locale.getDefault(), "%.1f", medication.getAmount());
-
                 String formStr = medication.getForm() != null ? medication.getForm().getLabel(binding.getRoot().getContext()) : "";
-
                 String instrStr = "";
                 if (medication.getInstruction() != null && medication.getInstruction() != EInstructions.DOES_NOT_MATTER) {
                     instrStr = medication.getInstruction().getDescription(binding.getRoot().getContext());
                 }
+                binding.medInstructions.setText(String.format("%s %s %s", bidi.unicodeWrap(amountStr), bidi.unicodeWrap(formStr), bidi.unicodeWrap(instrStr)).trim());
 
-                String amountPart = bidi.unicodeWrap(amountStr);
-                String formPart = bidi.unicodeWrap(formStr);
-                String instrPart = instrStr.isEmpty() ? "" : bidi.unicodeWrap(instrStr);
-
-                binding.medInstructions.setText(String.format("%s %s %s", amountPart, formPart, instrPart).trim());
-
-                // Build a list of all daily scheduled times
                 StringBuilder timesBuilder = new StringBuilder();
                 if (medication.getTimesADay() != null) {
                     for (int i = 0; i < medication.getTimesADay().size(); i++) {
@@ -226,9 +164,68 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                     }
                 }
                 binding.medTimes.setText(binding.getRoot().getContext().getString(R.string.scheduled_at, timesBuilder.toString()));
+
+                // Image Loading Logic
+                if (medication.getImagePath() != null) {
+                    File file = new File(medication.getImagePath());
+                    if (file.exists()) {
+                        binding.photoPlaceholder.setVisibility(View.GONE);
+                        binding.medPhoto.setVisibility(View.VISIBLE);
+
+                        // Detect orientation for correct ratio
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+                        boolean isPortrait = options.outHeight > options.outWidth;
+
+                        ConstraintSet constraintSet = new ConstraintSet();
+                        constraintSet.clone(binding.photoContainer);
+                        constraintSet.setDimensionRatio(binding.medPhoto.getId(), isPortrait ? "H,9:16" : "H,16:9");
+                        constraintSet.setDimensionRatio(binding.photoPlaceholder.getId(), isPortrait ? "H,9:16" : "H,16:9");
+                        constraintSet.setDimensionRatio(binding.layoutPhotoLocked.getId(), isPortrait ? "H,9:16" : "H,16:9");
+                        constraintSet.applyTo(binding.photoContainer);
+
+                        // --- Smart Lock Logic ---
+                        boolean isLocked = !AppConfig.isFeatureUnlocked(binding.getRoot().getContext(), AppConfig.FeaturePassType.PHOTO);
+                        binding.layoutPhotoLocked.setVisibility(isLocked ? View.VISIBLE : View.GONE);
+
+                        if (isLocked) {
+                            // Apply Grayscale + Dim Filter
+                            ColorMatrix matrix = new ColorMatrix();
+                            matrix.setSaturation(0); // Grayscale
+                            float[] src = matrix.getArray();
+                            src[4] -= 40; src[9] -= 40; src[14] -= 40; // Dimming
+                            binding.medPhoto.setColorFilter(new ColorMatrixColorFilter(matrix));
+
+                            binding.layoutPhotoLocked.setOnClickListener(v -> {
+                                Context ctx = binding.getRoot().getContext();
+                                if (ctx instanceof FragmentActivity) {
+                                    FeatureRationalBottomSheet.newInstance(AppConfig.FeaturePassType.PHOTO)
+                                            .show(((FragmentActivity) ctx).getSupportFragmentManager(), "UnlockPhoto");
+                                }
+                            });
+                        } else {
+                            binding.medPhoto.clearColorFilter();
+                            binding.layoutPhotoLocked.setOnClickListener(null);
+                        }
+
+                        Glide.with(binding.getRoot().getContext())
+                                .load(file)
+                                .signature(new ObjectKey(file.lastModified()))
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .into(binding.medPhoto);
+                    } else {
+                        binding.medPhoto.setVisibility(View.GONE);
+                        binding.photoPlaceholder.setVisibility(View.VISIBLE);
+                        binding.layoutPhotoLocked.setVisibility(View.GONE);
+                    }
+                } else {
+                    binding.medPhoto.setVisibility(View.GONE);
+                    binding.photoPlaceholder.setVisibility(View.VISIBLE);
+                    binding.layoutPhotoLocked.setVisibility(View.GONE);
+                }
             }
 
-            // Click listener for expansion/collapsing
             binding.cardView.setOnClickListener(v -> {
                 String id = medication.getId();
                 if (expandedIds.contains(id)) {
@@ -240,24 +237,18 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
             });
 
             binding.btnEdit.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onEdit(medication);
-                }
+                if (listener != null) listener.onEdit(medication);
             });
 
             binding.btnDelete.setOnClickListener(v -> {
                 int pos = getBindingAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    // Material "Slide & Fade" removal animation
                     binding.cardView.animate()
                             .translationX(binding.cardView.getWidth() * 0.5f)
                             .alpha(0f)
                             .setDuration(400)
                             .withEndAction(() -> {
-                                if (listener != null) {
-                                    listener.onDelete(medication, pos);
-                                }
-                                // Reset for view recycling
+                                if (listener != null) listener.onDelete(medication, pos);
                                 binding.cardView.setTranslationX(0);
                                 binding.cardView.setAlpha(1f);
                             })

@@ -373,4 +373,14 @@
     <string name="unit_mcg">mcg</string>
     <string name="unit_ml">mL</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">1時間薬の写真を追加または変更する</string>
+    <string name="btn_take_photo">写真を撮る</string>
+    <string name="btn_upload_photo">写真をアップロード</string>
+    <string name="photo_feature_rational">短い動画を見て、1時間薬の写真を追加または変更できます。</string>
+    <string name="photo_unlocked_toast">写真機能が解除されました！</string>
+    <string name="placeholder_add_photo">薬の写真を追加</string>
+    <string name="btn_rotate_left">左に回転</string>
+    <string name="btn_rotate_right">右に回転</string>
+    <string name="btn_remove_photo">写真を削除</string>
+    <string name="locked_photo_hint">タップして解除</string>
 </resources>

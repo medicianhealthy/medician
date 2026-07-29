@@ -60,8 +60,8 @@ public interface DoseInstanceDao {
     @Query("SELECT * FROM dose_instances WHERE id = :instanceId")
     DoseInstanceEntity getInstanceById(int instanceId);
 
-    @Query("UPDATE dose_instances SET medicationName = :name, amount = :amount, strength = :strength, unit = :unit, form = :form, instruction = :instruction WHERE medicationId = :id")
-    void updateMetadataForAllDoses(String id, String name, float amount, float strength, String unit, String form, String instruction);
+    @Query("UPDATE dose_instances SET medicationName = :name, amount = :amount, strength = :strength, unit = :unit, form = :form, instruction = :instruction, imagePath = :imagePath WHERE medicationId = :id")
+    void updateMetadataForAllDoses(String id, String name, float amount, float strength, String unit, String form, String instruction, String imagePath);
 
     /**
      * @return Observable list of all historical and future dose instances.

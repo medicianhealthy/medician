@@ -136,7 +136,7 @@ public abstract class AdMobAd {
     }
 
     public boolean isExpired() {
-        final long timeFromLastLoadInMillis = System.currentTimeMillis() - mLastLoadTime;
+        final long timeFromLastLoadInMillis = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() - mLastLoadTime;
         final float timeFromLastLoadInMinutes = TimeManager.getInstance().toMinutesFromMillis(timeFromLastLoadInMillis);
         return timeFromLastLoadInMinutes > 58;
     }
@@ -188,7 +188,7 @@ public abstract class AdMobAd {
      * @noinspection unused
      */
     private void setLastLoadTime() {
-        mLastLoadTime = System.currentTimeMillis();
+        mLastLoadTime = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
     }
 
     protected String getLastWord(@Nullable final String string) {

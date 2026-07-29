@@ -81,14 +81,14 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             case ACTION_TAKE:
             case ACTION_TAKE_ALL:
                 instance.setStatus("TAKEN");
-                instance.setActionTime(System.currentTimeMillis());
+                instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
                 db.doseInstanceDao().update(instance);
                 break;
 
             case ACTION_SKIP:
             case ACTION_SKIP_ALL:
                 instance.setStatus("SKIPPED");
-                instance.setActionTime(System.currentTimeMillis());
+                instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
                 db.doseInstanceDao().update(instance);
                 break;
 
@@ -111,13 +111,13 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Limit reached for " + instance.getMedicationName() + ". Marking as SKIPPED on this snooze attempt.");
             // Reached limit, mark as skipped
             instance.setStatus("SKIPPED");
-            instance.setActionTime(System.currentTimeMillis());
+            instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
             db.doseInstanceDao().update(instance);
         } else {
             // Can snooze again
             instance.setSnoozeCount(currentSnoozes + 1);
             // Move scheduled time forward
-            long newTime = System.currentTimeMillis() + (snoozeDuration * 60 * 1000L);
+            long newTime = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() + (snoozeDuration * 60 * 1000L);
             instance.setScheduledTime(newTime);
             db.doseInstanceDao().update(instance);
 

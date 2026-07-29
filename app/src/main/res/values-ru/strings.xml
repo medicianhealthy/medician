@@ -373,4 +373,14 @@
     <string name="unit_mcg">мкг</string>
     <string name="unit_ml">мл</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">добавить или изменить фото лекарства на 1 час</string>
+    <string name="btn_take_photo">Сделать фото</string>
+    <string name="btn_upload_photo">Загрузить фото</string>
+    <string name="photo_feature_rational">Посмотрите короткое видео, чтобы добавить или изменить фото лекарства на 1 час.</string>
+    <string name="photo_unlocked_toast">Функция фото разблокирована!</string>
+    <string name="placeholder_add_photo">Добавьте фото вашего лекарства</string>
+    <string name="btn_rotate_left">Повернуть влево</string>
+    <string name="btn_rotate_right">Повернуть вправо</string>
+    <string name="btn_remove_photo">Удалить фото</string>
+    <string name="locked_photo_hint">Нажмите, чтобы открыть</string>
 </resources>

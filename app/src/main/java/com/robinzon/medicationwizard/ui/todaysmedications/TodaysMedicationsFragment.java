@@ -395,7 +395,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     private boolean isTimingClarificationRequired(DoseInstanceEntity instance) {
-        long now = System.currentTimeMillis();
+        long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
         long scheduled = instance.getScheduledTime();
         long diffMins = (now - scheduled) / 60000;
 
@@ -446,7 +446,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
         instance.setStatus(status);
         if (instance.getActionTime() <= 0) {
-            instance.setActionTime(System.currentTimeMillis());
+            instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
         }
         final Context appContext = requireContext().getApplicationContext();
         AppDatabase.databaseWriteExecutor.execute(() -> {

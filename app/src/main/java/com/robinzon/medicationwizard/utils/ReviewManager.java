@@ -43,7 +43,7 @@ public class ReviewManager {
 
         // 2. Frequency Check: Don't prompt too often
         long lastPrompt = SharedPreferencesManager.getInstance(activity).getLong(SPK_LAST_REVIEW_TIME, 0);
-        if (System.currentTimeMillis() - lastPrompt < PROMPT_INTERVAL_MS) {
+        if (com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() - lastPrompt < PROMPT_INTERVAL_MS) {
             Logger.log("ReviewManager", "Prompted recently. Waiting for interval.");
             return;
         }
@@ -67,7 +67,7 @@ public class ReviewManager {
                 Task<Void> flow = manager.launchReviewFlow(activity, reviewInfo);
                 flow.addOnCompleteListener(t -> {
                     // Update timestamp regardless of outcome (we don't know if they rated)
-                    SharedPreferencesManager.getInstance(activity).setLong(SPK_LAST_REVIEW_TIME, System.currentTimeMillis());
+                    SharedPreferencesManager.getInstance(activity).setLong(SPK_LAST_REVIEW_TIME, com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
                     Logger.log("ReviewManager", "Review flow finished.");
                 });
             } else {

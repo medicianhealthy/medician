@@ -35,7 +35,7 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
     /**
      * Trigger for manual data refresh (e.g., when returning from background or adding a med).
      */
-    private final MutableLiveData<Long> mRefreshTrigger = new MutableLiveData<>(System.currentTimeMillis());
+    private final MutableLiveData<Long> mRefreshTrigger = new MutableLiveData<>(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
     /**
      * Reactive stream of medication instances for today.
      */
@@ -97,7 +97,7 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
      * Forces a recalculation of the current day's bounds and re-queries the database.
      */
     public void refresh() {
-        mRefreshTrigger.setValue(System.currentTimeMillis());
+        mRefreshTrigger.setValue(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
     }
 
     /**

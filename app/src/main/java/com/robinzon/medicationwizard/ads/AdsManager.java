@@ -321,13 +321,13 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     private void setFullScreenNonUserInitiatedAdDismissTimeStamp() {
-        this.fullAdDismissedTimeStamp = System.currentTimeMillis();
+        this.fullAdDismissedTimeStamp = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
         // FSA cooldown reset requirement
         com.robinzon.medicationwizard.utils.Statisticator.resetUsageMinutesForAds(activity);
     }
 
     private void setBannerClickTimeStamp() {
-        this.bannerClickTimeStamp = System.currentTimeMillis();
+        this.bannerClickTimeStamp = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
     }
 
     public long getFullScreenNonUserInitiatedAdDismissTimeStamp() {
@@ -340,7 +340,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
 
     public boolean hasCoolDownForFullScreenNonUserInitiatedAd() {
         final long coolDownMillis = TimeManager.getInstance().toMillisFromSeconds(getCoolDownSecondsForFullScreenNonUserInitiatedAd());
-        final long now = System.currentTimeMillis();
+        final long now = TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
         final long lastFullAdDismiss = getFullScreenNonUserInitiatedAdDismissTimeStamp();
         final long lastBannerClick = getBannerClickTimeStamp();
         return (now - lastFullAdDismiss) > coolDownMillis &&

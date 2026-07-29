@@ -373,4 +373,14 @@
     <string name="unit_mcg">mcg</string>
     <string name="unit_ml">mL</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">menambah atau mengubah foto obat selama 1 jam</string>
+    <string name="btn_take_photo">Ambil Foto</string>
+    <string name="btn_upload_photo">Unggah Foto</string>
+    <string name="photo_feature_rational">Tonton video singkat untuk menambah atau mengubah foto obat selama 1 jam.</string>
+    <string name="photo_unlocked_toast">Fitur foto terbuka!</string>
+    <string name="placeholder_add_photo">Tambahkan foto obat Anda</string>
+    <string name="btn_rotate_left">Putar ke Kiri</string>
+    <string name="btn_rotate_right">Putar ke Kanan</string>
+    <string name="btn_remove_photo">Hapus Foto</string>
+    <string name="locked_photo_hint">Ketuk untuk Membuka</string>
 </resources>

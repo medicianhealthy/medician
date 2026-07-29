@@ -372,4 +372,14 @@
     <string name="unit_mcg">mcg</string>
     <string name="unit_ml">ml</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">adicionar ou alterar uma foto de medicamento por 1 hora</string>
+    <string name="btn_take_photo">Tirar foto</string>
+    <string name="btn_upload_photo">Carregar foto</string>
+    <string name="photo_feature_rational">Assista a um vídeo curto para adicionar ou alterar uma foto do seu medicamento por 1 hora.</string>
+    <string name="photo_unlocked_toast">Recurso de foto desbloqueado!</string>
+    <string name="placeholder_add_photo">Adicione uma foto do seu remédio</string>
+    <string name="btn_rotate_left">Girar para a esquerda</string>
+    <string name="btn_rotate_right">Girar para a direita</string>
+    <string name="btn_remove_photo">Remover foto</string>
+    <string name="locked_photo_hint">Toque para desbloquear</string>
 </resources>

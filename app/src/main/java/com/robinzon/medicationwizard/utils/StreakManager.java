@@ -59,7 +59,7 @@ public class StreakManager {
                 cal.add(Calendar.DAY_OF_YEAR, -1);
 
                 // Safety break: don't check more than a year
-                if (streak > 365 || Math.abs(System.currentTimeMillis() - cal.getTimeInMillis()) > 365L * 24 * 60 * 60 * 1000) {
+                if (streak > 365 || Math.abs(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() - cal.getTimeInMillis()) > 365L * 24 * 60 * 60 * 1000) {
                     break;
                 }
 

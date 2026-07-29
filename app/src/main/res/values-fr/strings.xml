@@ -373,4 +373,14 @@
     <string name="unit_mcg">mcg</string>
     <string name="unit_ml">ml</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">ajouter ou modifier une photo de médicament pendant 1 heure</string>
+    <string name="btn_take_photo">Prendre une photo</string>
+    <string name="btn_upload_photo">Télécharger une photo</string>
+    <string name="photo_feature_rational">Regardez une courte vidéo pour ajouter ou modifier une photo de votre médicament pendant 1 heure.</string>
+    <string name="photo_unlocked_toast">Fonction photo déverrouillée !</string>
+    <string name="placeholder_add_photo">Ajouter une photo de votre médicament</string>
+    <string name="btn_rotate_left">Faire pivoter vers la gauche</string>
+    <string name="btn_rotate_right">Faire pivoter vers la droite</string>
+    <string name="btn_remove_photo">Supprimer la photo</string>
+    <string name="locked_photo_hint">Appuyez pour déverrouiller</string>
 </resources>

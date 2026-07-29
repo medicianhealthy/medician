@@ -2,6 +2,9 @@ package com.robinzon.medicationwizard.utils;
 
 public class TimeManager {
 
+    public static final String KEY_CHEAT_FAKE_TIME_START = "cheat_fake_time_start";
+    public static final String KEY_CHEAT_REAL_TIME_AT_SET = "cheat_real_time_at_set";
+
     private static TimeManager sInstance;
 
     private TimeManager() {
@@ -12,6 +15,30 @@ public class TimeManager {
             sInstance = new TimeManager();
         }
         return sInstance;
+    }
+
+    /**
+     * @return The current time in milliseconds. If a fake time cheat is active, 
+     * returns the fake time incremented by the real-time elapsed since it was set.
+     */
+    public long getCurrentTimeInMillisFakeOrReal() {
+        SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(com.robinzon.medicationwizard.MedicationWizardApplication.getContext());
+        long fakeStart = prefs.getLong(KEY_CHEAT_FAKE_TIME_START, 0);
+        long realAtSet = prefs.getLong(KEY_CHEAT_REAL_TIME_AT_SET, 0);
+
+        if (fakeStart == 0) {
+            return System.currentTimeMillis();
+        }
+
+        long elapsedRealTime = System.currentTimeMillis() - realAtSet;
+        return fakeStart + elapsedRealTime;
+    }
+
+    /**
+     * @return The actual system time in milliseconds, bypassing any cheats.
+     */
+    public long getRealTimeInMillis() {
+        return System.currentTimeMillis();
     }
 
     //Milliseconds

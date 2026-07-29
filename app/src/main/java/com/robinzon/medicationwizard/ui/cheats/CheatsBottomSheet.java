@@ -5,21 +5,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.MedicationWizardBottomSheet;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
+import com.robinzon.medicationwizard.utils.TimeManager;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class CheatsBottomSheet extends MedicationWizardBottomSheet {
 
     private final android.os.Handler updateHandler = new android.os.Handler(android.os.Looper.getMainLooper());
     private Runnable updateRunnable;
+    private View btnClearTime;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +52,8 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         MaterialCheckBox checkShowAds = view.findViewById(R.id.check_show_ads);
         TextView txtConfigInfo = view.findViewById(R.id.txt_config_info);
         View btnApply = view.findViewById(R.id.btn_apply);
+        View btnSetTime = view.findViewById(R.id.btn_set_fake_time);
+        btnClearTime = view.findViewById(R.id.btn_clear_fake_time);
 
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(requireContext());
 
@@ -52,7 +65,7 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
             public void run() {
                 if (isAdded()) {
                     setupConfigInfo(txtConfigInfo);
-                    updateHandler.postDelayed(this, 2500); // Refresh every 2.5 seconds
+                    updateHandler.postDelayed(this, 1000); // Refresh faster to see clock tick
                 }
             }
         };
@@ -61,22 +74,75 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         btnApply.setOnClickListener(v -> {
             prefs.setBoolean(AppConfig.KEY_CHEAT_PREMIUM, checkPremium.isChecked());
             prefs.setBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, checkShowAds.isChecked());
-
-            // Persist to the main billing cache as well so it survives process death
             prefs.setBoolean("cached_premium_status", checkPremium.isChecked());
-
             AppConfig.IS_PREMIUM = checkPremium.isChecked();
             AppConfig.FORCED_ADS_VISIBLE = checkShowAds.isChecked();
-
-            // Perform a clean restart of the activity
-            android.content.Intent intent = requireActivity().getIntent();
-            requireActivity().finish();
-            requireActivity().overridePendingTransition(0, 0);
-            startActivity(intent);
-            requireActivity().overridePendingTransition(0, 0);
-
-            dismiss();
+            restartApp();
         });
+
+        btnSetTime.setOnClickListener(v -> showDateTimePicker());
+        btnClearTime.setOnClickListener(v -> {
+            prefs.setLong(TimeManager.KEY_CHEAT_FAKE_TIME_START, 0);
+            updateTimeUi();
+            Toast.makeText(requireContext(), "Fake time cleared", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void showDateTimePicker() {
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Fake Date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build();
+
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.MINUTE, 10);
+            
+            MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(now.get(Calendar.HOUR_OF_DAY))
+                    .setMinute(now.get(Calendar.MINUTE))
+                    .setTitleText("Select Fake Time")
+                    .build();
+
+            timePicker.addOnPositiveButtonClickListener(v -> {
+                Calendar result = Calendar.getInstance();
+                result.setTimeInMillis(selection);
+                result.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                result.set(Calendar.MINUTE, timePicker.getMinute());
+                result.set(Calendar.SECOND, 0);
+                result.set(Calendar.MILLISECOND, 0);
+
+                long fakeStart = result.getTimeInMillis();
+                long realAtSet = System.currentTimeMillis();
+
+                SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(requireContext());
+                prefs.setLong(TimeManager.KEY_CHEAT_FAKE_TIME_START, fakeStart);
+                prefs.setLong(TimeManager.KEY_CHEAT_REAL_TIME_AT_SET, realAtSet);
+
+                updateTimeUi();
+                Toast.makeText(requireContext(), "Fake time set", Toast.LENGTH_SHORT).show();
+            });
+            timePicker.show(getChildFragmentManager(), "TIME_PICKER");
+        });
+        datePicker.show(getChildFragmentManager(), "DATE_PICKER");
+    }
+
+    private void updateTimeUi() {
+        // Refresh the clear button visibility
+        long fakeTime = SharedPreferencesManager.getInstance(requireContext()).getLong(TimeManager.KEY_CHEAT_FAKE_TIME_START, 0);
+        if (btnClearTime != null) {
+            btnClearTime.setVisibility(fakeTime > 0 ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void restartApp() {
+        android.content.Intent intent = requireActivity().getIntent();
+        requireActivity().finish();
+        requireActivity().overridePendingTransition(0, 0);
+        startActivity(intent);
+        requireActivity().overridePendingTransition(0, 0);
+        dismiss();
     }
 
     @Override
@@ -89,6 +155,19 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         RemoteConfigManager remoteConfigManager = RemoteConfigManager.getInstance();
         StringBuilder builder = new StringBuilder();
         java.util.Locale locale = java.util.Locale.getDefault();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", locale);
+
+        long currentTime = TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
+        long fakeStart = SharedPreferencesManager.getInstance(requireContext()).getLong(TimeManager.KEY_CHEAT_FAKE_TIME_START, 0);
+
+        builder.append("--- Time Status ---\n");
+        builder.append("Active Time: ").append(sdf.format(new Date(currentTime)));
+        if (fakeStart > 0) {
+            builder.append(" (FAKE)\n");
+        } else {
+            builder.append(" (REAL)\n");
+        }
+        builder.append("\n");
 
         builder.append("--- Remote Config Defaults/Server ---\n");
         builder.append("Int. Cooldown: ").append(remoteConfigManager.getAdInterstitialCoolDownSeconds()).append("s\n");
@@ -113,8 +192,12 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         builder.append("Support: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.SUPPORT)).append("\n");
         builder.append("Backup: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BACKUP)).append("\n");
         builder.append("Quiet Hours: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.QUIET_HOURS)).append("\n");
-        builder.append("Bypass Vol: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BYPASS_VOLUME));
+        builder.append("Bypass Vol: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.BYPASS_VOLUME)).append("\n");
+        builder.append("Photo: ").append(AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.PHOTO));
 
         textView.setText(builder.toString());
+        if (fakeStart > 0 && btnClearTime != null) {
+            btnClearTime.setVisibility(View.VISIBLE);
+        }
     }
 }

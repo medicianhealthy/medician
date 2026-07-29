@@ -62,7 +62,7 @@ public class ReminderManager {
 
         long time = instance.getScheduledTime();
         // Allow a 1-minute grace period for "now" reminders to account for processing time
-        if (time < System.currentTimeMillis() - 60000) return;
+        if (time < com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() - 60000) return;
 
         Context appContext = context.getApplicationContext();
         AlarmManager alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);

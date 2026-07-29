@@ -187,6 +187,12 @@
     <string name="streak_empty">¡Empieza tu racha mágica hoy!</string>
     <string name="settings_title">Ajustes</string>
 
+    <!-- Developer Cheats -->
+    <string name="cheats_title">Opciones de desarrollador</string>
+    <string name="cheats_is_premium">Es Premium</string>
+    <string name="cheats_show_ads">Mostrar anuncios (Forzar)</string>
+    <string name="cheats_apply_restart">Aplicar y reiniciar</string>
+
     <string name="notif_already_active">¡Las notificaciones ya están activas!</string>
     <string name="data_cleared">Datos borrados.</string>
     <string name="support_coming_soon">¡Soporte disponible próximamente!</string>
@@ -372,4 +378,14 @@
     <string name="unit_mcg">mcg</string>
     <string name="unit_ml">ml</string>
     <string name="unit_percentage">%</string>
+    <string name="benefit_photo">añadir o cambiar una foto de medicamento por 1 hora</string>
+    <string name="btn_take_photo">Tomar foto</string>
+    <string name="btn_upload_photo">Subir foto</string>
+    <string name="photo_feature_rational">Mira un video corto para añadir o cambiar una foto de tu medicamento por 1 hora.</string>
+    <string name="photo_unlocked_toast">¡Función de foto desbloqueada!</string>
+    <string name="placeholder_add_photo">Añade una foto de tu medicamento</string>
+    <string name="btn_rotate_left">Girar a la izquierda</string>
+    <string name="btn_rotate_right">Girar a la derecha</string>
+    <string name="btn_remove_photo">Eliminar foto</string>
+    <string name="locked_photo_hint">Toca para desbloquear</string>
 </resources>
