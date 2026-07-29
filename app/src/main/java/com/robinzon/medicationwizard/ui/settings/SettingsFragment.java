@@ -260,9 +260,14 @@ public class SettingsFragment extends MedicationWizardFragment {
 
         binding.txtVersion.setOnClickListener(v -> {
             cheatTapCount++;
-            if (cheatTapCount >= 10) {
+            int threshold = BuildConfig.DEBUG ? 1 : 10;
+            if (cheatTapCount >= threshold) {
                 cheatTapCount = 0;
-                showCheatPasswordDialog();
+                if (BuildConfig.DEBUG) {
+                    new com.robinzon.medicationwizard.ui.cheats.CheatsBottomSheet().show(getChildFragmentManager(), "CheatsBS");
+                } else {
+                    showCheatPasswordDialog();
+                }
             }
         });
 

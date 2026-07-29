@@ -82,6 +82,14 @@ public class MedicationsListFragment extends MedicationWizardFragment {
         setupSwipeRefresh();
         setupEmptyView();
 
+        // Listen for feature unlock (e.g., photo pass after RV) to refresh the list
+        getParentFragmentManager().setFragmentResultListener("feature_unlocked", getViewLifecycleOwner(), (key, bundle) -> {
+            String type = bundle.getString("feature_type");
+            if (com.robinzon.medicationwizard.AppConfig.FeaturePassType.PHOTO.name().equals(type)) {
+                if (adapter != null) adapter.notifyDataSetChanged();
+            }
+        });
+
         // Ensure empty state is not hidden by ad banner
         setPaddingForRecyclerView(binding.emptyLayout.emptyStateContainer);
 
@@ -162,7 +170,7 @@ public class MedicationsListFragment extends MedicationWizardFragment {
             });
         }
 
-        adapter = new MedicationsListAdapter();
+        adapter = new MedicationsListAdapter(getParentFragmentManager());
         adapter.setOnMedicationActionListener(new MedicationsListAdapter.OnMedicationActionListener() {
             @Override
             public void onDelete(Medication medication, int position) {

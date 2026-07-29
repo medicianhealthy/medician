@@ -1,6 +1,5 @@
 package com.robinzon.medicationwizard.ui.medicationslist;
 
-import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -38,7 +37,12 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
 
     private final List<Medication> medications = new ArrayList<>();
     private final Set<String> expandedIds = new HashSet<>();
+    private final androidx.fragment.app.FragmentManager fragmentManager;
     private OnMedicationActionListener listener;
+
+    public MedicationsListAdapter(androidx.fragment.app.FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+    }
 
     public void setOnMedicationActionListener(OnMedicationActionListener listener) {
         this.listener = listener;
@@ -198,10 +202,9 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                             binding.medPhoto.setColorFilter(new ColorMatrixColorFilter(matrix));
 
                             binding.layoutPhotoLocked.setOnClickListener(v -> {
-                                Context ctx = binding.getRoot().getContext();
-                                if (ctx instanceof FragmentActivity) {
+                                if (fragmentManager != null) {
                                     FeatureRationalBottomSheet.newInstance(AppConfig.FeaturePassType.PHOTO)
-                                            .show(((FragmentActivity) ctx).getSupportFragmentManager(), "UnlockPhoto");
+                                            .show(fragmentManager, "UnlockPhoto");
                                 }
                             });
                         } else {
