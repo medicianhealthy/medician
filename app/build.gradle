@@ -107,6 +107,10 @@ dependencies {
     // Play Billing
     implementation libs.billing
 
+    // Networking
+    implementation libs.retrofit
+    implementation libs.retrofit.converter.gson
+
     // Google User Messaging Platform (Consent)
     implementation libs.ump
 

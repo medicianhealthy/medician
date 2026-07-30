@@ -47,12 +47,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
+import com.robinzon.medicationwizard.api.NLMClient;
+import com.robinzon.medicationwizard.api.models.RxNormSpellingResponse;
 import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.EMeasurementUnit;
@@ -69,9 +72,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A highly interactive Material 3 BottomSheet for adding or editing medications.
@@ -83,6 +91,11 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private Medication medication = new Medication();
     private boolean hasAttemptedSave;
     private boolean isEditMode = false;
+
+    // Search & Autocomplete
+    private final android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private Runnable searchRunnable;
+    private boolean isSelectionInProgress = false;
 
     // Photo related
     private Uri tempCameraUri;
@@ -202,6 +215,16 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         setupDropdowns(view);
         TextInputLayout layoutForm = view.findViewById(R.id.layout_med_form);
         if (layoutForm != null) layoutForm.setHint(R.string.hint_form);
+
+        MaterialAutoCompleteTextView nameEdit = getCommercialNameInputEditText(view);
+        if (nameEdit != null) {
+            nameEdit.setOnItemClickListener((parent, v, position, id) -> {
+                isSelectionInProgress = true;
+                String selected = (String) parent.getItemAtPosition(position);
+                nameEdit.setText(selected, false);
+                hideKeyboard(nameEdit);
+            });
+        }
 
         setupInstructions(view);
         setTextChangeListeners(view);
@@ -426,7 +449,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private void preFillData(View view) {
         TextView titleView = getTitleTextView(view);
         if (titleView != null) titleView.setText(medication.getCommercialName());
-        TextInputEditText nameEdit = getCommercialNameInputEditText(view);
+        MaterialAutoCompleteTextView nameEdit = getCommercialNameInputEditText(view);
         if (nameEdit != null) nameEdit.setText(medication.getCommercialName());
         TextInputEditText amountEdit = getAmountInputEditText(view);
         if (amountEdit != null) {
@@ -508,7 +531,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     private void setTextChangeListeners(@NonNull final View mainView) {
-        final TextInputEditText commercialNameInputEditText = getCommercialNameInputEditText(mainView);
+        final MaterialAutoCompleteTextView commercialNameInputEditText = getCommercialNameInputEditText(mainView);
         if (null != commercialNameInputEditText) {
             commercialNameInputEditText.addTextChangedListener(getTextWatcher(commercialNameInputEditText, mainView));
         }
@@ -547,11 +570,25 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                     }
                 }
                 TextView titleView = getTitleTextView(mainView);
-                if (titleView != null && editText.getId() == R.id.med_name_fragment_add_med) {
+                MaterialAutoCompleteTextView nameEdit = getCommercialNameInputEditText(mainView);
+                if (titleView != null && nameEdit != null && editText.getId() == R.id.med_name_fragment_add_med) {
                     if (trimmedInput.isEmpty()) {
                         titleView.setText(R.string.fragment_add_med_title);
                     } else {
                         titleView.setText(trimmedInput);
+                    }
+
+                    if (isSelectionInProgress) {
+                        searchHandler.removeCallbacksAndMessages(null);
+                        isSelectionInProgress = false;
+                        return;
+                    }
+
+                    // Trigger Search with Debounce & Length check
+                    searchHandler.removeCallbacks(searchRunnable);
+                    searchRunnable = () -> performMedicationSearch(trimmedInput, nameEdit);
+                    if (trimmedInput.length() >= 3) {
+                        searchHandler.postDelayed(searchRunnable, 300);
                     }
                 }
             }
@@ -832,7 +869,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     private void populateMedication(@NonNull View view) {
-        final TextInputEditText nameInputEditText = getCommercialNameInputEditText(view);
+        final MaterialAutoCompleteTextView nameInputEditText = getCommercialNameInputEditText(view);
         if (nameInputEditText != null && nameInputEditText.getText() != null) {
             medication.setCommercialName(nameInputEditText.getText().toString());
         }
@@ -933,7 +970,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     @Nullable
-    private TextInputEditText getCommercialNameInputEditText(@NonNull View view) {
+    private MaterialAutoCompleteTextView getCommercialNameInputEditText(@NonNull View view) {
         return view.findViewById(R.id.med_name_fragment_add_med);
     }
 
@@ -955,5 +992,87 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     @Nullable
     private TextView getTitleTextView(View mainView) {
         return mainView.findViewById(R.id.title_fragment_add_med);
+    }
+
+    private void performMedicationSearch(String query, MaterialAutoCompleteTextView autoCompleteTextView) {
+        if (query.length() < 3) return;
+
+        NLMClient.getService().searchMedications(query).enqueue(new Callback<List<Object>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Object>> call, @NonNull Response<List<Object>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().size() > 1) {
+                    // RxTerms response: [total, [names], null, [details]]
+                    List<String> names = (List<String>) response.body().get(1);
+                    if (names != null && !names.isEmpty()) {
+                        updateAutoCompleteAdapter(names, autoCompleteTextView);
+                    } else {
+                        // No results, try fuzzy matching (spelling suggestions)
+                        performSpellingSearch(query, autoCompleteTextView);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Object>> call, @NonNull Throwable t) {
+                // Graceful failure (Offline or server error)
+            }
+        });
+    }
+
+    private void performSpellingSearch(String query, MaterialAutoCompleteTextView autoCompleteTextView) {
+        NLMClient.getService().getSpellingSuggestions(query).enqueue(new Callback<RxNormSpellingResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<RxNormSpellingResponse> call, @NonNull Response<RxNormSpellingResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().suggestionGroup != null) {
+                    RxNormSpellingResponse.SuggestionList suggestionList = response.body().suggestionGroup.suggestionList;
+                    if (suggestionList != null && suggestionList.suggestions != null && !suggestionList.suggestions.isEmpty()) {
+                        updateAutoCompleteAdapter(suggestionList.suggestions, autoCompleteTextView);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RxNormSpellingResponse> call, @NonNull Throwable t) {
+                // Graceful failure
+            }
+        });
+    }
+
+    private void updateAutoCompleteAdapter(List<String> suggestions, MaterialAutoCompleteTextView autoCompleteTextView) {
+        if (!isAdded() || getContext() == null) return;
+
+        List<String> formattedSuggestions = new ArrayList<>();
+        for (String s : suggestions) {
+            formattedSuggestions.add(toTitleCase(s));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.item_dropdown_menu, formattedSuggestions);
+        autoCompleteTextView.setAdapter(adapter);
+        // Only show if user is still focused and typing
+        if (autoCompleteTextView.hasFocus()) {
+            autoCompleteTextView.showDropDown();
+        }
+    }
+
+    private String toTitleCase(String input) {
+        if (input == null || input.isEmpty()) return input;
+        
+        String clean = input.trim();
+        if (clean.endsWith(",")) clean = clean.substring(0, clean.length() - 1);
+        
+        StringBuilder titleCase = new StringBuilder(clean.length());
+        boolean nextTitleCase = true;
+
+        for (char c : clean.toLowerCase().toCharArray()) {
+            if (Character.isSpaceChar(c) || c == '-' || c == '/' || c == '(' || c == ')' || c == '[' || c == ']' || c == ',' || c == '.' || c == ':') {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toUpperCase(c);
+                nextTitleCase = false;
+            }
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
     }
 }

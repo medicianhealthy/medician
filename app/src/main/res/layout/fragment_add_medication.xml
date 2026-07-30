@@ -32,17 +32,21 @@
                 android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:hint="@string/hint_med_name">
+                android:hint="@string/hint_med_name"
+                app:endIconMode="none"
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:startIconTint="?attr/colorPrimary">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:id="@+id/med_name_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords" />
+                    android:inputType="textCapWords"
+                    android:popupBackground="@drawable/bg_dropdown_popup" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
