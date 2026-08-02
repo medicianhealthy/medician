@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +29,7 @@ import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.databinding.FragmentTodaysMedicationsBinding;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
+import com.robinzon.medicationwizard.managers.MagicManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 
 import java.util.ArrayList;
@@ -350,14 +352,39 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     private void applyScheduledState(DoseInstanceEntity instance) {
-        instance.setStatus("SCHEDULED");
-        instance.setActionTime(0);
+        revertAction(instance);
+    }
+
+    private void revertAction(DoseInstanceEntity instance) {
         final Context appContext = requireContext().getApplicationContext();
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase db = AppDatabase.getDatabase(appContext);
-            db.doseInstanceDao().update(instance);
-            com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
-        });
+        if (instance.isPrn()) {
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                AppDatabase db = AppDatabase.getDatabase(appContext);
+                if (instance.getId() != null) {
+                    db.doseInstanceDao().deleteByIdInternal(instance.getId());
+                }
+
+                // Recalculate last taken time for library stopwatch
+                DoseInstanceEntity latest = db.doseInstanceDao().getLatestTakenInstance(instance.getMedicationId());
+                List<com.robinzon.medicationwizard.entities.Medication> allMeds =
+                        com.robinzon.medicationwizard.entities.Medication.getSavedMedications(appContext);
+                for (com.robinzon.medicationwizard.entities.Medication m : allMeds) {
+                    if (m.getId().equals(instance.getMedicationId())) {
+                        m.setLastTakenTimestamp(latest != null ? latest.getActionTime() : null);
+                        m.addToMedicationList(appContext);
+                        break;
+                    }
+                }
+            });
+        } else {
+            instance.setStatus("SCHEDULED");
+            instance.setActionTime(0);
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                AppDatabase db = AppDatabase.getDatabase(appContext);
+                db.doseInstanceDao().update(instance);
+                com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
+            });
+        }
     }
 
     private void showRecoveryDialog(List<DoseInstanceEntity> doses) {
@@ -445,14 +472,41 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
         instance.setStatus(status);
+        long actionTime = -1;
         if (instance.getActionTime() <= 0) {
-            instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
+            actionTime = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
+            instance.setActionTime(actionTime);
+        } else {
+            actionTime = instance.getActionTime();
         }
+
+        final long finalActionTime = actionTime;
         final Context appContext = requireContext().getApplicationContext();
+        
+        // --- Magic Bonus Logic: Early Bird ---
+        long diffMillis = Math.abs(finalActionTime - instance.getScheduledTime());
+        if (diffMillis <= 5 * 60 * 1000 && "TAKEN".equals(status)) {
+            MagicManager.getInstance(appContext).addMagics(1);
+            Toast.makeText(appContext, "Early Bird Bonus! +1 Magic 🐦✨", Toast.LENGTH_SHORT).show();
+        }
+
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
             if (!"SCHEDULED".equals(status)) {
                 com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
+                
+                // Update parent medication definition's last taken time if this was a TAKE action
+                if ("TAKEN".equals(status)) {
+                    List<com.robinzon.medicationwizard.entities.Medication> allMeds = 
+                            com.robinzon.medicationwizard.entities.Medication.getSavedMedications(appContext);
+                    for (com.robinzon.medicationwizard.entities.Medication m : allMeds) {
+                        if (m.getId().equals(instance.getMedicationId())) {
+                            m.setLastTakenTimestamp(finalActionTime);
+                            m.addToMedicationList(appContext);
+                            break;
+                        }
+                    }
+                }
             }
         });
         com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(appContext);
@@ -461,14 +515,20 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         else if ("SKIPPED".equals(status)) localizedStatus = getString(R.string.button_skip);
 
         Snackbar.make(mBinding.getRoot(), getString(R.string.medication_status_format, instance.getMedicationName(), localizedStatus), Snackbar.LENGTH_LONG)
-                .setAction(R.string.button_undo, v -> {
-                    instance.setStatus("SCHEDULED");
-                    instance.setActionTime(0);
-                    AppDatabase.databaseWriteExecutor.execute(() -> {
-                        AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
-                        com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
-                    });
-                }).show();
+                .setAction(R.string.button_undo, v -> revertAction(instance)).show();
+
+        // --- Magic Bonus Logic: Perfect Day ---
+        if ("TAKEN".equals(status)) {
+            List<DoseInstanceEntity> currentList = mViewModel.getTodaysMedications().getValue();
+            if (MagicManager.getInstance(requireContext()).checkAndGrantPerfectDayBonus(currentList)) {
+                com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+                dialog.setTitle("Perfect Day! 🏆");
+                dialog.setMessage("You took all your doses today! You earned +1 Magic for your consistency.");
+                dialog.setPositiveButton("Awesome!", null);
+                dialog.show();
+            }
+        }
+
         requestReviewIfEligible();
     }
 
@@ -493,7 +553,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     private void showReschedulePicker(DoseInstanceEntity instance) {
-        MaterialTimePicker picker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).setHour(12).setMinute(0).setTitleText(getString(R.string.button_reschedule) + " " + instance.getMedicationName()).build();
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(12)
+                .setMinute(0)
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
+                .setTitleText(getString(R.string.button_reschedule) + " " + instance.getMedicationName())
+                .build();
         final Context appContext = requireContext().getApplicationContext();
         picker.addOnPositiveButtonClickListener(v -> {
             java.util.Calendar now = java.util.Calendar.getInstance();
@@ -517,7 +583,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     }
 
     private void showGroupReschedulePicker(List<DoseInstanceEntity> doses) {
-        MaterialTimePicker picker = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).setHour(12).setMinute(0).setTitleText(R.string.button_reschedule_all).build();
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(12)
+                .setMinute(0)
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
+                .setTitleText(R.string.button_reschedule_all)
+                .build();
         final Context appContext = requireContext().getApplicationContext();
         picker.addOnPositiveButtonClickListener(v -> {
             java.util.Calendar now = java.util.Calendar.getInstance();

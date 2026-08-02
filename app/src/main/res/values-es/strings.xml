@@ -255,6 +255,7 @@
     <string name="frequency_3_times">3 veces al día</string>
     <string name="frequency_4_times">4 veces al día</string>
     <string name="frequency_5_times">5 veces al día</string>
+    <string name="frequency_as_needed">Según sea necesario (PRN)</string>
     <string name="time_set_format">Hora fijada: %1$s</string>
     <string name="select_time_index_format">Elegir Hora %1$d</string>
     <string name="error_pick_time_title">Elige una hora</string>
@@ -388,4 +389,8 @@
     <string name="btn_rotate_right">Girar a la derecha</string>
     <string name="btn_remove_photo">Eliminar foto</string>
     <string name="locked_photo_hint">Toca para desbloquear</string>
+    <string name="action_log_dose">Registrar toma</string>
+    <string name="action_add_new_med">Nuevo medicamento</string>
+    <string name="dialog_add_choice_title">¿Qué quieres hacer?</string>
+    <string name="stopwatch_last_dose_format">Última toma: hace %s</string>
 </resources>

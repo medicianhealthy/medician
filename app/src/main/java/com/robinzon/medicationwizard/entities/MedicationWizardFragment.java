@@ -330,21 +330,26 @@ public class MedicationWizardFragment extends Fragment {
     }
 
     private void showTimePickerForTimingClarification(com.robinzon.medicationwizard.database.DoseInstanceEntity instance, StatusUpdateCallback callback) {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        int hour = calendar.get(java.util.Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(java.util.Calendar.MINUTE);
+        com.google.android.material.timepicker.MaterialTimePicker picker = new com.google.android.material.timepicker.MaterialTimePicker.Builder()
+                .setTimeFormat(com.google.android.material.timepicker.TimeFormat.CLOCK_24H)
+                .setHour(java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY))
+                .setMinute(java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE))
+                .setInputMode(com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK)
+                .setTitleText(R.string.button_pick_time)
+                .build();
 
-        android.app.TimePickerDialog timePickerDialog = new android.app.TimePickerDialog(requireContext(), (view, hourOfDay, minuteOfHour) -> {
+        picker.addOnPositiveButtonClickListener(v -> {
             java.util.Calendar pickedCalendar = java.util.Calendar.getInstance();
-            pickedCalendar.set(java.util.Calendar.HOUR_OF_DAY, hourOfDay);
-            pickedCalendar.set(java.util.Calendar.MINUTE, minuteOfHour);
+            pickedCalendar.set(java.util.Calendar.HOUR_OF_DAY, picker.getHour());
+            pickedCalendar.set(java.util.Calendar.MINUTE, picker.getMinute());
             pickedCalendar.set(java.util.Calendar.SECOND, 0);
             pickedCalendar.set(java.util.Calendar.MILLISECOND, 0);
 
             instance.setActionTime(pickedCalendar.getTimeInMillis());
             callback.onApply();
-        }, hour, minute, android.text.format.DateFormat.is24HourFormat(requireContext()));
-        timePickerDialog.show();
+        });
+
+        picker.show(getChildFragmentManager(), "TimingClarificationPicker");
     }
 
     @Override

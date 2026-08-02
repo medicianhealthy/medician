@@ -250,6 +250,7 @@
     <string name="frequency_3_times">3-mal täglich</string>
     <string name="frequency_4_times">4-mal täglich</string>
     <string name="frequency_5_times">5-mal täglich</string>
+    <string name="frequency_as_needed">Nach Bedarf (PRN)</string>
     <string name="time_set_format">Zeit eingestellt: %1$s</string>
     <string name="select_time_index_format">Wähle Zeit %1$d</string>
     <string name="error_pick_time_title">Zeit wählen</string>
@@ -383,4 +384,8 @@
     <string name="btn_rotate_right">Nach rechts drehen</string>
     <string name="btn_remove_photo">Foto entfernen</string>
     <string name="locked_photo_hint">Zum Entsperren tippen</string>
+    <string name="action_log_dose">Dosis protokollieren</string>
+    <string name="action_add_new_med">Neues Medikament</string>
+    <string name="dialog_add_choice_title">Was möchtest du tun?</string>
+    <string name="stopwatch_last_dose_format">Letzte Dosis: vor %s</string>
 </resources>

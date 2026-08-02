@@ -1,5 +1,6 @@
 package com.robinzon.medicationwizard.ui.history;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -217,6 +218,27 @@ public class HistoryFragment extends MedicationWizardFragment {
     }
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
+        final Context appContext = requireContext().getApplicationContext();
+        if ("SCHEDULED".equals(status) && instance.isPrn()) {
+            AppDatabase.databaseWriteExecutor.execute(() -> {
+                AppDatabase db = AppDatabase.getDatabase(appContext);
+                db.doseInstanceDao().deleteByIdInternal(instance.getId());
+                
+                // Update library stopwatch
+                DoseInstanceEntity latest = db.doseInstanceDao().getLatestTakenInstance(instance.getMedicationId());
+                List<com.robinzon.medicationwizard.entities.Medication> allMeds = 
+                        com.robinzon.medicationwizard.entities.Medication.getSavedMedications(appContext);
+                for (com.robinzon.medicationwizard.entities.Medication m : allMeds) {
+                    if (m.getId().equals(instance.getMedicationId())) {
+                        m.setLastTakenTimestamp(latest != null ? latest.getActionTime() : null);
+                        m.addToMedicationList(appContext);
+                        break;
+                    }
+                }
+            });
+            return;
+        }
+
         instance.setStatus(status);
         if ("TAKEN".equals(status)) {
             if (instance.getActionTime() <= 0) {
@@ -227,11 +249,11 @@ public class HistoryFragment extends MedicationWizardFragment {
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
-            AppDatabase.getDatabase(requireContext()).doseInstanceDao().update(instance);
+            AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
             if (!"SCHEDULED".equals(status)) {
-                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(requireContext(), instance.getId());
+                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
             } else {
-                com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(requireContext(), instance);
+                com.robinzon.medicationwizard.reminders.ReminderManager.scheduleReminder(appContext, instance);
             }
         });
     }

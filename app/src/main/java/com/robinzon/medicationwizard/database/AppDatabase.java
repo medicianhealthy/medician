@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
  * keep all heavy database operations off the Main UI Thread.
  * </p>
  */
-@Database(entities = {DoseInstanceEntity.class}, version = 6, exportSchema = false)
+@Database(entities = {DoseInstanceEntity.class}, version = 7, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     /**

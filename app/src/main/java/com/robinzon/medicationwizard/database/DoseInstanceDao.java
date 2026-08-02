@@ -78,6 +78,12 @@ public interface DoseInstanceDao {
     @Query("SELECT * FROM dose_instances WHERE medicationId = :medicationId AND scheduledTime = :time LIMIT 1")
     DoseInstanceEntity getInstanceByTime(String medicationId, long time);
 
+    @Query("SELECT * FROM dose_instances WHERE medicationId = :medId AND status = 'TAKEN' ORDER BY actionTime DESC LIMIT 1")
+    DoseInstanceEntity getLatestTakenInstance(String medId);
+
+    @Query("DELETE FROM dose_instances WHERE id = :id")
+    void deleteByIdInternal(int id);
+
     /**
      * Returns medications scheduled for a specific time window, sorted by schedule time.
      * Used primary for the "Today's Medications" and "History" views.

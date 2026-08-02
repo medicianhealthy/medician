@@ -1,6 +1,7 @@
 package com.robinzon.medicationwizard;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,9 +31,11 @@ import com.robinzon.medicationwizard.backup.GoogleAccountManager;
 import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.notifications.ConsentManager;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
+import com.robinzon.medicationwizard.managers.MagicManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
+import com.robinzon.medicationwizard.ui.magics.MagicEarnBottomSheet;
 import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.Logger;
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private final Handler adCheckHandler = new Handler(Looper.getMainLooper());
     private Runnable adCheckRunnable;
     private boolean mIsFabVisible = true;
+    private boolean isSpeedDialExpanded = false;
+    private SharedPreferences.OnSharedPreferenceChangeListener magicBalanceListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +74,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         loadCheats();
 
         mainBinding.appBarMain.fab.setOnClickListener(view -> {
-            AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
-            bottomSheet.show(getSupportFragmentManager(), "AddMedBottomSheet");
+            toggleSpeedDial(mainBinding);
+        });
+
+        mainBinding.appBarMain.fabLogDose.setOnClickListener(v -> {
+            toggleSpeedDial(mainBinding);
+            openLogDoseSheet();
+        });
+
+        mainBinding.appBarMain.fabAddNewMed.setOnClickListener(v -> {
+            toggleSpeedDial(mainBinding);
+            openAddMedSheet();
         });
 
         setSupportActionBar(mainBinding.appBarMain.toolbar);
@@ -111,6 +125,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
             refreshNavHeader();
 
+            magicBalanceListener = (sharedPreferences, key) -> {
+                if (AppConfig.KEY_MAGIC_BALANCE.equals(key)) {
+                    runOnUiThread(this::refreshNavHeader);
+                }
+            };
+            SharedPreferencesManager.getInstance(this).registerListener(magicBalanceListener);
+
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 invalidateOptionsMenu();
             });
@@ -141,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         adsManager = new AdsManager(this);
+
+        checkDailyMagicBonus();
 
         ConsentManager.gatherConsent(this, () -> {
             Logger.log("Ads", "Consent gathered, fetching Remote Config");
@@ -217,24 +240,38 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             android.widget.ImageView profileImage = headerView.findViewById(R.id.imageView);
             android.widget.TextView profileName = headerView.findViewById(R.id.textView);
 
-            if (!com.robinzon.medicationwizard.AppConfig.isPremium(this) || !com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
-                profileName.setText(R.string.nav_header_subtitle);
-                profileImage.setImageResource(R.mipmap.ic_launcher);
-                return;
+            // 1. Magic Balance & Listener (For all users)
+            android.widget.TextView magicBalance = headerView.findViewById(R.id.txt_magic_balance_header);
+            if (magicBalance != null) {
+                magicBalance.setText(getString(R.string.magic_balance_format, MagicManager.getInstance(this).getMagicBalance()));
+            }
+            View magicBtn = headerView.findViewById(R.id.btn_magic_header);
+            if (magicBtn != null) {
+                magicBtn.setOnClickListener(v -> {
+                    DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                    if (drawer != null) drawer.closeDrawer(GravityCompat.START);
+                    new MagicEarnBottomSheet().show(getSupportFragmentManager(), "MagicEarnBS");
+                });
             }
 
-            GoogleAccountManager accountManager = GoogleAccountManager.getInstance(this);
-            if (accountManager.isSignedIn()) {
-                String name = accountManager.getAccountName();
-                if (name != null) profileName.setText(name);
+            // 2. Profile Info (Depending on Premium/Cloud status)
+            if (com.robinzon.medicationwizard.AppConfig.isPremium(this) && com.robinzon.medicationwizard.AppConfig.CLOUD_BACKUP_ENABLED) {
+                GoogleAccountManager accountManager = GoogleAccountManager.getInstance(this);
+                if (accountManager.isSignedIn()) {
+                    String name = accountManager.getAccountName();
+                    if (name != null) profileName.setText(name);
 
-                String photoUrl = accountManager.getAccountPhotoUrl();
-                if (photoUrl != null) {
-                    com.bumptech.glide.Glide.with(this)
-                            .load(photoUrl)
-                            .circleCrop()
-                            .placeholder(R.mipmap.ic_launcher)
-                            .into(profileImage);
+                    String photoUrl = accountManager.getAccountPhotoUrl();
+                    if (photoUrl != null) {
+                        com.bumptech.glide.Glide.with(this)
+                                .load(photoUrl)
+                                .circleCrop()
+                                .placeholder(R.mipmap.ic_launcher)
+                                .into(profileImage);
+                    }
+                } else {
+                    profileName.setText(R.string.nav_header_subtitle);
+                    profileImage.setImageResource(R.mipmap.ic_launcher);
                 }
             } else {
                 profileName.setText(R.string.nav_header_subtitle);
@@ -322,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
         if (itemId == R.id.action_add_med) {
-            new com.robinzon.medicationwizard.ui.AddMedicationBottomSheet().show(getSupportFragmentManager(), "AddMedMain");
+            showAddChoiceDialog();
             return true;
         }
 
@@ -356,6 +393,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             getAdsManager().onDestroy();
         }
         stopAdCheckTimer();
+        if (magicBalanceListener != null) {
+            SharedPreferencesManager.getInstance(this).unregisterListener(magicBalanceListener);
+        }
         super.onDestroy();
     }
 
@@ -436,5 +476,136 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         SharedPreferencesManager sharedPreferencesManager = SharedPreferencesManager.getInstance(this);
         AppConfig.IS_PREMIUM = sharedPreferencesManager.getBoolean(AppConfig.KEY_CHEAT_PREMIUM, AppConfig.IS_PREMIUM);
         AppConfig.FORCED_ADS_VISIBLE = sharedPreferencesManager.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE);
+    }
+
+    private void toggleSpeedDial(ActivityMainBinding binding) {
+        isSpeedDialExpanded = !isSpeedDialExpanded;
+        if (isSpeedDialExpanded) {
+            expandFab(binding);
+        } else {
+            collapseFab(binding);
+        }
+    }
+
+    private void expandFab(ActivityMainBinding binding) {
+        binding.appBarMain.layoutFabLogDose.setVisibility(View.VISIBLE);
+        binding.appBarMain.layoutFabAddMed.setVisibility(View.VISIBLE);
+
+        binding.appBarMain.fab.animate().rotation(45f).setDuration(200).start();
+
+        binding.appBarMain.layoutFabLogDose.setAlpha(0f);
+        binding.appBarMain.layoutFabLogDose.setTranslationY(20f);
+        binding.appBarMain.layoutFabLogDose.animate()
+                .translationY(0)
+                .alpha(1f)
+                .setDuration(200)
+                .start();
+
+        binding.appBarMain.layoutFabAddMed.setAlpha(0f);
+        binding.appBarMain.layoutFabAddMed.setTranslationY(20f);
+        binding.appBarMain.layoutFabAddMed.animate()
+                .translationY(0)
+                .alpha(1f)
+                .setDuration(200)
+                .start();
+    }
+
+    private void collapseFab(ActivityMainBinding binding) {
+        binding.appBarMain.fab.animate().rotation(0f).setDuration(200).start();
+
+        binding.appBarMain.layoutFabLogDose.animate()
+                .alpha(0f)
+                .translationY(20f)
+                .setDuration(200)
+                .withEndAction(() -> binding.appBarMain.layoutFabLogDose.setVisibility(View.GONE))
+                .start();
+
+        binding.appBarMain.layoutFabAddMed.animate()
+                .alpha(0f)
+                .translationY(20f)
+                .setDuration(200)
+                .withEndAction(() -> binding.appBarMain.layoutFabAddMed.setVisibility(View.GONE))
+                .start();
+    }
+
+    private void openLogDoseSheet() {
+        new com.robinzon.medicationwizard.ui.LogDoseBottomSheet().show(getSupportFragmentManager(), "LogDoseBS");
+    }
+
+    private void openAddMedSheet() {
+        new com.robinzon.medicationwizard.ui.AddMedicationBottomSheet().show(getSupportFragmentManager(), "AddMedBS");
+    }
+
+    private void checkDailyMagicBonus() {
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(this);
+        long lastLogin = sp.getLong("magic_last_login", 0);
+        long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
+
+        java.util.Calendar lastCal = java.util.Calendar.getInstance();
+        lastCal.setTimeInMillis(lastLogin);
+        java.util.Calendar nowCal = java.util.Calendar.getInstance();
+        nowCal.setTimeInMillis(now);
+
+        boolean isNewDay = lastLogin == 0 ||
+                lastCal.get(java.util.Calendar.DAY_OF_YEAR) != nowCal.get(java.util.Calendar.DAY_OF_YEAR) ||
+                lastCal.get(java.util.Calendar.YEAR) != nowCal.get(java.util.Calendar.YEAR);
+
+        if (isNewDay) {
+            MagicManager.getInstance(this).addMagics(1);
+            sp.setLong("magic_last_login", now);
+            // Optionally show a toast or dialog
+            Toast.makeText(this, getString(R.string.magic_earned_toast, 1) + " (Daily Bonus)", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void shareToWhatsApp() {
+        SharedPreferencesManager sp = SharedPreferencesManager.getInstance(this);
+        long lastShare = sp.getLong("magic_last_share", 0);
+        long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
+
+        java.util.Calendar lastCal = java.util.Calendar.getInstance();
+        lastCal.setTimeInMillis(lastShare);
+        java.util.Calendar nowCal = java.util.Calendar.getInstance();
+        nowCal.setTimeInMillis(now);
+
+        boolean alreadySharedToday = lastShare != 0 &&
+                lastCal.get(java.util.Calendar.DAY_OF_YEAR) == nowCal.get(java.util.Calendar.DAY_OF_YEAR) &&
+                lastCal.get(java.util.Calendar.YEAR) == nowCal.get(java.util.Calendar.YEAR);
+
+        if (alreadySharedToday) {
+            Toast.makeText(this, R.string.magic_share_limit_toast, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_message));
+        sendIntent.setType("text/plain");
+        sendIntent.setPackage("com.whatsapp");
+
+        try {
+            startActivity(sendIntent);
+            // Grant magics on return (simulated verification)
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                MagicManager.getInstance(this).addMagics(2);
+                sp.setLong("magic_last_share", now);
+                Toast.makeText(this, getString(R.string.magic_earned_toast, 2), Toast.LENGTH_SHORT).show();
+            }, 1500);
+        } catch (android.content.ActivityNotFoundException e) {
+            // Fallback to general share
+            sendIntent.setPackage(null);
+            startActivity(Intent.createChooser(sendIntent, getString(R.string.magic_earn_share_title)));
+        }
+    }
+
+    private void showAddChoiceDialog() {
+        String[] options = {getString(R.string.action_log_dose), getString(R.string.action_add_new_med)};
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(this);
+        dialog.setTitle(getString(R.string.dialog_add_choice_title));
+        dialog.setItems(options, (d, which) -> {
+            if (which == 0) openLogDoseSheet();
+            else openAddMedSheet();
+        });
+        dialog.show();
     }
 }

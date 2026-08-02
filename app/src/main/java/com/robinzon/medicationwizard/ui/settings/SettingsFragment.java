@@ -34,6 +34,10 @@ import com.robinzon.medicationwizard.backup.CloudBackupManager;
 import com.robinzon.medicationwizard.backup.CloudBackupSettings;
 import com.robinzon.medicationwizard.backup.DriveServiceHelper;
 import com.robinzon.medicationwizard.backup.GoogleAccountManager;
+import android.content.SharedPreferences;
+import com.robinzon.medicationwizard.managers.MagicManager;
+import com.robinzon.medicationwizard.ui.magics.MagicEarnBottomSheet;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import com.robinzon.medicationwizard.databinding.FragmentSettingsBinding;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
@@ -80,6 +84,7 @@ public class SettingsFragment extends MedicationWizardFragment {
     private int cheatTapCount = 0;
     private android.content.res.ColorStateList defaultCardBgColor;
     private int defaultCardStrokeWidth;
+    private SharedPreferences.OnSharedPreferenceChangeListener magicBalanceListener;
     private final ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -124,6 +129,23 @@ public class SettingsFragment extends MedicationWizardFragment {
             if (binding.cardCloudBackup != null) binding.cardCloudBackup.setVisibility(View.GONE);
         }
         updateFeatureEntitlements();
+        updateMagicDisplay();
+
+        magicBalanceListener = (sharedPreferences, key) -> {
+            if (AppConfig.KEY_MAGIC_BALANCE.equals(key)) {
+                updateMagicDisplay();
+            }
+        };
+        SharedPreferencesManager.getInstance(requireContext()).registerListener(magicBalanceListener);
+    }
+
+    private void updateMagicDisplay() {
+        if (binding == null) return;
+        int balance = MagicManager.getInstance(requireContext()).getMagicBalance();
+        binding.txtMagicBalanceSettings.setText(String.valueOf(balance));
+        binding.cardMagicMarketplace.setOnClickListener(v -> {
+            new MagicEarnBottomSheet().show(getChildFragmentManager(), "MagicEarnBS");
+        });
     }
 
     /**
@@ -566,9 +588,19 @@ public class SettingsFragment extends MedicationWizardFragment {
     }
 
     private void showQuietHoursPickers() {
-        MaterialTimePicker start = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).setHour(23).setTitleText("Start?").build();
+        MaterialTimePicker start = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(23)
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
+                .setTitleText("Start?")
+                .build();
         start.addOnPositiveButtonClickListener(v -> {
-            MaterialTimePicker end = new MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).setHour(7).setTitleText("End?").build();
+            MaterialTimePicker end = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(7)
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
+                    .setTitleText("End?")
+                    .build();
             end.addOnPositiveButtonClickListener(v2 -> {
                 viewModel.setQuietHours(start.getHour(), start.getMinute(), end.getHour(), end.getMinute());
                 if (getActivity() instanceof MainActivity)
@@ -969,6 +1001,7 @@ public class SettingsFragment extends MedicationWizardFragment {
         viewModel.refreshSettings(); // Sync with potential pass consumption
         updateNotificationStatus();
         updateFeatureEntitlements();
+        updateMagicDisplay();
         MainActivity main = (MainActivity) getActivity();
         if (main != null) {
             main.getAdsManager().addAdAvailabilityListener(this::updateFeatureEntitlements);
@@ -988,6 +1021,9 @@ public class SettingsFragment extends MedicationWizardFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (magicBalanceListener != null) {
+            SharedPreferencesManager.getInstance(requireContext()).unregisterListener(magicBalanceListener);
+        }
         binding = null;
     }
 

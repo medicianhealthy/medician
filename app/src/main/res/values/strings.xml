@@ -273,6 +273,7 @@
     <string name="frequency_3_times">3 times a day</string>
     <string name="frequency_4_times">4 times a day</string>
     <string name="frequency_5_times">5 times a day</string>
+    <string name="frequency_as_needed">As needed (PRN)</string>
     <string name="time_set_format">Time set: %1$s</string>
     <string name="select_time_index_format">Select Time %1$d</string>
     <string name="error_pick_time_title">Pick a time</string>
@@ -413,4 +414,39 @@
     <string name="btn_rotate_right">Rotate Right</string>
     <string name="btn_remove_photo">Remove Photo</string>
     <string name="locked_photo_hint">Tap to Unlock</string>
+    <string name="action_log_dose">Log a Dose</string>
+    <string name="action_add_new_med">Add New Med</string>
+    <string name="dialog_add_choice_title">What would you like to do?</string>
+    <string name="stopwatch_last_dose_format">Last dose: %s ago</string>
+    <string name="log_dose_subtitle">Select a medication to record a dose right now.</string>
+
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d Magics</string>
+    <string name="magic_earned_toast">+%1$d Magics earned!</string>
+    <string name="magic_insufficient_toast">Not enough Magics! Earn more by watching a video or sharing.</string>
+    <string name="magic_share_limit_toast">You can earn from sharing once a day. Come back tomorrow for more!</string>
+    <string name="magic_rate_limit_toast">You have already earned Magics from rating the app!</string>
+
+    <string name="magic_earn_title">Earn Magics</string>
+    <string name="magic_earn_rv_title">Watch a Video</string>
+    <string name="magic_earn_rv_desc">+1 Magic</string>
+    <string name="magic_earn_share_title">Share with a Friend</string>
+    <string name="magic_earn_share_desc">+2 Magics (WhatsApp)</string>
+    <string name="magic_earn_streak_title">Daily Login</string>
+    <string name="magic_earn_streak_desc">+1 Magic (Daily bonus)</string>
+    <string name="magic_earn_rate_title">Rate the App</string>
+    <string name="magic_earn_rate_desc">+3 Magics (One-time)</string>
+    <string name="magic_earn_story_title">Share Story</string>
+    <string name="magic_earn_story_desc">+3 Magics (Instagram/FB)</string>
+
+    <string name="magic_spend_pass_btn">Use 1 Magic (1 Hour)</string>
+    <string name="magic_spend_forever_btn">Unlock Forever (15 Magics)</string>
+    <string name="magic_spend_ad_free_btn">Ad-Free (3 Magics / 1 Hour)</string>
+    <string name="settings_magic_marketplace_title">Magics Marketplace</string>
+    <string name="settings_magic_marketplace_tempting_title">Unleash the Wizard\'s Power!</string>
+    <string name="settings_magic_marketplace_tempting_desc">Earn Magics to unlock premium features for free. Tap to refill your magic well!</string>
+    <string name="premium_rational_ad_free_msg">Unlock 1 hour of ad-free magic! No banners, no interruptions.</string>
+    <string name="benefit_ad_free">enjoy 1 hour of ad-free health tracking</string>
+
+    <string name="share_app_message">Check out Medication Wizard! It helps me track my meds with a touch of magic. Download here: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

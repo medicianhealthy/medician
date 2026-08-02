@@ -37,7 +37,7 @@ public class Medication implements Comparable<Medication> {
     private String id;
     private SparseArray<SimpleDayTime> timesADay;
     private float amount;
-    private int frequency;
+    private int frequency = -1;
     private String commercialName;
     private EForm form;
     private float strength;
@@ -47,6 +47,7 @@ public class Medication implements Comparable<Medication> {
     private EInstructions instruction;
     private EMeasurementUnit measurementUnit;
     private String imagePath;
+    private Long lastTakenTimestamp;
 
     /**
      * Constructs a new medication with a unique random UUID.
@@ -175,6 +176,9 @@ public class Medication implements Comparable<Medication> {
         med.setMedicalCondition(json.optString(JsonKeys.MEDICAL_CONDITION));
         med.setAmountLeft(json.optInt(JsonKeys.AMOUNT_LEFT, 0));
         med.setImagePath(json.optString(JsonKeys.IMAGE_PATH, null));
+        if (json.has(JsonKeys.LAST_TAKEN_TIMESTAMP)) {
+            med.setLastTakenTimestamp(json.optLong(JsonKeys.LAST_TAKEN_TIMESTAMP));
+        }
 
         if (!json.isNull(JsonKeys.FORM)) {
             try {
@@ -228,7 +232,7 @@ public class Medication implements Comparable<Medication> {
     public boolean isValid() {
         return commercialName != null && !commercialName.trim().isEmpty() &&
                 amount > 0 &&
-                frequency > 0 &&
+                frequency >= 0 &&
                 form != null;
     }
 
@@ -553,6 +557,18 @@ public class Medication implements Comparable<Medication> {
         this.imagePath = imagePath;
     }
 
+    public Long getLastTakenTimestamp() {
+        return lastTakenTimestamp;
+    }
+
+    public void setLastTakenTimestamp(Long lastTakenTimestamp) {
+        this.lastTakenTimestamp = lastTakenTimestamp;
+    }
+
+    public boolean isAsNeeded() {
+        return frequency == 0;
+    }
+
     @Override
     public int compareTo(Medication other) {
         if (this.commercialName == null) return -1;
@@ -587,6 +603,9 @@ public class Medication implements Comparable<Medication> {
             json.put(JsonKeys.MEDICAL_CONDITION, medicalCondition);
             json.put(JsonKeys.AMOUNT_LEFT, amountLeft);
             json.put(JsonKeys.IMAGE_PATH, imagePath);
+            if (lastTakenTimestamp != null) {
+                json.put(JsonKeys.LAST_TAKEN_TIMESTAMP, lastTakenTimestamp);
+            }
             if (form != null) json.put(JsonKeys.FORM, form.name());
             if (instruction != null) json.put(JsonKeys.INSTRUCTIONS, instruction.name());
             if (measurementUnit != null)
@@ -632,5 +651,6 @@ public class Medication implements Comparable<Medication> {
         public static final String INSTRUCTIONS = "mInstruction";
         public static final String MEASUREMENT_UNIT = "mMeasurementUnit";
         public static final String IMAGE_PATH = "mImagePath";
+        public static final String LAST_TAKEN_TIMESTAMP = "mLastTakenTimestamp";
     }
 }

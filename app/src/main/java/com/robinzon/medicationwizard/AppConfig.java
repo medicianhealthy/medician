@@ -34,6 +34,15 @@ public class AppConfig {
     public static final String KEY_PASS_STICKY_ACTIVE = "pass_sticky_active";
     public static final String KEY_PASS_DOSE_WINDOW_ACTIVE = "pass_dose_window_active";
     public static final String KEY_PASS_PHOTO_EXPIRY = "pass_photo_expiry";
+    public static final String KEY_PASS_AD_FREE_EXPIRY = "pass_ad_free_expiry";
+
+    public static final String KEY_MAGIC_BALANCE = "magic_balance";
+    public static final String KEY_PERMANENT_PASS_PREFIX = "permanent_pass_";
+
+    // Magic Economy Costs
+    public static final int MAGIC_COST_PASS_1H = 1;
+    public static final int MAGIC_COST_AD_FREE_1H = 3;
+    public static final int MAGIC_COST_PERMANENT = 15;
 
     /**
      * Master flag for purchased Premium status.
@@ -60,6 +69,12 @@ public class AppConfig {
         if (isPremiumPurchased(context)) return true;
 
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
+
+        // Check for permanent magic unlock first
+        if (prefs.getBoolean(KEY_PERMANENT_PASS_PREFIX + feature.name(), false)) {
+            return true;
+        }
+
         long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
 
         return switch (feature) {
@@ -72,6 +87,7 @@ public class AppConfig {
             case STICKY_NOTIF -> prefs.getBoolean(KEY_PASS_STICKY_ACTIVE, false);
             case DOSE_WINDOW -> prefs.getBoolean(KEY_PASS_DOSE_WINDOW_ACTIVE, false);
             case PHOTO -> prefs.getLong(KEY_PASS_PHOTO_EXPIRY, 0) > now;
+            case AD_FREE -> prefs.getLong(KEY_PASS_AD_FREE_EXPIRY, 0) > now;
         };
     }
 
@@ -80,7 +96,7 @@ public class AppConfig {
      * should hide standard ads.
      */
     public static boolean isPremium(Context context) {
-        return isPremiumPurchased(context);
+        return isPremiumPurchased(context) || isFeatureUnlocked(context, FeaturePassType.AD_FREE);
     }
 
     public static int getHistoryRetentionDays() {
@@ -116,6 +132,7 @@ public class AppConfig {
             case STICKY_NOTIF -> prefs.getBoolean(KEY_PASS_STICKY_ACTIVE, false) ?
                     context.getString(R.string.active_for_next_reminder) : "";
             case PHOTO -> formatExpiry(context, prefs.getLong(KEY_PASS_PHOTO_EXPIRY, 0));
+            case AD_FREE -> formatExpiry(context, prefs.getLong(KEY_PASS_AD_FREE_EXPIRY, 0));
         };
     }
 
@@ -129,6 +146,6 @@ public class AppConfig {
      * Enum to distinguish between premium features for pass logic.
      */
     public enum FeaturePassType {
-        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW, PHOTO
+        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW, PHOTO, AD_FREE
     }
 }

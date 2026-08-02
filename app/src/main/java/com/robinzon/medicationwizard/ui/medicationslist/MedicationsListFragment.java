@@ -183,6 +183,12 @@ public class MedicationsListFragment extends MedicationWizardFragment {
                 AddMedicationBottomSheet bottomSheet = AddMedicationBottomSheet.newInstance(medication);
                 bottomSheet.show(getChildFragmentManager(), "EditMedBottomSheet");
             }
+
+            @Override
+            public void onAddNew() {
+                AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
+                bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
+            }
         });
 
         int columns = getResources().getInteger(R.integer.medication_grid_columns);

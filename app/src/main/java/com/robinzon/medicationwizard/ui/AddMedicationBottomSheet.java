@@ -479,27 +479,30 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
 
         AutoCompleteTextView freqEdit = getFrequencyInputEditText(view);
-        if (freqEdit != null && medication.getDailyFrequency() > 0) {
+        if (freqEdit != null && medication.getDailyFrequency() >= 0) {
             String[] frequencies = new String[]{
+                    getString(R.string.frequency_as_needed),
                     getString(R.string.frequency_once),
                     getString(R.string.frequency_twice),
                     getString(R.string.frequency_3_times),
                     getString(R.string.frequency_4_times),
                     getString(R.string.frequency_5_times)
             };
-            if (medication.getDailyFrequency() <= frequencies.length) {
-                freqEdit.setText(frequencies[medication.getDailyFrequency() - 1], false);
+            if (medication.getDailyFrequency() < frequencies.length) {
+                freqEdit.setText(frequencies[medication.getDailyFrequency()], false);
             }
-            generateTimePickers(medication.getDailyFrequency());
-            if (medication.getTimesADay() != null) {
-                for (int k = 0; k < medication.getTimesADay().size(); k++) {
-                    int key = medication.getTimesADay().keyAt(k);
-                    SimpleDayTime time = medication.getTimesADay().valueAt(k);
-                    dosesInDay.put(key, time);
-                    if (k < timesContainer.getChildCount()) {
-                        View child = timesContainer.getChildAt(k);
-                        if (child instanceof Button) {
-                            ((Button) child).setText(getString(R.string.time_set_format, time.toString()));
+            if (medication.getDailyFrequency() > 0) {
+                generateTimePickers(medication.getDailyFrequency());
+                if (medication.getTimesADay() != null) {
+                    for (int k = 0; k < medication.getTimesADay().size(); k++) {
+                        int key = medication.getTimesADay().keyAt(k);
+                        SimpleDayTime time = medication.getTimesADay().valueAt(k);
+                        dosesInDay.put(key, time);
+                        if (k < timesContainer.getChildCount()) {
+                            View child = timesContainer.getChildAt(k);
+                            if (child instanceof Button) {
+                                ((Button) child).setText(getString(R.string.time_set_format, time.toString()));
+                            }
                         }
                     }
                 }
@@ -631,6 +634,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         setUnitDropDown(view);
         AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
         String[] frequencies = new String[]{
+                getString(R.string.frequency_as_needed),
                 getString(R.string.frequency_once),
                 getString(R.string.frequency_twice),
                 getString(R.string.frequency_3_times),
@@ -643,9 +647,16 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         dropdownFrequency.setOnClickListener(v -> dropdownFrequency.showDropDown());
         dropdownFrequency.setOnItemClickListener((parent, itemView, position, itemId) -> {
             hideKeyboard(dropdownFrequency);
-            int timesPerDay = position + 1;
+            int timesPerDay = position; // 0 = As Needed, 1 = Once, etc.
             medication.setDailyFrequency(timesPerDay);
-            generateTimePickers(timesPerDay);
+            
+            if (timesPerDay == 0) {
+                timesContainer.removeAllViews();
+                dosesInDay.clear();
+            } else {
+                generateTimePickers(timesPerDay);
+            }
+            
             timesContainer.postDelayed(() -> {
                 if (timesContainer.getChildCount() > 0) {
                     View row = timesContainer.getChildAt(0);
@@ -674,23 +685,35 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
         final int frequency = medication.getDailyFrequency();
         final SparseArray<SimpleDayTime> activeTimes = new SparseArray<>();
-        for (int i = 1; i <= frequency; i++) {
-            SimpleDayTime time = dosesInDay.get(i);
-            if (time == null) {
-                showErrorDialog(getString(R.string.error_pick_time_title), getString(R.string.error_pick_time_message));
-                return;
+
+        if (frequency > 0) {
+            for (int i = 1; i <= frequency; i++) {
+                SimpleDayTime time = dosesInDay.get(i);
+                if (time == null) {
+                    showErrorDialog(getString(R.string.error_pick_time_title), getString(R.string.error_pick_time_message));
+                    return;
+                }
+                activeTimes.put(i, time);
             }
-            activeTimes.put(i, time);
-        }
-        Set<SimpleDayTime> uniqueTimes = new HashSet<>();
-        for (int i = 0; i < activeTimes.size(); i++) {
-            if (!uniqueTimes.add(activeTimes.valueAt(i))) {
-                showErrorDialog(getString(R.string.error_duplicate_times_title), getString(R.string.error_duplicate_times_message));
-                return;
+
+            // Logical validation: Doses must be at different times
+            Set<SimpleDayTime> uniqueTimes = new HashSet<>();
+            for (int i = 0; i < activeTimes.size(); i++) {
+                if (!uniqueTimes.add(activeTimes.valueAt(i))) {
+                    showErrorDialog(getString(R.string.error_duplicate_times_title), getString(R.string.error_duplicate_times_message));
+                    return;
+                }
             }
         }
+
         medication.addTimeStampsForDay(activeTimes);
         medication.addToMedicationList(requireContext().getApplicationContext());
+
+        // Notify potential listeners (like LogDoseBottomSheet) that a new med was added
+        Bundle result = new Bundle();
+        result.putString("medication_id", medication.getId());
+        getParentFragmentManager().setFragmentResult("medication_added", result);
+
         dismiss();
         if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity) {
             final com.robinzon.medicationwizard.MainActivity mainActivity = (com.robinzon.medicationwizard.MainActivity) getActivity();
@@ -709,8 +732,9 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         if (medication.getAmount() == 0) {
             highLightInValidFields(getAmountInputEditText(mainView), true);
         }
-        if (medication.getDailyFrequency() == 0) {
-            highLightInValidFields(getFrequencyInputEditText(mainView), true);
+        AutoCompleteTextView freqView = getFrequencyInputEditText(mainView);
+        if (freqView != null && TextUtils.isEmpty(freqView.getText())) {
+            highLightInValidFields(freqView, true);
         }
         if (medication.getForm() == null) {
             highLightInValidFields(getFormInputEditText(mainView), true);
@@ -904,6 +928,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         if (freqDropdown != null && !TextUtils.isEmpty(freqDropdown.getText())) {
             String currentFreqText = freqDropdown.getText().toString().trim();
             String[] frequencies = new String[]{
+                    getString(R.string.frequency_as_needed).trim(),
                     getString(R.string.frequency_once).trim(),
                     getString(R.string.frequency_twice).trim(),
                     getString(R.string.frequency_3_times).trim(),
@@ -912,7 +937,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             };
             for (int i = 0; i < frequencies.length; i++) {
                 if (frequencies[i].equalsIgnoreCase(currentFreqText)) {
-                    medication.setDailyFrequency(i + 1);
+                    medication.setDailyFrequency(i); // 0 = As Needed
                     break;
                 }
             }
@@ -952,6 +977,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setHour(12)
                 .setMinute(0)
+                .setInputMode(com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK)
                 .setTitleText(R.string.time_picker_med_title)
                 .build();
         picker.addOnPositiveButtonClickListener(v -> {

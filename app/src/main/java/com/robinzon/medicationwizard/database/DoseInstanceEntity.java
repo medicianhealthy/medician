@@ -87,6 +87,11 @@ public class DoseInstanceEntity {
     private String imagePath;
 
     /**
+     * Whether this dose belongs to an "As Needed" (PRN) medication.
+     */
+    private boolean isPrn;
+
+    /**
      * Empty constructor required by Room.
      */
     public DoseInstanceEntity() {
@@ -110,6 +115,7 @@ public class DoseInstanceEntity {
         entity.status = instance.getStatus() != null ? instance.getStatus().name() : null;
         entity.instruction = instance.getInstruction() != null ? instance.getInstruction().name() : null;
         entity.snoozeCount = instance.getSnoozeCount();
+        entity.isPrn = (instance.getDailyFrequency() == 0);
         return entity;
     }
 
@@ -130,6 +136,7 @@ public class DoseInstanceEntity {
         entity.status = json.optString("status");
         entity.instruction = json.isNull("instruction") ? null : json.optString("instruction");
         entity.snoozeCount = json.optInt("snoozeCount");
+        entity.isPrn = json.optBoolean("isPrn");
         return entity;
     }
 
@@ -237,6 +244,14 @@ public class DoseInstanceEntity {
         this.imagePath = imagePath;
     }
 
+    public boolean isPrn() {
+        return isPrn;
+    }
+
+    public void setPrn(boolean prn) {
+        isPrn = prn;
+    }
+
     /**
      * Serializes this entity into a JSONObject for backup purposes.
      */
@@ -254,6 +269,7 @@ public class DoseInstanceEntity {
             json.put("status", status);
             json.put("instruction", instruction);
             json.put("snoozeCount", snoozeCount);
+            json.put("isPrn", isPrn);
         } catch (JSONException e) {
             return null;
         }

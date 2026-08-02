@@ -102,6 +102,7 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
                     .setTimeFormat(TimeFormat.CLOCK_24H)
                     .setHour(now.get(Calendar.HOUR_OF_DAY))
                     .setMinute(now.get(Calendar.MINUTE))
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
                     .setTitleText("Select Fake Time")
                     .build();
 

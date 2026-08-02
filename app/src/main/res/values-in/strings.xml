@@ -250,6 +250,7 @@
     <string name="frequency_3_times">3 kali sehari</string>
     <string name="frequency_4_times">4 kali sehari</string>
     <string name="frequency_5_times">5 kali sehari</string>
+    <string name="frequency_as_needed">Bila perlu (PRN)</string>
     <string name="time_set_format">Waktu diatur: %1$s</string>
     <string name="select_time_index_format">Pilih Waktu %1$d</string>
     <string name="error_pick_time_title">Pilih waktu</string>
@@ -383,4 +384,8 @@
     <string name="btn_rotate_right">Putar ke Kanan</string>
     <string name="btn_remove_photo">Hapus Foto</string>
     <string name="locked_photo_hint">Ketuk untuk Membuka</string>
+    <string name="action_log_dose">Catat Dosis</string>
+    <string name="action_add_new_med">Tambah Obat Baru</string>
+    <string name="dialog_add_choice_title">Apa yang ingin Anda lakukan?</string>
+    <string name="stopwatch_last_dose_format">Dosis terakhir: %s yang lalu</string>
 </resources>

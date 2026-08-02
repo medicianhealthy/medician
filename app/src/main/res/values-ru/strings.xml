@@ -250,6 +250,7 @@
     <string name="frequency_3_times">3 раза в день</string>
     <string name="frequency_4_times">4 раза в день</string>
     <string name="frequency_5_times">5 раз в день</string>
+    <string name="frequency_as_needed">По необходимости (PRN)</string>
     <string name="time_set_format">Время: %1$s</string>
     <string name="select_time_index_format">Время %1$d</string>
     <string name="error_pick_time_title">Выберите время</string>
@@ -383,4 +384,8 @@
     <string name="btn_rotate_right">Повернуть вправо</string>
     <string name="btn_remove_photo">Удалить фото</string>
     <string name="locked_photo_hint">Нажмите, чтобы открыть</string>
+    <string name="action_log_dose">Записать прием</string>
+    <string name="action_add_new_med">Добавить лекарство</string>
+    <string name="dialog_add_choice_title">Что вы хотите сделать?</string>
+    <string name="stopwatch_last_dose_format">Последний прием: %s назад</string>
 </resources>

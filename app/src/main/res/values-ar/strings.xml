@@ -256,6 +256,7 @@
     <string name="frequency_3_times">3 مرات في اليوم</string>
     <string name="frequency_4_times">4 مرات في اليوم</string>
     <string name="frequency_5_times">5 مرات في اليوم</string>
+    <string name="frequency_as_needed">عند الحاجة (PRN)</string>
     <string name="time_set_format">الوقت المحدد: %1$s</string>
     <string name="select_time_index_format">اختر وقت %1$d</string>
     <string name="error_pick_time_title">اختر وقتًا</string>
@@ -389,4 +390,8 @@
     <string name="btn_rotate_right">تدوير لليمين</string>
     <string name="btn_remove_photo">إزالة الصورة</string>
     <string name="locked_photo_hint">اضغط للفتح</string>
+    <string name="action_log_dose">تسجيل جرعة</string>
+    <string name="action_add_new_med">إضافة دواء جديد</string>
+    <string name="dialog_add_choice_title">ماذا تود أن تفعل؟</string>
+    <string name="stopwatch_last_dose_format">آخر جرعة: قبل %s</string>
 </resources>

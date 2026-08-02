@@ -110,6 +110,11 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
      * Initiates load requests for all ad units, subject to usage thresholds for banners.
      */
     public void loadAds() {
+        if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
+            if (mainBanner != null) mainBanner.resetContainer();
+            return;
+        }
+
         if (null != mainBanner && !mainBanner.isLoaded()) {
             float totalUsageMinutes = com.robinzon.medicationwizard.utils.Statisticator.getTotalUsageMinutes(activity);
             int minimumMinutesForBanner = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getMinAppTimeForBannerMins();

@@ -3,6 +3,8 @@ package com.robinzon.medicationwizard.ui.medicationslist;
 import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +35,28 @@ import java.util.Set;
 /**
  * Adapter for the master medication library list.
  */
-public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsListAdapter.MedicationViewHolder> {
+public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_MED = 0;
+    private static final int TYPE_ADD_NEW = 1;
 
     private final List<Medication> medications = new ArrayList<>();
     private final Set<String> expandedIds = new HashSet<>();
     private final androidx.fragment.app.FragmentManager fragmentManager;
     private OnMedicationActionListener listener;
 
+    private final Handler stopwatchHandler = new Handler(Looper.getMainLooper());
+    private final Runnable stopwatchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            notifyDataSetChanged();
+            stopwatchHandler.postDelayed(this, 60000); // Update every minute
+        }
+    };
+
     public MedicationsListAdapter(androidx.fragment.app.FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
+        stopwatchHandler.postDelayed(stopwatchRunnable, 60000);
     }
 
     public void setOnMedicationActionListener(OnMedicationActionListener listener) {
@@ -61,17 +76,34 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
         }
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return (position < medications.size()) ? TYPE_MED : TYPE_ADD_NEW;
+    }
+
     @NonNull
     @Override
-    public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemMedicationListBinding binding = ItemMedicationListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new MedicationViewHolder(binding);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_MED) {
+            ItemMedicationListBinding binding = ItemMedicationListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new MedicationViewHolder(binding);
+        } else {
+            // Reusing the same Add New layout from Log Dose for consistency
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_log_dose_add_new, parent, false);
+            return new AddNewViewHolder(v);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MedicationViewHolder holder, int position) {
-        Medication medication = medications.get(position);
-        holder.bind(medication, expandedIds.contains(medication.getId()));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof MedicationViewHolder) {
+            Medication medication = medications.get(position);
+            ((MedicationViewHolder) holder).bind(medication, expandedIds.contains(medication.getId()));
+        } else if (holder instanceof AddNewViewHolder) {
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) listener.onAddNew();
+            });
+        }
     }
 
     public void expandAll() {
@@ -88,12 +120,13 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
 
     @Override
     public int getItemCount() {
-        return medications.size();
+        return medications.size() + 1; // +1 for the Add New Med footer
     }
 
     public interface OnMedicationActionListener {
         void onDelete(Medication medication, int position);
         void onEdit(Medication medication);
+        void onAddNew();
     }
 
     class MedicationViewHolder extends RecyclerView.ViewHolder {
@@ -135,6 +168,24 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
             }
             binding.medIcon.setImageResource(formIconRes);
             binding.medInstructionsIcon.setImageResource(formIconRes);
+
+            // --- Stopwatch Logic (Always visible in collapsed view) ---
+            if (medication.getLastTakenTimestamp() != null) {
+                long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
+                long diff = now - medication.getLastTakenTimestamp();
+                if (diff > 0) {
+                    long hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(diff);
+                    long minutes = java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(diff) % 60;
+                    String timeStr = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
+                    binding.txtStopwatch.setVisibility(View.VISIBLE);
+                    binding.txtStopwatch.setText(binding.getRoot().getContext().getString(R.string.stopwatch_last_dose_format, timeStr));
+                } else {
+                    binding.txtStopwatch.setVisibility(View.GONE);
+                }
+            } else {
+                binding.txtStopwatch.setVisibility(View.GONE);
+            }
+            // -----------------------
 
             binding.expandedDetails.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
             binding.expandIcon.setRotation(isExpanded ? 180f : 0f);
@@ -258,6 +309,12 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<MedicationsList
                             .start();
                 }
             });
+        }
+    }
+
+    static class AddNewViewHolder extends RecyclerView.ViewHolder {
+        AddNewViewHolder(View v) {
+            super(v);
         }
     }
 }

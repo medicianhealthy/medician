@@ -9,6 +9,8 @@ import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
+import java.util.List;
+
 /**
  * Handles background actions triggered from notification buttons (Take, Snooze, Skip).
  * <p>
@@ -77,18 +79,22 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     }
 
     private void processAction(Context context, AppDatabase db, DoseInstanceEntity instance, String action) {
+        long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
         switch (action) {
             case ACTION_TAKE:
             case ACTION_TAKE_ALL:
                 instance.setStatus("TAKEN");
-                instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
+                instance.setActionTime(now);
                 db.doseInstanceDao().update(instance);
+                
+                // Update parent medication definition's last taken time
+                updateMedicationLastTakenTime(context, instance.getMedicationId(), now);
                 break;
 
             case ACTION_SKIP:
             case ACTION_SKIP_ALL:
                 instance.setStatus("SKIPPED");
-                instance.setActionTime(com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
+                instance.setActionTime(now);
                 db.doseInstanceDao().update(instance);
                 break;
 
@@ -96,6 +102,18 @@ public class NotificationActionReceiver extends BroadcastReceiver {
             case ACTION_SNOOZE_ALL:
                 handleSnooze(context, db, instance);
                 break;
+        }
+    }
+
+    private void updateMedicationLastTakenTime(Context context, String medId, long timestamp) {
+        List<com.robinzon.medicationwizard.entities.Medication> allMeds = 
+                com.robinzon.medicationwizard.entities.Medication.getSavedMedications(context);
+        for (com.robinzon.medicationwizard.entities.Medication m : allMeds) {
+            if (m.getId().equals(medId)) {
+                m.setLastTakenTimestamp(timestamp);
+                m.addToMedicationList(context);
+                break;
+            }
         }
     }
 
