@@ -119,8 +119,10 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
     private void handleSnooze(Context context, AppDatabase db, DoseInstanceEntity instance) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
-        int maxSnoozes = sp.getInt(SettingsViewModel.KEY_MAX_SNOOZES, 3);
-        int snoozeDuration = sp.getInt(SettingsViewModel.KEY_SNOOZE_DURATION_MINS, 10);
+        boolean isCritical = instance.isCritical();
+        
+        int maxSnoozes = isCritical ? -1 : sp.getInt(SettingsViewModel.KEY_MAX_SNOOZES, 3);
+        int snoozeDuration = isCritical ? 5 : sp.getInt(SettingsViewModel.KEY_SNOOZE_DURATION_MINS, 10);
 
         int currentSnoozes = instance.getSnoozeCount();
         com.robinzon.medicationwizard.utils.Logger.log("Snooze", "Snoozing " + instance.getMedicationName() + ". Current: " + currentSnoozes + ", Max: " + maxSnoozes);

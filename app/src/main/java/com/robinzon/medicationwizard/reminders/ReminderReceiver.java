@@ -70,18 +70,27 @@ public class ReminderReceiver extends BroadcastReceiver {
                 com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Unified check: Found " + dosesAtTime.size() + " doses for time " + scheduledTime);
 
                 // 2. Show notification (unified or single)
+                boolean isAnyCritical = false;
+                for (com.robinzon.medicationwizard.database.DoseInstanceEntity d : dosesAtTime) {
+                    if (d.isCritical()) {
+                        isAnyCritical = true;
+                        break;
+                    }
+                }
+                
+                final boolean finalIsAnyCritical = isAnyCritical;
                 android.os.Handler mainHandler = new android.os.Handler(android.os.Looper.getMainLooper());
                 mainHandler.post(() -> {
                     try {
-                        showNotification(context, dosesAtTime, scheduledTime);
+                        showNotification(context, dosesAtTime, scheduledTime, finalIsAnyCritical);
                     } catch (Exception e) {
                         com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Error showing notification: " + e.getMessage());
                     }
                 });
 
                 // 3. Effects
-                ReminderAlertManager.getInstance().startAlarm(context);
-                triggerFlashSync(context);
+                ReminderAlertManager.getInstance().startAlarm(context, isAnyCritical);
+                triggerFlashSync(context, isAnyCritical);
                 com.robinzon.medicationwizard.managers.FeaturePassManager.consumeNextReminderPasses(context);
             } catch (Exception e) {
                 com.robinzon.medicationwizard.utils.Logger.log("ReminderReceiver", "Background error: " + e.getMessage());
@@ -116,7 +125,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         }
     }
 
-    private void showNotification(Context context, java.util.List<com.robinzon.medicationwizard.database.DoseInstanceEntity> doses, long scheduledTime) {
+    private void showNotification(Context context, java.util.List<com.robinzon.medicationwizard.database.DoseInstanceEntity> doses, long scheduledTime, boolean isCritical) {
         if (doses == null || doses.isEmpty()) return;
 
         NotificationManagerCompat nm = NotificationManagerCompat.from(context);
@@ -131,11 +140,11 @@ public class ReminderReceiver extends BroadcastReceiver {
 
         if (doses.size() == 1) {
             com.robinzon.medicationwizard.database.DoseInstanceEntity dose = doses.get(0);
-            title = context.getString(R.string.notification_reminder_title);
+            title = isCritical ? "🚨 CRITICAL REMINDER 🚨" : context.getString(R.string.notification_reminder_title);
             message = formatDoseMessage(context, dose);
             instanceIds[0] = dose.getId();
         } else {
-            title = context.getString(R.string.notification_reminder_title) + " (" + doses.size() + ")";
+            title = (isCritical ? "🚨 CRITICAL (" : context.getString(R.string.notification_reminder_title) + " (") + doses.size() + ")";
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < doses.size(); i++) {
                 com.robinzon.medicationwizard.database.DoseInstanceEntity dose = doses.get(i);
@@ -173,7 +182,7 @@ public class ReminderReceiver extends BroadcastReceiver {
         PendingIntent skipPI = PendingIntent.getBroadcast(context, notificationId + 3, skipIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
-        boolean stickyEnabled = sp.getBoolean(SettingsViewModel.KEY_STICKY_NOTIF_ENABLED, false);
+        boolean stickyEnabled = isCritical || sp.getBoolean(SettingsViewModel.KEY_STICKY_NOTIF_ENABLED, false);
 
         // Delete Intent: Stop alarm if user swipes away the notification
         Intent stopIntent = new Intent(context, NotificationActionReceiver.class);
@@ -219,14 +228,16 @@ public class ReminderReceiver extends BroadcastReceiver {
         return context.getString(R.string.notification_reminder_message, amountStr, formStr, dose.getMedicationName());
     }
 
-    private void triggerFlashSync(Context context) {
+    private void triggerFlashSync(Context context, boolean isCritical) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
-        String patternName = sp.getString(SettingsViewModel.KEY_FLASH_PATTERN, "None");
+        String patternName = isCritical ? "Strobe" : sp.getString(SettingsViewModel.KEY_FLASH_PATTERN, "None");
         if ("None".equals(patternName)) return;
 
         CameraManager cm = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         try {
-            String cameraId = cm.getCameraIdList()[0];
+            String[] cameraIds = cm.getCameraIdList();
+            if (cameraIds.length == 0) return;
+            String cameraId = cameraIds[0];
             int flashes = switch (patternName) {
                 case "Single Blink" -> 1;
                 case "Double Pulse" -> 2;

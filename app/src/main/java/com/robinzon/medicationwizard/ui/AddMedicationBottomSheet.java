@@ -103,6 +103,8 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private ShapeableImageView imgPreview;
     private View layoutPlaceholder;
     private View btnRotateLeft, btnRotateRight, btnRemovePhoto;
+    private com.google.android.material.materialswitch.MaterialSwitch switchCritical;
+    private View crownCritical, badgeCritical;
     private Runnable pendingPhotoAction;
 
     private final ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(
@@ -235,8 +237,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         btnRotateLeft = view.findViewById(R.id.btn_rotate_left);
         btnRotateRight = view.findViewById(R.id.btn_rotate_right);
         btnRemovePhoto = view.findViewById(R.id.btn_remove_photo);
+        switchCritical = view.findViewById(R.id.switch_critical);
+        crownCritical = view.findViewById(R.id.crown_critical);
+        badgeCritical = view.findViewById(R.id.badge_active_critical);
 
         setupPhotoButtons(view);
+        setupCriticalToggle(view);
 
         if (isEditMode) {
             preFillData(view);
@@ -261,6 +267,45 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             outState.putParcelable("temp_camera_uri", tempCameraUri);
         }
         outState.putBoolean("is_edit_mode", isEditMode);
+    }
+
+    private void setupCriticalToggle(View view) {
+        updateCriticalEntitlement();
+
+        view.findViewById(R.id.btn_critical_toggle).setOnClickListener(v -> {
+            if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.CRITICAL)) {
+                boolean current = switchCritical.isChecked();
+                switchCritical.setChecked(!current);
+                medication.setCritical(!current);
+            } else {
+                FeatureRationalBottomSheet.newInstance(AppConfig.FeaturePassType.CRITICAL).show(getChildFragmentManager(), "CriticalRational");
+                getChildFragmentManager().setFragmentResultListener("feature_unlocked", getViewLifecycleOwner(), (key, bundle) -> {
+                    if (AppConfig.FeaturePassType.CRITICAL.name().equals(bundle.getString("feature_type"))) {
+                        updateCriticalEntitlement();
+                        switchCritical.setChecked(true);
+                        medication.setCritical(true);
+                    }
+                });
+            }
+        });
+    }
+
+    private void updateCriticalEntitlement() {
+        boolean purchased = AppConfig.isPremiumPurchased(requireContext());
+        boolean unlocked = AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.CRITICAL);
+
+        if (crownCritical != null) crownCritical.setVisibility(purchased ? View.GONE : View.VISIBLE);
+        if (badgeCritical != null) {
+            boolean showBadge = !purchased && unlocked;
+            badgeCritical.setVisibility(showBadge ? View.VISIBLE : View.GONE);
+            if (showBadge && badgeCritical instanceof TextView) {
+                ((TextView) badgeCritical).setText(R.string.active_for_next_reminder);
+            }
+        }
+        
+        if (switchCritical != null) {
+            switchCritical.setChecked(medication.isCritical());
+        }
     }
 
     private void setupPhotoButtons(View view) {
@@ -529,6 +574,9 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 case DOES_NOT_MATTER -> R.id.chip_does_not_matter;
             };
             chipGroup.check(chipId);
+        }
+        if (switchCritical != null) {
+            switchCritical.setChecked(medication.isCritical());
         }
         updatePhotoUi(false);
     }
@@ -969,6 +1017,9 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         // Sync dosesInDay back to medication object
         if (dosesInDay.size() > 0) {
             medication.addTimeStampsForDay(dosesInDay);
+        }
+        if (switchCritical != null) {
+            medication.setCritical(switchCritical.isChecked());
         }
     }
 

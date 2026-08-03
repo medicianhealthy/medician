@@ -72,6 +72,16 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             }
         }
 
+        // Listen for Extra Slot unlock
+        getChildFragmentManager().setFragmentResultListener("feature_unlocked", getViewLifecycleOwner(), (key, bundle) -> {
+            String type = bundle.getString("feature_type");
+            if (com.robinzon.medicationwizard.AppConfig.FeaturePassType.EXTRA_MED_SLOT.name().equals(type)) {
+                new Handler(Looper.getMainLooper()).postDelayed(() ->
+                        new AddMedicationBottomSheet().show(getChildFragmentManager(), "AddMedBottomSheet"),
+                        300);
+            }
+        });
+
         setupSwipeRefresh();
         setupEmptyView();
         setupRecyclerView();

@@ -72,6 +72,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ActivityMainBinding mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
 
+        // Listen for Extra Slot unlock from Marketplace
+        getSupportFragmentManager().setFragmentResultListener("feature_unlocked", this, (key, bundle) -> {
+            String type = bundle.getString("feature_type");
+            if (AppConfig.FeaturePassType.EXTRA_MED_SLOT.name().equals(type)) {
+                // Delay slightly for transition
+                new Handler(Looper.getMainLooper()).postDelayed(() -> 
+                    new com.robinzon.medicationwizard.ui.AddMedicationBottomSheet().show(getSupportFragmentManager(), "AddMedBS"), 
+                    300);
+            }
+        });
+
         loadCheats();
 
         mainBinding.appBarMain.fab.setOnClickListener(view -> {

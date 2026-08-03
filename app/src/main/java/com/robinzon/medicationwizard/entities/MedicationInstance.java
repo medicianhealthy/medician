@@ -49,6 +49,7 @@ public class MedicationInstance extends Medication {
             if (medication.getTimesADay() != null) {
                 this.addTimeStampsForDay(medication.getTimesADay());
             }
+            this.setCritical(medication.isCritical());
         }
     }
 

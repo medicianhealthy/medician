@@ -435,4 +435,13 @@
     <string name="magic_error_social_not_found">פייסבוק או אינסטגרם לא נמצאו!</string>
     <string name="magic_error_already_rated">כבר קיבלת תגמול על דירוג!</string>
     <string name="share_app_message">היי! כדאי לך להכיר את "קוסם התרופות" - אפליקציה שעוזרת לי לנהל את התרופות שלי עם מגע של קסם. להורדה כאן: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">תרופה קריטית</string>
+    <string name="critical_med_summary">עקיפת עוצמת קול מקסימלית, התראה דביקה, רטט דופק ונודניקים של 5 דקות.</string>
+    <string name="magic_spend_critical_btn">מעבר קריטי (2 קסמים / התזכורת הבאה)</string>
+    <string name="premium_benefit_critical_title">תרופה קריטית</string>
+    <string name="premium_benefit_critical_desc">הפעל התראות בעדיפות גבוהה עם התראות דביקות, עוצמת קול של סירנה ורטט מותאם אישית לתרופות מצילות חיים.</string>
+    <string name="premium_rational_critical_msg">זוהי תרופה קריטית. היא דורשת מעבר בעדיפות גבוהה כדי לאפשר תכונות התראה מצילות חיים.</string>
+    <string name="benefit_critical">הפעל התראות אמינות במיוחד למנה הבאה שלך</string>
 </resources>

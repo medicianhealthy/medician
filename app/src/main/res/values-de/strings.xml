@@ -424,4 +424,13 @@
     <string name="magic_error_social_not_found">Facebook oder Instagram nicht gefunden!</string>
     <string name="magic_error_already_rated">Bereits durch Bewertung verdient!</string>
     <string name="share_app_message">Schau dir Medizin-Magier an! Es hilft mir, meine Medikamente mit einem Hauch von Magie zu verfolgen. Hier herunterladen: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">Kritisches Medikament</string>
+    <string name="critical_med_summary">Max. Lautstärke-Bypass, fixierte Benachrichtigung, Herzschlag-Vibration und 5-Min-Schlummern.</string>
+    <string name="magic_spend_critical_btn">Kritischer Pass (2 Magics / Nächste Erinnerung)</string>
+    <string name="premium_benefit_critical_title">Kritisches Medikament</string>
+    <string name="premium_benefit_critical_desc">Aktiviere hochpriorisierte Alarme mit fixierten Benachrichtigungen, Sirenenlautstärke und benutzerdefinierter Vibration für lebenswichtige Medikamente.</string>
+    <string name="premium_rational_critical_msg">Dies ist ein kritisches Medikament. Es erfordert einen Hochprioritäts-Pass, um lebensrettende Alarmfunktionen zu aktivieren.</string>
+    <string name="benefit_critical">ultra-zuverlässige Alarme für deine nächste Dosis aktivieren</string>
 </resources>

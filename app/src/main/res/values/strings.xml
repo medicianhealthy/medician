@@ -414,6 +414,8 @@
     <string name="btn_rotate_right">Rotate Right</string>
     <string name="btn_remove_photo">Remove Photo</string>
     <string name="locked_photo_hint">Tap to Unlock</string>
+    <string name="critical_med_label">Critical Medication</string>
+    <string name="critical_med_summary">Max volume bypass, sticky notification, heartbeat vibration, and 5-min snoozes.</string>
     <string name="action_log_dose">Log a Dose</string>
     <string name="action_add_new_med">Add New Med</string>
     <string name="dialog_add_choice_title">What would you like to do?</string>
@@ -441,6 +443,7 @@
 
     <string name="magic_spend_pass_btn">Use 1 Magic (1 Hour)</string>
     <string name="magic_spend_forever_btn">Unlock Forever (15 Magics)</string>
+    <string name="magic_spend_critical_btn">Critical Pass (2 Magics / Next Reminder)</string>
     <string name="magic_spend_ad_free_btn">Ad-Free (3 Magics / 1 Hour)</string>
     <string name="magic_spend_extra_slot_btn">Unlock Slot (%1$d Magics)</string>
     <string name="settings_magic_marketplace_title">Magics Marketplace</string>
@@ -448,9 +451,13 @@
     <string name="settings_magic_marketplace_tempting_desc">Earn Magics to unlock premium features for free. Tap to refill your magic well!</string>
     <string name="premium_rational_ad_free_msg">Unlock 1 hour of ad-free magic! No banners, no interruptions.</string>
     <string name="premium_rational_extra_slot_msg">You\'ve reached the limit of 3 free medications. Unlock another slot to continue your journey!</string>
+    <string name="premium_rational_critical_msg">This is a Critical Medication. It requires a high-priority pass to enable life-saving alert features.</string>
     <string name="benefit_ad_free">enjoy 1 hour of ad-free health tracking</string>
     <string name="benefit_extra_slot">add one more medication to your library</string>
+    <string name="benefit_critical">enable ultra-reliable alerts for your next dose</string>
     <string name="premium_benefit_extra_slot_title">Extra Medication Slot</string>
+    <string name="premium_benefit_critical_title">Critical Medication</string>
+    <string name="premium_benefit_critical_desc">Turn on high-priority alerts with sticky notifications, siren volume, and custom vibration for life-saving meds.</string>
 
     <string name="magic_bonus_early_bird_toast">Early Bird Bonus! +1 Magic 🐦✨</string>
     <string name="magic_bonus_perfect_day_title">Perfect Day! 🏆</string>

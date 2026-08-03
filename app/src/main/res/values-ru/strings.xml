@@ -424,4 +424,13 @@
     <string name="magic_error_social_not_found">Facebook или Instagram не найдены!</string>
     <string name="magic_error_already_rated">Уже получено за оценку!</string>
     <string name="share_app_message">Посмотри Мастер Лекарств! Он помогает мне следить за приемом таблеток с капелькой магии. Скачать здесь: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">Критическое лекарство</string>
+    <string name="critical_med_summary">Обход громкости, закрепленное уведомление, вибрация «пульс» и повторы через 5 мин.</string>
+    <string name="magic_spend_critical_btn">Критический пропуск (2 Магии / След. напоминание)</string>
+    <string name="premium_benefit_critical_title">Критическое лекарство</string>
+    <string name="premium_benefit_critical_desc">Включите высокоприоритетные оповещения с закрепленными уведомлениями, громкостью сирены и особой вибрацией для жизненно важных лекарств.</string>
+    <string name="premium_rational_critical_msg">Это критическое лекарство. Для активации жизненно важных оповещений требуется высокоприоритетный пропуск.</string>
+    <string name="benefit_critical">включить сверхнадежные оповещения для следующей дозы</string>
 </resources>

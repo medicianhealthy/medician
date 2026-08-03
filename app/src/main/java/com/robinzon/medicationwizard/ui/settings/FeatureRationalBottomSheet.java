@@ -112,6 +112,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             int cost = AppConfig.MAGIC_COST_PASS_1H;
             if (featureType == AppConfig.FeaturePassType.AD_FREE) cost = AppConfig.MAGIC_COST_AD_FREE_1H;
             else if (featureType == AppConfig.FeaturePassType.EXTRA_MED_SLOT) cost = AppConfig.MAGIC_COST_EXTRA_MED_SLOT;
+            else if (featureType == AppConfig.FeaturePassType.CRITICAL) cost = AppConfig.MAGIC_COST_CRITICAL_PASS;
 
             if (MagicManager.getInstance(requireContext()).spendMagics(cost)) {
                 if (featureType == AppConfig.FeaturePassType.EXTRA_MED_SLOT) {
@@ -162,6 +163,8 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             passBtn.setText(R.string.magic_spend_ad_free_btn);
         } else if (featureType == AppConfig.FeaturePassType.EXTRA_MED_SLOT) {
             passBtn.setText(getString(R.string.magic_spend_extra_slot_btn, AppConfig.MAGIC_COST_EXTRA_MED_SLOT));
+        } else if (featureType == AppConfig.FeaturePassType.CRITICAL) {
+            passBtn.setText(R.string.magic_spend_critical_btn);
         } else {
             passBtn.setText(R.string.magic_spend_pass_btn);
         }
@@ -256,6 +259,10 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                 iconView.setImageResource(R.drawable.ic_list);
                 descView.setText(R.string.premium_rational_extra_slot_msg);
             }
+            case CRITICAL -> {
+                iconView.setImageResource(R.drawable.ic_vibration);
+                descView.setText(R.string.premium_rational_critical_msg);
+            }
         }
 
         String pkg = requireContext().getPackageName();
@@ -280,6 +287,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case PHOTO -> getString(R.string.btn_take_photo);
             case AD_FREE -> getString(R.string.premium_benefit_ad_free_title);
             case EXTRA_MED_SLOT -> getString(R.string.premium_benefit_extra_slot_title);
+            case CRITICAL -> getString(R.string.premium_benefit_critical_title);
         };
     }
 
@@ -297,6 +305,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case PHOTO -> getString(R.string.benefit_photo);
             case AD_FREE -> getString(R.string.benefit_ad_free);
             case EXTRA_MED_SLOT -> getString(R.string.benefit_extra_slot);
+            case CRITICAL -> getString(R.string.benefit_critical);
         };
     }
 }

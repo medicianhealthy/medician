@@ -48,6 +48,7 @@ public class Medication implements Comparable<Medication> {
     private EMeasurementUnit measurementUnit;
     private String imagePath;
     private Long lastTakenTimestamp;
+    private boolean isCritical;
 
     /**
      * Constructs a new medication with a unique random UUID.
@@ -179,6 +180,7 @@ public class Medication implements Comparable<Medication> {
         if (json.has(JsonKeys.LAST_TAKEN_TIMESTAMP)) {
             med.setLastTakenTimestamp(json.optLong(JsonKeys.LAST_TAKEN_TIMESTAMP));
         }
+        med.setCritical(json.optBoolean(JsonKeys.IS_CRITICAL, false));
 
         if (!json.isNull(JsonKeys.FORM)) {
             try {
@@ -565,6 +567,14 @@ public class Medication implements Comparable<Medication> {
         this.lastTakenTimestamp = lastTakenTimestamp;
     }
 
+    public boolean isCritical() {
+        return isCritical;
+    }
+
+    public void setCritical(boolean critical) {
+        isCritical = critical;
+    }
+
     public boolean isAsNeeded() {
         return frequency == 0;
     }
@@ -606,6 +616,7 @@ public class Medication implements Comparable<Medication> {
             if (lastTakenTimestamp != null) {
                 json.put(JsonKeys.LAST_TAKEN_TIMESTAMP, lastTakenTimestamp);
             }
+            json.put(JsonKeys.IS_CRITICAL, isCritical);
             if (form != null) json.put(JsonKeys.FORM, form.name());
             if (instruction != null) json.put(JsonKeys.INSTRUCTIONS, instruction.name());
             if (measurementUnit != null)
@@ -652,5 +663,6 @@ public class Medication implements Comparable<Medication> {
         public static final String MEASUREMENT_UNIT = "mMeasurementUnit";
         public static final String IMAGE_PATH = "mImagePath";
         public static final String LAST_TAKEN_TIMESTAMP = "mLastTakenTimestamp";
+        public static final String IS_CRITICAL = "mIsCritical";
     }
 }

@@ -424,4 +424,13 @@
     <string name="magic_error_social_not_found">Facebook ou Instagram non trouvé !</string>
     <string name="magic_error_already_rated">Déjà gagné en notant !</string>
     <string name="share_app_message">Découvrez Mage des Médicaments ! Il m\'aide à suivre mes médicaments avec une touche de magie. Téléchargez ici : https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">Médicament Critique</string>
+    <string name="critical_med_summary">Forçage du volume max, notification persistante, vibration cardiaque et reports de 5 min.</string>
+    <string name="magic_spend_critical_btn">Pass Critique (2 Magies / Prochain rappel)</string>
+    <string name="premium_benefit_critical_title">Médicament Critique</string>
+    <string name="premium_benefit_critical_desc">Activez les alertes haute priorité avec notifications persistantes, volume sirène et vibration personnalisée pour les médocs vitaux.</string>
+    <string name="premium_rational_critical_msg">C\'est un médicament critique. Il nécessite un pass haute priorité pour activer les fonctions d\'alerte vitale.</string>
+    <string name="benefit_critical">activer des alertes ultra-fiables pour votre prochaine dose</string>
 </resources>

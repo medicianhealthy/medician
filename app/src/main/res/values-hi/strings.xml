@@ -424,4 +424,13 @@
     <string name="magic_error_social_not_found">फेसबुक या इंस्टाग्राम नहीं मिला!</string>
     <string name="magic_error_already_rated">रेटिंग से पहले ही कमाया जा चुका है!</string>
     <string name="share_app_message">मेडिकेशन विजार्ड देखें! यह मुझे जादू के स्पर्श के साथ मेरी दवाओं को ट्रैक करने में मदद करता है। यहाँ डाउनलोड करें: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">महत्वपूर्ण दवा (Critical Medication)</string>
+    <string name="critical_med_summary">अधिकतम वॉल्यूम बायपास, स्टिकी नोटिफिकेशन, दिल की धड़कन जैसा वाइब्रेशन, और 5-मिनट का स्नूज़।</string>
+    <string name="magic_spend_critical_btn">क्रिटिकल पास (2 मैजिक्स / अगला रिमाइंडर)</string>
+    <string name="premium_benefit_critical_title">महत्वपूर्ण दवा</string>
+    <string name="premium_benefit_critical_desc">जीवन रक्षक दवाओं के लिए स्टिकी नोटिफिकेशन, सायरन वॉल्यूम और कस्टम वाइब्रेशन के साथ हाई-प्रायोरिटी अलर्ट चालू करें।</string>
+    <string name="premium_rational_critical_msg">यह एक महत्वपूर्ण दवा है। इसके लिए जीवन रक्षक अलर्ट सुविधाओं को सक्षम करने के लिए हाई-प्रायोरिटी पास की आवश्यकता है।</string>
+    <string name="benefit_critical">अपनी अगली खुराक के लिए अति-विश्वसनीय अलर्ट सक्षम करें</string>
 </resources>

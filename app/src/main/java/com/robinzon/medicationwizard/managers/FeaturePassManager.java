@@ -28,6 +28,7 @@ public class FeaturePassManager {
             case BACKUP -> prefs.setLong(AppConfig.KEY_PASS_BACKUP_EXPIRY, now + HOUR_IN_MILLIS);
             case PHOTO -> prefs.setLong(AppConfig.KEY_PASS_PHOTO_EXPIRY, now + HOUR_IN_MILLIS);
             case AD_FREE -> prefs.setLong(AppConfig.KEY_PASS_AD_FREE_EXPIRY, now + HOUR_IN_MILLIS);
+            case CRITICAL -> prefs.setBoolean(AppConfig.KEY_PASS_CRITICAL_ACTIVE, true);
             case DOSE_WINDOW -> prefs.setBoolean(AppConfig.KEY_PASS_DOSE_WINDOW_ACTIVE, true);
             case BYPASS_VOLUME -> prefs.setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, true);
             case VIBRATION -> prefs.setBoolean(AppConfig.KEY_PASS_VIBRATION_ACTIVE, true);
@@ -56,6 +57,7 @@ public class FeaturePassManager {
         prefs.setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, false);
         prefs.setBoolean(AppConfig.KEY_PASS_VIBRATION_ACTIVE, false);
         prefs.setBoolean(AppConfig.KEY_PASS_STICKY_ACTIVE, false);
+        prefs.setBoolean(AppConfig.KEY_PASS_CRITICAL_ACTIVE, false);
 
         // Use constants to ensure UI stays in sync after consumption.
         prefs.setBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);

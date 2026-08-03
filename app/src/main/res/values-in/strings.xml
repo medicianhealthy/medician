@@ -424,4 +424,13 @@
     <string name="magic_error_social_not_found">Facebook atau Instagram tidak ditemukan!</string>
     <string name="magic_error_already_rated">Sudah mendapatkan dari rating!</string>
     <string name="share_app_message">Cek Penyihir Obat! Ini membantu saya melacak obat saya dengan sentuhan ajaib. Unduh di sini: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">Obat Kritis</string>
+    <string name="critical_med_summary">Abaikan volume maksimal, notifikasi menempel, getaran detak jantung, dan tunda 5 menit.</string>
+    <string name="magic_spend_critical_btn">Pass Kritis (2 Magic / Pengingat Berikutnya)</string>
+    <string name="premium_benefit_critical_title">Obat Kritis</string>
+    <string name="premium_benefit_critical_desc">Aktifkan peringatan prioritas tinggi dengan notifikasi menempel, volume sirene, dan getaran kustom untuk obat penyelamat nyawa.</string>
+    <string name="premium_rational_critical_msg">Ini adalah Obat Kritis. Memerlukan pass prioritas tinggi untuk mengaktifkan fitur peringatan penyelamat nyawa.</string>
+    <string name="benefit_critical">aktifkan peringatan ultra-andal untuk dosis berikutnya</string>
 </resources>

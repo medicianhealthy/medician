@@ -430,4 +430,13 @@
     <string name="magic_error_social_not_found">فيسبوك أو إنستغرام غير موجود!</string>
     <string name="magic_error_already_rated">تم الكسب بالفعل من التقييم!</string>
     <string name="share_app_message">تحقق من ساحر الأدوية! يساعدني في تتبع أدويتي بلمسة سحرية. حمله من هنا: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">دواء حرج</string>
+    <string name="critical_med_summary">تجاوز الحد الأقصى لمستوى الصوت، إشعار مثبت، اهتزاز نبضات القلب، وغفوات لمدة 5 دقائق.</string>
+    <string name="magic_spend_critical_btn">مرور حرج (2 سحر / التذكير القادم)</string>
+    <string name="premium_benefit_critical_title">دواء حرج</string>
+    <string name="premium_benefit_critical_desc">قم بتفعيل التنبيهات عالية الأولوية مع الإشعارات المثبتة، ومستوى صوت صفارة الإنذار، والاهتزاز المخصص للأدوية المنقذة للحياة.</string>
+    <string name="premium_rational_critical_msg">هذا دواء حرج. يتطلب مرورًا عالي الأولوية لتمكين ميزات التنبيه المنقذة للحياة.</string>
+    <string name="benefit_critical">تمكين التنبيهات فائقة الموثوقية لجرعتك القادمة</string>
 </resources>

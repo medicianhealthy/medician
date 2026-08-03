@@ -92,6 +92,11 @@ public class DoseInstanceEntity {
     private boolean isPrn;
 
     /**
+     * Whether this dose is marked as "Critical".
+     */
+    private boolean isCritical;
+
+    /**
      * Empty constructor required by Room.
      */
     public DoseInstanceEntity() {
@@ -116,6 +121,7 @@ public class DoseInstanceEntity {
         entity.instruction = instance.getInstruction() != null ? instance.getInstruction().name() : null;
         entity.snoozeCount = instance.getSnoozeCount();
         entity.isPrn = (instance.getDailyFrequency() == 0);
+        entity.isCritical = instance.isCritical();
         return entity;
     }
 
@@ -137,6 +143,7 @@ public class DoseInstanceEntity {
         entity.instruction = json.isNull("instruction") ? null : json.optString("instruction");
         entity.snoozeCount = json.optInt("snoozeCount");
         entity.isPrn = json.optBoolean("isPrn");
+        entity.isCritical = json.optBoolean("isCritical");
         return entity;
     }
 
@@ -252,6 +259,14 @@ public class DoseInstanceEntity {
         isPrn = prn;
     }
 
+    public boolean isCritical() {
+        return isCritical;
+    }
+
+    public void setCritical(boolean critical) {
+        isCritical = critical;
+    }
+
     /**
      * Serializes this entity into a JSONObject for backup purposes.
      */
@@ -270,6 +285,7 @@ public class DoseInstanceEntity {
             json.put("instruction", instruction);
             json.put("snoozeCount", snoozeCount);
             json.put("isPrn", isPrn);
+            json.put("isCritical", isCritical);
         } catch (JSONException e) {
             return null;
         }

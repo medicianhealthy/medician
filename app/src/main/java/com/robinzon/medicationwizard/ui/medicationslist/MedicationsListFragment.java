@@ -27,6 +27,8 @@ import com.robinzon.medicationwizard.databinding.FragmentMedicationsListBinding;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
+import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.Collections;
 
@@ -87,6 +89,11 @@ public class MedicationsListFragment extends MedicationWizardFragment {
             String type = bundle.getString("feature_type");
             if (com.robinzon.medicationwizard.AppConfig.FeaturePassType.PHOTO.name().equals(type)) {
                 if (adapter != null) adapter.notifyDataSetChanged();
+            } else if (com.robinzon.medicationwizard.AppConfig.FeaturePassType.EXTRA_MED_SLOT.name().equals(type)) {
+                // If unlocked from list, open add sheet
+                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() ->
+                        new AddMedicationBottomSheet().show(getChildFragmentManager(), "AddMedBottomSheet"),
+                        300);
             }
         });
 
@@ -146,9 +153,21 @@ public class MedicationsListFragment extends MedicationWizardFragment {
     private void setupEmptyView() {
         binding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
             com.robinzon.medicationwizard.utils.Logger.log("MedicationsListFragment", "Empty state action clicked");
-            AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
-            bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
+            if (shouldCheckLimit()) {
+                FeatureRationalBottomSheet.newInstance(com.robinzon.medicationwizard.AppConfig.FeaturePassType.EXTRA_MED_SLOT)
+                        .show(getChildFragmentManager(), "ExtraSlotRational");
+            } else {
+                AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
+                bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
+            }
         });
+    }
+
+    private boolean shouldCheckLimit() {
+        if (com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(requireContext())) return false;
+        int currentCount = Medication.getSavedMedications(requireContext()).size();
+        int unlockedSlots = SharedPreferencesManager.getInstance(requireContext()).getInt(com.robinzon.medicationwizard.AppConfig.KEY_MEDS_SLOTS_UNLOCKED, 0);
+        return currentCount >= (com.robinzon.medicationwizard.AppConfig.FREE_MED_LIMIT + unlockedSlots);
     }
 
     /**
@@ -186,8 +205,13 @@ public class MedicationsListFragment extends MedicationWizardFragment {
 
             @Override
             public void onAddNew() {
-                AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
-                bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
+                if (shouldCheckLimit()) {
+                    FeatureRationalBottomSheet.newInstance(com.robinzon.medicationwizard.AppConfig.FeaturePassType.EXTRA_MED_SLOT)
+                            .show(getChildFragmentManager(), "ExtraSlotRational");
+                } else {
+                    AddMedicationBottomSheet bottomSheet = new AddMedicationBottomSheet();
+                    bottomSheet.show(getChildFragmentManager(), "AddMedBottomSheet");
+                }
             }
         });
 

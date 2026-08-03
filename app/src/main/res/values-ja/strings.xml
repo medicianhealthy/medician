@@ -424,4 +424,13 @@
     <string name="magic_error_social_not_found">FacebookまたはInstagramが見つかりません！</string>
     <string name="magic_error_already_rated">すでに評価で獲得済みです！</string>
     <string name="share_app_message">お薬の魔法使いをチェックしてみて！魔法のような感覚でお薬の管理ができます。ダウンロードはこちら: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Critical Medication Feature -->
+    <string name="critical_med_label">重要な薬</string>
+    <string name="critical_med_summary">最大音量の強制、固定通知、鼓動のような振動、5分ごとのスヌーズ。</string>
+    <string name="magic_spend_critical_btn">クリティカル・パス（2マジック / 次回のリマインダー）</string>
+    <string name="premium_benefit_critical_title">重要な薬</string>
+    <string name="premium_benefit_critical_desc">命に関わる薬のために、固定通知、サイレン音量、カスタム振動による高優先度のアラートをオンにします。</string>
+    <string name="premium_rational_critical_msg">これは重要な薬です。命を救うアラート機能を有効にするには、高優先度パスが必要です。</string>
+    <string name="benefit_critical">次回の服用のために超高信頼性アラートを有効にする</string>
 </resources>

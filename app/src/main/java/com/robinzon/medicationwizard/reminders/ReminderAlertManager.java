@@ -46,13 +46,17 @@ public class ReminderAlertManager {
      * Starts playing the reminder sound based on user settings.
      */
     public synchronized void startAlarm(Context context) {
+        startAlarm(context, false);
+    }
+
+    public synchronized void startAlarm(Context context, boolean isCritical) {
         stopAlarm(); // Ensure previous alarm is stopped
 
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         String uriStr = sp.getString(SettingsViewModel.KEY_NOTIF_SOUND_URI, "");
         Uri soundUri = uriStr.isEmpty() ? android.provider.Settings.System.DEFAULT_NOTIFICATION_URI : Uri.parse(uriStr);
-        boolean bypassPref = sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
-        int volumePercent = sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
+        boolean bypassPref = isCritical || sp.getBoolean(SettingsViewModel.KEY_BYPASS_SYSTEM_VOLUME, false);
+        int volumePercent = isCritical ? 85 : sp.getInt(SettingsViewModel.KEY_NOTIF_VOLUME, 70);
         float volumeMultiplier = volumePercent / 100f;
 
         mMediaPlayer = new MediaPlayer();
@@ -70,29 +74,31 @@ public class ReminderAlertManager {
                         .build());
             }
             mMediaPlayer.setVolume(volumeMultiplier, volumeMultiplier);
-            mMediaPlayer.setLooping(false); // Play only once
-            mMediaPlayer.setOnCompletionListener(mp -> stopAlarm()); // Stop vibration when sound ends
+            mMediaPlayer.setLooping(isCritical); // Loop if critical
+            mMediaPlayer.setOnCompletionListener(mp -> {
+                if (!isCritical) stopAlarm();
+            });
             mMediaPlayer.prepare();
             mMediaPlayer.start();
-            Logger.log("ReminderAlertManager", "Alarm started: %s", soundUri);
+            Logger.log("ReminderAlertManager", "Alarm started: %s (Critical: %b)", soundUri, isCritical);
 
             notifyListeners(true);
 
             // Handle Vibration
-            startVibration(context, bypassPref);
+            startVibration(context, bypassPref, isCritical);
 
-            // Safety timeout
-            mHandler.postDelayed(mTimeoutRunnable, ALARM_TIMEOUT_MS);
+            // Safety timeout: 30 seconds for critical, 10 for normal
+            mHandler.postDelayed(mTimeoutRunnable, isCritical ? 30000 : ALARM_TIMEOUT_MS);
         } catch (Exception e) {
             Logger.log("ReminderAlertManager", "Error starting alarm: %s", e.getMessage());
             releasePlayer();
         }
     }
 
-    private void startVibration(Context context, boolean isAlarm) {
+    private void startVibration(Context context, boolean isAlarm, boolean isCritical) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         // Ensure we respect both the functional toggle and the premium pass
-        boolean isVibrationEnabled = sp.getBoolean(SettingsViewModel.KEY_VIBRATION_ENABLED, false);
+        boolean isVibrationEnabled = isCritical || sp.getBoolean(SettingsViewModel.KEY_VIBRATION_ENABLED, false);
         
         if (!isVibrationEnabled) {
             Logger.log("ReminderAlertManager", "Vibration disabled in settings.");
@@ -113,8 +119,9 @@ public class ReminderAlertManager {
             return;
         }
 
-        String patternName = sp.getString(SettingsViewModel.KEY_VIBRATION_PATTERN, "Standard");
+        String patternName = isCritical ? "Urgent Heartbeat" : sp.getString(SettingsViewModel.KEY_VIBRATION_PATTERN, "Standard");
         long[] pattern = switch (patternName) {
+            case "Urgent Heartbeat" -> new long[]{0, 150, 100, 150, 500};
             case "Heartbeat" -> new long[]{0, 200, 100, 200, 100, 200, 500};
             case "SOS" ->
                     new long[]{0, 100, 100, 100, 100, 100, 300, 300, 100, 300, 100, 300, 300, 100, 100, 100, 100, 100, 500};
@@ -128,7 +135,7 @@ public class ReminderAlertManager {
                 .build();
 
         // Android 9+ (minSdk 28) supports VibrationEffect
-        mVibrator.vibrate(VibrationEffect.createWaveform(pattern, 0), attrs);
+        mVibrator.vibrate(VibrationEffect.createWaveform(pattern, isCritical ? 0 : -1), attrs);
         Logger.log("ReminderAlertManager", "Vibration started: %s (isAlarm: %b)", patternName, isAlarm);
     }
 
