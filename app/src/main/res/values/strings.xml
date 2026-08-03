@@ -442,11 +442,22 @@
     <string name="magic_spend_pass_btn">Use 1 Magic (1 Hour)</string>
     <string name="magic_spend_forever_btn">Unlock Forever (15 Magics)</string>
     <string name="magic_spend_ad_free_btn">Ad-Free (3 Magics / 1 Hour)</string>
+    <string name="magic_spend_extra_slot_btn">Unlock Slot (%1$d Magics)</string>
     <string name="settings_magic_marketplace_title">Magics Marketplace</string>
     <string name="settings_magic_marketplace_tempting_title">Unleash the Wizard\'s Power!</string>
     <string name="settings_magic_marketplace_tempting_desc">Earn Magics to unlock premium features for free. Tap to refill your magic well!</string>
     <string name="premium_rational_ad_free_msg">Unlock 1 hour of ad-free magic! No banners, no interruptions.</string>
+    <string name="premium_rational_extra_slot_msg">You\'ve reached the limit of 3 free medications. Unlock another slot to continue your journey!</string>
     <string name="benefit_ad_free">enjoy 1 hour of ad-free health tracking</string>
+    <string name="benefit_extra_slot">add one more medication to your library</string>
+    <string name="premium_benefit_extra_slot_title">Extra Medication Slot</string>
+
+    <string name="magic_bonus_early_bird_toast">Early Bird Bonus! +1 Magic 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">Perfect Day! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">You took all your doses today! You earned +1 Magic for your consistency.</string>
+    <string name="magic_bonus_perfect_day_btn">Awesome!</string>
+    <string name="magic_error_social_not_found">Facebook or Instagram not found!</string>
+    <string name="magic_error_already_rated">Already earned from rating!</string>
 
     <string name="share_app_message">Check out Medication Wizard! It helps me track my meds with a touch of magic. Download here: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

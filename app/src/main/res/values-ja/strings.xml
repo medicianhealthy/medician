@@ -388,4 +388,40 @@
     <string name="action_add_new_med">新しい薬を追加</string>
     <string name="dialog_add_choice_title">何をしますか？</string>
     <string name="stopwatch_last_dose_format">最終服用: %s 前</string>
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d マジック</string>
+    <string name="magic_earned_toast">+%1$d マジックを獲得しました！</string>
+    <string name="magic_insufficient_toast">マジックが足りません！ビデオを見たりシェアしたりして獲得しましょう。</string>
+    <string name="magic_share_limit_toast">シェアでマジックを獲得できるのは1日1回です。また明日来てください！</string>
+    <string name="magic_rate_limit_toast">すでにアプリの評価でマジックを獲得しています！</string>
+    <string name="magic_earn_title">マジックを獲得</string>
+    <string name="magic_earn_rv_title">ビデオを見る</string>
+    <string name="magic_earn_rv_desc">+1 マジック</string>
+    <string name="magic_earn_share_title">友達にシェア</string>
+    <string name="magic_earn_share_desc">+2 マジック (WhatsApp)</string>
+    <string name="magic_earn_streak_title">デイリーログイン</string>
+    <string name="magic_earn_streak_desc">+1 マジック (デイリーボーナス)</string>
+    <string name="magic_earn_rate_title">アプリを評価</string>
+    <string name="magic_earn_rate_desc">+3 マジック (1回のみ)</string>
+    <string name="magic_earn_story_title">ストーリーをシェア</string>
+    <string name="magic_earn_story_desc">+3 マジック (Instagram/FB)</string>
+    <string name="magic_spend_pass_btn">1 マジックを使用 (1時間)</string>
+    <string name="magic_spend_forever_btn">永久にアンロック (15 マジック)</string>
+    <string name="magic_spend_ad_free_btn">広告なし (3 マジック / 1時間)</string>
+    <string name="magic_spend_extra_slot_btn">スロットをアンロック (%1$d マジック)</string>
+    <string name="settings_magic_marketplace_title">マジック・マーケットプレイス</string>
+    <string name="settings_magic_marketplace_tempting_title">魔法使いの力を解き放とう！</string>
+    <string name="settings_magic_marketplace_tempting_desc">マジックを獲得して、プレミアム機能を無料でアンロックしましょう。タップして魔法の井戸を満たしてください！</string>
+    <string name="premium_rational_ad_free_msg">1時間の広告なし魔法をアンロック！バナーも中断もありません。</string>
+    <string name="premium_rational_extra_slot_msg">無料のお薬登録制限（3つ）に達しました。別のスロットをアンロックして旅を続けましょう！</string>
+    <string name="benefit_ad_free">1時間の広告なし健康管理を楽しむ</string>
+    <string name="benefit_extra_slot">ライブラリに薬をもう1つ追加する</string>
+    <string name="premium_benefit_extra_slot_title">追加のお薬スロット</string>
+    <string name="magic_bonus_early_bird_toast">早起きボーナス！ +1 マジック 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">完璧な一日！ 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">今日はすべての薬を服用しました！継続のご褒美として +1 マジックを獲得しました。</string>
+    <string name="magic_bonus_perfect_day_btn">素晴らしい！</string>
+    <string name="magic_error_social_not_found">FacebookまたはInstagramが見つかりません！</string>
+    <string name="magic_error_already_rated">すでに評価で獲得済みです！</string>
+    <string name="share_app_message">お薬の魔法使いをチェックしてみて！魔法のような感覚でお薬の管理ができます。ダウンロードはこちら: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

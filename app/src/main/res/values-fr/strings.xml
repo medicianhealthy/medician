@@ -388,4 +388,40 @@
     <string name="action_add_new_med">Nouveau médicament</string>
     <string name="dialog_add_choice_title">Que souhaitez-vous faire ?</string>
     <string name="stopwatch_last_dose_format">Dernière dose : il y a %s</string>
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d Magies</string>
+    <string name="magic_earned_toast">+%1$d Magies gagnées !</string>
+    <string name="magic_insufficient_toast">Pas assez de Magies ! Gagnez-en plus en regardant une vidéo ou en partageant.</string>
+    <string name="magic_share_limit_toast">Vous pouvez gagner en partageant une fois par jour. Revenez demain pour en avoir plus !</string>
+    <string name="magic_rate_limit_toast">Vous avez déjà gagné des Magies en notant l\'application !</string>
+    <string name="magic_earn_title">Gagner des Magies</string>
+    <string name="magic_earn_rv_title">Regarder une vidéo</string>
+    <string name="magic_earn_rv_desc">+1 Magie</string>
+    <string name="magic_earn_share_title">Partager avec un ami</string>
+    <string name="magic_earn_share_desc">+2 Magies (WhatsApp)</string>
+    <string name="magic_earn_streak_title">Connexion quotidienne</string>
+    <string name="magic_earn_streak_desc">+1 Magie (Bonus quotidien)</string>
+    <string name="magic_earn_rate_title">Noter l\'application</string>
+    <string name="magic_earn_rate_desc">+3 Magies (une fois)</string>
+    <string name="magic_earn_story_title">Partager une Story</string>
+    <string name="magic_earn_story_desc">+3 Magies (Instagram/FB)</string>
+    <string name="magic_spend_pass_btn">Utiliser 1 Magie (1 heure)</string>
+    <string name="magic_spend_forever_btn">Débloquer à vie (15 Magies)</string>
+    <string name="magic_spend_ad_free_btn">Sans pub (3 Magies / 1 heure)</string>
+    <string name="magic_spend_extra_slot_btn">Débloquer un emplacement (%1$d Magies)</string>
+    <string name="settings_magic_marketplace_title">Marché des Magies</string>
+    <string name="settings_magic_marketplace_tempting_title">Libérez le pouvoir du Mage !</string>
+    <string name="settings_magic_marketplace_tempting_desc">Gagnez des Magies pour débloquer des fonctionnalités premium gratuitement. Appuyez pour remplir votre puits de magie !</string>
+    <string name="premium_rational_ad_free_msg">Débloquez 1 heure de magie sans pub ! Pas de bannières, pas d\'interruptions.</string>
+    <string name="premium_rational_extra_slot_msg">Vous avez atteint la limite de 3 médicaments gratuits. Débloquez un autre emplacement pour continuer votre parcours !</string>
+    <string name="benefit_ad_free">profitez d\'une heure de suivi santé sans publicité</string>
+    <string name="benefit_extra_slot">ajoutez un médicament de plus à votre bibliothèque</string>
+    <string name="premium_benefit_extra_slot_title">Emplacement de médicament supplémentaire</string>
+    <string name="magic_bonus_early_bird_toast">Bonus lève-tard ! +1 Magie 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">Journée parfaite ! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">Vous avez pris toutes vos doses aujourd\'hui ! Vous avez gagné +1 Magie pour votre assiduité.</string>
+    <string name="magic_bonus_perfect_day_btn">Génial !</string>
+    <string name="magic_error_social_not_found">Facebook ou Instagram non trouvé !</string>
+    <string name="magic_error_already_rated">Déjà gagné en notant !</string>
+    <string name="share_app_message">Découvrez Mage des Médicaments ! Il m\'aide à suivre mes médicaments avec une touche de magie. Téléchargez ici : https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

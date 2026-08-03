@@ -165,7 +165,7 @@
     <string name="premium_benefit_backup_title">הגנת נתונים</string>
     <string name="premium_benefit_backup_desc">ייצוא וייבוא של נתוני התרופות שלך כדי לשמור עליהם בטוחים.</string>
     <string name="premium_benefit_rest_title">מנוחה מכבדת</string>
-    <string name="premium_benefit_rest_desc">הפעל שעות שקט כדי להבטיח ששנתך לעולם לא תופרע.</string>
+    <string name="premium_benefit_rest_desc">הפעל שעות שקט כדי להבתיח ששנתך לעולם לא תופרע.</string>
     <string name="premium_benefit_support_title">קוסמות בעדיפות</string>
     <string name="premium_benefit_support_desc">קבל תמיכה מהירה והצע קסמים חדשים ישירות לקוסמים שלנו.</string>
     <string name="premium_description">שדרג לפרימיום ותיהנה מתכונות מתקדמות כמו גיבוי בענן, שעות שקט וחוויה ללא פרסומות.</string>
@@ -395,4 +395,44 @@
     <string name="action_add_new_med">הוסף תרופה חדשה</string>
     <string name="dialog_add_choice_title">מה תרצה לעשות?</string>
     <string name="stopwatch_last_dose_format">מנה אחרונה: לפני %s</string>
+    <string name="log_dose_subtitle">בחר תרופה כדי לתעד מנה ברגע זה.</string>
+
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d קסמים</string>
+    <string name="magic_earned_toast">+%1$d קסמים נוספו!</string>
+    <string name="magic_insufficient_toast">אין מספיק קסמים! ניתן להרוויח עוד בצפייה בסרטון או שיתוף.</string>
+    <string name="magic_share_limit_toast">ניתן לקבל קסמים משיתוף פעם אחת ביום. חזרו מחר לעוד!</string>
+    <string name="magic_rate_limit_toast">כבר קיבלת קסמים על דירוג האפליקציה!</string>
+
+    <string name="magic_earn_title">הרווח קסמים</string>
+    <string name="magic_earn_rv_title">צפה בסרטון</string>
+    <string name="magic_earn_rv_desc">+1 קסם</string>
+    <string name="magic_earn_share_title">שתף עם חבר</string>
+    <string name="magic_earn_share_desc">+2 קסמים (וואטסאפ)</string>
+    <string name="magic_earn_streak_title">התחברות יומית</string>
+    <string name="magic_earn_streak_desc">+1 קסם (בונוס יומי)</string>
+    <string name="magic_earn_rate_title">דרג את האפליקציה</string>
+    <string name="magic_earn_rate_desc">+3 קסמים (חד פעמי)</string>
+    <string name="magic_earn_story_title">שתף סטורי</string>
+    <string name="magic_earn_story_desc">+3 קסמים (אינסטגרם/פייסבוק)</string>
+
+    <string name="magic_spend_pass_btn">השתמש בקסם 1 (שעה אחת)</string>
+    <string name="magic_spend_forever_btn">פתח לתמיד (15 קסמים)</string>
+    <string name="magic_spend_ad_free_btn">ללא פרסומות (3 קסמים / שעה אחת)</string>
+    <string name="magic_spend_extra_slot_btn">פתח מקום נוסף (%1$d קסמים)</string>
+    <string name="settings_magic_marketplace_title">שוק הקסמים</string>
+    <string name="settings_magic_marketplace_tempting_title">שחרר את כוחו של הקוסם!</string>
+    <string name="settings_magic_marketplace_tempting_desc">הרווח קסמים כדי לפתוח פיצ\'רים בחינם. הקש כדי למלא את באר הקסמים שלך!</string>
+    <string name="premium_rational_ad_free_msg">שחרר שעה של קסם ללא פרסומות! ללא באנרים וללא הפרעות.</string>
+    <string name="premium_rational_extra_slot_msg">הגעת למכסה של 3 תרופות בחינם. פתח מקום נוסף כדי להמשיך במסע שלך!</string>
+    <string name="benefit_ad_free">ליהנות משעה של מעקב בריאות ללא פרסומות</string>
+    <string name="benefit_extra_slot">להוסיף תרופה אחת נוספת לספרייה שלך</string>
+    <string name="premium_benefit_extra_slot_title">מקום נוסף לתרופה</string>
+    <string name="magic_bonus_early_bird_toast">בונוס ציפור מוקדמת! +1 קסם 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">יום מושלם! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">לקחת את כל המנות שלך היום! הרווחת +1 קסם על העקביות שלך.</string>
+    <string name="magic_bonus_perfect_day_btn">מדהים!</string>
+    <string name="magic_error_social_not_found">פייסבוק או אינסטגרם לא נמצאו!</string>
+    <string name="magic_error_already_rated">כבר קיבלת תגמול על דירוג!</string>
+    <string name="share_app_message">היי! כדאי לך להכיר את "קוסם התרופות" - אפליקציה שעוזרת לי לנהל את התרופות שלי עם מגע של קסם. להורדה כאן: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

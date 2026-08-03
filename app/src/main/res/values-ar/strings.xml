@@ -394,4 +394,40 @@
     <string name="action_add_new_med">إضافة دواء جديد</string>
     <string name="dialog_add_choice_title">ماذا تود أن تفعل؟</string>
     <string name="stopwatch_last_dose_format">آخر جرعة: قبل %s</string>
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d سحر</string>
+    <string name="magic_earned_toast">تم كسب +%1$d سحر!</string>
+    <string name="magic_insufficient_toast">ليس لديك ما يكفي من السحر! اكسب المزيد بمشاهدة فيديو أو المشاركة.</string>
+    <string name="magic_share_limit_toast">يمكنك الكسب من المشاركة مرة واحدة يوميًا. عد غدًا للمزيد!</string>
+    <string name="magic_rate_limit_toast">لقد كسبت سحراً بالفعل من تقييم التطبيق!</string>
+    <string name="magic_earn_title">اكسب السحر</string>
+    <string name="magic_earn_rv_title">شاهد فيديو</string>
+    <string name="magic_earn_rv_desc">+1 سحر</string>
+    <string name="magic_earn_share_title">شارك مع صديق</string>
+    <string name="magic_earn_share_desc">+2 سحر (واتساب)</string>
+    <string name="magic_earn_streak_title">تسجيل الدخول اليومي</string>
+    <string name="magic_earn_streak_desc">+1 سحر (مكافأة يومية)</string>
+    <string name="magic_earn_rate_title">قيم التطبيق</string>
+    <string name="magic_earn_rate_desc">+3 سحر (مرة واحدة)</string>
+    <string name="magic_earn_story_title">شارك قصة</string>
+    <string name="magic_earn_story_desc">+3 سحر (إنستغرام/فيسبوك)</string>
+    <string name="magic_spend_pass_btn">استخدم 1 سحر (ساعة واحدة)</string>
+    <string name="magic_spend_forever_btn">فتح للأبد (15 سحر)</string>
+    <string name="magic_spend_ad_free_btn">بدون إعلانات (3 سحر / ساعة واحدة)</string>
+    <string name="magic_spend_extra_slot_btn">فتح خانة (%1$d سحر)</string>
+    <string name="settings_magic_marketplace_title">سوق السحر</string>
+    <string name="settings_magic_marketplace_tempting_title">أطلق العنان لقوة الساحر!</string>
+    <string name="settings_magic_marketplace_tempting_desc">اكسب السحر لفتح الميزات المميزة مجانًا. اضغط لإعادة ملء بئر السحر الخاص بك!</string>
+    <string name="premium_rational_ad_free_msg">افتح ساعة واحدة من السحر الخالي من الإعلانات! لا لافتات، لا انقطاعات.</string>
+    <string name="premium_rational_extra_slot_msg">لقد وصلت إلى الحد الأقصى وهو 3 أدوية مجانية. افتح خانة أخرى لمواصلة رحلتك!</string>
+    <string name="benefit_ad_free">استمتع بساعة واحدة من تتبع الصحة بدون إعلانات</string>
+    <string name="benefit_extra_slot">أضف دواءً آخر إلى مكتبتك</string>
+    <string name="premium_benefit_extra_slot_title">خانة دواء إضافية</string>
+    <string name="magic_bonus_early_bird_toast">مكافأة الطائر المبكر! +1 سحر 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">يوم مثالي! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">لقد تناولت جميع جرعاتك اليوم! لقد كسبت +1 سحر لالتزامك.</string>
+    <string name="magic_bonus_perfect_day_btn">رائع!</string>
+    <string name="magic_error_social_not_found">فيسبوك أو إنستغرام غير موجود!</string>
+    <string name="magic_error_already_rated">تم الكسب بالفعل من التقييم!</string>
+    <string name="share_app_message">تحقق من ساحر الأدوية! يساعدني في تتبع أدويتي بلمسة سحرية. حمله من هنا: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

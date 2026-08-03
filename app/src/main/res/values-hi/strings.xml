@@ -388,4 +388,40 @@
     <string name="action_add_new_med">नई दवा जोड़ें</string>
     <string name="dialog_add_choice_title">आप क्या करना चाहेंगे?</string>
     <string name="stopwatch_last_dose_format">पिछली खुराक: %s पहले</string>
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d मैजिक्स</string>
+    <string name="magic_earned_toast">+%1$d मैजिक्स कमाए!</string>
+    <string name="magic_insufficient_toast">पर्याप्त मैजिक्स नहीं हैं! वीडियो देखकर या शेयर करके और कमाएं।</string>
+    <string name="magic_share_limit_toast">आप दिन में एक बार शेयर करके कमा सकते हैं। और के लिए कल वापस आएं!</string>
+    <string name="magic_rate_limit_toast">आप ऐप को रेट करने से पहले ही मैजिक्स कमा चुके हैं!</string>
+    <string name="magic_earn_title">मैजिक्स कमाएं</string>
+    <string name="magic_earn_rv_title">एक वीडियो देखें</string>
+    <string name="magic_earn_rv_desc">+1 मैजिक</string>
+    <string name="magic_earn_share_title">दोस्त के साथ शेयर करें</string>
+    <string name="magic_earn_share_desc">+2 मैजिक्स (WhatsApp)</string>
+    <string name="magic_earn_streak_title">दैनिक लॉगिन</string>
+    <string name="magic_earn_streak_desc">+1 मैजिक (दैनिक बोनस)</string>
+    <string name="magic_earn_rate_title">ऐप को रेट करें</string>
+    <string name="magic_earn_rate_desc">+3 मैजिक्स (एक बार)</string>
+    <string name="magic_earn_story_title">स्टोरी शेयर करें</string>
+    <string name="magic_earn_story_desc">+3 मैजिक्स (Instagram/FB)</string>
+    <string name="magic_spend_pass_btn">1 मैजिक का उपयोग करें (1 घंटा)</string>
+    <string name="magic_spend_forever_btn">हमेशा के लिए अनलॉक करें (15 मैजिक्स)</string>
+    <string name="magic_spend_ad_free_btn">विज्ञापन-मुक्त (3 मैजिक्स / 1 घंटा)</string>
+    <string name="magic_spend_extra_slot_btn">स्लॉट अनलॉक करें (%1$d मैजिक्स)</string>
+    <string name="settings_magic_marketplace_title">मैजिक्स मार्केटप्लेस</string>
+    <string name="settings_magic_marketplace_tempting_title">विजार्ड की शक्ति को अनलॉक करें!</string>
+    <string name="settings_magic_marketplace_tempting_desc">प्रीमियम सुविधाओं को मुफ्त में अनलॉक करने के लिए मैजिक्स कमाएं। अपने मैजिक कुएं को फिर से भरने के लिए टैप करें!</string>
+    <string name="premium_rational_ad_free_msg">1 घंटे का विज्ञापन-मुक्त जादू अनलॉक करें! कोई बैनर नहीं, कोई रुकावट नहीं।</string>
+    <string name="premium_rational_extra_slot_msg">आप 3 मुफ्त दवाओं की सीमा तक पहुँच गए हैं। अपनी यात्रा जारी रखने के लिए एक और स्लॉट अनलॉक करें!</string>
+    <string name="benefit_ad_free">1 घंटे के विज्ञापन-मुक्त स्वास्थ्य ट्रैकिंग का आनंद लें</string>
+    <string name="benefit_extra_slot">अपनी लाइब्रेरी में एक और दवा जोड़ें</string>
+    <string name="premium_benefit_extra_slot_title">अतिरिक्त दवा स्लॉट</string>
+    <string name="magic_bonus_early_bird_toast">अर्ली बर्ड बोनस! +1 मैजिक 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">परफेक्ट डे! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">आपने आज अपनी सभी खुराकें ले लीं! आपने अपनी निरंतरता के लिए +1 मैजिक कमाया।</string>
+    <string name="magic_bonus_perfect_day_btn">बहुत बढ़िया!</string>
+    <string name="magic_error_social_not_found">फेसबुक या इंस्टाग्राम नहीं मिला!</string>
+    <string name="magic_error_already_rated">रेटिंग से पहले ही कमाया जा चुका है!</string>
+    <string name="share_app_message">मेडिकेशन विजार्ड देखें! यह मुझे जादू के स्पर्श के साथ मेरी दवाओं को ट्रैक करने में मदद करता है। यहाँ डाउनलोड करें: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

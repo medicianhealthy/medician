@@ -109,9 +109,18 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         });
 
         view.findViewById(R.id.btn_pay_magic_pass).setOnClickListener(v -> {
-            int cost = featureType == AppConfig.FeaturePassType.AD_FREE ? AppConfig.MAGIC_COST_AD_FREE_1H : AppConfig.MAGIC_COST_PASS_1H;
+            int cost = AppConfig.MAGIC_COST_PASS_1H;
+            if (featureType == AppConfig.FeaturePassType.AD_FREE) cost = AppConfig.MAGIC_COST_AD_FREE_1H;
+            else if (featureType == AppConfig.FeaturePassType.EXTRA_MED_SLOT) cost = AppConfig.MAGIC_COST_EXTRA_MED_SLOT;
+
             if (MagicManager.getInstance(requireContext()).spendMagics(cost)) {
-                FeaturePassManager.grantPass(requireContext(), featureType);
+                if (featureType == AppConfig.FeaturePassType.EXTRA_MED_SLOT) {
+                    SharedPreferencesManager sp = SharedPreferencesManager.getInstance(requireContext());
+                    int unlocked = sp.getInt(AppConfig.KEY_MEDS_SLOTS_UNLOCKED, 0);
+                    sp.setInt(AppConfig.KEY_MEDS_SLOTS_UNLOCKED, unlocked + 1);
+                } else {
+                    FeaturePassManager.grantPass(requireContext(), featureType);
+                }
                 onFeatureUnlocked();
             } else {
                 Toast.makeText(requireContext(), R.string.magic_insufficient_toast, Toast.LENGTH_SHORT).show();
@@ -151,16 +160,18 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         com.google.android.material.button.MaterialButton passBtn = view.findViewById(R.id.btn_pay_magic_pass);
         if (featureType == AppConfig.FeaturePassType.AD_FREE) {
             passBtn.setText(R.string.magic_spend_ad_free_btn);
+        } else if (featureType == AppConfig.FeaturePassType.EXTRA_MED_SLOT) {
+            passBtn.setText(getString(R.string.magic_spend_extra_slot_btn, AppConfig.MAGIC_COST_EXTRA_MED_SLOT));
         } else {
             passBtn.setText(R.string.magic_spend_pass_btn);
         }
 
-        // Hide "Forever" button if already permanently unlocked
+        // Hide "Forever" button if already permanently unlocked or if it's a slot
         boolean permanentlyUnlocked = SharedPreferencesManager.getInstance(requireContext())
                 .getBoolean(AppConfig.KEY_PERMANENT_PASS_PREFIX + featureType.name(), false);
-        
+
         View foreverBtn = view.findViewById(R.id.btn_pay_magic_forever);
-        foreverBtn.setVisibility(permanentlyUnlocked ? View.GONE : View.VISIBLE);
+        foreverBtn.setVisibility((permanentlyUnlocked || featureType == AppConfig.FeaturePassType.EXTRA_MED_SLOT) ? View.GONE : View.VISIBLE);
     }
 
     private void onFeatureUnlocked() {
@@ -241,6 +252,10 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                 iconView.setImageResource(R.drawable.ic_ad_badge);
                 descView.setText(R.string.premium_rational_ad_free_msg);
             }
+            case EXTRA_MED_SLOT -> {
+                iconView.setImageResource(R.drawable.ic_list);
+                descView.setText(R.string.premium_rational_extra_slot_msg);
+            }
         }
 
         String pkg = requireContext().getPackageName();
@@ -264,6 +279,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case DOSE_WINDOW -> getString(R.string.settings_dose_window_title);
             case PHOTO -> getString(R.string.btn_take_photo);
             case AD_FREE -> getString(R.string.premium_benefit_ad_free_title);
+            case EXTRA_MED_SLOT -> getString(R.string.premium_benefit_extra_slot_title);
         };
     }
 
@@ -280,6 +296,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case DOSE_WINDOW -> getString(R.string.benefit_dose_window);
             case PHOTO -> getString(R.string.benefit_photo);
             case AD_FREE -> getString(R.string.benefit_ad_free);
+            case EXTRA_MED_SLOT -> getString(R.string.benefit_extra_slot);
         };
     }
 }

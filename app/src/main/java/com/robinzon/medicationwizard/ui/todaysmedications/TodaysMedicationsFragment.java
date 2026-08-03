@@ -31,6 +31,8 @@ import com.robinzon.medicationwizard.databinding.FragmentTodaysMedicationsBindin
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.managers.MagicManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
+import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
+import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -487,7 +489,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         long diffMillis = Math.abs(finalActionTime - instance.getScheduledTime());
         if (diffMillis <= 5 * 60 * 1000 && "TAKEN".equals(status)) {
             MagicManager.getInstance(appContext).addMagics(1);
-            Toast.makeText(appContext, "Early Bird Bonus! +1 Magic 🐦✨", Toast.LENGTH_SHORT).show();
+            Toast.makeText(appContext, getString(R.string.magic_bonus_early_bird_toast), Toast.LENGTH_SHORT).show();
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -522,9 +524,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
             List<DoseInstanceEntity> currentList = mViewModel.getTodaysMedications().getValue();
             if (MagicManager.getInstance(requireContext()).checkAndGrantPerfectDayBonus(currentList)) {
                 com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-                dialog.setTitle("Perfect Day! 🏆");
-                dialog.setMessage("You took all your doses today! You earned +1 Magic for your consistency.");
-                dialog.setPositiveButton("Awesome!", null);
+                dialog.setTitle(getString(R.string.magic_bonus_perfect_day_title));
+                dialog.setMessage(getString(R.string.magic_bonus_perfect_day_msg));
+                dialog.setPositiveButton(getString(R.string.magic_bonus_perfect_day_btn), null);
                 dialog.show();
             }
         }
@@ -693,6 +695,17 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private void setupEmptyView() {
         mBinding.emptyLayout.btnEmptyAction.setOnClickListener(v -> {
             if (getActivity() != null) {
+                if (!com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(requireContext())) {
+                    int currentCount = com.robinzon.medicationwizard.entities.Medication.getSavedMedications(requireContext()).size();
+                    int unlockedSlots = SharedPreferencesManager.getInstance(requireContext()).getInt(com.robinzon.medicationwizard.AppConfig.KEY_MEDS_SLOTS_UNLOCKED, 0);
+                    int allowedLimit = com.robinzon.medicationwizard.AppConfig.FREE_MED_LIMIT + unlockedSlots;
+
+                    if (currentCount >= allowedLimit) {
+                        FeatureRationalBottomSheet.newInstance(com.robinzon.medicationwizard.AppConfig.FeaturePassType.EXTRA_MED_SLOT)
+                                .show(getChildFragmentManager(), "ExtraSlotRational");
+                        return;
+                    }
+                }
                 AddMedicationBottomSheet bs = new AddMedicationBottomSheet();
                 bs.show(getChildFragmentManager(), "AddMedBottomSheet");
             }

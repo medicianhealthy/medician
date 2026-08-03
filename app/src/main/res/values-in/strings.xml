@@ -388,4 +388,40 @@
     <string name="action_add_new_med">Tambah Obat Baru</string>
     <string name="dialog_add_choice_title">Apa yang ingin Anda lakukan?</string>
     <string name="stopwatch_last_dose_format">Dosis terakhir: %s yang lalu</string>
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d Magic</string>
+    <string name="magic_earned_toast">+%1$d Magic didapatkan!</string>
+    <string name="magic_insufficient_toast">Magic tidak cukup! Dapatkan lebih banyak dengan menonton video atau berbagi.</string>
+    <string name="magic_share_limit_toast">Kamu bisa mendapatkan dari berbagi sekali sehari. Kembali lagi besok untuk lebih banyak!</string>
+    <string name="magic_rate_limit_toast">Kamu sudah mendapatkan Magic dari memberi rating aplikasi!</string>
+    <string name="magic_earn_title">Dapatkan Magic</string>
+    <string name="magic_earn_rv_title">Tonton Video</string>
+    <string name="magic_earn_rv_desc">+1 Magic</string>
+    <string name="magic_earn_share_title">Bagikan ke Teman</string>
+    <string name="magic_earn_share_desc">+2 Magic (WhatsApp)</string>
+    <string name="magic_earn_streak_title">Login Harian</string>
+    <string name="magic_earn_streak_desc">+1 Magic (Bonus harian)</string>
+    <string name="magic_earn_rate_title">Beri Rating Aplikasi</string>
+    <string name="magic_earn_rate_desc">+3 Magic (Sekali saja)</string>
+    <string name="magic_earn_story_title">Bagikan Cerita</string>
+    <string name="magic_earn_story_desc">+3 Magic (Instagram/FB)</string>
+    <string name="magic_spend_pass_btn">Gunakan 1 Magic (1 Jam)</string>
+    <string name="magic_spend_forever_btn">Buka Selamanya (15 Magic)</string>
+    <string name="magic_spend_ad_free_btn">Tanpa Iklan (3 Magic / 1 Jam)</string>
+    <string name="magic_spend_extra_slot_btn">Buka Slot (%1$d Magic)</string>
+    <string name="settings_magic_marketplace_title">Pasar Magic</string>
+    <string name="settings_magic_marketplace_tempting_title">Lepaskan Kekuatan Penyihir!</string>
+    <string name="settings_magic_marketplace_tempting_desc">Dapatkan Magic untuk membuka fitur premium secara gratis. Ketuk untuk mengisi ulang sumur magic-mu!</string>
+    <string name="premium_rational_ad_free_msg">Buka 1 jam sihir tanpa iklan! Tanpa banner, tanpa gangguan.</string>
+    <string name="premium_rational_extra_slot_msg">Kamu telah mencapai batas 3 obat gratis. Buka slot lain untuk melanjutkan perjalananmu!</string>
+    <string name="benefit_ad_free">nikmati 1 jam pelacakan kesehatan tanpa iklan</string>
+    <string name="benefit_extra_slot">tambahkan satu obat lagi ke perpustakaanmu</string>
+    <string name="premium_benefit_extra_slot_title">Slot Obat Tambahan</string>
+    <string name="magic_bonus_early_bird_toast">Bonus Burung Pagi! +1 Magic 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">Hari Sempurna! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">Kamu meminum semua dosismu hari ini! Kamu mendapatkan +1 Magic untuk konsistensimu.</string>
+    <string name="magic_bonus_perfect_day_btn">Luar Biasa!</string>
+    <string name="magic_error_social_not_found">Facebook atau Instagram tidak ditemukan!</string>
+    <string name="magic_error_already_rated">Sudah mendapatkan dari rating!</string>
+    <string name="share_app_message">Cek Penyihir Obat! Ini membantu saya melacak obat saya dengan sentuhan ajaib. Unduh di sini: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

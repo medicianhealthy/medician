@@ -388,4 +388,40 @@
     <string name="action_add_new_med">Добавить лекарство</string>
     <string name="dialog_add_choice_title">Что вы хотите сделать?</string>
     <string name="stopwatch_last_dose_format">Последний прием: %s назад</string>
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d Магий</string>
+    <string name="magic_earned_toast">Получено +%1$d Магий!</string>
+    <string name="magic_insufficient_toast">Недостаточно Магий! Заработайте больше, посмотрев видео или поделившись приложением.</string>
+    <string name="magic_share_limit_toast">Вы можете зарабатывать на репостах раз в день. Приходите завтра за новыми наградами!</string>
+    <string name="magic_rate_limit_toast">Вы уже получили Магии за оценку приложения!</string>
+    <string name="magic_earn_title">Заработать Магии</string>
+    <string name="magic_earn_rv_title">Смотреть видео</string>
+    <string name="magic_earn_rv_desc">+1 Магия</string>
+    <string name="magic_earn_share_title">Поделиться с другом</string>
+    <string name="magic_earn_share_desc">+2 Магии (WhatsApp)</string>
+    <string name="magic_earn_streak_title">Ежедневный вход</string>
+    <string name="magic_earn_streak_desc">+1 Магия (Ежедневный бонус)</string>
+    <string name="magic_earn_rate_title">Оценить приложение</string>
+    <string name="magic_earn_rate_desc">+3 Магии (единоразово)</string>
+    <string name="magic_earn_story_title">Поделиться в Story</string>
+    <string name="magic_earn_story_desc">+3 Магии (Instagram/FB)</string>
+    <string name="magic_spend_pass_btn">Использовать 1 Магию (1 час)</string>
+    <string name="magic_spend_forever_btn">Разблокировать навсегда (15 Магий)</string>
+    <string name="magic_spend_ad_free_btn">Без рекламы (3 Магий / 1 час)</string>
+    <string name="magic_spend_extra_slot_btn">Открыть слот (%1$d Магий)</string>
+    <string name="settings_magic_marketplace_title">Магазин Магий</string>
+    <string name="settings_magic_marketplace_tempting_title">Раскрой силу Мастера!</string>
+    <string name="settings_magic_marketplace_tempting_desc">Зарабатывайте Магии, чтобы бесплатно открывать премиум-функции. Нажмите, чтобы наполнить свой магический колодец!</string>
+    <string name="premium_rational_ad_free_msg">Открой 1 час магии без рекламы! Без баннеров и помех.</string>
+    <string name="premium_rational_extra_slot_msg">Вы достигли лимита в 3 бесплатных лекарства. Откройте еще один слот, чтобы продолжить свой путь!</string>
+    <string name="benefit_ad_free">наслаждайтесь 1 часом отслеживания здоровья без рекламы</string>
+    <string name="benefit_extra_slot">добавьте еще одно лекарство в свою библиотеку</string>
+    <string name="premium_benefit_extra_slot_title">Дополнительный слот для лекарств</string>
+    <string name="magic_bonus_early_bird_toast">Бонус ранней пташки! +1 Магия 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">Идеальный день! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">Вы приняли все дозы сегодня! Вы заработали +1 Магию за свою последовательность.</string>
+    <string name="magic_bonus_perfect_day_btn">Круто!</string>
+    <string name="magic_error_social_not_found">Facebook или Instagram не найдены!</string>
+    <string name="magic_error_already_rated">Уже получено за оценку!</string>
+    <string name="share_app_message">Посмотри Мастер Лекарств! Он помогает мне следить за приемом таблеток с капелькой магии. Скачать здесь: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

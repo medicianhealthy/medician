@@ -35,6 +35,7 @@ import com.robinzon.medicationwizard.managers.MagicManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
+import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
 import com.robinzon.medicationwizard.ui.magics.MagicEarnBottomSheet;
 import com.robinzon.medicationwizard.ui.onboarding.OnboardingActivity;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
@@ -533,6 +534,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void openAddMedSheet() {
+        if (!AppConfig.isPremiumPurchased(this)) {
+            int currentCount = com.robinzon.medicationwizard.entities.Medication.getSavedMedications(this).size();
+            int unlockedSlots = SharedPreferencesManager.getInstance(this).getInt(AppConfig.KEY_MEDS_SLOTS_UNLOCKED, 0);
+            int allowedLimit = AppConfig.FREE_MED_LIMIT + unlockedSlots;
+
+            if (currentCount >= allowedLimit) {
+                FeatureRationalBottomSheet.newInstance(AppConfig.FeaturePassType.EXTRA_MED_SLOT)
+                        .show(getSupportFragmentManager(), "ExtraSlotRational");
+                return;
+            }
+        }
         new com.robinzon.medicationwizard.ui.AddMedicationBottomSheet().show(getSupportFragmentManager(), "AddMedBS");
     }
 

@@ -388,4 +388,40 @@
     <string name="action_add_new_med">Neues Medikament</string>
     <string name="dialog_add_choice_title">Was möchtest du tun?</string>
     <string name="stopwatch_last_dose_format">Letzte Dosis: vor %s</string>
+    <!-- Magics Economy -->
+    <string name="magic_balance_format">%1$d Magics</string>
+    <string name="magic_earned_toast">+%1$d Magics verdient!</string>
+    <string name="magic_insufficient_toast">Nicht genug Magics! Verdiene mehr, indem du ein Video ansiehst oder teilst.</string>
+    <string name="magic_share_limit_toast">Du kannst einmal am Tag durch Teilen verdienen. Komm morgen wieder!</string>
+    <string name="magic_rate_limit_toast">Du hast bereits Magics für die Bewertung der App erhalten!</string>
+    <string name="magic_earn_title">Magics verdienen</string>
+    <string name="magic_earn_rv_title">Video ansehen</string>
+    <string name="magic_earn_rv_desc">+1 Magic</string>
+    <string name="magic_earn_share_title">Mit Freund teilen</string>
+    <string name="magic_earn_share_desc">+2 Magics (WhatsApp)</string>
+    <string name="magic_earn_streak_title">Täglicher Login</string>
+    <string name="magic_earn_streak_desc">+1 Magic (Täglicher Bonus)</string>
+    <string name="magic_earn_rate_title">App bewerten</string>
+    <string name="magic_earn_rate_desc">+3 Magics (einmalig)</string>
+    <string name="magic_earn_story_title">Story teilen</string>
+    <string name="magic_earn_story_desc">+3 Magics (Instagram/FB)</string>
+    <string name="magic_spend_pass_btn">1 Magic nutzen (1 Stunde)</string>
+    <string name="magic_spend_forever_btn">Dauerhaft freischalten (15 Magics)</string>
+    <string name="magic_spend_ad_free_btn">Werbefrei (3 Magics / 1 Stunde)</string>
+    <string name="magic_spend_extra_slot_btn">Slot freischalten (%1$d Magics)</string>
+    <string name="settings_magic_marketplace_title">Magics Marktplatz</string>
+    <string name="settings_magic_marketplace_tempting_title">Entfessle die Macht des Zauberers!</string>
+    <string name="settings_magic_marketplace_tempting_desc">Verdiene Magics, um Premium-Funktionen kostenlos freizuschalten. Tippe, um deinen magischen Brunnen aufzufüllen!</string>
+    <string name="premium_rational_ad_free_msg">Schalte 1 Stunde werbefreie Magie frei! Keine Banner, keine Unterbrechungen.</string>
+    <string name="premium_rational_extra_slot_msg">Du hast das Limit von 3 kostenlosen Medikamenten erreicht. Schalte einen weiteren Slot frei, um deine Reise fortzusetzen!</string>
+    <string name="benefit_ad_free">genießen Sie 1 Stunde werbefreies Gesundheits-Tracking</string>
+    <string name="benefit_extra_slot">fügen Sie ein weiteres Medikament zu Ihrer Bibliothek hinzu</string>
+    <string name="premium_benefit_extra_slot_title">Zusätzlicher Medikamenten-Slot</string>
+    <string name="magic_bonus_early_bird_toast">Frühaufsteher-Bonus! +1 Magic 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">Perfekter Tag! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">Du hast heute alle deine Dosen eingenommen! Du hast +1 Magic für deine Konsequenz verdient.</string>
+    <string name="magic_bonus_perfect_day_btn">Genial!</string>
+    <string name="magic_error_social_not_found">Facebook oder Instagram nicht gefunden!</string>
+    <string name="magic_error_already_rated">Bereits durch Bewertung verdient!</string>
+    <string name="share_app_message">Schau dir Medizin-Magier an! Es hilft mir, meine Medikamente mit einem Hauch von Magie zu verfolgen. Hier herunterladen: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>

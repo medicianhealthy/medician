@@ -130,7 +130,7 @@ public class MagicEarnBottomSheet extends MedicationWizardBottomSheet {
                 }
 
                 if (targetedShareIntents.isEmpty()) {
-                    Toast.makeText(requireContext(), "Facebook or Instagram not found!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.magic_error_social_not_found, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -155,7 +155,7 @@ public class MagicEarnBottomSheet extends MedicationWizardBottomSheet {
 
         view.findViewById(R.id.btn_earn_rate).setOnClickListener(v -> {
             if (alreadyRated) {
-                Toast.makeText(requireContext(), R.string.magic_rate_limit_toast, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.magic_error_already_rated, Toast.LENGTH_SHORT).show();
                 return;
             }
 

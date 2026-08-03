@@ -38,11 +38,15 @@ public class AppConfig {
 
     public static final String KEY_MAGIC_BALANCE = "magic_balance";
     public static final String KEY_PERMANENT_PASS_PREFIX = "permanent_pass_";
+    public static final String KEY_MEDS_SLOTS_UNLOCKED = "meds_slots_unlocked";
 
     // Magic Economy Costs
     public static final int MAGIC_COST_PASS_1H = 1;
     public static final int MAGIC_COST_AD_FREE_1H = 3;
     public static final int MAGIC_COST_PERMANENT = 15;
+    public static final int MAGIC_COST_EXTRA_MED_SLOT = 5;
+
+    public static final int FREE_MED_LIMIT = 3;
 
     /**
      * Master flag for purchased Premium status.
@@ -88,6 +92,7 @@ public class AppConfig {
             case DOSE_WINDOW -> prefs.getBoolean(KEY_PASS_DOSE_WINDOW_ACTIVE, false);
             case PHOTO -> prefs.getLong(KEY_PASS_PHOTO_EXPIRY, 0) > now;
             case AD_FREE -> prefs.getLong(KEY_PASS_AD_FREE_EXPIRY, 0) > now;
+            case EXTRA_MED_SLOT -> false; // This is a count-based unlock, not boolean/time
         };
     }
 
@@ -133,6 +138,7 @@ public class AppConfig {
                     context.getString(R.string.active_for_next_reminder) : "";
             case PHOTO -> formatExpiry(context, prefs.getLong(KEY_PASS_PHOTO_EXPIRY, 0));
             case AD_FREE -> formatExpiry(context, prefs.getLong(KEY_PASS_AD_FREE_EXPIRY, 0));
+            case EXTRA_MED_SLOT -> "";
         };
     }
 
@@ -146,6 +152,6 @@ public class AppConfig {
      * Enum to distinguish between premium features for pass logic.
      */
     public enum FeaturePassType {
-        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW, PHOTO, AD_FREE
+        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW, PHOTO, AD_FREE, EXTRA_MED_SLOT
     }
 }

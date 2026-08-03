@@ -322,7 +322,7 @@
     <string name="cloud_backup_failed">הגיבוי לענן נכשל.</string>
 
     <string name="alarm_permission_title">נדרשת הרשאת התראות מדויקות</string>
-    <string name="alarm_permission_message">כדי להבטיח שתזכורות התרופות שלך יופעלו בדקה המדויקת, אנא אפשר לאפליקציה לתזמן התראות מדויקות.</string>
+    <string name="alarm_permission_message">כדי להבתיח שתזכורות התרופות שלך יופעלו בדקה המדויקת, אנא אפשר לאפליקציה לתזמן התראות מדויקות.</string>
     <string name="take_early_warning">זה קצת מוקדם למנה זו. לקחת בכל זאת?</string>
     <string name="take_late_warning">מנה זו תוכננה למועד מוקדם יותר. לסמן כנלקחה עכשיו?</string>
     <!-- Feature Specific Passes -->
@@ -419,11 +419,20 @@
     <string name="magic_spend_pass_btn">השתמש בקסם 1 (שעה אחת)</string>
     <string name="magic_spend_forever_btn">פתח לתמיד (15 קסמים)</string>
     <string name="magic_spend_ad_free_btn">ללא פרסומות (3 קסמים / שעה אחת)</string>
+    <string name="magic_spend_extra_slot_btn">פתח מקום נוסף (%1$d קסמים)</string>
     <string name="settings_magic_marketplace_title">שוק הקסמים</string>
     <string name="settings_magic_marketplace_tempting_title">שחרר את כוחו של הקוסם!</string>
     <string name="settings_magic_marketplace_tempting_desc">הרווח קסמים כדי לפתוח פיצ\'רים בחינם. הקש כדי למלא את באר הקסמים שלך!</string>
     <string name="premium_rational_ad_free_msg">שחרר שעה של קסם ללא פרסומות! ללא באנרים וללא הפרעות.</string>
+    <string name="premium_rational_extra_slot_msg">הגעת למכסה של 3 תרופות בחינם. פתח מקום נוסף כדי להמשיך במסע שלך!</string>
     <string name="benefit_ad_free">ליהנות משעה של מעקב בריאות ללא פרסומות</string>
-
+    <string name="benefit_extra_slot">להוסיף תרופה אחת נוספת לספרייה שלך</string>
+    <string name="premium_benefit_extra_slot_title">מקום נוסף לתרופה</string>
+    <string name="magic_bonus_early_bird_toast">בונוס ציפור מוקדמת! +1 קסם 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">יום מושלם! 🏆</string>
+    <string name="magic_bonus_perfect_day_msg">לקחת את כל המנות שלך היום! הרווחת +1 קסם על העקביות שלך.</string>
+    <string name="magic_bonus_perfect_day_btn">מדהים!</string>
+    <string name="magic_error_social_not_found">פייסבוק או אינסטגרם לא נמצאו!</string>
+    <string name="magic_error_already_rated">כבר קיבלת תגמול על דירוג!</string>
     <string name="share_app_message">היי! כדאי לך להכיר את "קוסם התרופות" - אפליקציה שעוזרת לי לנהל את התרופות שלי עם מגע של קסם. להורדה כאן: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
 </resources>
