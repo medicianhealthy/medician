@@ -1,264 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Mage des Médicaments</string>
-    <string name="navigation_drawer_open">Ouvrir le menu</string>
-    <string name="navigation_drawer_close">Fermer le menu</string>
     <string name="nav_header_title">Mage des Médicaments</string>
-    <string name="nav_header_subtitle">Votre assistant santé magique</string>
-    <string name="nav_header_desc">En-tête de navigation</string>
-    <string name="action_settings">Paramètres</string>
-
-    <string name="menu_home">Mes médicaments du jour</string>
-    <string name="menu_gallery">Liste des médicaments</string>
+    <string name="nav_header_subtitle">Votre compagnon santé</string>
+    <string name="menu_home">Aujourd\'hui</string>
+    <string name="menu_gallery">Mes Médicaments</string>
     <string name="menu_history">Historique</string>
     <string name="menu_settings">Paramètres</string>
 
-    <string name="history_title">Historique de Médication</string>
-    <string name="history_empty">Aucun médicament enregistré pour ce jour.</string>
-    <string name="history_empty_subtitle">Il semble que vous n\'ayez aucune dose prévue ou enregistrée à cette date.</string>
-
-    <!-- Settings Screen -->
-    <string name="settings_category_reminders">Rappels</string>
-    <string name="settings_notifications_disabled_summary">Appuyez ici pour autoriser les rappels et rester en bonne santé.</string>
-    <string name="settings_notifications_manage_prompt">Pour désactiver ou gérer vos alertes de santé, veuillez utiliser les paramètres système.</string>
-    <string name="settings_notifications_title">Alertes de Santé</string>
-    <string name="settings_notifications_summary">Gardez vos rappels actifs pour ne jamais manquer une dose. Restez en forme !</string>
-
-    <string name="settings_quiet_hours_title">Heures de Sommeil</string>
-    <string name="settings_quiet_hours_summary">Ne pas me notifier pendant que je dors.</string>
-    <string name="settings_quiet_hours_format">Ne pas me notifier pendant que je dors (%1$s).</string>
-
-    <string name="settings_snooze_duration_title">Durée du Report</string>
-    <string name="settings_snooze_duration_summary">Attendre %1$d minutes avant de me rappeler à nouveau.</string>
-    <string name="settings_max_snoozes_title">Nombre Max de Reports</string>
-    <string name="settings_max_snoozes_summary">Arrêter de me rappeler après %1$s tentatives.</string>
-    <string name="settings_max_snoozes_unlimited_summary">Ne jamais arrêter de rappeler avant une action de ma part.</string>
-    <string name="max_snoozes_unlimited">Illimité</string>
-
-    <string name="settings_sound_title">Son d\'Alerte</string>
-    <string name="settings_sound_summary">Son actuel : %1$s</string>
-    <string name="settings_sound_preview_desc">Aperçu du son</string>
-
-    <string name="settings_bypass_title">Forcer le Volume</string>
-    <string name="settings_bypass_summary">Les rappels sonneront même si le téléphone est en mode silencieux.</string>
-
-    <string name="settings_volume_title">Volume de l\'Alerte</string>
-
-    <string name="settings_category_appearance">Apparence</string>
-    <string name="settings_theme_title">Thème de l\'App</string>
-    <string name="settings_theme_summary">Basculez entre le mode clair, sombre, ou laissez le système décider.</string>
-    <string name="theme_light">Clair</string>
-    <string name="theme_dark">Sombre</string>
-    <string name="theme_system">Système</string>
-    <string name="lang_system">Langue du Système</string>
-
-    <string name="settings_language_title">Langue de l\'App</string>
-    <string name="settings_language_summary">Choisissez la langue pour que la magie opère.</string>
-    <string name="settings_language_restart_warning">L\'application redémarrera pour appliquer la nouvelle langue.</string>
-    <string name="lang_english">English</string>
-    <string name="lang_hebrew">עברית</string>
-    <string name="lang_arabic">العربية</string>
-    <string name="lang_spanish">Español</string>
-    <string name="lang_french">Français</string>
-    <string name="lang_german">Deutsch</string>
-    <string name="lang_japanese">日本語</string>
-    <string name="lang_portuguese">Português (Brasil)</string>
-    <string name="lang_korean">한국어</string>
-    <string name="lang_hindi">हिन्दी</string>
-    <string name="lang_indonesian">Bahasa Indonesia</string>
-    <string name="lang_russian">Русский</string>
-
-    <string name="settings_category_data">Données et Confidentialité</string>
-    <string name="settings_backup_title">Sauvegarde et Restauration</string>
-    <string name="settings_backup_summary">Protégez vos données ou déplacez-les vers un nouvel appareil.</string>
-    <string name="backup_export">Exporter les Données</string>
-    <string name="backup_import">Importer les Données</string>
-    <string name="backup_restore_warning">Restaurer une sauvegarde supprimera tous vos médicaments et votre historique actuels. C\'est irréversible. Êtes-vous sûr ?</string>
-    <string name="medication_delete_warning">Ceci supprimera définitivement ce médicament et tout son historique. C\'est irréversible. Êtes-vous sûr ?</string>
-
-    <string name="settings_clear_data_title">Prendre un Nouveau Départ</string>
-    <string name="settings_clear_data_message">Ceci supprimera définitivement tous vos médicaments, l\'historique et les sauvegardes cloud. C\'est irréversible. Êtes-vous sûr ?</string>
-    <string name="settings_clear_data_message_no_cloud">Ceci supprimera définitivement tous vos médicaments et l\'historique. C\'est irréversible. Êtes-vous sûr ?</string>
-    <string name="settings_clear_data_summary">Effacer tous les médicaments et l\'historique. Attention, c\'est définitif !</string>
-
-    <string name="settings_category_about">À Propos</string>
-    <string name="settings_version_title">Version de l\'App</string>
-    <string name="settings_version_summary">Vous utilisez actuellement la version %1$s</string>
-
-    <string name="settings_support_title">Besoin d\'aide ?</string>
-    <string name="settings_support_summary">Support premium pour notre communauté magique. Des questions ou un bug trouvé ?</string>
-
-    <string name="take">Prendre</string>
-    <string name="permission_rational_notification_title">Restez sur la bonne voie !</string>
-    <string name="permission_rational_notification_message">Pour vous aider à ne pas oublier vos doses, j\'aimerais vous envoyer un petit rappel amical. Ça vous va ?</string>
-    <string name="button_sure">Bien sûr</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_delete">Supprimer</string>
+    <string name="button_save_medication">Enregistrer</string>
     <string name="button_not_now">Pas maintenant</string>
-    <string name="button_never">Jamais</string>
-    <string name="notification_missing">Pas de permission de notification</string>
-    <string name="button_allow">Autoriser</string>
-    <string name="button_grant">Accorder l\'accès</string>
-    <string name="button_ok">D\'accord</string>
-    <string name="button_select">Sélectionner</string>
-    <string name="button_skip">Sauter</string>
-    <string name="button_snooze">Reporter</string>
-    <string name="button_untake">Annuler prise</string>
-    <string name="button_unskip">Annuler saut</string>
-    <string name="button_take_all">Tout Prendre</string>
-    <string name="button_skip_all">Tout Sauter</string>
-    <string name="button_reschedule_all">Reprogrammer</string>
-    <string name="button_untake_all">Tout annuler</string>
-    <string name="button_unskip_all">Tout restaurer</string>
-    <string name="button_reset_all">Tout réinitialiser</string>
-    <string name="button_expand_all">Tout développer</string>
-    <string name="button_collapse_all">Tout réduire</string>
-    <string name="group_title_format">Rappels de %1$s</string>
-    <string name="group_status_taken">Tous marqués comme pris</string>
-    <string name="group_status_skipped">Tous marqués comme sautés</string>
-    <string name="group_status_mixed">Statut mixte</string>
-    <string name="sort_scheduled">Prévus</string>
-    <string name="sort_name">Nom</string>
-    <string name="sort_action_time">Heure d\'action</string>
-    <string name="sort_by_hint">Trier par :</string>
-    <string name="fragment_add_med_title">Nouveau Médicament</string>
-    <string name="edit">Modifier</string>
-    <string name="delete">Supprimer</string>
-    <string name="once_a_day">Une fois par jour</string>
-    <string name="twice_a_day">Deux fois par jour</string>
-    <string name="times_a_day">%1$d fois par jour</string>
-    <string name="scheduled_at">Prévu à : %1$s</string>
-    <string name="scheduled_for_format">Prévu pour %1$s</string>
-    <string name="took_format">Pris %1$s %2$s à %3$s</string>
-    <string name="skipped_at_format">Sauté à %1$s</string>
-    <string name="no_instructions">Aucune instruction</string>
-    <string name="medication_icon_desc">Icône de médicament</string>
-    <string name="empty_meds_title">Le Mage vous attend !</string>
-    <string name="empty_meds_subtitle">Je suis prêt à vous aider à suivre vos médicaments. Ajoutez le premier et laissez la magie opérer !</string>
-    <string name="empty_meds_action">Ajouter mon premier médicament</string>
-
-    <!-- Onboarding -->
-    <string name="onboarding_btn_next">Suivant</string>
-    <string name="onboarding_btn_skip">Passer</string>
-    <string name="onboarding_btn_finish">Commencer</string>
-    <string name="back_to_exit">Appuyez encore sur retour pour quitter</string>
-
-    <string name="onboarding_title_1">Rencontrez le Mage</string>
-    <string name="onboarding_desc_1">Votre compagnon santé personnel est là pour vous aider à gérer vos médicaments avec une touche de magie.</string>
-
-    <string name="onboarding_title_2">Rappels Intelligents</string>
-    <string name="onboarding_desc_2">Ne manquez plus jamais une dose. Nous vous enverrons des rappels ponctuels qui respectent votre sommeil.</string>
-
-    <string name="onboarding_title_3">Suivez vos Progrès</string>
-    <string name="onboarding_desc_3">Gardez un historique détaillé de votre parcours santé. Parfait pour partager avec votre médecin.</string>
-    <string name="onboarding_terms_agree"><![CDATA[J\'accepte les <a href="%1$s">Conditions d\'Utilisation</a> et la <a href="%2$s">Politique de Confidentialité</a>]]></string>
-    <string name="onboarding_error_terms">Veuillez accepter les conditions et la politique pour continuer la magie.</string>
-    <string name="url_terms">https://wisemedicalapps.com/terms-of-use/index.html</string>
-    <string name="url_privacy">https://wisemedicalapps.com/privacy-policy/index.html</string>
-    <string name="legal_terms_title">Conditions d\'Utilisation</string>
-    <string name="legal_privacy_title">Politique de Confidentialité</string>
-
-    <!-- Premium -->
-    <string name="premium_title">Libérez toute la Magie !</string>
-    <string name="premium_benefit_ad_free_title">Magie sans pub</string>
-    <string name="premium_benefit_ad_free_desc">Concentrez-vous sur votre santé sans interruptions ni distractions.</string>
-    <string name="premium_benefit_cloud_title">Protection Cloud</string>
-    <string name="premium_benefit_cloud_desc">Synchronisez vos données en toute sécurité sur tous vos appareils.</string>
-    <string name="premium_benefit_backup_title">Protection des Données</string>
-    <string name="premium_benefit_backup_desc">Exportez et importez vos données pour les garder en sécurité.</string>
-    <string name="premium_benefit_rest_title">Repos Respecté</string>
-    <string name="premium_benefit_rest_desc">Activez les Heures de Sommeil pour un repos jamais perturbé.</string>
-    <string name="premium_benefit_support_title">Sorceleur Prioritaire</string>
-    <string name="premium_benefit_support_desc">Bénéficiez d\'un support rapide et suggérez de nouveaux sorts directement à nos mages.</string>
-    <string name="premium_description">Passez à Premium : sauvegarde cloud, heures de repos, support VIP et une expérience sans pub.</string>
-    <string name="premium_description_local">Passez à Premium : sauvegarde des données, heures de repos, support VIP et une expérience sans pub.</string>
-    <string name="premium_upgrade_button">Améliorer maintenant</string>
-    <string name="premium_maybe_later">Peut-être plus tard</string>
-    <string name="menu_go_premium">Passer en Premium</string>
-    <string name="streak_format">Série magique de %1$d jours !</string>
-    <string name="history_percent_format">%1$d%% Complété</string>
-    <string name="history_doses_format">%1$d sur %2$d doses prises</string>
-    <string name="history_select_date_title">Choisir une date</string>
-    <string name="history_stats_title">Stats de Santé</string>
-    <string name="history_tip_title">Conseil Santé Magique</string>
-    <string name="history_tip_1">La régularité est la clé d\'une santé magique. Gardez votre série active !</string>
-    <string name="history_tip_2">Un mage n\'oublie jamais ses médicaments. Utilisez les rappels !</string>
-    <string name="history_tip_3">Prise avec repas ? Vérifiez vos instructions pour un meilleur effet magique.</string>
-    <string name="history_tip_4">Hydratez-vous ! La magie opère mieux quand le corps est bien irrigué.</string>
-    <string name="history_tip_5">Le repos est un sort puissant. Utilisez les Heures de Sommeil pour protéger votre sommeil.</string>
-    <string name="history_tip_6">Notez chaque dose. Un historique complet est un parchemin précieux pour votre médecin.</string>
-    <string name="streak_empty">Commencez votre série magique aujourd\'hui !</string>
-    <string name="settings_title">Paramètres</string>
-
-    <string name="notif_already_active">Les notifications sont déjà actives !</string>
-    <string name="data_cleared">Données effacées.</string>
-    <string name="support_coming_soon">Support bientôt disponible !</string>
-    <string name="support_email_address" translatable="false">medicationwizard@gmail.com</string>
-    <string name="support_dialog_title">Support Magique</string>
-    <string name="support_dialog_message">Y a-t-il un problème avec la magie (Bug) ou avez-vous une idée pour un nouveau sort (Fonctionnalité) ?</string>
-    <string name="support_option_bug">Un Bug</string>
-    <string name="support_option_feature">Nouveau Sort (Idée)</string>
-    <string name="support_subject_bug">Rapport de Bug : [%1$s]</string>
-    <string name="support_subject_feature">Idée de Nouveau Sort : [%1$s]</string>
-    <string name="support_no_email_client">Aucune application d\'email trouvée. Contactez-nous à medicationwizard@gmail.com</string>
-    <string name="support_body_header">--- Détails du Parchemin Magique ---</string>
-    <string name="support_body_version">Version App : %1$s</string>
-    <string name="support_body_device">Appareil : %1$s</string>
-    <string name="support_body_os">Version Android : %1$s</string>
-    <string name="support_body_locale">Langue : %1$s</string>
-    <string name="support_body_message_hint">--- Décrivez la magie ici ---</string>
-    <string name="sign_in_first">Veuillez d\'abord vous connecter</string>
-    <string name="backing_up_drive">Sauvegarde sur Google Drive&#8230;</string>
-    <string name="restoring_cloud">Restauration depuis le cloud&#8230;</string>
-    <string name="restore_success">Restauration réussie !</string>
-    <string name="no_backup_found">Aucune sauvegarde trouvée.</string>
-    <string name="restore_failed_format">Échec de la restauration : %1$s</string>
-    <string name="invalid_code">Code invalide</string>
-    <string name="signed_in_as_format">Connecté en tant que %1$s</string>
-    <string name="sign_in_failed_format">Échec de connexion : %1$s</string>
-
-    <string name="sign_in_required_title">Connexion Requise</string>
-    <string name="sign_in_required_message">Veuillez vous connecter avec Google pour activer la sauvegarde cloud et la synchro.</string>
-    <string name="cloud_restore_title">Restaurer depuis le Cloud</string>
-    <string name="cloud_restore_message">Ceci remplacera toutes vos données locales par la version cloud. Continuer ?</string>
-    <string name="button_restore">Restaurer</string>
-    <string name="medication_status_format">%1$s marqué comme %2$s</string>
-    <string name="button_undo">Annuler</string>
-
-    <string name="sound_picker_title">Choisir le Son d\'Alerte</string>
-    <string name="extra_details_label">Détails Extra (optionnel)</string>
-    <string name="instructions_label">Instructions (optionnel)</string>
-    <string name="instruction_before_eating">Avant de manger</string>
-    <string name="instruction_after_eating">Après avoir mangé</string>
-    <string name="instruction_while_eating">Pendant le repas</string>
-    <string name="instruction_before_sleep">Avant de dormir</string>
-    <string name="instruction_no_preference">Peu importe</string>
-    <string name="button_save_medication">Enregistrer le médicament</string>
-    <string name="time_picker_title">Choisir l\'Heure</string>
-    <string name="at_label">à</string>
-    <string name="button_reschedule">Reporter</string>
     <string name="button_take">Prendre</string>
-    <string name="button_pick_time">Choisir l\'heure exacte</string>
-    <string name="button_sign_in">Se Connecter</string>
+    <string name="button_take_all">Tout prendre</string>
+    <string name="button_skip">Passer</string>
+    <string name="button_skip_all">Tout passer</string>
+    <string name="button_snooze">Rappeler</string>
+    <string name="button_reschedule">Reprogrammer</string>
+    <string name="button_reschedule_all">Tout reprogrammer</string>
+    <string name="button_mark_pending">Marquer en attente</string>
+    <string name="button_undo">ANNULER</string>
 
-    <string name="hint_med_name">Nom du Médicament</string>
+    <string name="fragment_add_med_title">Ajouter une dose</string>
     <string name="hint_amount">Quantité</string>
-    <string name="hint_form">Type</string>
-    <string name="hint_frequency">Fréquence ?</string>
-    <string name="hint_strength">Force (optionnel)</string>
-    <string name="hint_unit">Unité (optionnel)</string>
-
-    <string name="frequency_once">Une fois par jour</string>
-    <string name="frequency_twice">Deux fois par jour</string>
-    <string name="frequency_3_times">3 fois par jour</string>
-    <string name="frequency_4_times">4 fois par jour</string>
-    <string name="frequency_5_times">5 fois par jour</string>
-    <string name="frequency_as_needed">Au besoin (PRN)</string>
-    <string name="time_set_format">Heure réglée : %1$s</string>
-    <string name="select_time_index_format">Choisir l\'Heure %1$d</string>
-    <string name="error_pick_time_title">Choisissez une heure</string>
-    <string name="error_pick_time_message">Appuyez simplement sur le bouton et choisissez l\'heure</string>
-    <string name="error_duplicate_times_title">Heures en Double</string>
-    <string name="error_duplicate_times_message">Vous avez sélectionné la même heure plusieurs fois. Veuillez choisir des heures différentes.</string>
-    <string name="error_required">Requis</string>
-    <string name="time_picker_med_title">Heure du Médicament</string>
+    <string name="hint_form">Forme</string>
+    <string name="hint_unit">Unité</string>
+    <string name="hint_strength">Force</string>
+    <string name="extra_details_label">Détails supplémentaires</string>
+    <string name="instructions_label">Instructions de prise</string>
+    <string name="btn_take_photo">Prendre une photo</string>
+    <string name="btn_upload_photo">Téléverser</string>
+    <string name="placeholder_add_photo">Ajouter une photo pour identifier votre médicament</string>
 
     <string name="form_pill">Pilule</string>
     <string name="form_solution">Solution</string>
@@ -268,157 +43,157 @@
     <string name="form_inhaler">Inhalateur</string>
     <string name="form_other">Autre</string>
 
-    <string name="medication_deleted_format">a été supprimé</string>
+    <string name="frequency_as_needed">Au besoin (PRN)</string>
+    <string name="frequency_once">Une fois par jour</string>
+    <string name="frequency_twice">Deux fois par jour</string>
+    <string name="frequency_3_times">3 fois par jour</string>
+    <string name="frequency_4_times">4 fois par jour</string>
+    <string name="frequency_5_times">5 fois par jour</string>
+
+    <string name="instruction_before_eating">Avant de manger</string>
+    <string name="instruction_after_eating">Après avoir mangé</string>
+    <string name="instruction_while_eating">En mangeant</string>
+    <string name="instruction_before_sleep">Avant de dormir</string>
+    <string name="instruction_no_preference">Peu importe</string>
+
+    <string name="time_set_format">Réglé à %s</string>
+    <string name="select_time_index_format">Choisir l\'heure %d</string>
+    <string name="time_picker_med_title">Heure de la dose</string>
+
+    <string name="error_required">Requis</string>
+    <string name="error_pick_time_title">Heures manquantes</string>
+    <string name="error_pick_time_message">Veuillez choisir toutes les heures pour ce médicament.</string>
+    <string name="error_duplicate_times_title">Heures en double</string>
+    <string name="error_duplicate_times_message">Toutes les doses doivent être à des heures différentes.</string>
+
+    <string name="medication_status_format">%1$s marqué comme %2$s</string>
+    <string name="take">pris</string>
+    <string name="history_empty">Rien aujourd\'hui</string>
+    <string name="history_empty_subtitle">Vos doses programmées apparaîtront ici.</string>
+    <string name="history_doses_format">%1$d/%2$d doses</string>
+    <string name="streak_format">%d jours</string>
+
+    <string name="recovery_dialog_title">Dose en retard</string>
+    <string name="recovery_dialog_message">Vous avez manqué votre dose de %s. Que voulez-vous faire ?</string>
+
+    <string name="alarm_permission_title">Alarmes précises requises</string>
+    <string name="alarm_permission_message">Pour vous rappeler vos médicaments à l\'heure exacte, l\'application a besoin de l\'autorisation pour les alarmes précises.</string>
+    <string name="back_to_exit">Appuyez encore pour quitter</string>
+
     <string name="notification_reminder_title">Rappel de Médicament</string>
-    <string name="notification_permission_reminder_title">Alertes Désactivées</string>
-    <string name="notification_permission_reminder_message">Vous ne recevrez pas de rappels tant que vous n\'aurez pas activé les permissions dans les réglages.</string>
-    <string name="notification_reminder_message">C\'est l\'heure de prendre %1$s %2$s de %3$s</string>
-    <string name="notification_reminder_dose">dose</string>
-    <string name="notification_channel_name">Rappels de Médication</string>
-    <string name="notification_channel_desc">Rappels pour prendre vos médicaments prévus</string>
-    <string name="premium_only_feature">Fonction Premium uniquement</string>
-    <string name="loading_magic">Chargement de la magie&#8230; patience.</string>
-    <string name="reward_ad_not_ready_title">Vidéo Non Prête</string>
-    <string name="reward_ad_not_ready_dialog">La vidéo n\'est pas encore prête. Vérifiez votre connexion et réessayez plus tard.</string>
-    <string name="reward_ad_dismissed_early_title">Finir de regarder</string>
-    <string name="reward_ad_dismissed_early_message">Vous devez regarder la vidéo jusqu\'au bout pour %s</string>
+    <string name="notification_reminder_message">Il est l\'heure de prendre %1$s (%2$s de %3$s)</string>
+    <string name="notification_reminder_dose">votre dose</string>
+    <string name="times_a_day">%d médicaments</string>
 
-    <string name="benefit_theme">personnaliser le thème de votre app pendant 1 heure</string>
-    <string name="benefit_support">accéder au Support Premium pendant 1 heure</string>
-    <string name="benefit_backup">activer la Sauvegarde Cloud pendant 1 heure</string>
-    <string name="benefit_backup_local">activer la Sauvegarde des Données pendant 1 heure</string>
-    <string name="benefit_bypass">forcer le volume pour votre prochain rappel</string>
-    <string name="benefit_vibration">activer la vibration et le flash pour votre prochain rappel</string>
-    <string name="benefit_sticky">rendre votre prochain rappel \"Persistant\" jusqu\'à action</string>
-    <string name="benefit_dose_window">personnaliser vos seuils d\'alerte pendant 1 heure</string>
-    <string name="benefit_quiet_hours">activer les Heures de Sommeil jusqu\'à 08:00 demain matin</string>
-    <string name="reward_ad_not_ready">La Magie n\'est pas encore prête. Veuillez réessayer dans quelques secondes.</string>
-    <string name="theme_unlock_title">Débloquer ce Thème</string>
-    <string name="theme_unlock_prompt">Regardez une vidéo pour débloquer ce thème et tout le Premium pendant %1$d heures !</string>
-    <string name="premium_pass_btn_watch">Voir la vidéo</string>
-    <string name="cloud_backup_title">Sauvegarde Cloud</string>
-    <string name="cloud_backup_summary">Protégez vos données avec Google Drive</string>
-    <string name="cloud_backup_sign_in_hint">Sauvegardez vos données sur Google Drive</string>
-    <string name="cloud_backup_sign_out">Se Déconnecter</string>
-    <string name="cloud_backup_auto_title">Sauvegarde Automatique</string>
-    <string name="cloud_backup_auto_summary">Synchro auto des données avec Google Drive</string>
-    <string name="sign_in_error_title">Problème de Connexion Magique</string>
-    <string name="sign_in_error_network">Impossible d\'atteindre les nuages magiques. Vérifiez votre connexion.</string>
-    <string name="sign_in_error_cancelled">La connexion a été interrompue. Voulez-vous réessayer ?</string>
-    <string name="sign_in_error_dev">Le portail magique est en maintenance. Nos mages s\'en occupent.</string>
-    <string name="sign_in_error_generic">Une erreur inattendue est survenue lors de la connexion. Réessayez dans un instant.</string>
-    <string name="sign_in_error_btn_retry">Réessayer</string>
-    <string name="cloud_backup_wifi_title">Sauvegarde via Wi-Fi uniquement</string>
-    <string name="cloud_backup_wifi_summary">Économiser les données mobiles</string>
-    <string name="cloud_backup_now">Lancer la Sauvegarde</string>
-    <string name="cloud_backup_success">Sauvegarde cloud réussie !</string>
-    <string name="cloud_backup_failed">Échec de la sauvegarde cloud.</string>
+    <string name="medication_deleted_format">supprimé</string>
+    <string name="medication_delete_warning">Toutes les données historiques de ce médicament seront également supprimées.</string>
+    <string name="delete">Supprimer</string>
 
-    <string name="alarm_permission_title">Alarmes Exactes Requises</string>
-    <string name="alarm_permission_message">Pour que vos rappels sonnent à la minute près, veuillez autoriser l\'app à utiliser des alarmes exactes.</string>
-    <string name="take_early_warning">C\'est un peu tôt pour cette dose. Prendre quand même ?</string>
-    <string name="take_late_warning">Cette dose était prévue plus tôt. Marquer comme prise maintenant ?</string>
-    <!-- Feature Specific Passes -->
-    <string name="premium_rational_title">Débloquer la Magie</string>
-    <string name="premium_rational_btn_watch">Voir la vidéo</string>
-    <string name="premium_rational_theme_msg">Voir une courte vidéo pour personnaliser votre thème pendant 1h. Revient au système après.</string>
-    <string name="premium_rational_support_msg">Voir une courte vidéo pour accéder au Support VIP pendant 1h.</string>
-    <string name="premium_rational_backup_msg">Voir une courte vidéo pour activer la Sauvegarde Cloud pendant 1h.</string>
-    <string name="premium_rational_backup_local_msg">Voir une courte vidéo pour activer la Sauvegarde des Données pendant 1h.</string>
-    <string name="premium_rational_bypass_msg">Voir une courte vidéo pour forcer le volume seulement pour votre prochain rappel.</string>
-    <string name="premium_rational_vibration_msg">Voir une courte vidéo pour activer la vibration et le flash seulement pour votre prochain rappel.</string>
-    <string name="premium_rational_sticky_msg">Voir une courte vidéo pour rendre votre prochain rappel "Persistant" jusqu\'à action.</string>
-    <string name="premium_rational_dose_window_msg">Voir une courte vidéo pour ajuster vos seuils d\'alerte pendant 1h.</string>
-    <string name="premium_rational_quiet_hours_msg">Voir une courte vidéo pour activer les Heures de Sommeil jusqu\'à 08:00 demain.</string>
+    <string name="premium_title">Wizard Premium</string>
+    <string name="premium_subtitle">Débloquez toute la magie de la santé</string>
+    <string name="premium_benefit_unlimited_title">Médicaments illimités</string>
+    <string name="premium_benefit_unlimited_desc">Gérez autant de médicaments que nécessaire sans aucune limite.</string>
+    <string name="premium_benefit_backup_title">Sauvegarde Cloud</string>
+    <string name="premium_benefit_backup_desc">Ne perdez jamais vos données. Sauvegardez et restaurez avec Google Drive.</string>
+    <string name="premium_benefit_adfree_title">Zéro Publicité</string>
+    <string name="premium_benefit_adfree_desc">Profitez d\'une expérience fluide sans aucune interruption publicitaire.</string>
+    <string name="premium_benefit_photo_title">Identification par Photo</string>
+    <string name="premium_benefit_photo_desc">Ajoutez des photos à vos médicaments pour une identification visuelle rapide.</string>
+    <string name="premium_purchase_btn">Devenir Premium</string>
+    <string name="premium_restore_btn">Restaurer l\'achat</string>
+    <string name="premium_already_purchased">Vous êtes déjà Premium !</string>
 
-    <string name="settings_category_advanced">Contrôle de Précision</string>
-    <string name="settings_vibration_title">Vibration et Flash</string>
-    <string name="settings_vibration_summary">Faire vibrer le téléphone et clignoter les lumières au moment voulu.</string>
-    <string name="settings_vibration_pattern_title">Modèle de Vibration</string>
-    <string name="settings_flash_pattern_title">Modèle de Flash</string>
+    <string name="settings_category_reminders">Rappels</string>
+    <string name="settings_notifications_title">Son et Alertes</string>
+    <string name="settings_notifications_summary">Changer la sonnerie et le volume</string>
+    <string name="settings_quiet_hours_title">Heures de Silence</string>
+    <string name="settings_quiet_hours_summary">Mettre les rappels en sourdine la nuit</string>
+    <string name="settings_category_appearance">Apparence</string>
+    <string name="settings_theme_title">Thème de l\'Application</string>
+    <string name="settings_category_data">Données et Support</string>
+    <string name="settings_backup_title">Sauvegarde et Restauration</string>
+    <string name="settings_support_title">Aide et Support</string>
+    <string name="settings_about_title">À propos de Medication Wizard</string>
 
-    <string name="settings_sticky_title">Rappels Persistants</string>
-    <string name="settings_sticky_summary">Le rappel reste actif jusqu\'à ce que vous enregistriez la dose explicitement.</string>
+    <string name="active_until_format"> Actif jusqu\'à %s</string>
+    <string name="active_for_next_reminder"> Actif pour le prochain rappel</string>
+    <string name="active_for_next_take_outside_window"> Actif pour la prochaine prise hors fenêtre</string>
+    <string name="feature_active_label">ACTIF</string>
+    <string name="feature_unlocked_toast">%s débloqué !</string>
+    <string name="reward_ad_not_ready_title">Publicité non prête</string>
+    <string name="reward_ad_not_ready_dialog">La vidéo de récompense se charge. Veuillez réessayer dans quelques secondes.</string>
+    <string name="reward_ad_dismissed_early_title">Vidéo non terminée</string>
+    <string name="reward_ad_dismissed_early_message">Vous devez regarder toute la vidéo pour %s.</string>
+    <string name="notification_permission_reminder_title">Notifications désactivées</string>
+    <string name="notification_permission_reminder_message">Vos rappels sont débloqués mais les notifications système sont désactivées. Veuillez les activer pour recevoir vos alertes.</string>
 
-    <string name="settings_dose_window_title">Fenêtre de Prise</string>
-    <string name="settings_dose_window_summary">Ajustez combien de temps à l\'avance ou en retard vous pouvez prendre vos médicaments sans alerte.</string>
-    <string name="settings_early_threshold_title">Alerte de Prise Précoce</string>
-    <string name="settings_late_threshold_title">Alerte de Prise Tardive</string>
-    <string name="settings_threshold_format">%1$d minutes</string>
+    <string name="settings_bypass_title">Bypass du volume système</string>
+    <string name="settings_vibration_title">Vibration</string>
+    <string name="settings_sticky_title">Notifications persistantes</string>
+    <string name="settings_dose_window_title">Fenêtre de prise personnalisée</string>
 
-    <string name="feature_active_label">Actif</string>
-    <string name="onboarding_scroll_hint">Faites défiler pour plus</string>
-    <string name="active_until_format">Actif jusqu\'à %1$s</string>
-    <string name="active_for_next_reminder">Actif pour le prochain rappel</string>
-    <string name="active_for_next_take_outside_window">Actif pour la prochaine prise hors délai</string>
-    <string name="feature_unlocked_toast">%1$s débloqué !</string>
+    <string name="benefit_theme">personnaliser l\'apparence de l\'application</string>
+    <string name="benefit_support">accéder au support prioritaire</string>
+    <string name="benefit_backup">sauvegarder vos données sur le Cloud</string>
+    <string name="benefit_backup_local">sauvegarder vos données localement</string>
+    <string name="benefit_bypass">entendre les alertes même en mode silencieux</string>
+    <string name="benefit_quiet_hours">programmer des heures de repos sans rappels</string>
+    <string name="benefit_vibration">ressentir des motifs de vibration personnalisés</string>
+    <string name="benefit_sticky">ne jamais manquer une alerte avec des notifs persistantes</string>
+    <string name="benefit_dose_window">ajuster la tolérance des prises en avance/retard</string>
+    <string name="benefit_photo">ajouter des photos de vos médicaments</string>
 
-    <string name="button_cancel">Annuler</string>
-    <string name="button_confirm">Confirmer</string>
-    <string name="button_delete">Supprimer</string>
-    <string name="snooze_5_min">5 minutes</string>
-    <string name="snooze_10_min">10 minutes</string>
-    <string name="snooze_15_min">15 minutes</string>
-    <string name="snooze_20_min">20 minutes</string>
-    <string name="snooze_30_min">30 minutes</string>
-    <string name="snooze_1_time">1 fois</string>
-    <string name="snooze_2_times">2 fois</string>
-    <string name="snooze_3_times">3 fois</string>
-    <string name="snooze_5_times">5 fois</string>
-    <string name="snooze_unlimited">Illimité</string>
+    <string name="premium_rational_theme_msg">Personnalisez votre grimoire ! Débloquez le changement de thème pour rendre l\'application vraiment vôtre.</string>
+    <string name="premium_rational_support_msg">Besoin d\'un guide ? Débloquez le support prioritaire pour obtenir de l\'aide de nos maîtres magiciens.</string>
+    <string name="premium_rational_backup_msg">Sauvegardez votre savoir ! Débloquez la sauvegarde Cloud pour synchroniser vos données entre appareils.</string>
+    <string name="premium_rational_backup_local_msg">Sécurisez votre savoir ! Débloquez la sauvegarde locale pour exporter vos données en toute sécurité.</string>
+    <string name="premium_rational_bypass_msg">Une magie qu\'on ne peut ignorer ! Débloquez le bypass du volume pour entendre les alertes en mode silencieux.</string>
+    <string name="premium_rational_quiet_hours_msg">Laissez le magicien se reposer. Débloquez les heures de silence pour mettre les rappels en sourdine la nuit.</string>
+    <string name="premium_rational_vibration_msg">Ressentez la magie ! Débloquez les motifs de vibration personnalisés pour chaque rappel.</string>
+    <string name="premium_rational_sticky_msg">Une incantation persistante. Débloquez les notifications qui restent jusqu\'à ce que vous agissiez.</string>
+    <string name="premium_rational_dose_window_msg">Maîtrisez le temps ! Débloquez les fenêtres de prise personnalisées pour plus de flexibilité.</string>
+    <string name="photo_feature_rational">Ajoutez une vision à votre potion ! Les photos vous aident à ne jamais confondre vos médicaments.</string>
 
-    <!-- Measurement Units -->
-    <string name="unit_grams">g</string>
-    <string name="unit_mg">mg</string>
-    <string name="unit_iu">UI</string>
-    <string name="unit_mcg">mcg</string>
-    <string name="unit_ml">ml</string>
-    <string name="unit_percentage">%</string>
-    <string name="benefit_photo">ajouter ou modifier une photo de médicament pendant 1 heure</string>
-    <string name="btn_take_photo">Prendre une photo</string>
-    <string name="btn_upload_photo">Télécharger une photo</string>
-    <string name="photo_feature_rational">Regardez une courte vidéo pour ajouter ou modifier une photo de votre médicament pendant 1 heure.</string>
-    <string name="photo_unlocked_toast">Fonction photo déverrouillée !</string>
-    <string name="placeholder_add_photo">Ajouter une photo de votre médicament</string>
-    <string name="btn_rotate_left">Faire pivoter vers la gauche</string>
-    <string name="btn_rotate_right">Faire pivoter vers la droite</string>
-    <string name="btn_remove_photo">Supprimer la photo</string>
-    <string name="locked_photo_hint">Appuyez pour déverrouiller</string>
+    <string name="dialog_add_choice_title">Que voulez-vous faire ?</string>
     <string name="action_log_dose">Enregistrer une dose</string>
     <string name="action_add_new_med">Nouveau médicament</string>
-    <string name="dialog_add_choice_title">Que souhaitez-vous faire ?</string>
+
     <string name="stopwatch_last_dose_format">Dernière dose : il y a %s</string>
+    <string name="log_dose_subtitle">Sélectionnez un médicament pour enregistrer une dose maintenant.</string>
+
     <!-- Magics Economy -->
     <string name="magic_balance_format">%1$d Magies</string>
     <string name="magic_earned_toast">+%1$d Magies gagnées !</string>
     <string name="magic_insufficient_toast">Pas assez de Magies ! Gagnez-en plus en regardant une vidéo ou en partageant.</string>
-    <string name="magic_share_limit_toast">Vous pouvez gagner en partageant une fois par jour. Revenez demain pour en avoir plus !</string>
+    <string name="magic_share_limit_toast">Vous pouvez gagner par partage une fois par jour. Revenez demain !</string>
     <string name="magic_rate_limit_toast">Vous avez déjà gagné des Magies en notant l\'application !</string>
+
     <string name="magic_earn_title">Gagner des Magies</string>
-    <string name="magic_earn_rv_title">Regarder une vidéo</string>
+    <string name="magic_earn_rv_title">Regarder une Vidéo</string>
     <string name="magic_earn_rv_desc">+1 Magie</string>
     <string name="magic_earn_share_title">Partager avec un ami</string>
     <string name="magic_earn_share_desc">+2 Magies (WhatsApp)</string>
-    <string name="magic_earn_streak_title">Connexion quotidienne</string>
+    <string name="magic_earn_streak_title">Connexion Quotidienne</string>
     <string name="magic_earn_streak_desc">+1 Magie (Bonus quotidien)</string>
-    <string name="magic_earn_rate_title">Noter l\'application</string>
-    <string name="magic_earn_rate_desc">+3 Magies (une fois)</string>
-    <string name="magic_earn_story_title">Partager une Story</string>
+    <string name="magic_earn_rate_title">Noter l\'Application</string>
+    <string name="magic_earn_rate_desc">+3 Magies (Une fois)</string>
+    <string name="magic_earn_story_title">Partager en Story</string>
     <string name="magic_earn_story_desc">+3 Magies (Instagram/FB)</string>
-    <string name="magic_spend_pass_btn">Utiliser 1 Magie (1 heure)</string>
+
+    <string name="magic_spend_pass_btn">Utiliser 1 Magie (1 Heure)</string>
     <string name="magic_spend_forever_btn">Débloquer à vie (15 Magies)</string>
-    <string name="magic_spend_ad_free_btn">Sans pub (3 Magies / 1 heure)</string>
-    <string name="magic_spend_extra_slot_btn">Débloquer un emplacement (%1$d Magies)</string>
+    <string name="magic_spend_ad_free_btn">Sans Pub (3 Magies / 1 Heure)</string>
+    <string name="magic_spend_extra_slot_btn">Débloquer Place (%1$d Magies)</string>
     <string name="settings_magic_marketplace_title">Marché des Magies</string>
     <string name="settings_magic_marketplace_tempting_title">Libérez le pouvoir du Mage !</string>
-    <string name="settings_magic_marketplace_tempting_desc">Gagnez des Magies pour débloquer des fonctionnalités premium gratuitement. Appuyez pour remplir votre puits de magie !</string>
-    <string name="premium_rational_ad_free_msg">Débloquez 1 heure de magie sans pub ! Pas de bannières, pas d\'interruptions.</string>
-    <string name="premium_rational_extra_slot_msg">Vous avez atteint la limite de 3 médicaments gratuits. Débloquez un autre emplacement pour continuer votre parcours !</string>
-    <string name="benefit_ad_free">profitez d\'une heure de suivi santé sans publicité</string>
-    <string name="benefit_extra_slot">ajoutez un médicament de plus à votre bibliothèque</string>
-    <string name="premium_benefit_extra_slot_title">Emplacement de médicament supplémentaire</string>
-    <string name="magic_bonus_early_bird_toast">Bonus lève-tard ! +1 Magie 🐦✨</string>
-    <string name="magic_bonus_perfect_day_title">Journée parfaite ! 🏆</string>
+    <string name="settings_magic_marketplace_tempting_desc">Gagnez des Magies pour débloquer des fonctions premium gratuitement. Tapez pour remplir votre puit magique !</string>
+    <string name="premium_rational_ad_free_msg">Débloquez 1 heure de magie sans pub ! Aucun bandeau, aucune interruption.</string>
+    <string name="premium_rational_extra_slot_msg">Vous avez atteint la limite de 3 médicaments gratuits. Débloquez une autre place pour continuer !</string>
+    <string name="benefit_ad_free">profiter d\'une heure de suivi santé sans publicité</string>
+    <string name="benefit_extra_slot">ajouter un médicament de plus à votre bibliothèque</string>
+    <string name="premium_benefit_extra_slot_title">Place de médicament supplémentaire</string>
+    <string name="magic_bonus_early_bird_toast">Bonus Oiseau de Nuit ! +1 Magie 🐦✨</string>
+    <string name="magic_bonus_perfect_day_title">Journée Parfaite ! 🏆</string>
     <string name="magic_bonus_perfect_day_msg">Vous avez pris toutes vos doses aujourd\'hui ! Vous avez gagné +1 Magie pour votre assiduité.</string>
     <string name="magic_bonus_perfect_day_btn">Génial !</string>
     <string name="magic_error_social_not_found">Facebook ou Instagram non trouvé !</string>
@@ -433,4 +208,12 @@
     <string name="premium_benefit_critical_desc">Activez les alertes haute priorité avec notifications persistantes, volume sirène et vibration personnalisée pour les médocs vitaux.</string>
     <string name="premium_rational_critical_msg">C\'est un médicament critique. Il nécessite un pass haute priorité pour activer les fonctions d\'alerte vitale.</string>
     <string name="benefit_critical">activer des alertes ultra-fiables pour votre prochaine dose</string>
+
+    <!-- Engagement Notifications -->
+    <string name="engagement_no_meds_title">Le Magicien se sent seul ! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">Votre magie de santé commence par l\'ajout de votre premier médicament. Commençons notre voyage ensemble !</string>
+    <string name="engagement_prn_only_title">Gardez votre magie fluide ! ✨</string>
+    <string name="engagement_prn_only_message">Même avec des médicaments au besoin, il est important de tenir à jour votre parchemin de santé. Ouvrez l\'application pour enregistrer une dose !</string>
+    <string name="engagement_general_title">Un message du Magicien&#8230; 📜</string>
+    <string name="engagement_general_message">Cela fait un moment depuis votre dernière visite. Revenez et vérifiez vos progrès de santé !</string>
 </resources>

@@ -433,4 +433,10 @@
     <string name="premium_benefit_critical_desc">जीवन रक्षक दवाओं के लिए स्टिकी नोटिफिकेशन, सायरन वॉल्यूम और कस्टम वाइब्रेशन के साथ हाई-प्रायोरिटी अलर्ट चालू करें।</string>
     <string name="premium_rational_critical_msg">यह एक महत्वपूर्ण दवा है। इसके लिए जीवन रक्षक अलर्ट सुविधाओं को सक्षम करने के लिए हाई-प्रायोरिटी पास की आवश्यकता है।</string>
     <string name="benefit_critical">अपनी अगली खुराक के लिए अति-विश्वसनीय अलर्ट सक्षम करें</string>
+    <string name="engagement_no_meds_title">विज़ार्ड अकेला है! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">आपके स्वास्थ्य का जादू आपकी पहली दवा जोड़ने से शुरू होता है। आइए अपनी यात्रा एक साथ शुरू करें!</string>
+    <string name="engagement_prn_only_title">अपने जादू को बहते रहने दें! ✨</string>
+    <string name="engagement_prn_only_message">ज़रूरत के अनुसार ली जाने वाली दवाओं के साथ भी, अपने स्वास्थ्य स्क्रॉल को अपडेट रखना महत्वपूर्ण है। खुराक लॉग करने के लिए ऐप खोलें!</string>
+    <string name="engagement_general_title">विज़ार्ड का एक संदेश&#8230; 📜</string>
+    <string name="engagement_general_message">आपकी पिछली मुलाकात को काफी समय हो गया है। वापस आएं और अपनी स्वास्थ्य प्रगति की जांच करें!</string>
 </resources>

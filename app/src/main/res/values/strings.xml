@@ -467,4 +467,12 @@
     <string name="magic_error_already_rated">Already earned from rating!</string>
 
     <string name="share_app_message">Check out Medication Wizard! It helps me track my meds with a touch of magic. Download here: https://play.google.com/store/apps/details?id=com.robinzon.medicationwizard</string>
+
+    <!-- Engagement Notifications -->
+    <string name="engagement_no_meds_title">The Wizard is lonely! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">Your health magic starts with adding your first medication. Let\'s begin our journey together!</string>
+    <string name="engagement_prn_only_title">Keep your magic flowing! ✨</string>
+    <string name="engagement_prn_only_message">Even with as-needed medications, it\'s important to keep your health scroll updated. Open the app to log a dose!</string>
+    <string name="engagement_general_title">A message from the Wizard... 📜</string>
+    <string name="engagement_general_message">It\'s been a while since your last visit. Come back and check your health progress!</string>
 </resources>

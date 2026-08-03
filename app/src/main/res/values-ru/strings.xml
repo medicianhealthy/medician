@@ -433,4 +433,10 @@
     <string name="premium_benefit_critical_desc">Включите высокоприоритетные оповещения с закрепленными уведомлениями, громкостью сирены и особой вибрацией для жизненно важных лекарств.</string>
     <string name="premium_rational_critical_msg">Это критическое лекарство. Для активации жизненно важных оповещений требуется высокоприоритетный пропуск.</string>
     <string name="benefit_critical">включить сверхнадежные оповещения для следующей дозы</string>
+    <string name="engagement_no_meds_title">Волшебнику одиноко! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">Магия вашего здоровья начинается с добавления вашего первого лекарства. Давайте начнем наше путешествие вместе!</string>
+    <string name="engagement_prn_only_title">Пусть ваша магия не иссякает! ✨</string>
+    <string name="engagement_prn_only_message">Даже если вы принимаете лекарства по необходимости, важно обновлять свой свиток здоровья. Откройте приложение, чтобы записать прием дозы!</string>
+    <string name="engagement_general_title">Сообщение от Волшебника&#8230; 📜</string>
+    <string name="engagement_general_message">Прошло немало времени с вашего последнего визита. Возвращайтесь и проверьте прогресс своего здоровья!</string>
 </resources>

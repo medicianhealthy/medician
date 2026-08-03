@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+import com.robinzon.medicationwizard.managers.EngagementManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
@@ -36,6 +37,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (action == null) return;
+
+        // Record interaction for engagement tracking
+        EngagementManager.recordInteraction(context);
 
         int singleId = intent.getIntExtra(EXTRA_INSTANCE_ID, -1);
         int[] instanceIds = intent.getIntArrayExtra(EXTRA_INSTANCE_IDS);

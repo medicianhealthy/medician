@@ -433,4 +433,10 @@
     <string name="premium_benefit_critical_desc">Aktifkan peringatan prioritas tinggi dengan notifikasi menempel, volume sirene, dan getaran kustom untuk obat penyelamat nyawa.</string>
     <string name="premium_rational_critical_msg">Ini adalah Obat Kritis. Memerlukan pass prioritas tinggi untuk mengaktifkan fitur peringatan penyelamat nyawa.</string>
     <string name="benefit_critical">aktifkan peringatan ultra-andal untuk dosis berikutnya</string>
+    <string name="engagement_no_meds_title">Penyihir merasa kesepian! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">Sihir kesehatan Anda dimulai dengan menambahkan obat pertama Anda. Mari kita mulai perjalanan kita bersama!</string>
+    <string name="engagement_prn_only_title">Biarkan sihir Anda mengalir! ✨</string>
+    <string name="engagement_prn_only_message">Bahkan dengan obat-obatan yang diminum sesuai kebutuhan, penting untuk menjaga gulungan kesehatan Anda tetap mutakhir. Buka aplikasi untuk mencatat dosis!</string>
+    <string name="engagement_general_title">Pesan dari Penyihir&#8230; 📜</string>
+    <string name="engagement_general_message">Sudah lama sejak kunjungan terakhir Anda. Kembali dan periksa kemajuan kesehatan Anda!</string>
 </resources>

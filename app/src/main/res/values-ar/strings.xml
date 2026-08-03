@@ -439,4 +439,10 @@
     <string name="premium_benefit_critical_desc">قم بتفعيل التنبيهات عالية الأولوية مع الإشعارات المثبتة، ومستوى صوت صفارة الإنذار، والاهتزاز المخصص للأدوية المنقذة للحياة.</string>
     <string name="premium_rational_critical_msg">هذا دواء حرج. يتطلب مرورًا عالي الأولوية لتمكين ميزات التنبيه المنقذة للحياة.</string>
     <string name="benefit_critical">تمكين التنبيهات فائقة الموثوقية لجرعتك القادمة</string>
+    <string name="engagement_no_meds_title">الساحر يشعر بالوحدة! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">سحر صحتك يبدأ بإضافة أول دواء لك. لنبدأ رحلتنا معاً!</string>
+    <string name="engagement_prn_only_title">حافظ على استمرار سحرك! ✨</string>
+    <string name="engagement_prn_only_message">حتى مع الأدوية التي يتم تناولها عند الحاجة، من المهم تحديث سجل صحتك. افتح التطبيق لتسجيل جرعة!</string>
+    <string name="engagement_general_title">رسالة من الساحر&#8230; 📜</string>
+    <string name="engagement_general_message">لقد مر وقت طويل منذ زيارتك الأخيرة. عد وتحقق من تقدمك الصحي!</string>
 </resources>

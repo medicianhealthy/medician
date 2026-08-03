@@ -32,6 +32,7 @@ import com.robinzon.medicationwizard.databinding.ActivityMainBinding;
 import com.robinzon.medicationwizard.notifications.ConsentManager;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.managers.MagicManager;
+import com.robinzon.medicationwizard.managers.EngagementManager;
 import com.robinzon.medicationwizard.remoteconfig.FireBaseFetchCallBack;
 import com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
@@ -315,6 +316,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      */
     public boolean addInteractionScoreOnly(float score) {
         return com.robinzon.medicationwizard.utils.Statisticator.addInteractionScoreAndCheck(this, score);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(android.view.MotionEvent ev) {
+        if (ev.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+            EngagementManager.recordInteraction(this);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

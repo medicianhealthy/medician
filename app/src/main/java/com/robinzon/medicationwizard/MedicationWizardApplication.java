@@ -15,6 +15,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.robinzon.medicationwizard.billing.BillingManager;
+import com.robinzon.medicationwizard.managers.EngagementManager;
 import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.NetworkMonitor;
@@ -51,6 +52,7 @@ public class MedicationWizardApplication extends Application
         applyTheme();
         applyLanguage();
         scheduleHistoryCleanup();
+        EngagementManager.recordInteraction(this);
         NetworkMonitor.getInstance(this).start();
     }
 

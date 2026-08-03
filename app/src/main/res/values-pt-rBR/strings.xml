@@ -432,4 +432,10 @@
     <string name="premium_benefit_critical_desc">Ative alertas de alta prioridade com notificações persistentes, volume de sirene e vibração personalizada para remédios vitais.</string>
     <string name="premium_rational_critical_msg">Esta é uma Medicação Crítica. Requer um passe de alta prioridade para ativar os recursos de alerta vital.</string>
     <string name="benefit_critical">ativar alertas ultra-confiáveis para sua próxima dose</string>
+    <string name="engagement_no_meds_title">O Mago está solitário! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">Sua magia de saúde começa com a adição do seu primeiro medicamento. Vamos começar nossa jornada juntos!</string>
+    <string name="engagement_prn_only_title">Mantenha sua magia fluindo! ✨</string>
+    <string name="engagement_prn_only_message">Mesmo com medicamentos de uso ocasional, é importante manter seu pergaminho de saúde atualizado. Abra o app para registrar uma dose!</string>
+    <string name="engagement_general_title">Uma mensagem do Mago&#8230; 📜</string>
+    <string name="engagement_general_message">Já faz um tempo desde sua última visita. Volte e verifique seu progresso de saúde!</string>
 </resources>

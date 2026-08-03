@@ -433,4 +433,10 @@
     <string name="premium_benefit_critical_desc">Aktiviere hochpriorisierte Alarme mit fixierten Benachrichtigungen, Sirenenlautstärke und benutzerdefinierter Vibration für lebenswichtige Medikamente.</string>
     <string name="premium_rational_critical_msg">Dies ist ein kritisches Medikament. Es erfordert einen Hochprioritäts-Pass, um lebensrettende Alarmfunktionen zu aktivieren.</string>
     <string name="benefit_critical">ultra-zuverlässige Alarme für deine nächste Dosis aktivieren</string>
+    <string name="engagement_no_meds_title">Der Zauberer ist einsam! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">Ihre Gesundheitsmagie beginnt mit dem Hinzufügen Ihres ersten Medikaments. Lassen Sie uns unsere gemeinsame Reise beginnen!</string>
+    <string name="engagement_prn_only_title">Lassen Sie Ihre Magie fließen! ✨</string>
+    <string name="engagement_prn_only_message">Auch bei Bedarf Medikamenten ist es wichtig, Ihre Gesundheitsrolle auf dem neuesten Stand zu halten. Öffnen Sie die App, um eine Dosis zu protokollieren!</string>
+    <string name="engagement_general_title">Eine Nachricht vom Zauberer&#8230; 📜</string>
+    <string name="engagement_general_message">Es ist schon eine Weile her, seit Sie uns das letzte Mal besucht haben. Kommen Sie zurück und sehen Sie sich Ihren Gesundheitsfortschritt an!</string>
 </resources>

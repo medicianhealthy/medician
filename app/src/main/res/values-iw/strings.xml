@@ -444,4 +444,10 @@
     <string name="premium_benefit_critical_desc">הפעל התראות בעדיפות גבוהה עם התראות דביקות, עוצמת קול של סירנה ורטט מותאם אישית לתרופות מצילות חיים.</string>
     <string name="premium_rational_critical_msg">זוהי תרופה קריטית. היא דורשת מעבר בעדיפות גבוהה כדי לאפשר תכונות התראה מצילות חיים.</string>
     <string name="benefit_critical">הפעל התראות אמינות במיוחד למנה הבאה שלך</string>
+    <string name="engagement_no_meds_title">הקוסם בודד! 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">קסם הבריאות שלך מתחיל בהוספת התרופה הראשונה שלך. בואו נתחיל את המסע שלנו ביחד!</string>
+    <string name="engagement_prn_only_title">שמור על הקסם שלך זורם! ✨</string>
+    <string name="engagement_prn_only_message">גם עם תרופות לפי הצורך, חשוב לשמור על מגילת הבריאות שלך מעודכנת. פתח את האפליקציה כדי לתעד מנה!</string>
+    <string name="engagement_general_title">הודעה מהקוסם&#8230; 📜</string>
+    <string name="engagement_general_message">עבר זמן מה מאז ביקורך האחרון. חזור ובדוק את התקדמות הבריאות שלך!</string>
 </resources>

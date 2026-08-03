@@ -40,6 +40,7 @@ public class AppConfig {
     public static final String KEY_MAGIC_BALANCE = "magic_balance";
     public static final String KEY_PERMANENT_PASS_PREFIX = "permanent_pass_";
     public static final String KEY_MEDS_SLOTS_UNLOCKED = "meds_slots_unlocked";
+    public static final String KEY_LAST_INTERACTION_TIME = "last_interaction_time";
 
     // Magic Economy Costs
     public static final int MAGIC_COST_PASS_1H = 1;

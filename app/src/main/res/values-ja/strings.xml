@@ -433,4 +433,10 @@
     <string name="premium_benefit_critical_desc">命に関わる薬のために、固定通知、サイレン音量、カスタム振動による高優先度のアラートをオンにします。</string>
     <string name="premium_rational_critical_msg">これは重要な薬です。命を救うアラート機能を有効にするには、高優先度パスが必要です。</string>
     <string name="benefit_critical">次回の服用のために超高信頼性アラートを有効にする</string>
+    <string name="engagement_no_meds_title">ウィザードは寂しがっています！ 🧙‍♂️</string>
+    <string name="engagement_no_meds_message">健康の魔法は、最初の薬を追加することから始まります。一緒に旅を始めましょう！</string>
+    <string name="engagement_prn_only_title">魔法を絶やさないで！ ✨</string>
+    <string name="engagement_prn_only_message">頓服薬であっても、健康の巻物を最新の状態に保つことが重要です。アプリを開いて投与量を記録しましょう！</string>
+    <string name="engagement_general_title">ウィザードからのメッセージ&#8230; 📜</string>
+    <string name="engagement_general_message">前回の訪問からしばらく時間が経ちました。戻って健康状態を確認しましょう！</string>
 </resources>
