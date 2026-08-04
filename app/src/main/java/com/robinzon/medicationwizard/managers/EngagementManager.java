@@ -36,7 +36,7 @@ public class EngagementManager {
      */
     private static void scheduleEngagementCheck(Context context) {
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(EngagementWorker.class)
-                .setInitialDelay(24, TimeUnit.HOURS)
+                .setInitialDelay(AppConfig.RE_ENGAGEMENT_THRESHOLD_HOURS, TimeUnit.MINUTES)
                 .addTag("engagement")
                 .build();
 

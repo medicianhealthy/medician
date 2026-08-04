@@ -42,6 +42,10 @@ public class AppConfig {
     public static final String KEY_MEDS_SLOTS_UNLOCKED = "meds_slots_unlocked";
     public static final String KEY_LAST_INTERACTION_TIME = "last_interaction_time";
 
+    public static final int RE_ENGAGEMENT_THRESHOLD_HOURS = 5;
+    public static final int ENGAGEMENT_WINDOW_START_HOUR = 8;
+    public static final int ENGAGEMENT_WINDOW_END_HOUR = 18;
+
     // Magic Economy Costs
     public static final int MAGIC_COST_PASS_1H = 1;
     public static final int MAGIC_COST_AD_FREE_1H = 3;

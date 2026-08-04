@@ -14,6 +14,7 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.entities.Medication;
@@ -37,21 +38,21 @@ public class EngagementWorker extends Worker {
     public Result doWork() {
         Context context = getApplicationContext();
 
-        // 1. Check Time Window (9:00 - 18:00)
+        // 1. Check Time Window (AppConfig.ENGAGEMENT_WINDOW_START_HOUR - AppConfig.ENGAGEMENT_WINDOW_END_HOUR)
         Calendar now = Calendar.getInstance();
         int hour = now.get(Calendar.HOUR_OF_DAY);
 
-        if (hour < 9 || hour >= 18) {
-            // Outside window. Reschedule for the next 9:00 AM
-            Calendar nextNine = (Calendar) now.clone();
-            if (hour >= 18) {
-                nextNine.add(Calendar.DAY_OF_YEAR, 1);
+        if (hour < AppConfig.ENGAGEMENT_WINDOW_START_HOUR || hour >= AppConfig.ENGAGEMENT_WINDOW_END_HOUR) {
+            // Outside window. Reschedule for the next START_HOUR
+            Calendar nextStart = (Calendar) now.clone();
+            if (hour >= AppConfig.ENGAGEMENT_WINDOW_END_HOUR) {
+                nextStart.add(Calendar.DAY_OF_YEAR, 1);
             }
-            nextNine.set(Calendar.HOUR_OF_DAY, 9);
-            nextNine.set(Calendar.MINUTE, 0);
-            nextNine.set(Calendar.SECOND, 0);
+            nextStart.set(Calendar.HOUR_OF_DAY, AppConfig.ENGAGEMENT_WINDOW_START_HOUR);
+            nextStart.set(Calendar.MINUTE, 0);
+            nextStart.set(Calendar.SECOND, 0);
 
-            long delayMillis = nextNine.getTimeInMillis() - now.getTimeInMillis();
+            long delayMillis = nextStart.getTimeInMillis() - now.getTimeInMillis();
             
             OneTimeWorkRequest retryRequest = new OneTimeWorkRequest.Builder(EngagementWorker.class)
                     .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
