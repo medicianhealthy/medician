@@ -122,7 +122,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                         pendingPhotoAction = null;
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), R.string.error_camera_permission, Toast.LENGTH_LONG).show();
                 }
             }
     );
@@ -578,7 +578,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                         bitmap.recycle();
                         rotated.recycle();
                     } catch (IOException e) {
-                        Toast.makeText(requireContext(), "Error rotating image", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.error_rotating_image, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .start();

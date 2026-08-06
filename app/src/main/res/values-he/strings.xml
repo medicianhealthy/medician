@@ -480,4 +480,27 @@
     <string name="engagement_prn_only_message">גם עם תרופות לפי הצורך, חשוב לשמור על מגילת הבריאות שלך מעודכנת. פתח את האפליקציה כדי לתעד מנה!</string>
     <string name="engagement_general_title">הודעה מהקוסם&#8230; 📜</string>
     <string name="engagement_general_message">עבר זמן מה מאז ביקורך האחרון. חזור ובדוק את התקדמות הבריאות שלך!</string>
+    <string name="error_camera_permission">נדרשת הרשאת מצלמה כדי לצלם תמונות</string>
+    <string name="error_rotating_image">שגיאה בסיבוב התמונה</string>
+    <string name="cheat_fake_time_cleared" translatable="false">זמן מזויף נמחק</string>
+    <string name="cheat_fake_time_set" translatable="false">זמן מזויף הוגדר</string>
+    <string name="dialog_restore_backup_title">שחזור גיבוי</string>
+    <string name="dialog_developer_access_title">גישת מפתח</string>
+    <string name="dialog_enter_access_code">הזן קוד גישה</string>
+    <string name="accessibility_expand_medication">הרחב פרטי תרופה</string>
+    <string name="accessibility_frequency">תדירות</string>
+    <string name="accessibility_instructions">הוראות</string>
+    <string name="accessibility_times">זמנים מתוזמנים</string>
+    <string name="accessibility_medication_photo">תמונת תרופה</string>
+    <string name="premium_subtitle">שחרר את כל קסם הבריאות</string>
+    <string name="premium_benefit_unlimited_title">תרופות ללא הגבלה</string>
+    <string name="premium_benefit_unlimited_desc">נהל כמה תרופות שאתה צריך ללא כל הגבלה.</string>
+    <string name="premium_benefit_adfree_title">ללא פרסומות</string>
+    <string name="premium_benefit_adfree_desc">תהנה מחוויה חלקה ללא הפרעות או הסחות דעת.</string>
+    <string name="premium_benefit_photo_title">זיהוי באמצעות תמונה</string>
+    <string name="premium_benefit_photo_desc">הוסף תמונות לתרופות שלך לזיהוי מהיר וקל.</string>
+    <string name="premium_purchase_btn">עבור לפרימיום</string>
+    <string name="premium_restore_btn">שחזר רכישה</string>
+    <string name="premium_already_purchased">אתה כבר פרימיום!</string>
+    <string name="settings_about_title">אודות קוסם התרופות</string>
 </resources>

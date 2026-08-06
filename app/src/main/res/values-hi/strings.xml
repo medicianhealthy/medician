@@ -469,4 +469,27 @@
     <string name="engagement_prn_only_message">ज़रूरत के अनुसार ली जाने वाली दवाओं के साथ भी, अपने स्वास्थ्य स्क्रॉल को अपडेट रखना महत्वपूर्ण है। खुराक लॉग करने के लिए ऐप खोलें!</string>
     <string name="engagement_general_title">विज़ार्ड का एक संदेश&#8230; 📜</string>
     <string name="engagement_general_message">आपकी पिछली मुलाकात को काफी समय हो गया है। वापस आएं और अपनी स्वास्थ्य प्रगति की जांच करें!</string>
+    <string name="error_camera_permission">फोटो लेने के लिए कैमरा अनुमति आवश्यक है</string>
+    <string name="error_rotating_image">छवि घुमाने में त्रुटि</string>
+    <string name="cheat_fake_time_cleared" translatable="false">नकली समय साफ किया गया</string>
+    <string name="cheat_fake_time_set" translatable="false">नकली समय सेट किया गया</string>
+    <string name="dialog_restore_backup_title">बैकअप बहाल करें</string>
+    <string name="dialog_developer_access_title">डेवलपर एक्सेस</string>
+    <string name="dialog_enter_access_code">एक्सेस कोड दर्ज करें</string>
+    <string name="accessibility_expand_medication">दवा विवरण विस्तार करें</string>
+    <string name="accessibility_frequency">आवृत्ति</string>
+    <string name="accessibility_instructions">निर्देश</string>
+    <string name="accessibility_times">निर्धारित समय</string>
+    <string name="accessibility_medication_photo">दवा की फोटो</string>
+    <string name="premium_subtitle">पूर्ण स्वास्थ्य जादू अनलॉक करें</string>
+    <string name="premium_benefit_unlimited_title">असीमित दवाएं</string>
+    <string name="premium_benefit_unlimited_desc">बिना किसी सीमा के जितनी चाहें उतनी दवाएं प्रबंधित करें।</string>
+    <string name="premium_benefit_adfree_title">कोई विज्ञापन नहीं</string>
+    <string name="premium_benefit_adfree_desc">बिना किसी रुकावट या ध्यान भटकाए एक सहज अनुभव का आनंद लें।</string>
+    <string name="premium_benefit_photo_title">फोटो पहचान</string>
+    <string name="premium_benefit_photo_desc">त्वरित और आसान पहचान के लिए अपनी दवाओं में फोटो जोड़ें।</string>
+    <string name="premium_purchase_btn">प्रीमियम लें</string>
+    <string name="premium_restore_btn">खरीद बहाल करें</string>
+    <string name="premium_already_purchased">आप पहले से ही प्रीमियम हैं!</string>
+    <string name="settings_about_title">मेडिकेशन विजार्ड के बारे में</string>
 </resources>

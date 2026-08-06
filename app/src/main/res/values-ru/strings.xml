@@ -469,4 +469,27 @@
     <string name="engagement_prn_only_message">Даже если вы принимаете лекарства по необходимости, важно обновлять свой свиток здоровья. Откройте приложение, чтобы записать прием дозы!</string>
     <string name="engagement_general_title">Сообщение от Волшебника&#8230; 📜</string>
     <string name="engagement_general_message">Прошло немало времени с вашего последнего визита. Возвращайтесь и проверьте прогресс своего здоровья!</string>
+    <string name="error_camera_permission">Для фотосъемки требуется разрешение на использование камеры</string>
+    <string name="error_rotating_image">Ошибка поворота изображения</string>
+    <string name="cheat_fake_time_cleared" translatable="false">Поддельное время очищено</string>
+    <string name="cheat_fake_time_set" translatable="false">Поддельное время установлено</string>
+    <string name="dialog_restore_backup_title">Восстановить резервную копию</string>
+    <string name="dialog_developer_access_title">Доступ разработчика</string>
+    <string name="dialog_enter_access_code">Введите код доступа</string>
+    <string name="accessibility_expand_medication">Развернуть сведения о лекарстве</string>
+    <string name="accessibility_frequency">Частота</string>
+    <string name="accessibility_instructions">Инструкции</string>
+    <string name="accessibility_times">Запланированное время</string>
+    <string name="accessibility_medication_photo">Фото лекарства</string>
+    <string name="premium_subtitle">Открой всю магию здоровья</string>
+    <string name="premium_benefit_unlimited_title">Безлимитные лекарства</string>
+    <string name="premium_benefit_unlimited_desc">Управляйте любым количеством лекарств без ограничений.</string>
+    <string name="premium_benefit_adfree_title">Без рекламы</string>
+    <string name="premium_benefit_adfree_desc">Наслаждайтесь приложением без прерываний и отвлекающих факторов.</string>
+    <string name="premium_benefit_photo_title">Идентификация по фото</string>
+    <string name="premium_benefit_photo_desc">Добавляйте фото к лекарствам для быстрой и легкой идентификации.</string>
+    <string name="premium_purchase_btn">Стать Premium</string>
+    <string name="premium_restore_btn">Восстановить покупку</string>
+    <string name="premium_already_purchased">У вас уже есть Premium!</string>
+    <string name="settings_about_title">О приложении Мастер Лекарств</string>
 </resources>

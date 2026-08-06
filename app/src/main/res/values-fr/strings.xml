@@ -246,4 +246,17 @@
     <string name="engagement_prn_only_message">Même avec des médicaments au besoin, il est important de tenir à jour votre parchemin de santé. Ouvrez l\'application pour enregistrer une dose !</string>
     <string name="engagement_general_title">Un message du Magicien&#8230; 📜</string>
     <string name="engagement_general_message">Cela fait un moment depuis votre dernière visite. Revenez et vérifiez vos progrès de santé !</string>
+    <string name="error_camera_permission">L\'autorisation de l\'appareil photo est requise pour prendre des photos</string>
+    <string name="error_rotating_image">Erreur lors de la rotation de l\'image</string>
+    <string name="cheat_fake_time_cleared" translatable="false">Heure fictive effacée</string>
+    <string name="cheat_fake_time_set" translatable="false">Heure fictive définie</string>
+    <string name="dialog_restore_backup_title">Restaurer la sauvegarde</string>
+    <string name="dialog_developer_access_title">Accès développeur</string>
+    <string name="dialog_enter_access_code">Entrez le code d\'accès</string>
+    <string name="accessibility_expand_medication">Développer les détails du médicament</string>
+    <string name="accessibility_frequency">Fréquence</string>
+    <string name="accessibility_instructions">Instructions</string>
+    <string name="accessibility_times">Heures programmées</string>
+    <string name="accessibility_medication_photo">Photo du médicament</string>
+    <string name="onboarding_scroll_hint">Faites défiler pour en savoir plus</string>
 </resources>

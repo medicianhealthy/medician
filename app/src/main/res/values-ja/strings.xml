@@ -469,4 +469,27 @@
     <string name="engagement_prn_only_message">頓服薬であっても、健康の巻物を最新の状態に保つことが重要です。アプリを開いて投与量を記録しましょう！</string>
     <string name="engagement_general_title">ウィザードからのメッセージ&#8230; 📜</string>
     <string name="engagement_general_message">前回の訪問からしばらく時間が経ちました。戻って健康状態を確認しましょう！</string>
+    <string name="error_camera_permission">写真を撮るにはカメラの権限が必要です</string>
+    <string name="error_rotating_image">画像の回転エラー</string>
+    <string name="cheat_fake_time_cleared" translatable="false">偽の時間をクリアしました</string>
+    <string name="cheat_fake_time_set" translatable="false">偽の時間を設定しました</string>
+    <string name="dialog_restore_backup_title">バックアップの復元</string>
+    <string name="dialog_developer_access_title">開発者アクセス</string>
+    <string name="dialog_enter_access_code">アクセスコードを入力してください</string>
+    <string name="accessibility_expand_medication">薬の詳細を展開</string>
+    <string name="accessibility_frequency">頻度</string>
+    <string name="accessibility_instructions">指示</string>
+    <string name="accessibility_times">予定時間</string>
+    <string name="accessibility_medication_photo">薬の写真</string>
+    <string name="premium_subtitle">健康の魔法をフル活用</string>
+    <string name="premium_benefit_unlimited_title">お薬の登録が無制限</string>
+    <string name="premium_benefit_unlimited_desc">制限なく、必要なお薬をすべて管理できます。</string>
+    <string name="premium_benefit_adfree_title">広告なし</string>
+    <string name="premium_benefit_adfree_desc">中断や気を散らすことなく、スムーズな体験を楽しめます。</string>
+    <string name="premium_benefit_photo_title">写真で識別</string>
+    <string name="premium_benefit_photo_desc">お薬に写真を追加して、素早く簡単に識別できます。</string>
+    <string name="premium_purchase_btn">プレミアム版にする</string>
+    <string name="premium_restore_btn">購入を復元</string>
+    <string name="premium_already_purchased">すでにプレミアム版です！</string>
+    <string name="settings_about_title">お薬の魔法使いについて</string>
 </resources>

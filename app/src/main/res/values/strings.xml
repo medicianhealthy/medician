@@ -102,6 +102,7 @@
     <string name="admob_interstitial_id_live" translatable="false">ca-app-pub-1732884929436465/1796850753</string>
     <string name="admob_rv_id_live" translatable="false">ca-app-pub-1732884929436465/6375471588</string>
     <string name="admob_rewarded_interstitial_id_live" translatable="false">RInter</string>
+    <string name="admob_app_open_id_live" translatable="false">ca-app-pub-1732884929436465/3636531980</string>
     <string name="take">Take</string>
     <string name="permission_rational_notification_title">Stay on Track!</string>
     <string name="permission_rational_notification_message">To help you remember your doses, I\'d love to send you a friendly nudge when it\'s time. Sound good?</string>
@@ -370,8 +371,31 @@
     <string name="settings_late_threshold_title">Late Take Warning</string>
     <string name="settings_threshold_format">%1$d minutes</string>
 
-    <string name="feature_active_label">Active</string>
     <string name="onboarding_scroll_hint">Scroll for more</string>
+    <string name="feature_active_label">Active</string>
+    <string name="premium_subtitle">Unlock Full Health Magic</string>
+    <string name="premium_benefit_unlimited_title">Unlimited Medications</string>
+    <string name="premium_benefit_unlimited_desc">Manage as many medications as you need without any limits.</string>
+    <string name="premium_benefit_adfree_title">No Ads</string>
+    <string name="premium_benefit_adfree_desc">Enjoy a seamless experience without any interruptions or distractions.</string>
+    <string name="premium_benefit_photo_title">Photo Identification</string>
+    <string name="premium_benefit_photo_desc">Add photos to your medications for quick and easy identification.</string>
+    <string name="premium_purchase_btn">Go Premium</string>
+    <string name="premium_restore_btn">Restore Purchase</string>
+    <string name="premium_already_purchased">You are already Premium!</string>
+    <string name="settings_about_title">About Medication Wizard</string>
+    <string name="error_camera_permission">Camera permission is required to take photos</string>
+    <string name="error_rotating_image">Error rotating image</string>
+    <string name="cheat_fake_time_cleared" translatable="false">Fake time cleared</string>
+    <string name="cheat_fake_time_set" translatable="false">Fake time set</string>
+    <string name="dialog_restore_backup_title">Restore Backup</string>
+    <string name="dialog_developer_access_title">Developer Access</string>
+    <string name="dialog_enter_access_code">Enter access code</string>
+    <string name="accessibility_expand_medication">Expand medication details</string>
+    <string name="accessibility_frequency">Frequency</string>
+    <string name="accessibility_instructions">Instructions</string>
+    <string name="accessibility_times">Scheduled times</string>
+    <string name="accessibility_medication_photo">Medication photo</string>
 
     <string name="active_until_format">Active until %1$s</string>
     <string name="active_for_next_reminder">Active for next reminder</string>

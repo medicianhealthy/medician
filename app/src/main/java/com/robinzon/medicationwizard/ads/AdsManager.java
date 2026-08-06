@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 
 import com.robinzon.medicationwizard.BuildConfig;
+import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ads.admob.AdMobAppOpen;
 import com.robinzon.medicationwizard.ads.admob.AdMobBanner;
 import com.robinzon.medicationwizard.ads.admob.AdMobInterstitial;
@@ -70,26 +71,26 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
      */
     private void createAds() {
         if (null == mainBanner) {
-            mainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Banner) : "a",
+            mainBanner = new AdMobBanner(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Banner) : activity.getString(R.string.admob_banner_id_live),
                     this,
                     AdPlacement.Main);
             getAdsCollection().add(mainBanner);
 
         }
         if (null == mainInterstitial) {
-            mainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : "z",
+            mainInterstitial = new AdMobInterstitial(BuildConfig.DEBUG ? getTestAdForAdType(AdType.InterstitialVideo) : activity.getString(R.string.admob_interstitial_id_live),
                     this,
                     AdPlacement.Main);
             getAdsCollection().add(mainInterstitial);
         }
         if (null == mainRewarded) {
-            mainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : "a",
+            mainRewarded = new AdMobRewarded(BuildConfig.DEBUG ? getTestAdForAdType(AdType.Rewarded) : activity.getString(R.string.admob_rv_id_live),
                     this,
                     AdPlacement.Main);
             getAdsCollection().add(mainRewarded);
         }
         if (null == appOpenAd) {
-            appOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : "a",
+            appOpenAd = new AdMobAppOpen(BuildConfig.DEBUG ? getTestAdForAdType(AdType.AppOpen) : activity.getString(R.string.admob_app_open_id_live),
                     this,
                     AdPlacement.Main);
             getAdsCollection().add(appOpenAd);

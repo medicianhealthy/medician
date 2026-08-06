@@ -5,8 +5,21 @@
 # --- Project Entities & Database Models ---
 # Keep all entities and database related classes to ensure Room and JSON serialization work
 -keep class com.robinzon.medicationwizard.entities.** { *; }
+-keep class com.robinzon.medicationwizard.api.models.** { *; }
 -keep class com.robinzon.medicationwizard.database.** { *; }
 -keep class com.robinzon.medicationwizard.ui.todaysmedications.DoseItem { *; }
+
+# --- Retrofit & Gson ---
+# Retain annotations and generic signatures for reflection
+-keepattributes Signature, *Annotation*
+-keep class retrofit2.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+# Gson specific rules to prevent obfuscating field names used in JSON
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
 
 # --- Room Persistence Library ---
 -keep class * extends androidx.room.RoomDatabase
@@ -76,6 +89,17 @@
 -keep class com.robinzon.medicationwizard.databinding.** { *; }
 -keep class com.google.android.material.** { *; }
 -dontwarn com.google.android.material.internal.CheckableImageButton
+
+# --- Performance & Privacy: Strip Logs ---
+# This rule tells R8 to treat Log methods as having no side effects,
+# which allows it to remove the calls entirely in the release build.
+-assumenosideeffects class android.util.Log {
+    public static int v(...);
+    public static int d(...);
+    public static int i(...);
+    public static int w(...);
+    public static int e(...);
+}
 
 # --- Retrofit / OkHttp (Common dependencies) ---
 -dontwarn okio.**

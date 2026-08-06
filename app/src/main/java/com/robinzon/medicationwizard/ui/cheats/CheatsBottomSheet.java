@@ -84,13 +84,13 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         btnClearTime.setOnClickListener(v -> {
             prefs.setLong(TimeManager.KEY_CHEAT_FAKE_TIME_START, 0);
             updateTimeUi();
-            Toast.makeText(requireContext(), "Fake time cleared", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.cheat_fake_time_cleared, Toast.LENGTH_SHORT).show();
         });
     }
 
     private void showDateTimePicker() {
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Fake Date")
+                .setTitleText(R.string.cheats_set_fake_time)
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build();
 
@@ -103,7 +103,7 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
                     .setHour(now.get(Calendar.HOUR_OF_DAY))
                     .setMinute(now.get(Calendar.MINUTE))
                     .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
-                    .setTitleText("Select Fake Time")
+                    .setTitleText(R.string.cheats_set_fake_time)
                     .build();
 
             timePicker.addOnPositiveButtonClickListener(v -> {
@@ -122,7 +122,7 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
                 prefs.setLong(TimeManager.KEY_CHEAT_REAL_TIME_AT_SET, realAtSet);
 
                 updateTimeUi();
-                Toast.makeText(requireContext(), "Fake time set", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.cheat_fake_time_set, Toast.LENGTH_SHORT).show();
             });
             timePicker.show(getChildFragmentManager(), "TIME_PICKER");
         });

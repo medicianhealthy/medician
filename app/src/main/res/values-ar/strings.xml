@@ -475,4 +475,27 @@
     <string name="engagement_prn_only_message">حتى مع الأدوية التي يتم تناولها عند الحاجة، من المهم تحديث سجل صحتك. افتح التطبيق لتسجيل جرعة!</string>
     <string name="engagement_general_title">رسالة من الساحر&#8230; 📜</string>
     <string name="engagement_general_message">لقد مر وقت طويل منذ زيارتك الأخيرة. عد وتحقق من تقدمك الصحي!</string>
+    <string name="error_camera_permission">مطلوب إذن الكاميرا لالتقاط الصور</string>
+    <string name="error_rotating_image">خطأ في تدوير الصورة</string>
+    <string name="cheat_fake_time_cleared" translatable="false">تم مسح الوقت الوهمي</string>
+    <string name="cheat_fake_time_set" translatable="false">تم ضبط الوقت الوهمي</string>
+    <string name="dialog_restore_backup_title">استعادة النسخة الاحتياطية</string>
+    <string name="dialog_developer_access_title">وصول المطور</string>
+    <string name="dialog_enter_access_code">أدخل رمز الوصول</string>
+    <string name="accessibility_expand_medication">توسيع تفاصيل الدواء</string>
+    <string name="accessibility_frequency">التكرار</string>
+    <string name="accessibility_instructions">التعليمات</string>
+    <string name="accessibility_times">الأوقات المجدولة</string>
+    <string name="accessibility_medication_photo">صورة الدواء</string>
+    <string name="premium_subtitle">افتح السحر الصحي الكامل</string>
+    <string name="premium_benefit_unlimited_title">أدوية غير محدودة</string>
+    <string name="premium_benefit_unlimited_desc">قم بإدارة أي عدد تريده من الأدوية دون أي قيود.</string>
+    <string name="premium_benefit_adfree_title">بدون إعلانات</string>
+    <string name="premium_benefit_adfree_desc">استمتع بتجربة سلسة دون أي انقطاع أو تشتيت.</string>
+    <string name="premium_benefit_photo_title">التعرف بالصور</string>
+    <string name="premium_benefit_photo_desc">أضف صورًا لأدويتك للتعرف عليها بسرعة وسهولة.</string>
+    <string name="premium_purchase_btn">احصل على بريميوم</string>
+    <string name="premium_restore_btn">استعادة المشتريات</string>
+    <string name="premium_already_purchased">أنت بريميوم بالفعل!</string>
+    <string name="settings_about_title">حول ساحر الأدوية</string>
 </resources>

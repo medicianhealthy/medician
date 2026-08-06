@@ -109,15 +109,9 @@ public class Statisticator {
 
         if (currentActions >= threshold) {
             prefs.setInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0);
-            if (BuildConfig.DEBUG) {
-                Toast.makeText(context, "Action " + threshold + "/" + threshold + " reached, triggering ad", Toast.LENGTH_SHORT).show();
-            }
             return true;
         } else {
             prefs.setInt(SPK_ACTIONS_FOR_INTERSTITIAL, currentActions);
-            if (BuildConfig.DEBUG) {
-                Toast.makeText(context, "Action " + currentActions + "/" + threshold + " reached", Toast.LENGTH_SHORT).show();
-            }
             return false;
         }
     }
@@ -137,15 +131,9 @@ public class Statisticator {
         if (currentScore >= threshold) {
             float remainder = (float) (currentScore - (float) threshold);
             prefs.setFloat(SPK_INTERSTITIAL_SCORE, remainder);
-            if (BuildConfig.DEBUG && scoreToAdd > 0) {
-                Toast.makeText(context, "Added " + scoreToAdd + " points, reached " + threshold + ", total is " + remainder, Toast.LENGTH_SHORT).show();
-            }
             return true;
         } else {
             prefs.setFloat(SPK_INTERSTITIAL_SCORE, currentScore);
-            if (BuildConfig.DEBUG && scoreToAdd > 0) {
-                Toast.makeText(context, "Added " + scoreToAdd + " points, total is " + currentScore, Toast.LENGTH_SHORT).show();
-            }
             return false;
         }
     }

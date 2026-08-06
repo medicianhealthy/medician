@@ -68,7 +68,7 @@ public class SettingsFragment extends MedicationWizardFragment {
             uri -> {
                 if (uri != null) {
                     com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-                    dialog.setTitle("Restore Backup");
+                    dialog.setTitle(getString(R.string.dialog_restore_backup_title));
                     dialog.setMessage(getString(R.string.backup_restore_warning));
                     dialog.setPositiveButton(getString(R.string.button_confirm), (confirmDialog, index) ->
                             BackupManager.restoreBackup(requireContext(), uri, (success, msg) ->
@@ -650,8 +650,8 @@ public class SettingsFragment extends MedicationWizardFragment {
         android.widget.EditText input = new android.widget.EditText(requireContext());
         input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
         com.robinzon.medicationwizard.ui.CustomMaterialDialog d = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
-        d.setTitle("Developer Access");
-        d.setMessage("Enter access code");
+        d.setTitle(getString(R.string.dialog_developer_access_title));
+        d.setMessage(getString(R.string.dialog_enter_access_code));
         d.setView(input);
         d.setPositiveButton(getString(R.string.button_confirm), (dialog, index) -> {
             if ("Gway1952".equals(input.getText().toString())) {

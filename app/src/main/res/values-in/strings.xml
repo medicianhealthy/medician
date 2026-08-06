@@ -469,4 +469,27 @@
     <string name="engagement_prn_only_message">Bahkan dengan obat-obatan yang diminum sesuai kebutuhan, penting untuk menjaga gulungan kesehatan Anda tetap mutakhir. Buka aplikasi untuk mencatat dosis!</string>
     <string name="engagement_general_title">Pesan dari Penyihir&#8230; 📜</string>
     <string name="engagement_general_message">Sudah lama sejak kunjungan terakhir Anda. Kembali dan periksa kemajuan kesehatan Anda!</string>
+    <string name="error_camera_permission">Izin kamera diperlukan untuk mengambil foto</string>
+    <string name="error_rotating_image">Kesalahan saat memutar gambar</string>
+    <string name="cheat_fake_time_cleared" translatable="false">Waktu palsu dihapus</string>
+    <string name="cheat_fake_time_set" translatable="false">Waktu palsu diatur</string>
+    <string name="dialog_restore_backup_title">Pulihkan Cadangan</string>
+    <string name="dialog_developer_access_title">Akses Pengembang</string>
+    <string name="dialog_enter_access_code">Masukkan kode akses</string>
+    <string name="accessibility_expand_medication">Perluas detail obat</string>
+    <string name="accessibility_frequency">Frekuensi</string>
+    <string name="accessibility_instructions">Instruksi</string>
+    <string name="accessibility_times">Waktu terjadwal</string>
+    <string name="accessibility_medication_photo">Foto obat</string>
+    <string name="premium_subtitle">Buka Keajaiban Kesehatan Penuh</string>
+    <string name="premium_benefit_unlimited_title">Obat Tanpa Batas</string>
+    <string name="premium_benefit_unlimited_desc">Kelola obat sebanyak yang Anda butuhkan tanpa batasan apa pun.</string>
+    <string name="premium_benefit_adfree_title">Tanpa Iklan</string>
+    <string name="premium_benefit_adfree_desc">Nikmati pengalaman mulus tanpa gangguan atau distraksi.</string>
+    <string name="premium_benefit_photo_title">Identifikasi Foto</string>
+    <string name="premium_benefit_photo_desc">Tambahkan foto ke obat-obatan Anda untuk identifikasi yang cepat dan mudah.</string>
+    <string name="premium_purchase_btn">Jadi Premium</string>
+    <string name="premium_restore_btn">Pulihkan Pembelian</string>
+    <string name="premium_already_purchased">Anda sudah Premium!</string>
+    <string name="settings_about_title">Tentang Penyihir Obat</string>
 </resources>

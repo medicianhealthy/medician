@@ -468,4 +468,27 @@
     <string name="engagement_prn_only_message">Mesmo com medicamentos de uso ocasional, é importante manter seu pergaminho de saúde atualizado. Abra o app para registrar uma dose!</string>
     <string name="engagement_general_title">Uma mensagem do Mago&#8230; 📜</string>
     <string name="engagement_general_message">Já faz um tempo desde sua última visita. Volte e verifique seu progresso de saúde!</string>
+    <string name="error_camera_permission">A permissão da câmera é necessária para tirar fotos</string>
+    <string name="error_rotating_image">Erro ao girar imagem</string>
+    <string name="cheat_fake_time_cleared" translatable="false">Hora falsa limpa</string>
+    <string name="cheat_fake_time_set" translatable="false">Hora falsa definida</string>
+    <string name="dialog_restore_backup_title">Restaurar Backup</string>
+    <string name="dialog_developer_access_title">Acesso do Desenvolvedor</string>
+    <string name="dialog_enter_access_code">Digite o código de acesso</string>
+    <string name="accessibility_expand_medication">Expandir detalhes do medicamento</string>
+    <string name="accessibility_frequency">Frequência</string>
+    <string name="accessibility_instructions">Instruções</string>
+    <string name="accessibility_times">Horários agendados</string>
+    <string name="accessibility_medication_photo">Foto do medicamento</string>
+    <string name="premium_subtitle">Desbloqueie toda a Magia da Saúde</string>
+    <string name="premium_benefit_unlimited_title">Medicamentos Ilimitados</string>
+    <string name="premium_benefit_unlimited_desc">Gerencie quantos medicamentos precisar sem limites.</string>
+    <string name="premium_benefit_adfree_title">Sem Anúncios</string>
+    <string name="premium_benefit_adfree_desc">Aproveite uma experiência sem interrupções ou distrações.</string>
+    <string name="premium_benefit_photo_title">Identificação por Foto</string>
+    <string name="premium_benefit_photo_desc">Adicione fotos aos seus medicamentos para uma identificação rápida e fácil.</string>
+    <string name="premium_purchase_btn">Seja Premium</string>
+    <string name="premium_restore_btn">Restaurar Compra</string>
+    <string name="premium_already_purchased">Você já é Premium!</string>
+    <string name="settings_about_title">Sobre o Mago da Medicação</string>
 </resources>

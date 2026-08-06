@@ -469,4 +469,27 @@
     <string name="engagement_prn_only_message">Auch bei Bedarf Medikamenten ist es wichtig, Ihre Gesundheitsrolle auf dem neuesten Stand zu halten. Öffnen Sie die App, um eine Dosis zu protokollieren!</string>
     <string name="engagement_general_title">Eine Nachricht vom Zauberer&#8230; 📜</string>
     <string name="engagement_general_message">Es ist schon eine Weile her, seit Sie uns das letzte Mal besucht haben. Kommen Sie zurück und sehen Sie sich Ihren Gesundheitsfortschritt an!</string>
+    <string name="error_camera_permission">Kameraberechtigung ist erforderlich, um Fotos aufzunehmen</string>
+    <string name="error_rotating_image">Fehler beim Drehen des Bildes</string>
+    <string name="cheat_fake_time_cleared" translatable="false">Fake-Zeit gelöscht</string>
+    <string name="cheat_fake_time_set" translatable="false">Fake-Zeit eingestellt</string>
+    <string name="dialog_restore_backup_title">Sicherung wiederherstellen</string>
+    <string name="dialog_developer_access_title">Entwicklerzugriff</string>
+    <string name="dialog_enter_access_code">Zugangscode eingeben</string>
+    <string name="accessibility_expand_medication">Medikamentendetails erweitern</string>
+    <string name="accessibility_frequency">Häufigkeit</string>
+    <string name="accessibility_instructions">Anweisungen</string>
+    <string name="accessibility_times">Geplante Zeiten</string>
+    <string name="accessibility_medication_photo">Medikamentenfoto</string>
+    <string name="premium_subtitle">Entfessle die volle Gesundheitsmagie</string>
+    <string name="premium_benefit_unlimited_title">Unbegrenzte Medikamente</string>
+    <string name="premium_benefit_unlimited_desc">Verwalte so viele Medikamente wie du brauchst, ohne Einschränkungen.</string>
+    <string name="premium_benefit_adfree_title">Keine Werbung</string>
+    <string name="premium_benefit_adfree_desc">Genieße ein nahtloses Erlebnis ohne Unterbrechungen oder Ablenkungen.</string>
+    <string name="premium_benefit_photo_title">Identifikation per Foto</string>
+    <string name="premium_benefit_photo_desc">Füge Fotos zu deinen Medikamenten hinzu für eine schnelle und einfache Identifizierung.</string>
+    <string name="premium_purchase_btn">Werde Premium</string>
+    <string name="premium_restore_btn">Kauf wiederherstellen</string>
+    <string name="premium_already_purchased">Du bist bereits Premium!</string>
+    <string name="settings_about_title">Über Medizin-Magier</string>
 </resources>
