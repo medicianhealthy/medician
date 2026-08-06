@@ -15,7 +15,7 @@ android {
         multiDexEnabled true
     }
 
-    compileSdk = libs.versions.compileSdk.get().toInteger()
+    compileSdk = rootProject.SDK_COMPILE_VERSION
 
     buildTypes {
         release {

@@ -1,14 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     //Android sdk  -->   https://developer.android.com/tools/releases/platforms
-    project.ext.set("SDK_MINIMUM_VERSION", 28) //Android 9.0
-    project.ext.set("SDK_COMPILE_VERSION", 36) //Android 16.0
-    project.ext.set("SDK_TARGET_VERSION", 36) //Android 16.0
+    project.ext.set("SDK_MINIMUM_VERSION", 26) //Android 8.0
+    project.ext.set("SDK_COMPILE_VERSION", 37) //Android 17.0
+    project.ext.set("SDK_TARGET_VERSION", 37) //Android 17.0
     // Version components
     def major = 1
     def minor = 0
     def patch = 1
-    def build = 13 // Increment this for hotfixes to the same version name
+    def build = 14 // Increment this for hotfixes to the same version name
 
     // Example: 100010001
     project.ext.set("VERSION_CODE", major * 100000000 + minor * 1000000 + patch * 1000 + build)

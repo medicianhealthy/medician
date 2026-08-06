@@ -9,7 +9,7 @@ comGoogleFirebaseX4 = "22.0.3"
 comGoogleFirebaseX5 = "25.1.1"
 constraintlayout = "2.2.2"
 firebaseAds = "23.6.0"
-firebaseBom = "34.14.0"
+firebaseBom = "34.17.0"
 firebaseCrashlyticsGradle = "3.0.7"
 glide = "5.0.9"
 googleApiClientAndroid = "2.9.0"
@@ -50,7 +50,7 @@ androidx-work-runtime = { group = "androidx.work", name = "work-runtime", versio
 billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 compiler = { group = "com.github.bumptech.glide", name = "compiler", version = "5.0.9" }
 firebase-ads = { group = "com.google.firebase", name = "firebase-ads", version.ref = "firebaseAds" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "34.17.0" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsGradle" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version.ref = "googleApiClientAndroid" }
