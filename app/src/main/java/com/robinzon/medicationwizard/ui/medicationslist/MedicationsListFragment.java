@@ -87,7 +87,8 @@ public class MedicationsListFragment extends MedicationWizardFragment {
         // Listen for feature unlock (e.g., photo pass after RV) to refresh the list
         getParentFragmentManager().setFragmentResultListener("feature_unlocked", getViewLifecycleOwner(), (key, bundle) -> {
             String type = bundle.getString("feature_type");
-            if (com.robinzon.medicationwizard.AppConfig.FeaturePassType.PHOTO.name().equals(type)) {
+            if (com.robinzon.medicationwizard.AppConfig.FeaturePassType.PHOTO.name().equals(type) ||
+                com.robinzon.medicationwizard.AppConfig.FeaturePassType.INVENTORY.name().equals(type)) {
                 if (adapter != null) adapter.notifyDataSetChanged();
             } else if (com.robinzon.medicationwizard.AppConfig.FeaturePassType.EXTRA_MED_SLOT.name().equals(type)) {
                 // If unlocked from list, open add sheet

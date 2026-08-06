@@ -347,6 +347,36 @@
     <string name="settings_threshold_format">%1$d मिनट</string>
 
     <string name="feature_active_label">सक्रिय</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">स्थायी रूप से सक्रिय</string>
+    <string name="magic_spend_inventory_btn">इन्वेंट्री ट्रैकर अनलॉक करें (10 मैजिक्स)</string>
+    <string name="premium_benefit_inventory_title">इन्वेंट्री ट्रैकर</string>
+    <string name="premium_benefit_inventory_desc">अपनी दवा की आपूर्ति पर नज़र रखें। आपकी वास्तविक खपत के आधार पर गणना की गई, रिफिल का समय होने पर सूचना प्राप्त करें।</string>
+    <string name="premium_rational_inventory_msg">अपनी दवा के स्टॉक को स्वचालित रूप से प्रबंधित करने और रिफिल अलर्ट प्राप्त करने के लिए इन्वेंट्री ट्रैकर अनलॉक करें।</string>
+    <string name="benefit_inventory">स्वचालित रूप से दवा के स्टॉक और रिफिल की जरूरतों को ट्रैक करें</string>
+    <string name="inventory_label">इन्वेंट्री ट्रैकर</string>
+    <string name="inventory_current_label">वर्तमान स्टॉक:</string>
+    <string name="inventory_refill_button">स्टॉक रिफिल करें</string>
+    <string name="inventory_alert_settings">अलर्ट सेटिंग्स</string>
+    <string name="inventory_alert_none">कोई अलर्ट नहीं</string>
+    <string name="inventory_alert_amount">जब स्टॉक %s तक पहुंच जाए</string>
+    <string name="inventory_alert_days">खाली होने से %s दिन पहले अलर्ट करें</string>
+    <string name="inventory_dialog_refill_title">%s रिफिल करें</string>
+    <string name="inventory_dialog_refill_message">वर्तमान में आपके पास मौजूद दवा की नई कुल मात्रा दर्ज करें।</string>
+    <string name="inventory_dialog_alert_title">रिफिल अलर्ट</string>
+    <string name="inventory_dialog_alert_desc">विज़ार्ड आपको रिफिल करने के लिए कैसे याद दिलाए?</string>
+    <string name="inventory_option_days">दिन पहले</string>
+    <string name="inventory_option_amount">निश्चित मात्रा</string>
+    <string name="inventory_input_days_hint">खाली होने से पहले के दिन</string>
+    <string name="inventory_input_amount_hint">शेष मात्रा</string>
+    <string name="inventory_stock_format">स्टॉक: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">रिफिल आवश्यक: %s</string>
+    <string name="inventory_low_stock_notif_msg">आपके पास केवल %2$s के लिए पर्याप्त %1$s है। रिफिल लॉग करने के लिए टैप करें।</string>
+    <string name="inventory_empty_stock_notif_msg">आपकी %s खत्म हो गई है! रिफिल लॉग करने के लिए टैप करें।</string>
+    <string name="inventory_debug_toast">इन्वेंट्री परिवर्तन: %1$s -> %2$s</string>
+    <string name="unit_days">दिन</string>
+
     <string name="onboarding_scroll_hint">और देखने के लिए स्क्रॉल करें</string>
     <string name="active_until_format">%1$s तक सक्रिय</string>
     <string name="active_for_next_reminder">अगले रिमाइंडर के लिए सक्रिय</string>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.managers.EngagementManager;
+import com.robinzon.medicationwizard.managers.InventoryManager;
 import com.robinzon.medicationwizard.ui.settings.SettingsViewModel;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
@@ -91,6 +92,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 instance.setActionTime(now);
                 db.doseInstanceDao().update(instance);
                 
+                // Inventory Logic
+                InventoryManager.decrementInventory(context, instance.getMedicationId(), instance.getAmount());
+
                 // Update parent medication definition's last taken time
                 updateMedicationLastTakenTime(context, instance.getMedicationId(), now);
                 break;

@@ -347,6 +347,36 @@
     <string name="settings_threshold_format">%1$d menit</string>
 
     <string name="feature_active_label">Aktif</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">Aktif Permanen</string>
+    <string name="magic_spend_inventory_btn">Buka Pelacak Inventaris (10 Sihir)</string>
+    <string name="premium_benefit_inventory_title">Pelacak Inventaris</string>
+    <string name="premium_benefit_inventory_desc">Pantau persediaan obat Anda. Dapatkan notifikasi saat waktunya mengisi ulang, dihitung berdasarkan konsumsi aktual Anda.</string>
+    <string name="premium_rational_inventory_msg">Buka Pelacak Inventaris untuk mengelola stok obat Anda secara otomatis dan menerima peringatan isi ulang.</string>
+    <string name="benefit_inventory">lacak stok obat dan kebutuhan isi ulang secara otomatis</string>
+    <string name="inventory_label">Pelacak Inventaris</string>
+    <string name="inventory_current_label">Stok Saat Ini:</string>
+    <string name="inventory_refill_button">Isi Ulang Stok</string>
+    <string name="inventory_alert_settings">Pengaturan Peringatan</string>
+    <string name="inventory_alert_none">Tidak ada peringatan</string>
+    <string name="inventory_alert_amount">Saat stok mencapai %s</string>
+    <string name="inventory_alert_days">Peringatan %s hari sebelum habis</string>
+    <string name="inventory_dialog_refill_title">Isi Ulang %s</string>
+    <string name="inventory_dialog_refill_message">Masukkan jumlah total baru obat yang saat ini Anda miliki.</string>
+    <string name="inventory_dialog_alert_title">Peringatan Isi Ulang</string>
+    <string name="inventory_dialog_alert_desc">Bagaimana seharusnya Wizard mengingatkan Anda untuk mengisi ulang?</string>
+    <string name="inventory_option_days">Hari Sebelumnya</string>
+    <string name="inventory_option_amount">Jumlah Tetap</string>
+    <string name="inventory_input_days_hint">Hari sebelum habis</string>
+    <string name="inventory_input_amount_hint">Jumlah tersisa</string>
+    <string name="inventory_stock_format">Stok: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">Perlu Isi Ulang: %s</string>
+    <string name="inventory_low_stock_notif_msg">Anda hanya memiliki cukup %1$s untuk %2$s. Ketuk untuk mencatat isi ulang.</string>
+    <string name="inventory_empty_stock_notif_msg">Anda kehabisan %s! Ketuk untuk mencatat isi ulang.</string>
+    <string name="inventory_debug_toast">Perubahan inventaris: %1$s -> %2$s</string>
+    <string name="unit_days">hari</string>
+
     <string name="onboarding_scroll_hint">Gulir untuk lainnya</string>
     <string name="active_until_format">Aktif sampai %1$s</string>
     <string name="active_for_next_reminder">Aktif untuk pengingat berikutnya</string>

@@ -39,4 +39,5 @@
     <color name="md_theme_dark_onBackground">#E2E2E5</color>
     <color name="md_theme_dark_surface">#161B22</color>
     <color name="md_theme_dark_onSurface">#E2E2E5</color>
+    <color name="inventory_low_stock">#B00020</color>
 </resources>

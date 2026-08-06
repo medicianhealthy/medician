@@ -352,6 +352,36 @@
     <string name="settings_threshold_format">%1$d minutos</string>
 
     <string name="feature_active_label">Activo</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">Activo permanentemente</string>
+    <string name="magic_spend_inventory_btn">Desbloquear rastreador de inventario (10 Magics)</string>
+    <string name="premium_benefit_inventory_title">Rastreador de inventario</string>
+    <string name="premium_benefit_inventory_desc">Mantenga un seguimiento de su suministro de medicamentos. Reciba notificaciones cuando sea el momento de reponer, calculado según su consumo real.</string>
+    <string name="premium_rational_inventory_msg">Desbloquee el rastreador de inventario para administrar automáticamente su stock de medicamentos y recibir alertas de reposición.</string>
+    <string name="benefit_inventory">rastrear automáticamente el stock de medicamentos y las necesidades de reposición</string>
+    <string name="inventory_label">Rastreador de inventario</string>
+    <string name="inventory_current_label">Stock actual:</string>
+    <string name="inventory_refill_button">Reponer stock</string>
+    <string name="inventory_alert_settings">Ajustes de alerta</string>
+    <string name="inventory_alert_none">Sin alerta</string>
+    <string name="inventory_alert_amount">Cuando el stock llegue a %s</string>
+    <string name="inventory_alert_days">Alertar %s días antes de que se agote</string>
+    <string name="inventory_dialog_refill_title">Reponer %s</string>
+    <string name="inventory_dialog_refill_message">Ingrese la nueva cantidad total de medicamento que posee actualmente.</string>
+    <string name="inventory_dialog_alert_title">Alerta de reposición</string>
+    <string name="inventory_dialog_alert_desc">¿Cómo debería recordarle el Mago que reponga?</string>
+    <string name="inventory_option_days">Días antes</string>
+    <string name="inventory_option_amount">Cantidad fija</string>
+    <string name="inventory_input_days_hint">Días antes de que se agote</string>
+    <string name="inventory_input_amount_hint">Cantidad restante</string>
+    <string name="inventory_stock_format">Stock: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">Reposición necesaria: %s</string>
+    <string name="inventory_low_stock_notif_msg">Solo tiene suficiente %1$s para %2$s. Toque para registrar una reposición.</string>
+    <string name="inventory_empty_stock_notif_msg">¡Se ha quedado sin %s! Toque para registrar una reposición.</string>
+    <string name="inventory_debug_toast">Cambio de inventario: %1$s -> %2$s</string>
+    <string name="unit_days">días</string>
+
     <string name="onboarding_scroll_hint">Desliza para ver más</string>
     <string name="active_until_format">Activo hasta las %1$s</string>
     <string name="active_for_next_reminder">Activo para el próximo aviso</string>

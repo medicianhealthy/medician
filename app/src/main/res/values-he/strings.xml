@@ -354,6 +354,36 @@
     <string name="settings_threshold_format">%1$d דקות</string>
 
     <string name="feature_active_label">פעיל</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">פעיל לצמיתות</string>
+    <string name="magic_spend_inventory_btn">פתיחת מעקב מלאי (10 קסמים)</string>
+    <string name="premium_benefit_inventory_title">מעקב מלאי</string>
+    <string name="premium_benefit_inventory_desc">עקוב אחר אספקת התרופות שלך. קבל התראה כשיגיע הזמן למילוי חוזר, המחושב לפי הצריכה בפועל שלך.</string>
+    <string name="premium_rational_inventory_msg">פתח את מעקב המלאי כדי לנהל באופן אוטומטי את מלאי התרופות שלך ולקבל התראות מילוי חוזר.</string>
+    <string name="benefit_inventory">מעקב אוטומטי אחר מלאי התרופות וצרכי המילוי החוזר</string>
+    <string name="inventory_label">מעקב מלאי</string>
+    <string name="inventory_current_label">מלאי נוכחי:</string>
+    <string name="inventory_refill_button">מילוי מלאי</string>
+    <string name="inventory_alert_settings">הגדרות התראה</string>
+    <string name="inventory_alert_none">אין התראה</string>
+    <string name="inventory_alert_amount">כשהמלאי מגיע ל-%s</string>
+    <string name="inventory_alert_days">התראה %s ימים לפני שהמלאי נגמר</string>
+    <string name="inventory_dialog_refill_title">מילוי %s</string>
+    <string name="inventory_dialog_refill_message">הזן את הכמות הכוללת החדשה של התרופה שברשותך כעת.</string>
+    <string name="inventory_dialog_alert_title">התראת מילוי חוזר</string>
+    <string name="inventory_dialog_alert_desc">איך הקוסם צריך להזכיר לך למלא שוב?</string>
+    <string name="inventory_option_days">ימים לפני</string>
+    <string name="inventory_option_amount">כמות קבועה</string>
+    <string name="inventory_input_days_hint">ימים לפני שהמלאי נגמר</string>
+    <string name="inventory_input_amount_hint">כמות שנותרה</string>
+    <string name="inventory_stock_format">מלאי: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">נדרש מילוי חוזר: %s</string>
+    <string name="inventory_low_stock_notif_msg">יש לך מספיק %1$s ל-%2$s בלבד. הקש כדי לתעד מילוי חוזר.</string>
+    <string name="inventory_empty_stock_notif_msg">נגמר לך ה-%s! הקש כדי לתעד מילוי חוזר.</string>
+    <string name="inventory_debug_toast">שינוי מלאי: %1$s -> %2$s</string>
+    <string name="unit_days">ימים</string>
+
     <string name="onboarding_scroll_hint">גלול למטה לעוד</string>
     <string name="active_until_format">פעיל עד %1$s</string>
     <string name="active_for_next_reminder">פעיל לתזכורת הבאה</string>

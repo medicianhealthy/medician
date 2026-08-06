@@ -347,6 +347,36 @@
     <string name="settings_threshold_format">%1$d Minuten</string>
 
     <string name="feature_active_label">Aktiv</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">Dauerhaft aktiv</string>
+    <string name="magic_spend_inventory_btn">Bestands-Tracker freischalten (10 Magie)</string>
+    <string name="premium_benefit_inventory_title">Bestands-Tracker</string>
+    <string name="premium_benefit_inventory_desc">Verfolgen Sie Ihren Medikamentenvorrat. Lassen Sie sich benachrichtigen, wenn es Zeit zum Nachfüllen ist, berechnet auf der Grundlage Ihres tatsächlichen Verbrauchs.</string>
+    <string name="premium_rational_inventory_msg">Schalten Sie den Bestands-Tracker frei, um Ihren Medikamentenvorrat automatisch zu verwalten und Nachfüllwarnungen zu erhalten.</string>
+    <string name="benefit_inventory">Medikamentenvorrat und Nachfüllbedarf automatisch verfolgen</string>
+    <string name="inventory_label">Bestands-Tracker</string>
+    <string name="inventory_current_label">Aktueller Bestand:</string>
+    <string name="inventory_refill_button">Bestand auffüllen</string>
+    <string name="inventory_alert_settings">Benachrichtigungseinstellungen</string>
+    <string name="inventory_alert_none">Kein Alarm</string>
+    <string name="inventory_alert_amount">Wenn der Bestand %s erreicht</string>
+    <string name="inventory_alert_days">Alarm %s Tage vor Leerstand</string>
+    <string name="inventory_dialog_refill_title">%s auffüllen</string>
+    <string name="inventory_dialog_refill_message">Geben Sie die neue Gesamtmenge der Medikamente ein, die Sie derzeit besitzen.</string>
+    <string name="inventory_dialog_alert_title">Nachfüllalarm</string>
+    <string name="inventory_dialog_alert_desc">Wie soll der Wizard Sie an das Nachfüllen erinnern?</string>
+    <string name="inventory_option_days">Tage vorher</string>
+    <string name="inventory_option_amount">Fester Betrag</string>
+    <string name="inventory_input_days_hint">Tage vor Leerstand</string>
+    <string name="inventory_input_amount_hint">Verbleibende Menge</string>
+    <string name="inventory_stock_format">Bestand: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">Nachfüllen erforderlich: %s</string>
+    <string name="inventory_low_stock_notif_msg">Sie haben nur noch genug %1$s für %2$s. Tippen Sie, um ein Nachfüllen zu protokollieren.</string>
+    <string name="inventory_empty_stock_notif_msg">Sie haben kein %s mehr! Tippen Sie, um ein Nachfüllen zu protokollieren.</string>
+    <string name="inventory_debug_toast">Bestandsänderung: %1$s -> %2$s</string>
+    <string name="unit_days">Tage</string>
+
     <string name="onboarding_scroll_hint">Scrollen für mehr</string>
     <string name="active_until_format">Aktiv bis %1$s</string>
     <string name="active_for_next_reminder">Aktiv für nächste Erinnerung</string>

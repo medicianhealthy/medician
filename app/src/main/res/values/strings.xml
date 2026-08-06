@@ -253,6 +253,7 @@
     <string name="instruction_while_eating">While eating</string>
     <string name="instruction_before_sleep">Before sleep</string>
     <string name="instruction_no_preference">Doesn\'t matter</string>
+
     <string name="button_save_medication">Save Medication</string>
     <string name="time_picker_title">Select Time</string>
     <string name="at_label">at</string>
@@ -371,9 +372,12 @@
 
     <string name="feature_active_label">Active</string>
     <string name="onboarding_scroll_hint">Scroll for more</string>
+
     <string name="active_until_format">Active until %1$s</string>
     <string name="active_for_next_reminder">Active for next reminder</string>
     <string name="active_for_next_take_outside_window">Active for next take outside window</string>
+    <string name="active_permanently">Active Permanently</string>
+
     <string name="feature_unlocked_toast">%1$s unlocked!</string>
 
     <string name="button_cancel">Cancel</string>
@@ -395,6 +399,7 @@
     <!-- Measurement Units -->
     <string name="unit_grams">g</string>
     <string name="unit_mg">mg</string>
+    <string name="unit_days">days</string>
     <string name="unit_iu">IU</string>
     <string name="unit_mcg">mcg</string>
     <string name="unit_ml">mL</string>
@@ -444,6 +449,7 @@
     <string name="magic_spend_pass_btn">Use 1 Magic (1 Hour)</string>
     <string name="magic_spend_forever_btn">Unlock Forever (15 Magics)</string>
     <string name="magic_spend_critical_btn">Critical Pass (2 Magics / Next Reminder)</string>
+    <string name="magic_spend_inventory_btn">Unlock Inventory Tracker (10 Magics)</string>
     <string name="magic_spend_ad_free_btn">Ad-Free (3 Magics / 1 Hour)</string>
     <string name="magic_spend_extra_slot_btn">Unlock Slot (%1$d Magics)</string>
     <string name="settings_magic_marketplace_title">Magics Marketplace</string>
@@ -452,13 +458,38 @@
     <string name="premium_rational_ad_free_msg">Unlock 1 hour of ad-free magic! No banners, no interruptions.</string>
     <string name="premium_rational_extra_slot_msg">You\'ve reached the limit of 3 free medications. Unlock another slot to continue your journey!</string>
     <string name="premium_rational_critical_msg">This is a Critical Medication. It requires a high-priority pass to enable life-saving alert features.</string>
+    <string name="premium_rational_inventory_msg">Unlock the Inventory Tracker to automatically manage your medication stock and receive refill alerts.</string>
     <string name="benefit_ad_free">enjoy 1 hour of ad-free health tracking</string>
     <string name="benefit_extra_slot">add one more medication to your library</string>
     <string name="benefit_critical">enable ultra-reliable alerts for your next dose</string>
+    <string name="benefit_inventory">automatically track medication stock and refill needs</string>
     <string name="premium_benefit_extra_slot_title">Extra Medication Slot</string>
     <string name="premium_benefit_critical_title">Critical Medication</string>
     <string name="premium_benefit_critical_desc">Turn on high-priority alerts with sticky notifications, siren volume, and custom vibration for life-saving meds.</string>
+    <string name="premium_benefit_inventory_title">Inventory Tracker</string>
+    <string name="premium_benefit_inventory_desc">Keep track of your medication supply. Get notified when it\'s time to refill, calculated by your actual consumption.</string>
 
+    <!-- Inventory Tracker -->
+    <string name="inventory_label">Inventory Tracker</string>
+    <string name="inventory_current_label">Current Stock:</string>
+    <string name="inventory_refill_button">Refill Stock</string>
+    <string name="inventory_alert_settings">Alert Settings</string>
+    <string name="inventory_alert_none">No alert</string>
+    <string name="inventory_alert_amount">When stock reaches %s</string>
+    <string name="inventory_alert_days">Alert %s days before empty</string>
+    <string name="inventory_dialog_refill_title">Refill %s</string>
+    <string name="inventory_dialog_refill_message">Enter the new total amount of medication currently in your possession.</string>
+    <string name="inventory_dialog_alert_title">Refill Alert</string>
+    <string name="inventory_dialog_alert_desc">How should the Wizard remind you to refill?</string>
+    <string name="inventory_option_days">Days Before</string>
+    <string name="inventory_option_amount">Fixed Amount</string>
+    <string name="inventory_input_days_hint">Days before empty</string>
+    <string name="inventory_input_amount_hint">Remaining amount</string>
+    <string name="inventory_stock_format">Stock: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">Refill Required: %s</string>
+    <string name="inventory_low_stock_notif_msg">You only have enough %1$s for %2$s. Tap to log a refill.</string>
+    <string name="inventory_empty_stock_notif_msg">You have run out of %s! Tap to log a refill.</string>
+    <string name="inventory_debug_toast">Inventory change: %1$s -> %2$s</string>
     <string name="magic_bonus_early_bird_toast">Early Bird Bonus! +1 Magic 🐦✨</string>
     <string name="magic_bonus_perfect_day_title">Perfect Day! 🏆</string>
     <string name="magic_bonus_perfect_day_msg">You took all your doses today! You earned +1 Magic for your consistency.</string>

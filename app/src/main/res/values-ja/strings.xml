@@ -347,6 +347,36 @@
     <string name="settings_threshold_format">%1$d 分</string>
 
     <string name="feature_active_label">有効中</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">永続的に有効</string>
+    <string name="magic_spend_inventory_btn">在庫トラッカーをアンロック (10 マジック)</string>
+    <string name="premium_benefit_inventory_title">在庫トラッカー</string>
+    <string name="premium_benefit_inventory_desc">薬の供給を追跡します。実際の消費量から計算された、補充の時期に通知を受け取ります。</string>
+    <string name="premium_rational_inventory_msg">在庫トラッカーをアンロックして、薬の在庫を自動的に管理し、補充アラートを受け取ります。</string>
+    <string name="benefit_inventory">薬の在庫と補充の必要性を自動的に追跡</string>
+    <string name="inventory_label">在庫トラッカー</string>
+    <string name="inventory_current_label">現在の在庫:</string>
+    <string name="inventory_refill_button">在庫を補充</string>
+    <string name="inventory_alert_settings">アラート設定</string>
+    <string name="inventory_alert_none">アラートなし</string>
+    <string name="inventory_alert_amount">在庫が %s に達したとき</string>
+    <string name="inventory_alert_days">なくなる %s 日前にアラート</string>
+    <string name="inventory_dialog_refill_title">%s を補充</string>
+    <string name="inventory_dialog_refill_message">現在所持している薬の新しい合計量を入力してください。</string>
+    <string name="inventory_dialog_alert_title">補充アラート</string>
+    <string name="inventory_dialog_alert_desc">ウィザードはどのように補充を通知すべきですか？</string>
+    <string name="inventory_option_days">日目前</string>
+    <string name="inventory_option_amount">固定量</string>
+    <string name="inventory_input_days_hint">なくなるまでの日数</string>
+    <string name="inventory_input_amount_hint">残量</string>
+    <string name="inventory_stock_format">在庫: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">補充が必要: %s</string>
+    <string name="inventory_low_stock_notif_msg">%1$s はあと %2$s 分しかありません。タップして補充を記録します。</string>
+    <string name="inventory_empty_stock_notif_msg">%s がなくなりました！タップして補充を記録します。</string>
+    <string name="inventory_debug_toast">在庫の変更: %1$s -> %2$s</string>
+    <string name="unit_days">日</string>
+
     <string name="onboarding_scroll_hint">スクロールして続きを見る</string>
     <string name="active_until_format">%1$s まで有効</string>
     <string name="active_for_next_reminder">次回の通知で有効</string>

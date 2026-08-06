@@ -10,498 +10,656 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="16dp">
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
-                android:id="@+id/drag_handle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/title_fragment_add_med"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/fragment_add_med_title"
-                android:textAppearance="?attr/textAppearanceHeadlineSmall" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="@string/hint_med_name"
-                app:endIconMode="none"
-                app:startIconDrawable="@android:drawable/ic_menu_search"
-                app:startIconTint="?attr/colorPrimary">
-
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/med_name_fragment_add_med"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    android:popupBackground="@drawable/bg_dropdown_popup" />
-            </com.google.android.material.textfield.TextInputLayout>
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/inner_content_container"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="600dp">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:hint="@string/hint_amount">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/med_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layout_med_form"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:hint="@string/hint_form"
-                    app:hintEnabled="true"
-                    app:startIconDrawable="@drawable/baseline_medication_24"
-                    app:startIconTint="?attr/colorOnSurface">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/med_form_fragment_add_med"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:inputType="none"
-                        android:popupBackground="@drawable/bg_dropdown_popup" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:hint="@string/hint_frequency">
-
-                <AutoCompleteTextView
-                    android:id="@+id/med_frequency_fragment_add_med"
+                <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                    android:id="@+id/drag_handle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:popupBackground="@drawable/bg_dropdown_popup" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/times_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Optional Separator -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="?attr/colorOutlineVariant" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    android:text="@string/extra_details_label"
-                    android:textAppearance="?attr/textAppearanceLabelLarge"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="?attr/colorOutlineVariant" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:hint="@string/hint_strength">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/medication_strength"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/hint_unit">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/dropdown_unit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:inputType="none"
-                        android:popupBackground="@drawable/bg_dropdown_popup" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/instructions_label"
-                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group_instructions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:singleSelection="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_before_eating"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/instruction_before_eating" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_after_eating"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/instruction_after_eating" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_while_eating"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/instruction_while_eating" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_before_sleep"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/instruction_before_sleep" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_does_not_matter"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/instruction_no_preference" />
-            </com.google.android.material.chip.ChipGroup>
-
-            <!-- Photo Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="?attr/colorOutlineVariant" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    android:text="@string/btn_take_photo"
-                    android:textAppearance="?attr/textAppearanceLabelLarge"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="?attr/colorOutlineVariant" />
-            </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_photo"
-                style="@style/Widget.Material3.CardView.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="12dp">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/photo_inner_container"
+                    android:id="@+id/title_fragment_add_med"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp">
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/fragment_add_med_title"
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/img_med_photo_preview"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:scaleType="fitCenter"
-                        android:visibility="gone"
-                        app:layout_constraintDimensionRatio="H,16:9"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
-                        tools:src="@tools:sample/backgrounds/scenic"
-                        tools:visibility="visible" />
+                <!-- 1. Basics -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="@string/hint_med_name"
+                    app:endIconMode="none"
+                    app:startIconDrawable="@android:drawable/ic_menu_search"
+                    app:startIconTint="?attr/colorPrimary">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_rotate_left"
-                        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:visibility="gone"
-                        app:icon="@drawable/ic_rotate_left"
-                        app:iconSize="20dp"
-                        app:layout_constraintStart_toStartOf="@id/img_med_photo_preview"
-                        app:layout_constraintTop_toTopOf="@id/img_med_photo_preview"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_rotate_right"
-                        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:visibility="gone"
-                        app:icon="@drawable/ic_rotate_right"
-                        app:iconSize="20dp"
-                        app:layout_constraintEnd_toEndOf="@id/img_med_photo_preview"
-                        app:layout_constraintTop_toTopOf="@id/img_med_photo_preview"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_remove_photo"
-                        style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_margin="8dp"
-                        android:padding="8dp"
-                        android:visibility="gone"
-                        app:icon="@android:drawable/ic_menu_delete"
-                        app:iconSize="20dp"
-                        app:layout_constraintBottom_toBottomOf="@id/img_med_photo_preview"
-                        app:layout_constraintEnd_toEndOf="@id/img_med_photo_preview"
-                        tools:visibility="visible" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_photo_placeholder"
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/med_name_fragment_add_med"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingVertical="12dp"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:contentDescription="@null"
-                            app:srcCompat="@android:drawable/ic_menu_camera"
-                            app:tint="?attr/colorPrimary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/placeholder_add_photo"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-                    </LinearLayout>
-
-                    <androidx.constraintlayout.widget.Barrier
-                        android:id="@+id/barrier_photo_top"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:barrierDirection="bottom"
-                        app:constraint_referenced_ids="img_med_photo_preview,layout_photo_placeholder" />
-
-                    <androidx.constraintlayout.helper.widget.Flow
-                        android:id="@+id/photo_button_flow"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        app:constraint_referenced_ids="btn_camera,btn_gallery"
-                        app:flow_horizontalGap="8dp"
-                        app:flow_horizontalStyle="packed"
-                        app:flow_wrapMode="aligned"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/barrier_photo_top" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_camera"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/btn_take_photo"
-                        app:icon="@android:drawable/ic_menu_camera"
-                        tools:ignore="MissingConstraints" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_gallery"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/btn_upload_photo"
-                        app:icon="@android:drawable/ic_menu_gallery"
-                        tools:ignore="MissingConstraints" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Critical Medication Toggle -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_critical_med"
-                style="@style/Widget.Material3.CardView.Elevated"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
+                        android:inputType="textCapWords"
+                        android:popupBackground="@drawable/bg_dropdown_popup" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
-                    android:id="@+id/btn_critical_toggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_amount">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/med_amount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/layout_med_form"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:hint="@string/hint_form"
+                        app:hintEnabled="true"
+                        app:startIconDrawable="@drawable/baseline_medication_24"
+                        app:startIconTint="?attr/colorOnSurface">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/med_form_fragment_add_med"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:popupBackground="@drawable/bg_dropdown_popup" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:hint="@string/hint_frequency">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/med_frequency_fragment_add_med"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:popupBackground="@drawable/bg_dropdown_popup" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/times_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- 2. Instructions -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/instructions_label"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_instructions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_before_eating"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/instruction_before_eating" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_after_eating"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/instruction_after_eating" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_while_eating"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/instruction_while_eating" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_before_sleep"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/instruction_before_sleep" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_does_not_matter"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/instruction_no_preference" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- 3. Inventory Tracker Section (Just after instructions) -->
+                <LinearLayout
+                    android:id="@+id/layout_inventory_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="12dp"
+                        android:text="@string/inventory_label"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_inventory"
+                    style="@style/Widget.Material3.CardView.Elevated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorOutlineVariant"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/img_inventory_lock"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="12dp"
+                                android:alpha="0.6"
+                                android:contentDescription="@null"
+                                app:srcCompat="@drawable/ic_lock"
+                                app:tint="?attr/colorPrimary" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/inventory_current_label"
+                                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                <TextView
+                                    android:id="@+id/txt_inventory_stock"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                                    android:textStyle="bold"
+                                    tools:text="45 pills" />
+                            </LinearLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_inventory_refill"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/inventory_refill_button" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="12dp"
+                            android:background="?attr/colorOutlineVariant" />
+
+                        <LinearLayout
+                            android:id="@+id/btn_inventory_alert_settings"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/inventory_alert_settings"
+                                    android:textAppearance="?attr/textAppearanceTitleSmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                <TextView
+                                    android:id="@+id/txt_inventory_alert_summary"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                                    tools:text="Alert 3 days before empty" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="@null"
+                                app:srcCompat="@drawable/ic_chevron_right"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- 4. Take Photo Section (Below inventory) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="12dp"
+                        android:text="@string/btn_take_photo"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_photo"
+                    style="@style/Widget.Material3.CardView.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:cardCornerRadius="12dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/photo_inner_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/img_med_photo_preview"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:scaleType="fitCenter"
+                            android:visibility="gone"
+                            app:layout_constraintDimensionRatio="H,16:9"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+                            tools:src="@tools:sample/backgrounds/scenic"
+                            tools:visibility="visible" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_rotate_left"
+                            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="8dp"
+                            android:padding="8dp"
+                            android:visibility="gone"
+                            app:icon="@drawable/ic_rotate_left"
+                            app:iconSize="20dp"
+                            app:layout_constraintStart_toStartOf="@id/img_med_photo_preview"
+                            app:layout_constraintTop_toTopOf="@id/img_med_photo_preview"
+                            tools:visibility="visible" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_rotate_right"
+                            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="8dp"
+                            android:padding="8dp"
+                            android:visibility="gone"
+                            app:icon="@drawable/ic_rotate_right"
+                            app:iconSize="20dp"
+                            app:layout_constraintEnd_toEndOf="@id/img_med_photo_preview"
+                            app:layout_constraintTop_toTopOf="@id/img_med_photo_preview"
+                            tools:visibility="visible" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_remove_photo"
+                            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="8dp"
+                            android:padding="8dp"
+                            android:visibility="gone"
+                            app:icon="@android:drawable/ic_menu_delete"
+                            app:iconSize="20dp"
+                            app:layout_constraintBottom_toBottomOf="@id/img_med_photo_preview"
+                            app:layout_constraintEnd_toEndOf="@id/img_med_photo_preview"
+                            tools:visibility="visible" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_photo_placeholder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="12dp"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@null"
+                                app:srcCompat="@android:drawable/ic_menu_camera"
+                                app:tint="?attr/colorPrimary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/placeholder_add_photo"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.Barrier
+                            android:id="@+id/barrier_photo_top"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:barrierDirection="bottom"
+                            app:constraint_referenced_ids="img_med_photo_preview,layout_photo_placeholder" />
+
+                        <androidx.constraintlayout.helper.widget.Flow
+                            android:id="@+id/photo_button_flow"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            app:constraint_referenced_ids="btn_camera,btn_gallery"
+                            app:flow_horizontalGap="8dp"
+                            app:flow_horizontalStyle="packed"
+                            app:flow_wrapMode="aligned"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/barrier_photo_top" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_camera"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_take_photo"
+                            app:icon="@android:drawable/ic_menu_camera"
+                            tools:ignore="MissingConstraints" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_gallery"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_upload_photo"
+                            app:icon="@android:drawable/ic_menu_gallery"
+                            tools:ignore="MissingConstraints" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- 5. Extra Details Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="12dp"
+                        android:text="@string/extra_details_label"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="?attr/colorOutlineVariant" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_strength">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/medication_strength"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:hint="@string/hint_unit">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <AutoCompleteTextView
+                            android:id="@+id/dropdown_unit"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:popupBackground="@drawable/bg_dropdown_popup" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
-                            <androidx.constraintlayout.helper.widget.Flow
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                app:constraint_referenced_ids="txt_critical_label,crown_critical,badge_active_critical"
-                                app:flow_horizontalBias="0"
-                                app:flow_horizontalGap="8dp"
-                                app:flow_horizontalStyle="packed"
-                                app:flow_wrapMode="chain"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                <!-- 6. Critical Medication Toggle -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_critical_med"
+                    style="@style/Widget.Material3.CardView.Elevated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="?attr/colorOutlineVariant"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:id="@+id/btn_critical_toggle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <androidx.constraintlayout.helper.widget.Flow
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    app:constraint_referenced_ids="txt_critical_label,crown_critical,badge_active_critical"
+                                    app:flow_horizontalBias="0"
+                                    app:flow_horizontalGap="8dp"
+                                    app:flow_horizontalStyle="packed"
+                                    app:flow_wrapMode="chain"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/txt_critical_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/critical_med_label"
+                                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                                    android:textStyle="bold"
+                                    tools:ignore="MissingConstraints" />
+
+                                <ImageView
+                                    android:id="@+id/crown_critical"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:contentDescription="@null"
+                                    app:srcCompat="@drawable/ic_crown"
+                                    tools:ignore="MissingConstraints" />
+
+                                <TextView
+                                    android:id="@+id/badge_active_critical"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_feature_active_badge"
+                                    android:text="@string/feature_active_label"
+                                    android:textColor="?attr/colorOnTertiaryContainer"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone"
+                                    tools:ignore="MissingConstraints"
+                                    tools:visibility="visible" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
 
                             <TextView
-                                android:id="@+id/txt_critical_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/critical_med_label"
-                                android:textAppearance="?attr/textAppearanceTitleMedium"
-                                android:textStyle="bold"
-                                tools:ignore="MissingConstraints" />
+                                android:layout_marginTop="2dp"
+                                android:text="@string/critical_med_summary"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
 
-                            <ImageView
-                                android:id="@+id/crown_critical"
-                                android:layout_width="18dp"
-                                android:layout_height="18dp"
-                                android:contentDescription="@null"
-                                app:srcCompat="@drawable/ic_crown"
-                                tools:ignore="MissingConstraints" />
-
-                            <TextView
-                                android:id="@+id/badge_active_critical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_feature_active_badge"
-                                android:text="@string/feature_active_label"
-                                android:textColor="?attr/colorOnTertiaryContainer"
-                                android:textSize="10sp"
-                                android:textStyle="bold"
-                                android:visibility="gone"
-                                tools:ignore="MissingConstraints"
-                                tools:visibility="visible" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <TextView
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_critical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="@string/critical_med_summary"
-                            android:textAppearance="?attr/textAppearanceBodySmall"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:layout_marginStart="12dp"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switch_critical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:clickable="false"
-                        android:focusable="false" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                <!-- 7. Save Button -->
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="@string/button_save_medication" />
 
-            <Button
-                android:id="@+id/btn_save"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="@string/button_save_medication" />
-        </LinearLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
     <include layout="@layout/layout_ad_container" />

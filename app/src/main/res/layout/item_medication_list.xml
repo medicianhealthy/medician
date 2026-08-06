@@ -68,6 +68,18 @@
                     android:visibility="gone"
                     tools:text="Last dose: 02:45 ago"
                     tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txt_inventory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:textColor="?attr/colorSecondary"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:text="Stock: 12 pills"
+                    tools:visibility="visible" />
             </LinearLayout>
 
             <ImageView

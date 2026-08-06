@@ -119,6 +119,36 @@
     <string name="active_for_next_reminder"> Actif pour le prochain rappel</string>
     <string name="active_for_next_take_outside_window"> Actif pour la prochaine prise hors fenêtre</string>
     <string name="feature_active_label">ACTIF</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">Actif en permanence</string>
+    <string name="magic_spend_inventory_btn">Débloquer le suivi d\'inventaire (10 Magics)</string>
+    <string name="premium_benefit_inventory_title">Suivi d\'inventaire</string>
+    <string name="premium_benefit_inventory_desc">Suivez votre réserve de médicaments. Soyez averti quand il est temps de renouveler, calculé selon votre consommation réelle.</string>
+    <string name="premium_rational_inventory_msg">Débloquez le suivi d\'inventaire para gérer automatiquement votre stock de médicaments et recevoir des alertes de renouvellement.</string>
+    <string name="benefit_inventory">suivre automatiquement le stock de médicaments et les besoins de renouvellement</string>
+    <string name="inventory_label">Suivi d\'inventaire</string>
+    <string name="inventory_current_label">Stock actuel :</string>
+    <string name="inventory_refill_button">Recharger le stock</string>
+    <string name="inventory_alert_settings">Paramètres d\'alerte</string>
+    <string name="inventory_alert_none">Aucune alerte</string>
+    <string name="inventory_alert_amount">Quand le stock atteint %s</string>
+    <string name="inventory_alert_days">Alerte %s jours avant la fin</string>
+    <string name="inventory_dialog_refill_title">Recharger %s</string>
+    <string name="inventory_dialog_refill_message">Entrez la nouvelle quantité totale de médicaments actuellement en votre possession.</string>
+    <string name="inventory_dialog_alert_title">Alerte de renouvellement</string>
+    <string name="inventory_dialog_alert_desc">Comment l\'Assistant doit-il vous rappeler de renouveler ?</string>
+    <string name="inventory_option_days">Jours avant</string>
+    <string name="inventory_option_amount">Montant fixe</string>
+    <string name="inventory_input_days_hint">Jours avant la fin</string>
+    <string name="inventory_input_amount_hint">Quantité restante</string>
+    <string name="inventory_stock_format">Stock : %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">Renouvellement requis : %s</string>
+    <string name="inventory_low_stock_notif_msg">Vous avez seulement assez de %1$s pour %2$s. Appuyez pour enregistrer un renouvellement.</string>
+    <string name="inventory_empty_stock_notif_msg">Vous n\'avez plus de %s ! Appuyez pour enregistrer un renouvellement.</string>
+    <string name="inventory_debug_toast">Changement d\'inventaire : %1$s -> %2$s</string>
+    <string name="unit_days">jours</string>
+
     <string name="feature_unlocked_toast">%s débloqué !</string>
     <string name="reward_ad_not_ready_title">Publicité non prête</string>
     <string name="reward_ad_not_ready_dialog">La vidéo de récompense se charge. Veuillez réessayer dans quelques secondes.</string>

@@ -263,6 +263,10 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
                 iconView.setImageResource(R.drawable.ic_vibration);
                 descView.setText(R.string.premium_rational_critical_msg);
             }
+            case INVENTORY -> {
+                iconView.setImageResource(R.drawable.ic_list);
+                descView.setText(R.string.premium_rational_inventory_msg);
+            }
         }
 
         String pkg = requireContext().getPackageName();
@@ -288,6 +292,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case AD_FREE -> getString(R.string.premium_benefit_ad_free_title);
             case EXTRA_MED_SLOT -> getString(R.string.premium_benefit_extra_slot_title);
             case CRITICAL -> getString(R.string.premium_benefit_critical_title);
+            case INVENTORY -> getString(R.string.premium_benefit_inventory_title);
         };
     }
 
@@ -295,8 +300,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         return switch (featureType) {
             case THEME -> getString(R.string.benefit_theme);
             case SUPPORT -> getString(R.string.benefit_support);
-            case BACKUP ->
-                    getString(AppConfig.CLOUD_BACKUP_ENABLED ? R.string.benefit_backup : R.string.benefit_backup_local);
+            case BACKUP -> getString(AppConfig.CLOUD_BACKUP_ENABLED ? R.string.benefit_backup : R.string.benefit_backup_local);
             case BYPASS_VOLUME -> getString(R.string.benefit_bypass);
             case QUIET_HOURS -> getString(R.string.benefit_quiet_hours);
             case VIBRATION -> getString(R.string.benefit_vibration);
@@ -306,6 +310,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
             case AD_FREE -> getString(R.string.benefit_ad_free);
             case EXTRA_MED_SLOT -> getString(R.string.benefit_extra_slot);
             case CRITICAL -> getString(R.string.benefit_critical);
+            case INVENTORY -> getString(R.string.benefit_inventory);
         };
     }
 }

@@ -185,6 +185,38 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             } else {
                 binding.txtStopwatch.setVisibility(View.GONE);
             }
+
+            // --- Inventory Tracker Logic ---
+            if (AppConfig.isFeatureUnlocked(binding.getRoot().getContext(), AppConfig.FeaturePassType.INVENTORY)) {
+                binding.txtInventory.setVisibility(View.VISIBLE);
+                String unit = medication.getMeasurementUnit() != null ? medication.getMeasurementUnit().getLabel(binding.getRoot().getContext()) : "";
+                String stockStr = medication.getInventoryCurrent() == (long) medication.getInventoryCurrent() ?
+                        String.valueOf((long) medication.getInventoryCurrent()) :
+                        String.format(Locale.getDefault(), "%.1f", medication.getInventoryCurrent());
+                
+                binding.txtInventory.setText(bidi.unicodeWrap(binding.getRoot().getContext().getString(R.string.inventory_stock_format, stockStr, unit)));
+                
+                // Visual warning if low
+                if (medication.getInventoryThreshold() > 0) {
+                    boolean isLow = false;
+                    if (medication.getInventoryAlertType() == Medication.InventoryAlertType.AMOUNT_REACHED) {
+                        isLow = medication.getInventoryCurrent() <= medication.getInventoryThreshold();
+                    } else {
+                        int freq = medication.getDailyFrequency();
+                        if (freq > 0) {
+                            float daysLeft = medication.getInventoryCurrent() / (freq * medication.getAmount());
+                            isLow = daysLeft <= medication.getInventoryThreshold();
+                        }
+                    }
+                    int lowColor = binding.getRoot().getContext().getColor(R.color.inventory_low_stock);
+                    int normalColor = com.google.android.material.color.MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSecondary);
+                    binding.txtInventory.setTextColor(isLow ? lowColor : normalColor);
+                } else {
+                    binding.txtInventory.setTextColor(com.google.android.material.color.MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSecondary));
+                }
+            } else {
+                binding.txtInventory.setVisibility(View.GONE);
+            }
             // -----------------------
 
             binding.expandedDetails.setVisibility(isExpanded ? View.VISIBLE : View.GONE);

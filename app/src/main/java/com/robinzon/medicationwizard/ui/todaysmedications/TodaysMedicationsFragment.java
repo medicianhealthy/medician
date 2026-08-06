@@ -29,6 +29,7 @@ import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.databinding.FragmentTodaysMedicationsBinding;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
+import com.robinzon.medicationwizard.managers.InventoryManager;
 import com.robinzon.medicationwizard.managers.MagicManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
 import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
@@ -500,6 +501,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         if (diffMillis <= 5 * 60 * 1000 && "TAKEN".equals(status)) {
             MagicManager.getInstance(appContext).addMagics(1);
             Toast.makeText(appContext, getString(R.string.magic_bonus_early_bird_toast), Toast.LENGTH_SHORT).show();
+        }
+
+        // Inventory Logic
+        if ("TAKEN".equals(status)) {
+            InventoryManager.decrementInventory(appContext, instance.getMedicationId(), instance.getAmount());
         }
 
         AppDatabase.databaseWriteExecutor.execute(() -> {

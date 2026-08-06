@@ -347,6 +347,36 @@
     <string name="settings_threshold_format">%1$d мин.</string>
 
     <string name="feature_active_label">Активно</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">Активен постоянно</string>
+    <string name="magic_spend_inventory_btn">Разблокировать трекер запасов (10 магии)</string>
+    <string name="premium_benefit_inventory_title">Трекер запасов</string>
+    <string name="premium_benefit_inventory_desc">Следите за запасом лекарств. Получайте уведомления, когда придет время пополнить запас, рассчитанное на основе вашего фактического потребления.</string>
+    <string name="premium_rational_inventory_msg">Разблокируйте трекер запасов, чтобы автоматически управлять запасом лекарств и получать оповещения о пополнении.</string>
+    <string name="benefit_inventory">автоматически отслеживать запас лекарств и потребности в пополнении</string>
+    <string name="inventory_label">Трекер запасов</string>
+    <string name="inventory_current_label">Текущий запас:</string>
+    <string name="inventory_refill_button">Пополнить запас</string>
+    <string name="inventory_alert_settings">Настройки оповещений</string>
+    <string name="inventory_alert_none">Нет оповещений</string>
+    <string name="inventory_alert_amount">Когда запас достигнет %s</string>
+    <string name="inventory_alert_days">Оповестить за %s дн. до окончания</string>
+    <string name="inventory_dialog_refill_title">Пополнить %s</string>
+    <string name="inventory_dialog_refill_message">Введите новое общее количество лекарства, которое сейчас находится у вас.</string>
+    <string name="inventory_dialog_alert_title">Оповещение о пополнении</string>
+    <string name="inventory_dialog_alert_desc">Как Волшебник должен напоминать вам о пополнении?</string>
+    <string name="inventory_option_days">Дней до</string>
+    <string name="inventory_option_amount">Фиксированное количество</string>
+    <string name="inventory_input_days_hint">Дней до окончания</string>
+    <string name="inventory_input_amount_hint">Оставшееся количество</string>
+    <string name="inventory_stock_format">Запас: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">Требуется пополнение: %s</string>
+    <string name="inventory_low_stock_notif_msg">У вас осталось %1$s только на %2$s. Нажмите, чтобы зарегистрировать пополнение.</string>
+    <string name="inventory_empty_stock_notif_msg">У вас закончился %s! Нажмите, чтобы зарегистрировать пополнение.</string>
+    <string name="inventory_debug_toast">Изменение запаса: %1$s -> %2$s</string>
+    <string name="unit_days">дн.</string>
+
     <string name="onboarding_scroll_hint">Листайте дальше</string>
     <string name="active_until_format">До %1$s</string>
     <string name="active_for_next_reminder">На след. прием</string>

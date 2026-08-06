@@ -36,6 +36,7 @@ public class AppConfig {
     public static final String KEY_PASS_PHOTO_EXPIRY = "pass_photo_expiry";
     public static final String KEY_PASS_AD_FREE_EXPIRY = "pass_ad_free_expiry";
     public static final String KEY_PASS_CRITICAL_ACTIVE = "pass_critical_active";
+    public static final String KEY_PASS_INVENTORY_ACTIVE = "pass_inventory_active";
 
     public static final String KEY_MAGIC_BALANCE = "magic_balance";
     public static final String KEY_PERMANENT_PASS_PREFIX = "permanent_pass_";
@@ -52,6 +53,7 @@ public class AppConfig {
     public static final int MAGIC_COST_PERMANENT = 15;
     public static final int MAGIC_COST_EXTRA_MED_SLOT = 5;
     public static final int MAGIC_COST_CRITICAL_PASS = 2;
+    public static final int MAGIC_COST_INVENTORY_TRACKER = 10;
 
     public static final int FREE_MED_LIMIT = 3;
 
@@ -100,6 +102,7 @@ public class AppConfig {
             case PHOTO -> prefs.getLong(KEY_PASS_PHOTO_EXPIRY, 0) > now;
             case AD_FREE -> prefs.getLong(KEY_PASS_AD_FREE_EXPIRY, 0) > now;
             case CRITICAL -> prefs.getBoolean(KEY_PASS_CRITICAL_ACTIVE, false);
+            case INVENTORY -> prefs.getBoolean(KEY_PASS_INVENTORY_ACTIVE, false);
             case EXTRA_MED_SLOT -> false; // This is a count-based unlock, not boolean/time
         };
     }
@@ -148,6 +151,8 @@ public class AppConfig {
             case AD_FREE -> formatExpiry(context, prefs.getLong(KEY_PASS_AD_FREE_EXPIRY, 0));
             case CRITICAL -> prefs.getBoolean(KEY_PASS_CRITICAL_ACTIVE, false) ?
                     context.getString(R.string.active_for_next_reminder) : "";
+            case INVENTORY -> prefs.getBoolean(KEY_PASS_INVENTORY_ACTIVE, false) ?
+                    context.getString(R.string.active_permanently) : "";
             case EXTRA_MED_SLOT -> "";
         };
     }
@@ -162,6 +167,6 @@ public class AppConfig {
      * Enum to distinguish between premium features for pass logic.
      */
     public enum FeaturePassType {
-        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW, PHOTO, AD_FREE, EXTRA_MED_SLOT, CRITICAL
+        THEME, SUPPORT, BACKUP, QUIET_HOURS, BYPASS_VOLUME, VIBRATION, STICKY_NOTIF, DOSE_WINDOW, PHOTO, AD_FREE, EXTRA_MED_SLOT, CRITICAL, INVENTORY
     }
 }

@@ -50,6 +50,15 @@ public class Medication implements Comparable<Medication> {
     private Long lastTakenTimestamp;
     private boolean isCritical;
 
+    // Inventory Tracker
+    private float inventoryCurrent;
+    private float inventoryThreshold;
+    private InventoryAlertType inventoryAlertType = InventoryAlertType.AMOUNT_REACHED;
+
+    public enum InventoryAlertType {
+        DAYS_BEFORE, AMOUNT_REACHED
+    }
+
     /**
      * Constructs a new medication with a unique random UUID.
      */
@@ -181,6 +190,15 @@ public class Medication implements Comparable<Medication> {
             med.setLastTakenTimestamp(json.optLong(JsonKeys.LAST_TAKEN_TIMESTAMP));
         }
         med.setCritical(json.optBoolean(JsonKeys.IS_CRITICAL, false));
+
+        // Inventory
+        med.setInventoryCurrent((float) json.optDouble(JsonKeys.INVENTORY_CURRENT, 0));
+        med.setInventoryThreshold((float) json.optDouble(JsonKeys.INVENTORY_THRESHOLD, 0));
+        if (!json.isNull(JsonKeys.INVENTORY_ALERT_TYPE)) {
+            try {
+                med.setInventoryAlertType(InventoryAlertType.valueOf(json.getString(JsonKeys.INVENTORY_ALERT_TYPE)));
+            } catch (Exception ignored) {}
+        }
 
         if (!json.isNull(JsonKeys.FORM)) {
             try {
@@ -575,6 +593,30 @@ public class Medication implements Comparable<Medication> {
         isCritical = critical;
     }
 
+    public float getInventoryCurrent() {
+        return inventoryCurrent;
+    }
+
+    public void setInventoryCurrent(float inventoryCurrent) {
+        this.inventoryCurrent = inventoryCurrent;
+    }
+
+    public float getInventoryThreshold() {
+        return inventoryThreshold;
+    }
+
+    public void setInventoryThreshold(float inventoryThreshold) {
+        this.inventoryThreshold = inventoryThreshold;
+    }
+
+    public InventoryAlertType getInventoryAlertType() {
+        return inventoryAlertType;
+    }
+
+    public void setInventoryAlertType(InventoryAlertType inventoryAlertType) {
+        this.inventoryAlertType = inventoryAlertType;
+    }
+
     public boolean isAsNeeded() {
         return frequency == 0;
     }
@@ -617,6 +659,14 @@ public class Medication implements Comparable<Medication> {
                 json.put(JsonKeys.LAST_TAKEN_TIMESTAMP, lastTakenTimestamp);
             }
             json.put(JsonKeys.IS_CRITICAL, isCritical);
+
+            // Inventory
+            json.put(JsonKeys.INVENTORY_CURRENT, (double) inventoryCurrent);
+            json.put(JsonKeys.INVENTORY_THRESHOLD, (double) inventoryThreshold);
+            if (inventoryAlertType != null) {
+                json.put(JsonKeys.INVENTORY_ALERT_TYPE, inventoryAlertType.name());
+            }
+
             if (form != null) json.put(JsonKeys.FORM, form.name());
             if (instruction != null) json.put(JsonKeys.INSTRUCTIONS, instruction.name());
             if (measurementUnit != null)
@@ -664,5 +714,8 @@ public class Medication implements Comparable<Medication> {
         public static final String IMAGE_PATH = "mImagePath";
         public static final String LAST_TAKEN_TIMESTAMP = "mLastTakenTimestamp";
         public static final String IS_CRITICAL = "mIsCritical";
+        public static final String INVENTORY_CURRENT = "mInventoryCurrent";
+        public static final String INVENTORY_THRESHOLD = "mInventoryThreshold";
+        public static final String INVENTORY_ALERT_TYPE = "mInventoryAlertType";
     }
 }

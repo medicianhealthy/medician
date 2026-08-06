@@ -105,6 +105,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private View btnRotateLeft, btnRotateRight, btnRemovePhoto;
     private com.google.android.material.materialswitch.MaterialSwitch switchCritical;
     private View crownCritical, badgeCritical;
+
+    // Inventory
+    private View cardInventory, imgInventoryLock;
+    private TextView txtInventoryStock, txtInventoryAlertSummary;
+    private View btnInventoryRefill, btnInventoryAlertSettings;
+
     private Runnable pendingPhotoAction;
 
     private final ActivityResultLauncher<String> permissionLauncher = registerForActivityResult(
@@ -241,8 +247,17 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         crownCritical = view.findViewById(R.id.crown_critical);
         badgeCritical = view.findViewById(R.id.badge_active_critical);
 
+        // Inventory
+        cardInventory = view.findViewById(R.id.card_inventory);
+        imgInventoryLock = view.findViewById(R.id.img_inventory_lock);
+        txtInventoryStock = view.findViewById(R.id.txt_inventory_stock);
+        txtInventoryAlertSummary = view.findViewById(R.id.txt_inventory_alert_summary);
+        btnInventoryRefill = view.findViewById(R.id.btn_inventory_refill);
+        btnInventoryAlertSettings = view.findViewById(R.id.btn_inventory_alert_settings);
+
         setupPhotoButtons(view);
         setupCriticalToggle(view);
+        setupInventoryUi(view);
 
         if (isEditMode) {
             preFillData(view);
@@ -267,6 +282,118 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             outState.putParcelable("temp_camera_uri", tempCameraUri);
         }
         outState.putBoolean("is_edit_mode", isEditMode);
+    }
+
+    private void setupInventoryUi(View view) {
+        updateInventoryEntitlement();
+
+        btnInventoryRefill.setOnClickListener(v -> {
+            checkInventoryUnlockAndAct(() -> showRefillDialog());
+        });
+
+        btnInventoryAlertSettings.setOnClickListener(v -> {
+            checkInventoryUnlockAndAct(() -> showAlertSettingsDialog());
+        });
+    }
+
+    private void updateInventoryEntitlement() {
+        boolean unlocked = AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.INVENTORY);
+        if (imgInventoryLock != null) imgInventoryLock.setVisibility(unlocked ? View.GONE : View.VISIBLE);
+        updateInventorySummary();
+    }
+
+    private void checkInventoryUnlockAndAct(Runnable action) {
+        if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.INVENTORY)) {
+            action.run();
+        } else {
+            FeatureRationalBottomSheet.newInstance(AppConfig.FeaturePassType.INVENTORY).show(getChildFragmentManager(), "InventoryRational");
+            getChildFragmentManager().setFragmentResultListener("feature_unlocked", getViewLifecycleOwner(), (key, bundle) -> {
+                if (AppConfig.FeaturePassType.INVENTORY.name().equals(bundle.getString("feature_type"))) {
+                    updateInventoryEntitlement();
+                    action.run();
+                }
+            });
+        }
+    }
+
+    private void updateInventorySummary() {
+        if (txtInventoryStock == null) return;
+
+        EMeasurementUnit unit = medication.getMeasurementUnit();
+        String unitLabel = unit != null ? unit.getLabel(requireContext()) : "";
+        txtInventoryStock.setText(medication.getInventoryCurrent() + " " + unitLabel);
+
+        if (medication.getInventoryThreshold() <= 0) {
+            txtInventoryAlertSummary.setText(R.string.inventory_alert_none);
+        } else if (medication.getInventoryAlertType() == Medication.InventoryAlertType.AMOUNT_REACHED) {
+            txtInventoryAlertSummary.setText(getString(R.string.inventory_alert_amount, String.valueOf(medication.getInventoryThreshold())));
+        } else {
+            txtInventoryAlertSummary.setText(getString(R.string.inventory_alert_days, String.valueOf((int)medication.getInventoryThreshold())));
+        }
+    }
+
+    private void showRefillDialog() {
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.inventory_dialog_refill_title, medication.getCommercialName()));
+        dialog.setMessage(getString(R.string.inventory_dialog_refill_message));
+
+        final View customView = getLayoutInflater().inflate(R.layout.dialog_inventory_input, null);
+        final TextInputEditText input = customView.findViewById(R.id.inventory_input);
+        if (input != null) input.setText(String.valueOf(medication.getInventoryCurrent()));
+        dialog.setView(customView);
+
+        dialog.setPositiveButton(getString(android.R.string.ok), (d, which) -> {
+            if (input != null && input.getText() != null) {
+                try {
+                    float newVal = Float.parseFloat(input.getText().toString());
+                    medication.setInventoryCurrent(newVal);
+                    updateInventorySummary();
+                } catch (Exception ignored) {}
+            }
+        });
+        dialog.setNegativeButton(getString(android.R.string.cancel), null);
+        dialog.show();
+    }
+
+    private void showAlertSettingsDialog() {
+        String[] options = {getString(R.string.inventory_option_days), getString(R.string.inventory_option_amount), getString(R.string.inventory_alert_none)};
+        
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(R.string.inventory_dialog_alert_title));
+        dialog.setItems(options, (d, which) -> {
+            if (which == 2) {
+                medication.setInventoryThreshold(0);
+                updateInventorySummary();
+            } else {
+                showThresholdInputDialog(which == 0 ? Medication.InventoryAlertType.DAYS_BEFORE : Medication.InventoryAlertType.AMOUNT_REACHED);
+            }
+        });
+        dialog.show();
+    }
+
+    private void showThresholdInputDialog(Medication.InventoryAlertType type) {
+        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        dialog.setTitle(getString(type == Medication.InventoryAlertType.DAYS_BEFORE ? R.string.inventory_option_days : R.string.inventory_option_amount));
+
+        final View customView = getLayoutInflater().inflate(R.layout.dialog_inventory_input, null);
+        final TextInputLayout layout = customView.findViewById(R.id.inventory_input_layout);
+        final TextInputEditText input = customView.findViewById(R.id.inventory_input);
+        
+        if (layout != null) layout.setHint(getString(type == Medication.InventoryAlertType.DAYS_BEFORE ? R.string.inventory_input_days_hint : R.string.inventory_input_amount_hint));
+        if (input != null) input.setText(String.valueOf(medication.getInventoryThreshold()));
+
+        dialog.setView(customView);
+        dialog.setPositiveButton(getString(android.R.string.ok), (d, which) -> {
+            if (input != null && input.getText() != null) {
+                try {
+                    float val = Float.parseFloat(input.getText().toString());
+                    medication.setInventoryThreshold(val);
+                    medication.setInventoryAlertType(type);
+                    updateInventorySummary();
+                } catch (Exception ignored) {}
+            }
+        });
+        dialog.show();
     }
 
     private void setupCriticalToggle(View view) {
@@ -578,6 +705,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         if (switchCritical != null) {
             switchCritical.setChecked(medication.isCritical());
         }
+        updateInventorySummary();
         updatePhotoUi(false);
     }
 

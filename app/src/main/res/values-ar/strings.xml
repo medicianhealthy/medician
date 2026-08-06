@@ -353,6 +353,36 @@
     <string name="settings_threshold_format">%1$d دقيقة</string>
 
     <string name="feature_active_label">نشط</string>
+
+    <!-- Inventory Tracker -->
+    <string name="active_permanently">نشط دائمًا</string>
+    <string name="magic_spend_inventory_btn">فتح متتبع المخزون (10 سحر)</string>
+    <string name="premium_benefit_inventory_title">متتبع المخزون</string>
+    <string name="premium_benefit_inventory_desc">تتبع مخزون الأدوية الخاص بك. احصل على إشعارات عندما يحين وقت إعادة التعبئة، محسوبة بناءً على استهلاكك الفعلي.</string>
+    <string name="premium_rational_inventory_msg">افتح متتبع المخزون لإدارة مخزون الأدوية تلقائيًا وتلقي تنبيهات إعادة التعبئة.</string>
+    <string name="benefit_inventory">تتبع مخزون الأدوية واحتياجات إعادة التعبئة تلقائيًا</string>
+    <string name="inventory_label">متتبع المخزون</string>
+    <string name="inventory_current_label">المخزون الحالي:</string>
+    <string name="inventory_refill_button">إعادة تعبئة المخزون</string>
+    <string name="inventory_alert_settings">إعدادات التنبيه</string>
+    <string name="inventory_alert_none">لا يوجد تنبيه</string>
+    <string name="inventory_alert_amount">عندما يصل المخزون إلى %s</string>
+    <string name="inventory_alert_days">تنبيه قبل %s أيام من النفاد</string>
+    <string name="inventory_dialog_refill_title">إعادة تعبئة %s</string>
+    <string name="inventory_dialog_refill_message">أدخل الكمية الإجمالية الجديدة للدواء الموجود بحوزتك حاليًا.</string>
+    <string name="inventory_dialog_alert_title">تنبيه إعادة التعبئة</string>
+    <string name="inventory_dialog_alert_desc">كيف يجب أن يذكرك المعالج بإعادة التعبئة؟</string>
+    <string name="inventory_option_days">أيام قبل</string>
+    <string name="inventory_option_amount">كمية ثابتة</string>
+    <string name="inventory_input_days_hint">أيام قبل النفاد</string>
+    <string name="inventory_input_amount_hint">الكمية المتبقية</string>
+    <string name="inventory_stock_format">المخزون: %1$s %2$s</string>
+    <string name="inventory_low_stock_notif_title">مطلوب إعادة التعبئة: %s</string>
+    <string name="inventory_low_stock_notif_msg">لديك ما يكفي من %1$s لمدة %2$s فقط. اضغط لتسجيل إعادة التعبئة.</string>
+    <string name="inventory_empty_stock_notif_msg">لقد نفد منك %s! اضغط لتسجيل إعادة التعبئة.</string>
+    <string name="inventory_debug_toast">تغيير المخزون: %1$s -> %2$s</string>
+    <string name="unit_days">أيام</string>
+
     <string name="onboarding_scroll_hint">اسحب للمزيد</string>
     <string name="active_until_format">نشط حتى %1$s</string>
     <string name="active_for_next_reminder">نشط للتذكير القادم</string>

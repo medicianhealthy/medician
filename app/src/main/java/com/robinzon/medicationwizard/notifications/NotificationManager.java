@@ -11,8 +11,10 @@ import android.os.Build;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ui.CustomMaterialDialog;
 import com.robinzon.medicationwizard.utils.PermissionManager;
@@ -298,5 +300,26 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(intent);
+    }
+
+    public static void postInventoryAlert(Context context, String medName, String message) {
+        NotificationManagerCompat nm = NotificationManagerCompat.from(context);
+        
+        Intent intent = new Intent(context, MainActivity.class);
+        android.app.PendingIntent pi = android.app.PendingIntent.getActivity(context, 1001, intent, android.app.PendingIntent.FLAG_UPDATE_CURRENT | android.app.PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_med_pill)
+                .setContentTitle(context.getString(R.string.inventory_low_stock_notif_title, medName))
+                .setContentText(message)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(pi)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER);
+
+        try {
+            nm.notify(medName.hashCode(), builder.build());
+        } catch (SecurityException ignored) {}
     }
 }
