@@ -20,11 +20,6 @@ public class AppConfig {
     // --- Persistence Keys ---
     public static final String KEY_CHEAT_PREMIUM = "cheat_is_premium";
     public static final String KEY_CHEAT_SHOW_ADS = "cheat_show_ads";
-    /**
-     * @deprecated Use individual feature pass keys instead.
-     */
-    @Deprecated
-    public static final String KEY_TEMP_PREMIUM_EXPIRY = "temp_premium_expiry";
     public static final String KEY_PASS_THEME_EXPIRY = "pass_theme_expiry";
     public static final String KEY_PASS_SUPPORT_EXPIRY = "pass_support_expiry";
     public static final String KEY_PASS_BACKUP_EXPIRY = "pass_backup_expiry";
@@ -53,7 +48,6 @@ public class AppConfig {
     public static final int MAGIC_COST_PERMANENT = 15;
     public static final int MAGIC_COST_EXTRA_MED_SLOT = 5;
     public static final int MAGIC_COST_CRITICAL_PASS = 2;
-    public static final int MAGIC_COST_INVENTORY_TRACKER = 10;
 
     public static final int FREE_MED_LIMIT = 3;
 

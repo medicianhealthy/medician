@@ -49,7 +49,6 @@ import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
  */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, OnAdActionListener {
 
-    public static final float BANNER_HEIGHT_MULTIPLIER = 1.08F;
     private AppBarConfiguration appBarConfiguration;
     private AdsManager adsManager;
     private NavController navController;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (AppConfig.FeaturePassType.EXTRA_MED_SLOT.name().equals(type)) {
                 // Delay slightly for transition
                 new Handler(Looper.getMainLooper()).postDelayed(() -> 
-                    new com.robinzon.medicationwizard.ui.AddMedicationBottomSheet().show(getSupportFragmentManager(), "AddMedBS"), 
+                    new AddMedicationBottomSheet().show(getSupportFragmentManager(), "AddMedBS"), 
                     300);
             }
         });
