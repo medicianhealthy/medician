@@ -112,6 +112,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:contentDescription="@string/action_magic"
         app:srcCompat="@drawable/ic_magic_wand"
         app:tint="?attr/colorOnPrimaryContainer" />
 

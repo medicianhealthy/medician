@@ -12,7 +12,6 @@
 # --- Retrofit & Gson ---
 # Retain annotations and generic signatures for reflection
 -keepattributes Signature, *Annotation*
--keep class retrofit2.** { *; }
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
@@ -29,22 +28,16 @@
 -dontwarn androidx.room.paging.**
 
 # --- Google Play Services / AdMob / UMP ---
--keep class com.google.android.gms.ads.** { *; }
--keep class com.google.ads.** { *; }
 -keep class com.google.android.ump.** { *; }
 -dontwarn com.google.android.gms.ads.**
 
 # --- Google Sign-In & Auth ---
--keep class com.google.android.gms.auth.** { *; }
 -keep class com.google.android.gms.common.api.GoogleApiClient { *; }
 
 # --- Firebase ---
--keep class com.google.firebase.** { *; }
 -dontwarn com.google.firebase.**
 
 # --- Google API Client & Google Drive ---
--keep class com.google.api.client.** { *; }
--keep class com.google.api.services.drive.** { *; }
 -keep class com.google.api.services.drive.model.** { *; }
 -keep class com.google.common.util.concurrent.** { *; }
 -keep class com.google.j2objc.annotations.** { *; }
@@ -60,8 +53,6 @@
 -dontwarn com.google.errorprone.annotations.**
 
 # --- gRPC & Protobuf (Firebase compatibility) ---
--keep class io.grpc.** { *; }
--keep class com.google.protobuf.** { *; }
 -keep class io.grpc.internal.** { *; }
 -keep interface io.grpc.** { *; }
 
@@ -70,7 +61,7 @@
 -dontwarn javax.annotation.**
 
 # --- WorkManager ---
--keep class androidx.work.** { *; }
+-dontwarn androidx.work.**
 
 # --- Glide ---
 -keep public class * implements com.bumptech.glide.module.GlideModule
@@ -82,12 +73,10 @@
 -dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
 
 # --- Play Review & Billing ---
--keep class com.google.android.play.core.review.** { *; }
--keep class com.android.billingclient.** { *; }
+# (R8/Proguard rules provided by library)
 
 # --- View Binding & Material Components ---
 -keep class com.robinzon.medicationwizard.databinding.** { *; }
--keep class com.google.android.material.** { *; }
 -dontwarn com.google.android.material.internal.CheckableImageButton
 
 # --- Performance & Privacy: Strip Logs ---

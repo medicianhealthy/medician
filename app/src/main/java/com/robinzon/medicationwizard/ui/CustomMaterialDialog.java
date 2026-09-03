@@ -74,9 +74,8 @@ public class CustomMaterialDialog {
 
         // HIGH_QUALITY/BALANCED break strategy to prevent "lonely words"
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            // Constant 1 is BREAK_STRATEGY_HIGH_QUALITY, 2 is BREAK_STRATEGY_BALANCED
             // High quality performs more aggressive optimization to avoid orphans
-            messageView.setBreakStrategy(1);
+            messageView.setBreakStrategy(android.text.Layout.BREAK_STRATEGY_HIGH_QUALITY);
             messageView.setHyphenationFrequency(android.text.Layout.HYPHENATION_FREQUENCY_FULL);
         }
 

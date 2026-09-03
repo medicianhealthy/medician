@@ -52,12 +52,13 @@ android {
         }
     }
     namespace 'com.robinzon.medicationwizard'
+}
 
-    applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "MedicationWizard-v${variant.versionName}-${variant.versionCode}-${variant.buildType.name}.apk"
-        }
+androidComponents.onVariants(androidComponents.selector().all()) { variant ->
+    variant.outputs.each { output ->
+        output.outputFileName.set("MedicationWizard-v${rootProject.VERSION_NAME}-${rootProject.VERSION_CODE}-${variant.buildType}.apk")
     }
+}
 
     // Rename App Bundles (AAB)
     tasks.matching { it.name.startsWith("bundle") && (it.name.endsWith("Release") || it.name.endsWith("Debug")) }.configureEach { task ->
@@ -75,7 +76,6 @@ android {
             }
         }
     }
-}
 
 dependencies {
     implementation(platform(libs.kotlin.bom))

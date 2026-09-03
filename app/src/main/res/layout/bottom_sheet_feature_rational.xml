@@ -49,6 +49,7 @@
                     android:layout_height="80dp"
                     android:layout_gravity="center"
                     android:padding="8dp"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_magic_wand" />
 
                 <ImageView
@@ -56,6 +57,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="bottom|end"
                     android:elevation="10dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/ic_crown" />
             </FrameLayout>
 

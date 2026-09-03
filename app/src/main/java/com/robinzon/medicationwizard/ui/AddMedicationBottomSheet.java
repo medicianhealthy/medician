@@ -808,7 +808,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private void setupDropdowns(View view) {
         setFormDropDown(view);
         setUnitDropDown(view);
-        AutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
+        MaterialAutoCompleteTextView dropdownFrequency = view.findViewById(R.id.med_frequency_fragment_add_med);
         String[] frequencies = new String[]{
                 getString(R.string.frequency_as_needed),
                 getString(R.string.frequency_once),
@@ -961,12 +961,9 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     private void setFormDropDown(View view) {
-        final AutoCompleteTextView dropdownForm = view.findViewById(R.id.med_form_fragment_add_med);
+        final MaterialAutoCompleteTextView dropdownForm = view.findViewById(R.id.med_form_fragment_add_med);
         if (null == dropdownForm) return;
-        dropdownForm.setOnTouchListener((v, event) -> {
-            hideKeyboard(v);
-            return false;
-        });
+
         String[] forms = new String[]{
                 getString(R.string.form_pill),
                 getString(R.string.form_solution),
@@ -1015,7 +1012,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     private void setUnitDropDown(View view) {
-        final AutoCompleteTextView dropdownUnit = view.findViewById(R.id.dropdown_unit);
+        final MaterialAutoCompleteTextView dropdownUnit = view.findViewById(R.id.dropdown_unit);
         final ArrayList<String> measurementUnits = new ArrayList<>();
         for (EMeasurementUnit unit : EMeasurementUnit.values()) {
             measurementUnits.add(unit.getLabel(requireContext()));

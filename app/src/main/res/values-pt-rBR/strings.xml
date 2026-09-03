@@ -96,7 +96,7 @@
     <string name="notification_missing">Sem permissão de notificação</string>
     <string name="button_allow">Permitir</string>
     <string name="button_grant">Dar permissão</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
     <string name="button_select">Selecionar</string>
     <string name="button_skip">Pular</string>
     <string name="button_snooze">Soneca</string>

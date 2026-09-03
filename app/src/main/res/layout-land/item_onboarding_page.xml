@@ -30,6 +30,7 @@
             android:id="@+id/img_mascot"
             android:layout_width="140dp"
             android:layout_height="140dp"
+            android:contentDescription="@string/app_name"
             android:elevation="4dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_wizard_high_def"
@@ -43,6 +44,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:alpha="0.8"
+            android:importantForAccessibility="no"
             app:layout_constraintBottom_toTopOf="@+id/img_mascot"
             app:layout_constraintEnd_toStartOf="@+id/img_mascot"
             app:layout_constraintHorizontal_bias="0.9"
@@ -57,6 +59,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:alpha="0.6"
+            android:importantForAccessibility="no"
             android:rotation="15"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -147,6 +150,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginStart="4dp"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/ic_arrow_down"
             app:tint="?attr/colorOnSecondaryContainer" />
     </LinearLayout>
@@ -157,6 +161,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
+        android:contentDescription="@null"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -164,6 +169,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
+        android:contentDescription="@null"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -171,6 +177,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
+        android:contentDescription="@null"
         tools:ignore="MissingConstraints" />
 
     <ImageView
@@ -178,6 +185,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
+        android:contentDescription="@null"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -112,7 +112,7 @@
     <string name="notification_missing">No notifications permission</string>
     <string name="button_allow">Allow</string>
     <string name="button_grant">Grant</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
     <string name="button_select">Select</string>
     <string name="button_skip">Skip</string>
     <string name="button_snooze">Snooze</string>
@@ -207,8 +207,8 @@
     <string name="cheats_title">Developer Cheats</string>
     <string name="cheats_is_premium">Is Premium</string>
     <string name="cheats_show_ads">Show Ads (Force)</string>
-    <string name="cheats_set_fake_time" translatable="false">Set Fake Time</string>
-    <string name="cheats_clear_fake_time" translatable="false">Clear Fake Time</string>
+    <string name="cheats_set_fake_time">Set Fake Time</string>
+    <string name="cheats_clear_fake_time">Clear Fake Time</string>
     <string name="cheats_apply_restart">Apply &amp; Restart</string>
 
     <string name="notif_already_active">Notifications are already active!</string>
@@ -445,6 +445,7 @@
     <string name="locked_photo_hint">Tap to Unlock</string>
     <string name="critical_med_label">Critical Medication</string>
     <string name="critical_med_summary">Max volume bypass, sticky notification, heartbeat vibration, and 5-min snoozes.</string>
+    <string name="action_magic" translatable="false">Magic</string>
     <string name="action_log_dose">Log a Dose</string>
     <string name="action_add_new_med">Add New Med</string>
     <string name="dialog_add_choice_title">What would you like to do?</string>

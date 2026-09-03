@@ -94,12 +94,13 @@
                         app:startIconDrawable="@drawable/baseline_medication_24"
                         app:startIconTint="?attr/colorOnSurface">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/med_form_fragment_add_med"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clickable="true"
                             android:focusable="false"
+                            android:hint="@string/hint_form"
                             android:inputType="none"
                             android:popupBackground="@drawable/bg_dropdown_popup" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -112,12 +113,13 @@
                     android:layout_marginBottom="12dp"
                     android:hint="@string/hint_frequency">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/med_frequency_fragment_add_med"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
                         android:focusable="false"
+                        android:hint="@string/hint_frequency"
                         android:inputType="none"
                         android:popupBackground="@drawable/bg_dropdown_popup" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -545,12 +547,13 @@
                         android:layout_weight="1"
                         android:hint="@string/hint_unit">
 
-                        <AutoCompleteTextView
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
                             android:id="@+id/dropdown_unit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clickable="true"
                             android:focusable="false"
+                            android:hint="@string/hint_unit"
                             android:inputType="none"
                             android:popupBackground="@drawable/bg_dropdown_popup" />
                     </com.google.android.material.textfield.TextInputLayout>

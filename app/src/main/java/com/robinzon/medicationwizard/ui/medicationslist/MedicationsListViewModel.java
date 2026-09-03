@@ -76,7 +76,6 @@ public class MedicationsListViewModel extends AndroidViewModel implements Shared
      */
     @Override
     protected void onCleared() {
-        super.onCleared();
         SharedPreferencesManager.getInstance(getApplication()).unregisterListener(this);
     }
 }

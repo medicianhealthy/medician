@@ -96,7 +96,7 @@
     <string name="notification_missing">Keine Benachrichtigungsrechte</string>
     <string name="button_allow">Erlauben</string>
     <string name="button_grant">Zulassen</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_ok">OK</string>
     <string name="button_select">Wählen</string>
     <string name="button_skip">Auslassen</string>
     <string name="button_snooze">Schlummern</string>
