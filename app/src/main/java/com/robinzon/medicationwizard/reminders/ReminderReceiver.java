@@ -196,6 +196,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                 .setContentText(doses.size() == 1 ? message : context.getString(R.string.times_a_day, doses.size()))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
+                //noinspection FullScreenIntent
                 .setFullScreenIntent(pendingIntent, true)
                 .setContentIntent(pendingIntent)
                 .setDeleteIntent(stopPI)

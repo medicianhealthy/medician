@@ -189,9 +189,8 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof MedVH) {
+            if (holder instanceof MedVH medHolder) {
                 Medication m = meds.get(position);
-                MedVH medHolder = (MedVH) holder;
                 medHolder.name.setText(m.getCommercialName());
                 
                 String details = "";

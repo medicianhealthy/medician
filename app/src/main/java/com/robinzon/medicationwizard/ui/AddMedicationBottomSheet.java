@@ -12,6 +12,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -53,6 +55,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.robinzon.medicationwizard.AppConfig;
+import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.api.NLMClient;
 import com.robinzon.medicationwizard.api.models.RxNormSpellingResponse;
@@ -60,6 +63,7 @@ import com.robinzon.medicationwizard.entities.EForm;
 import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.EMeasurementUnit;
 import com.robinzon.medicationwizard.entities.Medication;
+import com.robinzon.medicationwizard.notifications.NotificationManager;
 import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
 import com.robinzon.medicationwizard.utils.SimpleDayTime;
 
@@ -333,10 +337,11 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     private void showRefillDialog() {
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        CustomMaterialDialog dialog = new CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(R.string.inventory_dialog_refill_title, medication.getCommercialName()));
         dialog.setMessage(getString(R.string.inventory_dialog_refill_message));
 
+        //noinspection InflateParams
         final View customView = getLayoutInflater().inflate(R.layout.dialog_inventory_input, null);
         final TextInputEditText input = customView.findViewById(R.id.inventory_input);
         if (input != null) input.setText(String.valueOf(medication.getInventoryCurrent()));
@@ -372,9 +377,10 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     }
 
     private void showThresholdInputDialog(Medication.InventoryAlertType type) {
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        CustomMaterialDialog dialog = new CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(type == Medication.InventoryAlertType.DAYS_BEFORE ? R.string.inventory_option_days : R.string.inventory_option_amount));
 
+        //noinspection InflateParams
         final View customView = getLayoutInflater().inflate(R.layout.dialog_inventory_input, null);
         final TextInputLayout layout = customView.findViewById(R.id.inventory_input_layout);
         final TextInputEditText input = customView.findViewById(R.id.inventory_input);
@@ -823,14 +829,13 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         dropdownFrequency.setOnClickListener(v -> dropdownFrequency.showDropDown());
         dropdownFrequency.setOnItemClickListener((parent, itemView, position, itemId) -> {
             hideKeyboard(dropdownFrequency);
-            int timesPerDay = position; // 0 = As Needed, 1 = Once, etc.
-            medication.setDailyFrequency(timesPerDay);
+            medication.setDailyFrequency(position);
             
-            if (timesPerDay == 0) {
+            if (position == 0) {
                 timesContainer.removeAllViews();
                 dosesInDay.clear();
             } else {
-                generateTimePickers(timesPerDay);
+                generateTimePickers(position);
             }
             
             timesContainer.postDelayed(() -> {
@@ -891,12 +896,11 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         getParentFragmentManager().setFragmentResult("medication_added", result);
 
         dismiss();
-        if (getActivity() instanceof com.robinzon.medicationwizard.MainActivity) {
-            final com.robinzon.medicationwizard.MainActivity mainActivity = (com.robinzon.medicationwizard.MainActivity) getActivity();
-            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+        if (getActivity() instanceof MainActivity mainActivity) {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (mainActivity.isFinishing() || mainActivity.isDestroyed()) return;
                 mainActivity.getAdsManager().showInterstitialAd();
-                com.robinzon.medicationwizard.notifications.NotificationManager.getInstance(mainActivity).requestWithRationale();
+                NotificationManager.getInstance(mainActivity).requestWithRationale();
             }, 1200);
         }
     }

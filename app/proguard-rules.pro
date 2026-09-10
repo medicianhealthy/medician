@@ -39,7 +39,8 @@
 
 # --- Google API Client & Google Drive ---
 -keep class com.google.api.services.drive.model.** { *; }
--keep class com.google.common.util.concurrent.** { *; }
+-keep interface com.google.common.util.concurrent.ListenableFuture { *; }
+-keep class com.google.common.util.concurrent.SettableFuture { *; }
 -keep class com.google.j2objc.annotations.** { *; }
 -keep class com.google.errorprone.annotations.** { *; }
 

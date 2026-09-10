@@ -2,6 +2,7 @@ package com.robinzon.medicationwizard.notifications;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,30 +39,28 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     public static void createNotificationChannel(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Delete old channel if it exists to clean up
-            android.app.NotificationManager manager = context.getSystemService(android.app.NotificationManager.class);
-            if (manager != null) {
-                manager.deleteNotificationChannel("medication_reminders");
-            }
+        // Delete old channel if it exists to clean up
+        android.app.NotificationManager manager = context.getSystemService(android.app.NotificationManager.class);
+        if (manager != null) {
+            manager.deleteNotificationChannel("medication_reminders");
+        }
 
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    context.getString(R.string.notification_channel_name),
-                    android.app.NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription(context.getString(R.string.notification_channel_desc));
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID,
+                context.getString(R.string.notification_channel_name),
+                android.app.NotificationManager.IMPORTANCE_HIGH
+        );
+        channel.setDescription(context.getString(R.string.notification_channel_desc));
 
-            // FIX: Silence the system sound so we only hear the app's custom MediaPlayer alert.
-            // This prevents the "Double Sound" issue.
-            channel.setSound(null, null);
-            channel.enableVibration(true);
-            channel.setShowBadge(true);
-            channel.setLockscreenVisibility(android.app.Notification.VISIBILITY_PUBLIC);
+        // FIX: Silence the system sound so we only hear the app's custom MediaPlayer alert.
+        // This prevents the "Double Sound" issue.
+        channel.setSound(null, null);
+        channel.enableVibration(true);
+        channel.setShowBadge(true);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-            if (manager != null) {
-                manager.createNotificationChannel(channel);
-            }
+        if (manager != null) {
+            manager.createNotificationChannel(channel);
         }
     }
 

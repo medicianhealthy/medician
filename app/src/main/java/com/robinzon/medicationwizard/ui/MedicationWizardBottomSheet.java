@@ -25,8 +25,7 @@ public class MedicationWizardBottomSheet extends BottomSheetDialogFragment {
 
         // Find the ad container in the bottom sheet layout
         FrameLayout adContainer = view.findViewById(R.id.ad_container);
-        if (adContainer != null && getActivity() instanceof MainActivity) {
-            MainActivity main = (MainActivity) getActivity();
+        if (adContainer != null && getActivity() instanceof MainActivity main) {
 
             // Only show and attach if ads should be visible
             if (!AppConfig.isPremium(requireContext()) || AppConfig.FORCED_ADS_VISIBLE) {
@@ -41,8 +40,7 @@ public class MedicationWizardBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if (getActivity() instanceof MainActivity) {
-            MainActivity main = (MainActivity) getActivity();
+        if (getActivity() instanceof MainActivity main) {
             main.getAdsManager().restoreBannerToDefault();
         }
     }

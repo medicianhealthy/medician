@@ -11,9 +11,11 @@ import androidx.lifecycle.Transformations;
 
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
+import com.robinzon.medicationwizard.utils.Logger;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,11 +55,11 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
         // Combine SortOrder and RefreshTrigger to create the final data stream.
         // This ensures that either a sort change OR a manual refresh (which updates the time window)
         // will trigger a fresh database query.
-        LiveData<Pair<SortOrder, Long>> combinedTrigger = new MediatorLiveData<>();
-        ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).addSource(mSortOrder, order ->
-                ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).setValue(new Pair<>(order, mRefreshTrigger.getValue())));
-        ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).addSource(mRefreshTrigger, time ->
-                ((MediatorLiveData<Pair<SortOrder, Long>>) combinedTrigger).setValue(new Pair<>(mSortOrder.getValue(), time)));
+        MediatorLiveData<Pair<SortOrder, Long>> combinedTrigger = new MediatorLiveData<>();
+        combinedTrigger.addSource(mSortOrder, order ->
+                combinedTrigger.setValue(new Pair<>(order, mRefreshTrigger.getValue())));
+        combinedTrigger.addSource(mRefreshTrigger, time ->
+                combinedTrigger.setValue(new Pair<>(mSortOrder.getValue(), time)));
 
         mTodaysMedications = Transformations.switchMap(combinedTrigger, trigger -> {
             SortOrder order = trigger.first;
@@ -76,8 +78,8 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
             calendar.set(Calendar.MILLISECOND, 999);
             long endTime = calendar.getTimeInMillis();
 
-            com.robinzon.medicationwizard.utils.Logger.log("TodaysMedicationsViewModel",
-                    "Querying for Today: " + new java.util.Date(startTime) + " to " + new java.util.Date(endTime));
+            Logger.log("TodaysMedicationsViewModel",
+                    "Querying for Today: " + new Date(startTime) + " to " + new Date(endTime));
 
             if (order == null) order = SortOrder.TIME;
 

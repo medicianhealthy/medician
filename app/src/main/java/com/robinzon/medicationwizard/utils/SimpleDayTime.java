@@ -56,8 +56,7 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
      */
     @Nullable
     public static SimpleDayTime fromJson(Object obj) {
-        if (obj instanceof JSONObject) {
-            JSONObject json = (JSONObject) obj;
+        if (obj instanceof JSONObject json) {
             try {
                 return new SimpleDayTime(
                         (byte) json.getInt("hour"),
@@ -66,8 +65,7 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
             } catch (JSONException e) {
                 return null;
             }
-        } else if (obj instanceof String) {
-            String timeStr = (String) obj;
+        } else if (obj instanceof String timeStr) {
             try {
                 String[] parts = timeStr.split(":");
                 if (parts.length == 2) {

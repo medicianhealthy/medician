@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_SINGLE = 0;
     private static final int TYPE_GROUP = 1;
 
-    private List<DoseItem> items = new ArrayList<>();
+    private List<DoseItem> items;
     private OnMedicationActionListener actionListener;
 
     public MedicationsAdapter(List<DoseItem> dataSet) {
@@ -169,7 +170,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
             timeText.setText(timeFmt.format(new Date(instance.getScheduledTime())));
 
-            if (instance.getInstruction() != null && !java.util.Objects.equals(instance.getInstruction(), "DOES_NOT_MATTER")) {
+            if (instance.getInstruction() != null && !Objects.equals(instance.getInstruction(), "DOES_NOT_MATTER")) {
                 directionsText.setVisibility(View.VISIBLE);
                 try {
                     directionsText.setText(EInstructions.valueOf(instance.getInstruction()).getDescription(itemView.getContext()));
@@ -334,7 +335,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     actualActionSummaryTxt.setVisibility(View.GONE);
                 }
 
-                if (d.getInstruction() != null && !java.util.Objects.equals(d.getInstruction(), "DOES_NOT_MATTER")) {
+                if (d.getInstruction() != null && !Objects.equals(d.getInstruction(), "DOES_NOT_MATTER")) {
                     directionsTxt.setVisibility(View.VISIBLE);
                     try {
                         directionsTxt.setText(EInstructions.valueOf(d.getInstruction()).getDescription(itemView.getContext()));

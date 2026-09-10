@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.text.LineBreaker;
+import android.os.Build;
+import android.text.Layout;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +22,7 @@ import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
+import com.robinzon.medicationwizard.R;
 
 /**
  * Branded Dialog wrapper for Medication Wizard.
@@ -49,8 +53,8 @@ public class CustomMaterialDialog {
         MaterialShapeDrawable shapeDrawable = new MaterialShapeDrawable(shapeAppearanceModel);
 
         // 2. Magic Border: Primary Colored Stroke (Subtle 1dp)
-        int surfaceAttr = context.getResources().getIdentifier("colorSurface", "attr", context.getPackageName());
-        int primaryAttr = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
+        int surfaceAttr = com.google.android.material.R.attr.colorSurface;
+        int primaryAttr = androidx.appcompat.R.attr.colorPrimary;
 
         int surfaceColor = MaterialColors.getColor(context, surfaceAttr, Color.WHITE);
         int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
@@ -73,11 +77,13 @@ public class CustomMaterialDialog {
         messageView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
         // HIGH_QUALITY/BALANCED break strategy to prevent "lonely words"
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            // High quality performs more aggressive optimization to avoid orphans
-            messageView.setBreakStrategy(android.text.Layout.BREAK_STRATEGY_HIGH_QUALITY);
-            messageView.setHyphenationFrequency(android.text.Layout.HYPHENATION_FREQUENCY_FULL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            messageView.setBreakStrategy(LineBreaker.BREAK_STRATEGY_HIGH_QUALITY);
+        } else {
+            //noinspection WrongConstant
+            messageView.setBreakStrategy(Layout.BREAK_STRATEGY_HIGH_QUALITY);
         }
+        messageView.setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_FULL);
 
         // Start alignment (Left for LTR, Right for RTL)
         messageView.setGravity(Gravity.START);
@@ -89,7 +95,7 @@ public class CustomMaterialDialog {
 
         messageView.setPadding(paddingSide, paddingTop, paddingSide, paddingBottom);
 
-        int variantAttr = context.getResources().getIdentifier("colorOnSurfaceVariant", "attr", context.getPackageName());
+        int variantAttr = com.google.android.material.R.attr.colorOnSurfaceVariant;
         int textColor = MaterialColors.getColor(context, variantAttr, Color.GRAY);
         messageView.setTextColor(textColor);
 
@@ -132,13 +138,12 @@ public class CustomMaterialDialog {
         dialog.show();
 
         // 4. Guided Actions: Bold Primary Buttons
-        if (dialog instanceof AlertDialog) {
-            AlertDialog alertDialog = (AlertDialog) dialog;
+        if (dialog instanceof AlertDialog alertDialog) {
 
             Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
             if (positiveButton != null) {
                 positiveButton.setTypeface(null, Typeface.BOLD);
-                int primaryAttr = context.getResources().getIdentifier("colorPrimary", "attr", context.getPackageName());
+                int primaryAttr = androidx.appcompat.R.attr.colorPrimary;
                 int primaryColor = MaterialColors.getColor(context, primaryAttr, Color.BLUE);
                 positiveButton.setTextColor(primaryColor);
                 positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -147,7 +152,7 @@ public class CustomMaterialDialog {
 
             Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
             if (negativeButton != null) {
-                int variantAttr = context.getResources().getIdentifier("colorOnSurfaceVariant", "attr", context.getPackageName());
+                int variantAttr = com.google.android.material.R.attr.colorOnSurfaceVariant;
                 int secondaryColor = MaterialColors.getColor(context, variantAttr, Color.GRAY);
                 negativeButton.setTextColor(secondaryColor);
                 negativeButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -156,7 +161,7 @@ public class CustomMaterialDialog {
 
             Button neutralButton = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
             if (neutralButton != null) {
-                int variantAttr = context.getResources().getIdentifier("colorOnSurfaceVariant", "attr", context.getPackageName());
+                int variantAttr = com.google.android.material.R.attr.colorOnSurfaceVariant;
                 int secondaryColor = MaterialColors.getColor(context, variantAttr, Color.GRAY);
                 neutralButton.setTextColor(secondaryColor);
                 neutralButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);

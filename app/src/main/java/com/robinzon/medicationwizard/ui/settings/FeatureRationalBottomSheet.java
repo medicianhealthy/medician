@@ -91,8 +91,7 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         view.findViewById(R.id.btn_watch_video).setVisibility(featureType == AppConfig.FeaturePassType.AD_FREE ? View.GONE : View.VISIBLE);
 
         view.findViewById(R.id.btn_watch_video).setOnClickListener(v -> {
-            if (getActivity() instanceof MainActivity) {
-                MainActivity main = (MainActivity) getActivity();
+            if (getActivity() instanceof MainActivity main) {
                 main.getAdsManager().showRewarded(status -> {
                     if (status == AdsManager.RewardedStatus.SUCCESS) {
                         FeaturePassManager.grantPass(requireContext(), featureType);

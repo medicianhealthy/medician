@@ -28,12 +28,17 @@ import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.database.AppDatabase;
 import com.robinzon.medicationwizard.database.DoseInstanceEntity;
 import com.robinzon.medicationwizard.databinding.FragmentTodaysMedicationsBinding;
+import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.entities.MedicationWizardFragment;
 import com.robinzon.medicationwizard.managers.InventoryManager;
 import com.robinzon.medicationwizard.managers.MagicManager;
+import com.robinzon.medicationwizard.reminders.ReminderManager;
 import com.robinzon.medicationwizard.ui.AddMedicationBottomSheet;
+import com.robinzon.medicationwizard.ui.CustomMaterialDialog;
 import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
 import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
+import com.robinzon.medicationwizard.utils.Statisticator;
+import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -485,9 +490,9 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
     private void applyStatusUpdate(DoseInstanceEntity instance, String status) {
         instance.setStatus(status);
-        long actionTime = -1;
+        long actionTime;
         if (instance.getActionTime() <= 0) {
-            actionTime = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
+            actionTime = TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
             instance.setActionTime(actionTime);
         } else {
             actionTime = instance.getActionTime();
@@ -511,13 +516,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             AppDatabase.getDatabase(appContext).doseInstanceDao().update(instance);
             if (!"SCHEDULED".equals(status)) {
-                com.robinzon.medicationwizard.reminders.ReminderManager.cancelReminder(appContext, instance.getId());
+                ReminderManager.cancelReminder(appContext, instance.getId());
                 
                 // Update parent medication definition's last taken time if this was a TAKE action
                 if ("TAKEN".equals(status)) {
-                    List<com.robinzon.medicationwizard.entities.Medication> allMeds = 
-                            com.robinzon.medicationwizard.entities.Medication.getSavedMedications(appContext);
-                    for (com.robinzon.medicationwizard.entities.Medication m : allMeds) {
+                    List<Medication> allMeds =
+                            Medication.getSavedMedications(appContext);
+                    for (Medication m : allMeds) {
                         if (m.getId().equals(instance.getMedicationId())) {
                             m.setLastTakenTimestamp(finalActionTime);
                             m.addToMedicationList(appContext);
@@ -527,7 +532,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
                 }
             }
         });
-        com.robinzon.medicationwizard.utils.Statisticator.incrementDosesLogged(appContext);
+        Statisticator.incrementDosesLogged(appContext);
         String localizedStatus = status;
         if ("TAKEN".equals(status)) localizedStatus = getString(R.string.take);
         else if ("SKIPPED".equals(status)) localizedStatus = getString(R.string.button_skip);
@@ -539,7 +544,7 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         if ("TAKEN".equals(status)) {
             List<DoseInstanceEntity> currentList = mViewModel.getTodaysMedications().getValue();
             if (MagicManager.getInstance(requireContext()).checkAndGrantPerfectDayBonus(currentList)) {
-                com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+                CustomMaterialDialog dialog = new CustomMaterialDialog(requireContext());
                 dialog.setTitle(getString(R.string.magic_bonus_perfect_day_title));
                 dialog.setMessage(getString(R.string.magic_bonus_perfect_day_msg));
                 dialog.setPositiveButton(getString(R.string.magic_bonus_perfect_day_btn), null);

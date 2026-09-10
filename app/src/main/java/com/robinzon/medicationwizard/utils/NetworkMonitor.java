@@ -27,7 +27,7 @@ public class NetworkMonitor {
     private final ConnectivityManager mConnectivityManager;
     private final Set<NetworkStatusListener> mListeners = new CopyOnWriteArraySet<>();
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
-    private boolean mIsConnected = false;
+    private boolean mIsConnected;
     private final ConnectivityManager.NetworkCallback mNetworkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(@NonNull Network network) {

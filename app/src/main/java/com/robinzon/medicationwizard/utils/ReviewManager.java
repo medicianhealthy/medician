@@ -43,14 +43,13 @@ public class ReviewManager {
 
         // 2. Frequency Check: Don't prompt too often
         long lastPrompt = SharedPreferencesManager.getInstance(activity).getLong(SPK_LAST_REVIEW_TIME, 0);
-        if (com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() - lastPrompt < PROMPT_INTERVAL_MS) {
+        if (TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() - lastPrompt < PROMPT_INTERVAL_MS) {
             Logger.log("ReviewManager", "Prompted recently. Waiting for interval.");
             return;
         }
 
         // 3. Collision Avoidance: Check AdsManager cooldown (Interstitials)
-        if (activity instanceof MainActivity) {
-            MainActivity main = (MainActivity) activity;
+        if (activity instanceof MainActivity main) {
             if (main.getAdsManager() != null && !main.getAdsManager().hasCoolDownForFullScreenNonUserInitiatedAd()) {
                 Logger.log("ReviewManager", "Skipping to avoid ad/overlay collision.");
                 return;
@@ -67,7 +66,7 @@ public class ReviewManager {
                 Task<Void> flow = manager.launchReviewFlow(activity, reviewInfo);
                 flow.addOnCompleteListener(t -> {
                     // Update timestamp regardless of outcome (we don't know if they rated)
-                    SharedPreferencesManager.getInstance(activity).setLong(SPK_LAST_REVIEW_TIME, com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
+                    SharedPreferencesManager.getInstance(activity).setLong(SPK_LAST_REVIEW_TIME, TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal());
                     Logger.log("ReviewManager", "Review flow finished.");
                 });
             } else {
