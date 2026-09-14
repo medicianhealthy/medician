@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.ads.MobileAds;
 import com.robinzon.medicationwizard.BuildConfig;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.ads.admob.AdMobAppOpen;
@@ -61,6 +62,8 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
      * Performs one-time setup of ad units and initiates the first load requests.
      */
     public void initializeAds() {
+        MobileAds.initialize(activity, initializationStatus ->
+                Logger.log("Ads", "MobileAds initialized."));
         NetworkMonitor.getInstance(activity).addListener(this);
         createAds();
         loadAds();
