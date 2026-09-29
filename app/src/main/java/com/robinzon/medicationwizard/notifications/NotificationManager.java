@@ -165,7 +165,10 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
 
     private boolean shouldShowRationalInnerDialog() {
         Activity activity = mActivityRef.get();
-        return activity != null && PermissionManager.shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return activity != null && PermissionManager.shouldShowRequestPermissionRationale(activity, Manifest.permission.POST_NOTIFICATIONS);
+        }
+        return false;
     }
 
     /**

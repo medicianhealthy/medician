@@ -1,6 +1,9 @@
 package com.robinzon.medicationwizard.ui.settings;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import android.content.SharedPreferences;
+
+import com.google.android.material.color.MaterialColors;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.MainActivity;
 import com.robinzon.medicationwizard.R;
@@ -269,12 +274,12 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         }
 
         String pkg = requireContext().getPackageName();
-        int primaryAttr = getResources().getIdentifier("colorPrimary", "attr", pkg);
-        int primary = com.google.android.material.color.MaterialColors.getColor(requireContext(), primaryAttr, android.graphics.Color.BLUE);
+        @SuppressLint("DiscouragedApi") int primaryAttr = getResources().getIdentifier("colorPrimary", "attr", pkg);
+        int primary = MaterialColors.getColor(requireContext(), primaryAttr, Color.BLUE);
 
         // All features now use consistent primary theme coloring for icons and glows
-        iconView.setImageTintList(android.content.res.ColorStateList.valueOf(primary));
-        glowView.setBackgroundTintList(android.content.res.ColorStateList.valueOf(primary));
+        iconView.setImageTintList(ColorStateList.valueOf(primary));
+        glowView.setBackgroundTintList(ColorStateList.valueOf(primary));
     }
 
     private String getFeatureName() {

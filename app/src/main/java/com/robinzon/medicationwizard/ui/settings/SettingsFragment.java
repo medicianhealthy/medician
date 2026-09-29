@@ -2,6 +2,8 @@ package com.robinzon.medicationwizard.ui.settings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,9 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import android.annotation.SuppressLint;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.ColorUtils;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -18,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -833,13 +838,13 @@ public class SettingsFragment extends MedicationWizardFragment {
         } else {
             binding.txtNotificationsTitle.setText(R.string.notification_missing);
             binding.txtNotificationsSummary.setText(R.string.settings_notifications_disabled_summary);
-            int primaryAttr = getContext().getResources().getIdentifier("colorPrimary", "attr", getContext().getPackageName());
-            int surfaceAttr = getContext().getResources().getIdentifier("colorSurface", "attr", getContext().getPackageName());
-            int primary = com.google.android.material.color.MaterialColors.getColor(requireContext(), primaryAttr, android.graphics.Color.BLUE);
-            int surface = com.google.android.material.color.MaterialColors.getColor(requireContext(), surfaceAttr, android.graphics.Color.WHITE);
+            @SuppressLint("DiscouragedApi") int primaryAttr = getContext().getResources().getIdentifier("colorPrimary", "attr", getContext().getPackageName());
+            @SuppressLint("DiscouragedApi") int surfaceAttr = getContext().getResources().getIdentifier("colorSurface", "attr", getContext().getPackageName());
+            int primary = MaterialColors.getColor(requireContext(), primaryAttr, Color.BLUE);
+            int surface = MaterialColors.getColor(requireContext(), surfaceAttr, Color.WHITE);
             binding.cardNotifications.setStrokeWidth((int) (1.5f * getResources().getDisplayMetrics().density));
             binding.cardNotifications.setStrokeColor(primary);
-            binding.cardNotifications.setCardBackgroundColor(android.content.res.ColorStateList.valueOf(androidx.core.graphics.ColorUtils.blendARGB(surface, primary, 0.10f)));
+            binding.cardNotifications.setCardBackgroundColor(ColorStateList.valueOf(ColorUtils.blendARGB(surface, primary, 0.10f)));
         }
     }
 

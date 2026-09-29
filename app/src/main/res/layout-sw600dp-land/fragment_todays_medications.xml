@@ -167,6 +167,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Doses Today"
+                            tools:ignore="HardcodedText"
                             android:textAppearance="?attr/textAppearanceTitleMedium"
                             android:textColor="?attr/colorOnPrimaryContainer" />
 

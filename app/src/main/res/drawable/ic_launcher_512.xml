@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt"
+    xmlns:tools="http://schemas.android.com/tools"
     android:width="512dp"
     android:height="512dp"
     android:viewportWidth="512"
-    android:viewportHeight="512">
+    android:viewportHeight="512"
+    tools:ignore="VectorRaster">
 
     <!-- Background Rainbow Square (Play Store Requirement) -->
     <path android:pathData="M0,0h512v512h-512z">

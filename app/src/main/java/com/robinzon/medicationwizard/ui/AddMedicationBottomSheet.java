@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -22,6 +23,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -48,7 +50,9 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -97,7 +101,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private boolean isEditMode = false;
 
     // Search & Autocomplete
-    private final android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
     private boolean isSelectionInProgress = false;
 
@@ -107,7 +111,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private ShapeableImageView imgPreview;
     private View layoutPlaceholder;
     private View btnRotateLeft, btnRotateRight, btnRemovePhoto;
-    private com.google.android.material.materialswitch.MaterialSwitch switchCritical;
+    private MaterialSwitch switchCritical;
     private View crownCritical, badgeCritical;
 
     // Inventory
@@ -320,6 +324,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateInventorySummary() {
         if (txtInventoryStock == null) return;
 
@@ -363,7 +368,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private void showAlertSettingsDialog() {
         String[] options = {getString(R.string.inventory_option_days), getString(R.string.inventory_option_amount), getString(R.string.inventory_alert_none)};
         
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog dialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(requireContext());
+        CustomMaterialDialog dialog = new CustomMaterialDialog(requireContext());
         dialog.setTitle(getString(R.string.inventory_dialog_alert_title));
         dialog.setItems(options, (d, which) -> {
             if (which == 2) {
@@ -651,7 +656,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 };
                 layoutForm.setStartIconDrawable(icon);
                 int onSurfaceAttr = com.google.android.material.R.attr.colorOnSurface;
-                int iconColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
+                int iconColor = MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
                 layoutForm.setStartIconTintList(ColorStateList.valueOf(iconColor));
             }
         }
@@ -851,7 +856,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
 
     private void hideKeyboard(View view) {
         if (view != null) {
-            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
@@ -924,7 +929,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
     private void showErrorDialog(@NonNull String title, @NonNull String message) {
         Context context = getContext();
         if (context == null) return;
-        com.robinzon.medicationwizard.ui.CustomMaterialDialog errorDialog = new com.robinzon.medicationwizard.ui.CustomMaterialDialog(context);
+        CustomMaterialDialog errorDialog = new CustomMaterialDialog(context);
         errorDialog.setTitle(title);
         errorDialog.setMessage(message);
         errorDialog.setPositiveButton(getString(android.R.string.ok), (dialog, buttonIndex) -> dialog.dismiss());
@@ -1010,7 +1015,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             };
             layoutForm.setStartIconDrawable(icon);
             int onSurfaceAttr = com.google.android.material.R.attr.colorOnSurface;
-            int iconColor = com.google.android.material.color.MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
+            int iconColor = MaterialColors.getColor(requireContext(), onSurfaceAttr, Color.BLACK);
             layoutForm.setStartIconTintList(ColorStateList.valueOf(iconColor));
         });
     }
@@ -1157,7 +1162,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setHour(12)
                 .setMinute(0)
-                .setInputMode(com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK)
+                .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
                 .setTitleText(R.string.time_picker_med_title)
                 .build();
         picker.addOnPositiveButtonClickListener(v -> {

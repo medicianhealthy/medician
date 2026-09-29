@@ -8,22 +8,26 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.text.BidiFormatter;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.ObjectKey;
+import com.google.android.material.color.MaterialColors;
 import com.robinzon.medicationwizard.AppConfig;
 import com.robinzon.medicationwizard.R;
 import com.robinzon.medicationwizard.databinding.ItemMedicationListBinding;
 import com.robinzon.medicationwizard.entities.EInstructions;
 import com.robinzon.medicationwizard.entities.Medication;
 import com.robinzon.medicationwizard.ui.settings.FeatureRationalBottomSheet;
+import com.robinzon.medicationwizard.utils.TimeManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Adapter for the master medication library list.
@@ -42,11 +47,12 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private final List<Medication> medications = new ArrayList<>();
     private final Set<String> expandedIds = new HashSet<>();
-    private final androidx.fragment.app.FragmentManager fragmentManager;
+    private final FragmentManager fragmentManager;
     private OnMedicationActionListener listener;
 
     private final Handler stopwatchHandler = new Handler(Looper.getMainLooper());
     private final Runnable stopwatchRunnable = new Runnable() {
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void run() {
             notifyDataSetChanged();
@@ -54,7 +60,7 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
-    public MedicationsListAdapter(androidx.fragment.app.FragmentManager fragmentManager) {
+    public MedicationsListAdapter(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         stopwatchHandler.postDelayed(stopwatchRunnable, 60000);
     }
@@ -63,6 +69,7 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setMedications(List<Medication> medications) {
         this.medications.clear();
         this.medications.addAll(medications);
@@ -171,11 +178,11 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             // --- Stopwatch Logic (Always visible in collapsed view) ---
             if (medication.getLastTakenTimestamp() != null) {
-                long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
+                long now = TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
                 long diff = now - medication.getLastTakenTimestamp();
                 if (diff > 0) {
-                    long hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(diff);
-                    long minutes = java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(diff) % 60;
+                    long hours = TimeUnit.MILLISECONDS.toHours(diff);
+                    long minutes = TimeUnit.MILLISECONDS.toMinutes(diff) % 60;
                     String timeStr = String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
                     binding.txtStopwatch.setVisibility(View.VISIBLE);
                     binding.txtStopwatch.setText(binding.getRoot().getContext().getString(R.string.stopwatch_last_dose_format, timeStr));
@@ -209,10 +216,10 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                     int lowColor = binding.getRoot().getContext().getColor(R.color.inventory_low_stock);
-                    int normalColor = com.google.android.material.color.MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSecondary);
+                    int normalColor = MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSecondary);
                     binding.txtInventory.setTextColor(isLow ? lowColor : normalColor);
                 } else {
-                    binding.txtInventory.setTextColor(com.google.android.material.color.MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSecondary));
+                    binding.txtInventory.setTextColor(MaterialColors.getColor(binding.getRoot(), com.google.android.material.R.attr.colorSecondary));
                 }
             } else {
                 binding.txtInventory.setVisibility(View.GONE);

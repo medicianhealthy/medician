@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import android.annotation.SuppressLint;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.text.BidiFormatter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +42,7 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.actionListener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<DoseItem> newData) {
         this.items = newData;
         notifyDataSetChanged();
