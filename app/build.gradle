@@ -72,14 +72,48 @@ androidComponents.onVariants(androidComponents.selector().all()) { variant ->
         def vName = rootProject.VERSION_NAME
         def vCode = rootProject.VERSION_CODE
         def buildType = task.name.endsWith("Release") ? "release" : "debug"
-        def outputDirProvider = layout.buildDirectory.dir("outputs/bundle/${buildType}")
+
+        // Extract the build directory outside the doLast closure for configuration cache compatibility
+        def buildDir = layout.buildDirectory.dir("outputs/bundle/${buildType}").get().asFile
+
+        // 2. Check Android Studio custom export location (used by Generate Signed Bundle)
+        // Extract project properties OUTSIDE the doLast closure for configuration cache compatibility
+        def apkLocationProp = project.findProperty("android.injected.apk.location")
+        def bundleLocationProp = project.findProperty("android.injected.bundle.location")
 
         task.doLast {
             def bundleName = "MedicationWizard-v${vName}-${vCode}-${buildType}.aab"
-            def outputDir = outputDirProvider.get().asFile
-            def originalFile = new File(outputDir, "app-${buildType}.aab")
-            if (originalFile.exists()) {
-                originalFile.renameTo(new File(outputDir, bundleName))
+            
+            // 1. Check default build directory
+            def defaultDir = buildDir
+            
+            // 2. Resolve custom export location
+            def customIdeDir = null
+            if (apkLocationProp != null) {
+                customIdeDir = new File(apkLocationProp.toString())
+            }
+            if (bundleLocationProp != null) {
+                customIdeDir = new File(bundleLocationProp.toString())
+            }
+
+            // AS usually creates a 'release' or 'debug' subfolder inside the custom selected folder
+            def dirsToCheck = [defaultDir, customIdeDir]
+            if (customIdeDir != null) {
+                dirsToCheck.add(new File(customIdeDir, buildType))
+            }
+
+            dirsToCheck.findAll { it != null && it.exists() }.each { dir ->
+                def originalFiles = [
+                    new File(dir, "app-${buildType}.aab"),
+                    new File(dir, "app.aab")
+                ]
+                
+                originalFiles.each { file ->
+                    if (file.exists()) {
+                        file.renameTo(new File(dir, bundleName))
+                        println "Successfully renamed AAB to: ${new File(dir, bundleName).absolutePath}"
+                    }
+                }
             }
         }
     }
