@@ -1247,6 +1247,7 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             public void onResponse(@NonNull Call<List<Object>> call, @NonNull Response<List<Object>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().size() > 1) {
                     // RxTerms response: [total, [names], null, [details]]
+                    @SuppressWarnings("unchecked")
                     List<String> names = (List<String>) response.body().get(1);
                     if (names != null && !names.isEmpty()) {
                         updateAutoCompleteAdapter(names, autoCompleteTextView);
