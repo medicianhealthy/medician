@@ -19,6 +19,11 @@ import com.robinzon.medicationwizard.utils.TimeManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Serves as the abstract base class for all AdMob ad wrappers in the application.
+ * It encapsulates common behaviors such as state tracking (loading, loaded, showing), 
+ * retry logic upon failures, and expiration rules to ensure ads remain fresh.
+ */
 public abstract class AdMobAd {
     private final String mAdUnitId;
     private final AdsManager mAdsManager;
@@ -31,7 +36,13 @@ public abstract class AdMobAd {
     private Timer mReloadTimer;
     private long mLastLoadTime;
 
-
+    /**
+     * Constructs a base AdMob ad instance, storing core identity and management context.
+     *
+     * @param adUnitId The string identifier for the ad unit. Must not be null.
+     * @param adsManager The AdsManager coordinating this object. Must not be null.
+     * @param placement The intended placement of this ad in the UI. Must not be null.
+     */
     public AdMobAd(final @NonNull String adUnitId,
                    final @NonNull AdsManager adsManager,
                    final @NonNull AdPlacement placement) {
@@ -40,28 +51,50 @@ public abstract class AdMobAd {
         this.mPlacement = placement;
     }
 
+    /**
+     * Retrieves the host Activity for UI operations and context binding.
+     *
+     * @return The Activity linked to the AdsManager.
+     */
     @NonNull
     public Activity getActivity() {
         return getAdsManager().getActivity();
     }
 
+    /**
+     * Retrieves a standard context derived from the parent Activity.
+     *
+     * @return A Context object suitable for non-UI SDK operations.
+     */
     @NonNull
     public Context getContext() {
         return getActivity();
     }
 
+    /**
+     * Retrieves the AdMob Unit ID associated with this wrapper.
+     *
+     * @return The ad unit ID string.
+     */
     @NonNull
     public String getAdUnitId() {
         return mAdUnitId;
     }
 
+    /**
+     * Retrieves the manager responsible for coordinating ad lifecycles.
+     *
+     * @return The AdsManager reference.
+     */
     @NonNull
     public AdsManager getAdsManager() {
         return mAdsManager;
     }
 
     /**
-     * @return The placement of this specific ad
+     * Gets the intended placement enum for this ad to help with analytics or UI logic.
+     *
+     * @return The AdPlacement enum value.
      * @noinspection unused
      */
     @NonNull
@@ -70,41 +103,79 @@ public abstract class AdMobAd {
     }
 
     /**
+     * Indicates whether the ad is currently making a network request to load content.
+     *
+     * @return True if loading, otherwise false.
      * @noinspection BooleanMethodIsAlwaysInverted
      */
     public boolean isLoading() {
         return mIsLoading;
     }
 
+    /**
+     * Sets the loading state flag for this ad.
+     *
+     * @param isLoading True to mark as loading, false when finished.
+     */
     public void setIsLoading(final boolean isLoading) {
         this.mIsLoading = isLoading;
     }
 
+    /**
+     * Indicates whether the ad has successfully downloaded content and is ready to show.
+     *
+     * @return True if a valid ad is cached, otherwise false.
+     */
     public boolean isLoaded() {
         return mIsLoaded;
     }
 
+    /**
+     * Updates the internal readiness state of this ad.
+     *
+     * @param isLoaded True to mark as ready, false if invalidated or shown.
+     */
     public void setIsLoaded(final boolean isLoaded) {
         this.mIsLoaded = isLoaded;
     }
 
+    /**
+     * Indicates whether this ad is actively rendering on the screen.
+     *
+     * @return True if the user is currently viewing the ad, otherwise false.
+     */
     public boolean isShowing() {
         return mIsShowing;
     }
 
+    /**
+     * Updates the internal visibility state.
+     *
+     * @param isShowing True when presentation begins, false when dismissed.
+     */
     public void setIsShowing(final boolean isShowing) {
         this.mIsShowing = isShowing;
     }
 
-    // Getters
+    /**
+     * Returns the specific enum classification of this ad (e.g., Banner, Rewarded).
+     *
+     * @return The AdType.
+     */
     public abstract AdType getAdType();
 
-    //Info
-
-
-    //Actions
+    /**
+     * Triggers the process of requesting ad content from the network.
+     * Must be implemented by subclasses using appropriate SDK loader classes.
+     */
     public abstract void load();
 
+    /**
+     * Evaluates standard business rules (premium status, network availability, and current state) 
+     * to determine if a network load request is permissible.
+     *
+     * @return True if the load is allowed, false if blocked, or null if context is entirely unavailable.
+     */
     @Nullable
     protected Boolean shouldBeLoaded() {
         // Allow Rewarded ads to load even if premium (so users can extend Magic Pass)
@@ -129,43 +200,95 @@ public abstract class AdMobAd {
         }
     }
 
+    /**
+     * Attempts to render the ad to the user interface.
+     */
     public abstract void show();
 
+    /**
+     * Safety check to ensure the ad is fully loaded, not currently displaying, and holds a valid core object.
+     *
+     * @return True if it is safe to invoke the SDK's show method.
+     */
     protected boolean canShow() {
         return null != getCoreAdObject() && isLoaded() && !isShowing() && !isLoading();
     }
 
+    /**
+     * Determines whether the pre-loaded ad content has expired and should be refreshed.
+     * AdMob generally prefers ads to be shown within a specific timeframe (often 1 hour).
+     *
+     * @return True if the ad was loaded more than 58 minutes ago, otherwise false.
+     */
     public boolean isExpired() {
         final long timeFromLastLoadInMillis = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal() - mLastLoadTime;
         final float timeFromLastLoadInMinutes = TimeManager.getInstance().toMinutesFromMillis(timeFromLastLoadInMillis);
         return timeFromLastLoadInMinutes > 58;
     }
 
+    /**
+     * Checks subclass-specific business logic to verify if the ad is permitted to display.
+     *
+     * @return True if the ad should be presented.
+     */
     public abstract boolean shouldShow();
 
     /**
+     * Hides the ad view, if applicable.
      * @noinspection unused
      */
     public abstract void hide();
 
+    /**
+     * Used to inform the SDK that the parent UI has entered a paused state.
+     */
     public abstract void onPause();
 
+    /**
+     * Used to inform the SDK that the parent UI has resumed foreground activity.
+     */
     public abstract void onResume();
 
+    /**
+     * Retrieves the builder object used to request an ad from Google.
+     *
+     * @return The AdRequest object.
+     */
     public abstract AdRequest getAdRequest();
 
+    /**
+     * Exposes the underlying Google SDK object specific to this ad format.
+     *
+     * @return The core ad instance (e.g., AdView, InterstitialAd).
+     */
     public abstract Object getCoreAdObject();
 
+    /**
+     * Yields a short tag based on the subclass name for clear logging output.
+     *
+     * @return The simple class name string.
+     */
     public String getLogTag() {
         return this.getClass().getSimpleName();
     }
 
+    /**
+     * Centralized logging wrapper to ensure standardized debug output if logging is globally enabled.
+     *
+     * @param message The formatting string to log. Must not be null.
+     * @param params The format arguments.
+     */
     protected void log(final @NonNull String message, final @NonNull Object... params) {
         if (Logger.IS_LOGGING_ENABLED) {
             Logger.log(getLogTag(), message, params);
         }
     }
 
+    /**
+     * Provides a multi-line formatted string dump of the wrapper's current state.
+     *
+     * @return Formatted state data string.
+     */
     @NonNull
     @Override
     public String toString() {
@@ -176,21 +299,30 @@ public abstract class AdMobAd {
                 "IsShowing=" + mIsShowing;
     }
 
+    /**
+     * Invoked when an ad is successfully downloaded. Resets retry trackers and stops retry timers.
+     */
     protected void loaded() {
         if (null != mReloadTimer) {
             mReloadTimer.cancel();
             mLoadRetryAttempts = 0;
         }
-
     }
 
     /**
+     * Updates the internal timestamp of the last successful load to calculate expiration later.
      * @noinspection unused
      */
     private void setLastLoadTime() {
         mLastLoadTime = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
     }
 
+    /**
+     * Parses the name of the mediation adapter handling the current fill.
+     *
+     * @param string The full class path of the adapter.
+     * @return A simplified adapter name, stripping out packages and common suffixes.
+     */
     protected String getLastWord(@Nullable final String string) {
         if (!TextUtils.isEmpty(string)) {
             String[] parts = string.split("\\.");
@@ -199,6 +331,11 @@ public abstract class AdMobAd {
         return "NA";
     }
 
+    /**
+     * Coordinates the exponential backoff retry logic when an ad request fails due to common transient errors.
+     *
+     * @param loadAdError The error descriptor object from AdMob.
+     */
     protected void failedToLoad(final LoadAdError loadAdError) {
         final int loadAdErrorCode = loadAdError.getCode();
         if (AdRequest.ERROR_CODE_NO_FILL == loadAdErrorCode ||
@@ -219,5 +356,8 @@ public abstract class AdMobAd {
         }
     }
 
+    /**
+     * Destroys resources, cancels timers, and cleanly tears down the ad.
+     */
     public abstract void onDestroy();
 }

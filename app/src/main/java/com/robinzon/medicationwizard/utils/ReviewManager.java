@@ -9,6 +9,10 @@ import com.robinzon.medicationwizard.MainActivity;
 
 /**
  * Orchestrates the Google Play In-App Review flow.
+ * <p>
+ * Evaluates user engagement metrics (sessions, doses logged, usage time) to determine
+ * the optimal time to prompt the user for an app review without disrupting their experience.
+ * </p>
  */
 public class ReviewManager {
 
@@ -20,13 +24,14 @@ public class ReviewManager {
     private static final long PROMPT_INTERVAL_MS = 30 * 24 * 60 * 60 * 1000L; // 30 days
 
     /**
-     * Potentially triggers the in-app review flow based on user activity.
-     */
-    /**
      * Checks if the user meets the engagement criteria (sessions, doses, usage time)
      * and triggers the official Google Play In-App Review flow if they do.
+     * <p>
+     * Implements collision avoidance to prevent the review dialog from appearing
+     * at the same time as a full-screen ad. Also enforces a minimum interval between prompts.
+     * </p>
      *
-     * @param activity The currently foregrounded activity.
+     * @param activity The currently foregrounded activity. Must not be null.
      */
     public static void requestReviewIfEligible(Activity activity) {
         if (activity == null) return;

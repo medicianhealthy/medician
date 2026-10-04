@@ -67,7 +67,7 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * Constructor used primarily for cloning or reconstruction from partial data.
+     * Constructs a new medication used primarily for cloning or reconstruction from partial data.
      *
      * @param id The unique identifier for this medication.
      */
@@ -76,9 +76,9 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * Completely removes a medication definition and all associated schedules.
+     * Removes a medication definition and all associated schedules completely.
      *
-     * @param context Application context.
+     * @param context Must not be null. Application context.
      * @param id      The medication ID to delete.
      */
     public static void deleteMedication(final Context context, final String id) {
@@ -112,10 +112,9 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * Synchronously wipes all medication data (Definitions and History).
-     * Preserves user settings and usage statistics.
+     * Wipes all medication data synchronously, preserving user settings and usage statistics.
      *
-     * @param context Application context.
+     * @param context Must not be null. Application context.
      */
     public static void clearAllMedicationsInternal(final Context context) {
         // 1. SharedPreferences: Clear ONLY the medication list
@@ -132,18 +131,19 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * Asynchronously wipes all medication data.
-     * Preserves user settings and usage statistics.
+     * Wipes all medication data asynchronously, preserving user settings and usage statistics.
      *
-     * @param context Application context.
+     * @param context Must not be null. Application context.
      */
     public static void clearAllMedicationsAsync(final Context context) {
         AppDatabase.databaseWriteExecutor.execute(() -> clearAllMedicationsInternal(context));
     }
 
     /**
-     * @param context Application context.
-     * @return True if there is at least one medication definition in the library.
+     * Checks whether there is at least one medication definition in the library.
+     * 
+     * @param context Must not be null. Application context.
+     * @return Returns true if there is at least one medication definition.
      */
     public static boolean hasMedications(Context context) {
         JSONArray array = SharedPreferencesManager.getInstance(context).getJsonArray(PREF_MEDICATION_LIST, null);
@@ -153,8 +153,8 @@ public class Medication implements Comparable<Medication> {
     /**
      * Retrieves all saved medications as domain objects.
      *
-     * @param context Application context.
-     * @return List of medication definitions.
+     * @param context Must not be null. Application context.
+     * @return Returns a list of all saved medication definitions.
      */
     public static ArrayList<Medication> getSavedMedications(final Context context) {
         ArrayList<Medication> result = new ArrayList<>();
@@ -174,8 +174,8 @@ public class Medication implements Comparable<Medication> {
     /**
      * Reconstructs a Medication object from its JSON representation.
      *
-     * @param json The serialized data.
-     * @return A populated Medication object.
+     * @param json Must not be null. The serialized JSON data.
+     * @return Returns a populated Medication object.
      */
     public static Medication fromJson(@NonNull JSONObject json) {
         Medication med = new Medication(json.optString(JsonKeys.ID));
@@ -233,13 +233,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The number of doses scheduled per day.
+     * Retrieves the number of doses scheduled per day.
+     * 
+     * @return Returns the number of doses scheduled per day.
      */
     public int getDailyFrequency() {
         return frequency;
     }
 
     /**
+     * Updates the number of doses scheduled per day.
+     *
      * @param frequency The number of doses scheduled per day.
      */
     public void setDailyFrequency(int frequency) {
@@ -247,7 +251,9 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return True if the minimum required fields (Name, Amount, Frequency, Form) are populated.
+     * Checks if the minimum required fields (Name, Amount, Frequency, Form) are populated.
+     * 
+     * @return Returns true if the medication definition is valid.
      */
     public boolean isValid() {
         return commercialName != null && !commercialName.trim().isEmpty() &&
@@ -266,7 +272,7 @@ public class Medication implements Comparable<Medication> {
      * 4. Triggers {@link ReminderManager} to set Android system alarms for the new doses.
      * </p>
      *
-     * @param context The application context.
+     * @param context Must not be null. The application context.
      */
     public void addToMedicationList(final Context context) {
         final JSONObject json = toJson();
@@ -361,11 +367,11 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * Internal helper to create a specific time-stamped instance of this medication.
+     * Creates a specific time-stamped instance of this medication internally.
      *
      * @param dayOffset Number of days from today.
      * @param time      The specific time of day.
-     * @return A self-contained MedicationInstance.
+     * @return Returns a self-contained MedicationInstance.
      */
     @NonNull
     private MedicationInstance getMedicationInstance(int dayOffset, SimpleDayTime time) {
@@ -386,9 +392,11 @@ public class Medication implements Comparable<Medication> {
 
     /**
      * Updates the daily schedule with a new set of timestamps.
+     * <p>
      * Automatically triggers {@link #sortTimesADay()} to ensure chronological order.
+     * </p>
      *
-     * @param simpleDayTimeSparseArray A map of index-to-time for the doses.
+     * @param simpleDayTimeSparseArray Must not be null. A map of index-to-time for the doses.
      */
     public void addTimeStampsForDay(@NonNull final SparseArray<SimpleDayTime> simpleDayTimeSparseArray) {
         if (simpleDayTimeSparseArray.size() == 0) {
@@ -405,7 +413,7 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * Logical sorter: Sorts the daily dose times chronologically.
+     * Sorts the daily dose times chronologically.
      */
     public void sortTimesADay() {
         if (timesADay == null || timesADay.size() <= 1) return;
@@ -423,13 +431,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The unique identifier of the medication.
+     * Retrieves the unique identifier of the medication.
+     * 
+     * @return Returns the unique identifier.
      */
     public String getId() {
         return id;
     }
 
     /**
+     * Updates the unique identifier of the medication.
+     * 
      * @param id The unique identifier of the medication.
      */
     public void setId(String id) {
@@ -437,13 +449,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The commercial display name.
+     * Retrieves the commercial display name.
+     * 
+     * @return Returns the commercial display name.
      */
     public String getCommercialName() {
         return commercialName;
     }
 
     /**
+     * Updates the commercial display name.
+     * 
      * @param commercialName The commercial display name.
      */
     public void setCommercialName(String commercialName) {
@@ -451,13 +467,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The amount per dose.
+     * Retrieves the amount per dose.
+     * 
+     * @return Returns the amount per dose.
      */
     public float getAmount() {
         return amount;
     }
 
     /**
+     * Updates the amount per dose.
+     * 
      * @param amount The amount per dose.
      */
     public void setAmount(float amount) {
@@ -465,13 +485,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The delivery form (e.g., Pill, Drops).
+     * Retrieves the delivery form.
+     * 
+     * @return Returns the delivery form (e.g., Pill, Drops).
      */
     public EForm getForm() {
         return form;
     }
 
     /**
+     * Updates the delivery form.
+     * 
      * @param form The delivery form (e.g., Pill, Drops).
      */
     public void setForm(EForm form) {
@@ -479,13 +503,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The strength value (e.g., 500).
+     * Retrieves the strength value.
+     * 
+     * @return Returns the strength value (e.g., 500).
      */
     public float getStrength() {
         return strength;
     }
 
     /**
+     * Updates the strength value.
+     * 
      * @param strength The strength value (e.g., 500).
      */
     public void setStrength(float strength) {
@@ -493,13 +521,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The medical condition being treated.
+     * Retrieves the medical condition being treated.
+     * 
+     * @return Returns the medical condition being treated.
      */
     public String getMedicalCondition() {
         return medicalCondition;
     }
 
     /**
+     * Updates the medical condition being treated.
+     * 
      * @param medicalCondition The medical condition being treated.
      */
     public void setMedicalCondition(String medicalCondition) {
@@ -507,13 +539,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The list of daily timestamps.
+     * Retrieves the list of daily timestamps.
+     * 
+     * @return Returns the list of daily timestamps.
      */
     public List<Long> getDailySchedule() {
         return dailySchedule;
     }
 
     /**
+     * Updates the list of daily timestamps.
+     * 
      * @param dailySchedule The list of daily timestamps.
      */
     public void setDailySchedule(List<Long> dailySchedule) {
@@ -521,13 +557,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The measurement unit (e.g., mg, ml).
+     * Retrieves the measurement unit.
+     * 
+     * @return Returns the measurement unit (e.g., mg, ml).
      */
     public EMeasurementUnit getMeasurementUnit() {
         return measurementUnit;
     }
 
     /**
+     * Updates the measurement unit.
+     * 
      * @param measurementUnit The measurement unit (e.g., mg, ml).
      */
     public void setMeasurementUnit(EMeasurementUnit measurementUnit) {
@@ -535,13 +575,17 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return The count of remaining doses in the pack.
+     * Retrieves the count of remaining doses in the pack.
+     * 
+     * @return Returns the count of remaining doses.
      */
     public int getAmountLeft() {
         return amountLeft;
     }
 
     /**
+     * Updates the count of remaining doses in the pack.
+     * 
      * @param amountLeft The count of remaining doses in the pack.
      */
     public void setAmountLeft(int amountLeft) {
@@ -549,78 +593,155 @@ public class Medication implements Comparable<Medication> {
     }
 
     /**
-     * @return Map of daily dose indices to times.
+     * Retrieves the map of daily dose indices to times.
+     * 
+     * @return Returns the sparse array mapping dose index to scheduled time.
      */
     public SparseArray<SimpleDayTime> getTimesADay() {
         return timesADay;
     }
 
     /**
-     * @return Instructions for taking (e.g., Before Food).
+     * Retrieves instructions for taking the medication.
+     * 
+     * @return Returns instructions for taking (e.g., Before Food).
      */
     public EInstructions getInstruction() {
         return instruction;
     }
 
     /**
+     * Updates instructions for taking the medication.
+     * 
      * @param instruction Instructions for taking (e.g., Before Food).
      */
     public void setInstruction(EInstructions instruction) {
         this.instruction = instruction;
     }
 
+    /**
+     * Retrieves the path to the medication's image.
+     *
+     * @return Returns the image path string.
+     */
     public String getImagePath() {
         return imagePath;
     }
 
+    /**
+     * Updates the path to the medication's image.
+     *
+     * @param imagePath The image path string.
+     */
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
+    /**
+     * Retrieves the timestamp when the medication was last taken.
+     *
+     * @return Returns the timestamp as a Long.
+     */
     public Long getLastTakenTimestamp() {
         return lastTakenTimestamp;
     }
 
+    /**
+     * Updates the timestamp when the medication was last taken.
+     *
+     * @param lastTakenTimestamp The timestamp as a Long.
+     */
     public void setLastTakenTimestamp(Long lastTakenTimestamp) {
         this.lastTakenTimestamp = lastTakenTimestamp;
     }
 
+    /**
+     * Checks if this medication is marked as critical.
+     *
+     * @return Returns true if the medication is critical.
+     */
     public boolean isCritical() {
         return isCritical;
     }
 
+    /**
+     * Updates the critical status of the medication.
+     *
+     * @param critical True if the medication is critical.
+     */
     public void setCritical(boolean critical) {
         isCritical = critical;
     }
 
+    /**
+     * Retrieves the current inventory level of the medication.
+     *
+     * @return Returns the current inventory level.
+     */
     public float getInventoryCurrent() {
         return inventoryCurrent;
     }
 
+    /**
+     * Updates the current inventory level of the medication.
+     *
+     * @param inventoryCurrent The current inventory level.
+     */
     public void setInventoryCurrent(float inventoryCurrent) {
         this.inventoryCurrent = inventoryCurrent;
     }
 
+    /**
+     * Retrieves the inventory threshold for alerts.
+     *
+     * @return Returns the inventory threshold.
+     */
     public float getInventoryThreshold() {
         return inventoryThreshold;
     }
 
+    /**
+     * Updates the inventory threshold for alerts.
+     *
+     * @param inventoryThreshold The inventory threshold.
+     */
     public void setInventoryThreshold(float inventoryThreshold) {
         this.inventoryThreshold = inventoryThreshold;
     }
 
+    /**
+     * Retrieves the type of alert triggered for inventory management.
+     *
+     * @return Returns the inventory alert type.
+     */
     public InventoryAlertType getInventoryAlertType() {
         return inventoryAlertType;
     }
 
+    /**
+     * Updates the type of alert triggered for inventory management.
+     *
+     * @param inventoryAlertType The inventory alert type.
+     */
     public void setInventoryAlertType(InventoryAlertType inventoryAlertType) {
         this.inventoryAlertType = inventoryAlertType;
     }
 
+    /**
+     * Checks if the medication is taken on an as-needed basis.
+     *
+     * @return Returns true if the frequency is 0 (as needed).
+     */
     public boolean isAsNeeded() {
         return frequency == 0;
     }
 
+    /**
+     * Compares this medication with another based on their commercial names.
+     *
+     * @param other The other medication to compare to.
+     * @return Returns a negative integer, zero, or a positive integer as this medication's name is less than, equal to, or greater than the specified medication's name.
+     */
     @Override
     public int compareTo(Medication other) {
         if (this.commercialName == null) return -1;
@@ -628,6 +749,11 @@ public class Medication implements Comparable<Medication> {
         return this.commercialName.compareToIgnoreCase(other.commercialName);
     }
 
+    /**
+     * Generates a string representation of the medication.
+     *
+     * @return Returns a formatted string detailing ID, name, amount, and frequency.
+     */
     @NonNull
     @Override
     public String toString() {
@@ -642,7 +768,7 @@ public class Medication implements Comparable<Medication> {
     /**
      * Serializes the medication definition to a JSONObject.
      *
-     * @return The resulting JSONObject.
+     * @return Returns the resulting JSONObject, or null if an exception occurs.
      */
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -678,6 +804,11 @@ public class Medication implements Comparable<Medication> {
         return json;
     }
 
+    /**
+     * Converts the daily dose times array to a JSON array.
+     *
+     * @return Returns a JSONArray containing the formatted times.
+     */
     private JSONArray getTimesADayAsJsonArray() {
         JSONArray array = new JSONArray();
         if (timesADay != null) {
@@ -688,6 +819,11 @@ public class Medication implements Comparable<Medication> {
         return array;
     }
 
+    /**
+     * Converts the daily schedule of timestamps into a JSON array.
+     *
+     * @return Returns a JSONArray containing the epoch millisecond timestamps.
+     */
     private JSONArray getDailyScheduleAsJsonArray() {
         JSONArray array = new JSONArray();
         if (dailySchedule != null) {

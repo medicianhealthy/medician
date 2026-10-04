@@ -34,6 +34,10 @@ import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for displaying the app's onboarding flow and terms of service.
+ * Handles swipeable educational pages, magic-themed animations, and terms agreement.
+ */
 public class OnboardingActivity extends AppCompatActivity {
 
     public static final String KEY_HAS_SEEN_ONBOARDING = "has_seen_onboarding";
@@ -41,6 +45,12 @@ public class OnboardingActivity extends AppCompatActivity {
     private ActivityOnboardingBinding binding;
     private int pageBeforeSkip = -1;
 
+    /**
+     * Initializes the activity, sets up the window insets, configures onboarding pages, and binds UI elements.
+     * 
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down
+     *                           then this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +153,10 @@ public class OnboardingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Triggers a shaking animation on the terms container.
+     * Used to draw user attention when attempting to proceed without agreeing to terms.
+     */
     private void shakeTermsContainer() {
         ObjectAnimator shake = ObjectAnimator.ofFloat(binding.containerTerms, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0);
         shake.setDuration(500);
@@ -152,6 +166,10 @@ public class OnboardingActivity extends AppCompatActivity {
         binding.containerTerms.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS);
     }
 
+    /**
+     * Sets up the terms and privacy policy text with clickable links.
+     * Binds the click listeners for toggling the checkbox.
+     */
     private void setupTerms() {
         String termsUrl = getString(R.string.url_terms).trim();
         String privacyUrl = getString(R.string.url_privacy).trim();
@@ -184,6 +202,11 @@ public class OnboardingActivity extends AppCompatActivity {
         binding.txtTerms.setOnClickListener(toggleListener);
     }
 
+    /**
+     * Opens an internal web viewer for the given URL (e.g., terms or privacy policy).
+     *
+     * @param url The target URL to open.
+     */
     private void openInternalUrl(String url) {
         Intent intent = new Intent(this, WebViewerActivity.class);
         intent.putExtra(WebViewerActivity.EXTRA_URL, url);
@@ -221,6 +244,12 @@ public class OnboardingActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates the visual indicator dots and handles UI transitions based on the current page.
+     *
+     * @param position   The index of the currently visible page.
+     * @param totalPages The total number of onboarding pages.
+     */
     private void updateUiForPage(int position, int totalPages) {
         updateDots(position);
         boolean isLastPage = position == totalPages - 1;
@@ -231,6 +260,10 @@ public class OnboardingActivity extends AppCompatActivity {
         binding.btnSkip.setVisibility(isLastPage ? View.GONE : View.VISIBLE);
     }
 
+    /**
+     * Finishes the onboarding flow, saves the completion state to shared preferences,
+     * and transitions to the main activity.
+     */
     private void finishOnboarding() {
         SharedPreferencesManager.getInstance(this).setBoolean(KEY_HAS_SEEN_ONBOARDING, true);
         Intent intent = new Intent(this, MainActivity.class);

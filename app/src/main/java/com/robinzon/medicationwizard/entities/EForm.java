@@ -42,14 +42,30 @@ public enum EForm {
 
     private final int labelResId;
 
+    /**
+     * Constructs a new medication form with its corresponding localized label resource ID.
+     *
+     * @param labelResId The string resource ID for the form's localized name.
+     */
     EForm(int labelResId) {
         this.labelResId = labelResId;
     }
 
+    /**
+     * Retrieves the resource ID of the localized label.
+     *
+     * @return Returns the integer resource ID of the form's label.
+     */
     public int getLabelResId() {
         return labelResId;
     }
 
+    /**
+     * Retrieves the localized, human-readable label for the medication form.
+     *
+     * @param context Must not be null. The application context used to resolve the string resource.
+     * @return Returns the localized string label for the form.
+     */
     public String getLabel(android.content.Context context) {
         return context.getString(labelResId);
     }

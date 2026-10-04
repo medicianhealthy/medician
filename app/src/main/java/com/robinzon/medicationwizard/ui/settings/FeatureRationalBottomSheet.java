@@ -40,6 +40,12 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
     private AppConfig.FeaturePassType featureType;
     private SharedPreferences.OnSharedPreferenceChangeListener balanceListener;
 
+    /**
+     * Creates a new instance of the FeatureRationalBottomSheet with the specified feature type.
+     *
+     * @param type The type of feature to prompt the user about.
+     * @return A new instance of FeatureRationalBottomSheet.
+     */
     public static FeatureRationalBottomSheet newInstance(AppConfig.FeaturePassType type) {
         FeatureRationalBottomSheet fragment = new FeatureRationalBottomSheet();
         Bundle args = new Bundle();
@@ -48,6 +54,11 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         return fragment;
     }
 
+    /**
+     * Initializes the bottom sheet and retrieves the feature type argument.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +88,13 @@ public class FeatureRationalBottomSheet extends MedicationWizardBottomSheet {
         return inflater.inflate(R.layout.bottom_sheet_feature_rational, container, false);
     }
 
+    /**
+     * Sets up the content of the bottom sheet based on the feature type and handles click listeners.
+     * Contains business logic to handle rewarded videos and magic passes.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

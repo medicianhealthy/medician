@@ -97,16 +97,18 @@ public class DoseInstanceEntity {
     private boolean isCritical;
 
     /**
-     * Empty constructor required by Room.
+     * Initializes a new, empty dose instance entity.
+     * Required by Room for instantiation.
      */
     public DoseInstanceEntity() {
     }
 
     /**
-     * Factory method to convert a domain-level {@link MedicationInstance} into a database-ready entity.
+     * Converts a domain-level {@link MedicationInstance} into a database-ready entity.
+     * This factory method maps the domain object properties to database columns for persistence.
      *
-     * @param instance The instance object containing domain logic and data.
-     * @return A populated entity object for storage.
+     * @param instance The instance object containing domain logic and data. Must not be null.
+     * @return Returns a populated {@link DoseInstanceEntity} ready for database insertion.
      */
     public static DoseInstanceEntity fromInstance(MedicationInstance instance) {
         DoseInstanceEntity entity = new DoseInstanceEntity();
@@ -126,7 +128,11 @@ public class DoseInstanceEntity {
     }
 
     /**
-     * Creates a DoseInstanceEntity from a JSONObject.
+     * Deserializes a {@link DoseInstanceEntity} from a JSON representation.
+     * Useful for restoring backups or processing network responses.
+     *
+     * @param json The JSONObject containing the entity's data.
+     * @return Returns a new {@link DoseInstanceEntity}, or null if the input JSON is null.
      */
     public static DoseInstanceEntity fromJson(JSONObject json) {
         if (json == null) return null;
@@ -147,128 +153,281 @@ public class DoseInstanceEntity {
         return entity;
     }
 
+    /**
+     * Retrieves the primary key ID.
+     *
+     * @return Returns the integer ID of the entity.
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets the primary key ID.
+     *
+     * @param id The new integer ID to assign to the entity.
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Retrieves the parent medication's unique ID.
+     *
+     * @return Returns the medication ID string.
+     */
     public String getMedicationId() {
         return medicationId;
     }
 
+    /**
+     * Sets the parent medication's unique ID.
+     *
+     * @param medicationId The medication ID string.
+     */
     public void setMedicationId(String medicationId) {
         this.medicationId = medicationId;
     }
 
+    /**
+     * Retrieves the medication's name.
+     *
+     * @return Returns the medication name.
+     */
     public String getMedicationName() {
         return medicationName;
     }
 
+    /**
+     * Sets the medication's name.
+     *
+     * @param medicationName The new medication name.
+     */
     public void setMedicationName(String medicationName) {
         this.medicationName = medicationName;
     }
 
+    /**
+     * Retrieves the dose amount.
+     *
+     * @return Returns the dose amount.
+     */
     public float getAmount() {
         return amount;
     }
 
+    /**
+     * Sets the dose amount.
+     *
+     * @param amount The new dose amount.
+     */
     public void setAmount(float amount) {
         this.amount = amount;
     }
 
+    /**
+     * Retrieves the strength of the medication.
+     *
+     * @return Returns the strength value.
+     */
     public float getStrength() {
         return strength;
     }
 
+    /**
+     * Sets the strength of the medication.
+     *
+     * @param strength The new strength value.
+     */
     public void setStrength(float strength) {
         this.strength = strength;
     }
 
+    /**
+     * Retrieves the measurement unit.
+     *
+     * @return Returns the unit (e.g., "mg").
+     */
     public String getUnit() {
         return unit;
     }
 
+    /**
+     * Sets the measurement unit.
+     *
+     * @param unit The measurement unit.
+     */
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
+    /**
+     * Retrieves the physical form of the medication.
+     *
+     * @return Returns the form (e.g., "Pill").
+     */
     public String getForm() {
         return form;
     }
 
+    /**
+     * Sets the physical form of the medication.
+     *
+     * @param form The physical form.
+     */
     public void setForm(String form) {
         this.form = form;
     }
 
+    /**
+     * Retrieves the planned execution time.
+     *
+     * @return Returns the scheduled time in epoch milliseconds.
+     */
     public long getScheduledTime() {
         return scheduledTime;
     }
 
+    /**
+     * Sets the planned execution time.
+     *
+     * @param scheduledTime The scheduled time in epoch milliseconds.
+     */
     public void setScheduledTime(long scheduledTime) {
         this.scheduledTime = scheduledTime;
     }
 
+    /**
+     * Retrieves the time the user acted on this dose.
+     *
+     * @return Returns the action time in epoch milliseconds.
+     */
     public long getActionTime() {
         return actionTime;
     }
 
+    /**
+     * Sets the time the user acted on this dose.
+     *
+     * @param actionTime The action time in epoch milliseconds.
+     */
     public void setActionTime(long actionTime) {
         this.actionTime = actionTime;
     }
 
+    /**
+     * Retrieves the current status.
+     *
+     * @return Returns the status string (e.g., "TAKEN").
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Sets the current status.
+     *
+     * @param status The status string.
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * Retrieves the casual instructions for this dose.
+     *
+     * @return Returns the instruction string.
+     */
     public String getInstruction() {
         return instruction;
     }
 
+    /**
+     * Sets the casual instructions for this dose.
+     *
+     * @param instruction The instruction string.
+     */
     public void setInstruction(String instruction) {
         this.instruction = instruction;
     }
 
+    /**
+     * Retrieves the number of times this dose was snoozed.
+     *
+     * @return Returns the snooze count.
+     */
     public int getSnoozeCount() {
         return snoozeCount;
     }
 
+    /**
+     * Sets the number of times this dose was snoozed.
+     *
+     * @param snoozeCount The new snooze count.
+     */
     public void setSnoozeCount(int snoozeCount) {
         this.snoozeCount = snoozeCount;
     }
 
+    /**
+     * Retrieves the file path to the medication's image.
+     *
+     * @return Returns the absolute image path.
+     */
     public String getImagePath() {
         return imagePath;
     }
 
+    /**
+     * Sets the file path to the medication's image.
+     *
+     * @param imagePath The absolute image path.
+     */
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
+    /**
+     * Checks if this is an "As Needed" (PRN) dose.
+     *
+     * @return Returns true if PRN, false otherwise.
+     */
     public boolean isPrn() {
         return isPrn;
     }
 
+    /**
+     * Sets whether this is an "As Needed" (PRN) dose.
+     *
+     * @param prn True if PRN, false otherwise.
+     */
     public void setPrn(boolean prn) {
         isPrn = prn;
     }
 
+    /**
+     * Checks if this dose is marked as critical.
+     *
+     * @return Returns true if critical, false otherwise.
+     */
     public boolean isCritical() {
         return isCritical;
     }
 
+    /**
+     * Sets whether this dose is marked as critical.
+     *
+     * @param critical True if critical, false otherwise.
+     */
     public void setCritical(boolean critical) {
         isCritical = critical;
     }
 
     /**
-     * Serializes this entity into a JSONObject for backup purposes.
+     * Serializes this entity into a JSONObject.
+     * This is primarily used for creating backup files.
+     *
+     * @return Returns a populated {@link JSONObject}, or null if an error occurs during serialization.
      */
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

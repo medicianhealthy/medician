@@ -39,6 +39,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Adapter for the master medication library list.
+ * Manages the display of individual medication cards, including expanding/collapsing details,
+ * inventory tracking warnings, and stopwatch timers since the last dose.
  */
 public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -60,15 +62,30 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
+    /**
+     * Constructs the adapter and starts the background stopwatch timer.
+     *
+     * @param fragmentManager The FragmentManager used for displaying locked feature dialogs (like photo pass).
+     */
     public MedicationsListAdapter(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         stopwatchHandler.postDelayed(stopwatchRunnable, 60000);
     }
 
+    /**
+     * Sets the callback listener for user interactions with medication items.
+     *
+     * @param listener The listener implementation to handle edit, delete, and add events.
+     */
     public void setOnMedicationActionListener(OnMedicationActionListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Replaces the current dataset with a new list of medications and refreshes the view.
+     *
+     * @param medications The new list of medications to display.
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void setMedications(List<Medication> medications) {
         this.medications.clear();
@@ -76,6 +93,11 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
+    /**
+     * Removes an item from the adapter at the specified position and animates the removal.
+     *
+     * @param position The index of the item to remove.
+     */
     public void removeItem(int position) {
         if (position >= 0 && position < medications.size()) {
             medications.remove(position);
@@ -113,6 +135,10 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    /**
+     * Expands all medication cards to show their full details.
+     */
+    @SuppressLint("NotifyDataSetChanged")
     public void expandAll() {
         for (Medication med : medications) {
             expandedIds.add(med.getId());
@@ -120,6 +146,10 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
+    /**
+     * Collapses all medication cards to their compact state.
+     */
+    @SuppressLint("NotifyDataSetChanged")
     public void collapseAll() {
         expandedIds.clear();
         notifyDataSetChanged();
@@ -130,12 +160,34 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return medications.size() + 1; // +1 for the Add New Med footer
     }
 
+    /**
+     * Interface definition for a callback to be invoked when a medication item is interacted with.
+     */
     public interface OnMedicationActionListener {
+        /**
+         * Triggered when the user attempts to delete a medication.
+         *
+         * @param medication The medication targeted for deletion.
+         * @param position   The current position of the medication in the list.
+         */
         void onDelete(Medication medication, int position);
+
+        /**
+         * Triggered when the user wants to edit a medication's details.
+         *
+         * @param medication The medication to edit.
+         */
         void onEdit(Medication medication);
+
+        /**
+         * Triggered when the user clicks the "Add New" footer item.
+         */
         void onAddNew();
     }
 
+    /**
+     * ViewHolder for displaying an individual medication card.
+     */
     class MedicationViewHolder extends RecyclerView.ViewHolder {
         private final ItemMedicationListBinding binding;
 
@@ -144,6 +196,13 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             this.binding = binding;
         }
 
+        /**
+         * Binds the medication data to the view elements and handles logic for expanded states,
+         * stopwatch formatting, inventory warnings, and photo locking.
+         *
+         * @param medication The medication data object.
+         * @param isExpanded True if the card should show extended details; false for compact view.
+         */
         public void bind(Medication medication, boolean isExpanded) {
             BidiFormatter bidi = BidiFormatter.getInstance();
             binding.medName.setText(bidi.unicodeWrap(medication.getCommercialName()));
@@ -351,6 +410,9 @@ public class MedicationsListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    /**
+     * ViewHolder for the static "Add New" button at the end of the list.
+     */
     static class AddNewViewHolder extends RecyclerView.ViewHolder {
         AddNewViewHolder(View v) {
             super(v);

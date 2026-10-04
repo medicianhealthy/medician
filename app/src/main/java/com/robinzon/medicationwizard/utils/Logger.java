@@ -33,8 +33,8 @@ public class Logger {
     /**
      * Prints an INFO level log if logging is enabled.
      *
-     * @param tag     The category of the log.
-     * @param message The message (supports format placeholders).
+     * @param tag     The category of the log. Must not be null.
+     * @param message The message (supports format placeholders). Must not be null.
      * @param params  Values to fill the placeholders in the message.
      */
     public static void log(@NonNull final String tag,

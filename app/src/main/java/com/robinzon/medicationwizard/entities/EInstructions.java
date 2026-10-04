@@ -37,12 +37,20 @@ public enum EInstructions {
 
     private final int mLabelResId;
 
+    /**
+     * Constructs a new instruction with its corresponding localized label.
+     *
+     * @param labelResId The string resource ID for the instruction's localized description.
+     */
     EInstructions(int labelResId) {
         this.mLabelResId = labelResId;
     }
 
     /**
-     * @return The localized, human-readable description of the instruction.
+     * Retrieves the localized, human-readable description of the instruction.
+     *
+     * @param context Must not be null. The application context used to resolve the string resource.
+     * @return Returns the localized, human-readable description of the instruction.
      */
     public String getDescription(Context context) {
         return context.getString(mLabelResId);

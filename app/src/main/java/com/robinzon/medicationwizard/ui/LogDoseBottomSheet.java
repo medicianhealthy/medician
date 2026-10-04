@@ -25,18 +25,36 @@ import com.robinzon.medicationwizard.entities.Medication;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Bottom sheet fragment that allows the user to log a dose for an existing medication or start the process to add a new one.
+ * It provides search functionality and allows taking a dose immediately or at a specific time in the past.
+ */
 public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
 
     private final List<Medication> allMeds = new ArrayList<>();
     private final List<Medication> filteredMeds = new ArrayList<>();
     private MedAdapter adapter;
 
+    /**
+     * Inflates the layout for the log dose bottom sheet.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The root view of the inflated layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_log_dose, container, false);
     }
 
+    /**
+     * Initializes the view components, loads medications, sets up the RecyclerView, and adds search filtering.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -88,6 +106,12 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
         });
     }
 
+    /**
+     * Filters the medication list based on the provided search query.
+     * Updates the adapter to show only medications whose commercial names contain the search string.
+     *
+     * @param query The search string entered by the user. Must not be null.
+     */
     private void filter(String query) {
         filteredMeds.clear();
         if (query.isEmpty()) {
@@ -103,12 +127,23 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Reloads the medication list from storage and resets the search filter.
+     * Useful when returning from the add medication flow.
+     */
     private void refreshMedsList() {
         allMeds.clear();
         allMeds.addAll(Medication.getSavedMedications(requireContext()));
         filter(""); // Reset search and refresh adapter
     }
 
+    /**
+     * Logs a completed dose into the database and updates the medication's last taken timestamp.
+     * Uses a background executor to perform database writes off the main thread.
+     *
+     * @param medication The medication being logged. Must not be null.
+     * @param timestamp  The time the dose was taken, in milliseconds since the epoch.
+     */
     private void logDose(Medication medication, long timestamp) {
         final android.content.Context appContext = requireContext().getApplicationContext();
         DoseInstanceEntity entity = new DoseInstanceEntity();
@@ -133,6 +168,12 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
         });
     }
 
+    /**
+     * Displays a time picker dialog allowing the user to select a specific time for logging a dose.
+     * Often used for logging "PRN" (as needed) doses taken in the past.
+     *
+     * @param medication The medication for which to log the selected time. Must not be null.
+     */
     private void showTimePicker(Medication medication) {
         java.util.Calendar now = java.util.Calendar.getInstance();
         MaterialTimePicker picker = new MaterialTimePicker.Builder()
@@ -159,6 +200,10 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
         picker.show(getChildFragmentManager(), "LogDoseTimePicker");
     }
 
+    /**
+     * Adapter for displaying the list of available medications to log.
+     * Appends an "Add New" button as the final list item.
+     */
     private static class MedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private static final int TYPE_MED = 0;
         private static final int TYPE_ADD_NEW = 1;
@@ -166,6 +211,12 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
         private final List<Medication> meds;
         private final OnActionClickListener listener;
 
+        /**
+         * Initializes the adapter with the list of medications and click listener.
+         *
+         * @param meds     The list of medications to display. Must not be null.
+         * @param listener The callback for handling user interactions with items. Must not be null.
+         */
         MedAdapter(List<Medication> meds, OnActionClickListener listener) {
             this.meds = meds;
             this.listener = listener;
@@ -229,6 +280,9 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
             return meds.size() + 1; // Always show Add New at the end
         }
 
+        /**
+         * ViewHolder for an individual medication item in the list.
+         */
         static class MedVH extends RecyclerView.ViewHolder {
             final TextView name, details;
             final ImageView icon;
@@ -243,15 +297,36 @@ public class LogDoseBottomSheet extends MedicationWizardBottomSheet {
             }
         }
 
+        /**
+         * ViewHolder for the "Add New" button item.
+         */
         static class AddNewVH extends RecyclerView.ViewHolder {
             AddNewVH(View v) {
                 super(v);
             }
         }
 
+        /**
+         * Interface for responding to user interactions within the medication list.
+         */
         interface OnActionClickListener {
+            /**
+             * Triggered when the user chooses to log a dose at the current time.
+             *
+             * @param med The medication to log.
+             */
             void onTakeNow(Medication med);
+            
+            /**
+             * Triggered when the user chooses to log a dose at a specific custom time.
+             *
+             * @param med The medication to log.
+             */
             void onPickTime(Medication med);
+            
+            /**
+             * Triggered when the user chooses to add a completely new medication to the app.
+             */
             void onAddNewClicked();
         }
     }

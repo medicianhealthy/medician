@@ -26,6 +26,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * A bottom sheet designed for development and testing purposes.
+ * Exposes internal configuration details and allows overriding certain features
+ * like premium status, ads visibility, and system time.
+ */
 public class CheatsBottomSheet extends MedicationWizardBottomSheet {
 
     private final android.os.Handler updateHandler = new android.os.Handler(android.os.Looper.getMainLooper());
@@ -88,6 +93,10 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         });
     }
 
+    /**
+     * Displays a date and time picker to set a fake time for testing time-dependent logic.
+     * Updates shared preferences with the calculated offset between the real time and the selected fake time.
+     */
     private void showDateTimePicker() {
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
                 .setTitleText(R.string.cheats_set_fake_time)
@@ -129,6 +138,10 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         datePicker.show(getChildFragmentManager(), "DATE_PICKER");
     }
 
+    /**
+     * Updates the user interface based on whether a fake time is currently active.
+     * Shows or hides the "Clear Fake Time" button.
+     */
     private void updateTimeUi() {
         // Refresh the clear button visibility
         long fakeTime = SharedPreferencesManager.getInstance(requireContext()).getLong(TimeManager.KEY_CHEAT_FAKE_TIME_START, 0);
@@ -137,6 +150,10 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
+    /**
+     * Hard restarts the application to apply configuration changes such as premium status or ads visibility.
+     * Triggers a finish and start cycle of the hosting activity.
+     */
     private void restartApp() {
         android.content.Intent intent = requireActivity().getIntent();
         requireActivity().finish();
@@ -152,6 +169,12 @@ public class CheatsBottomSheet extends MedicationWizardBottomSheet {
         updateHandler.removeCallbacks(updateRunnable);
     }
 
+    /**
+     * Formats and sets live debug statistics and remote configuration values into the provided text view.
+     * This data is continuously updated to reflect the real-time state of the app's internal limits.
+     *
+     * @param textView The TextView where the configuration dump will be rendered.
+     */
     private void setupConfigInfo(TextView textView) {
         RemoteConfigManager remoteConfigManager = RemoteConfigManager.getInstance();
         StringBuilder builder = new StringBuilder();

@@ -19,6 +19,13 @@ import com.robinzon.medicationwizard.R;
  */
 public class MedicationWizardBottomSheet extends BottomSheetDialogFragment {
 
+    /**
+     * Initializes the view and attempts to attach the ad banner to the bottom sheet's container.
+     * Checks if ads should be displayed based on premium status before attaching.
+     *
+     * @param view               The View returned by {@link #onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -37,6 +44,11 @@ public class MedicationWizardBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
+    /**
+     * Restores the ad banner to the main activity's default container when the bottom sheet is dismissed.
+     *
+     * @param dialog The dialog that was dismissed.
+     */
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);

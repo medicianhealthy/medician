@@ -105,6 +105,14 @@ public class SettingsFragment extends MedicationWizardFragment {
 
     private final ReminderAlertManager.OnAlarmStateChangedListener alarmListener = this::updatePlayButtonIcon;
 
+    /**
+     * Creates and inflates the settings view hierarchy.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -113,6 +121,12 @@ public class SettingsFragment extends MedicationWizardFragment {
         return binding.getRoot();
     }
 
+    /**
+     * Sets up UI logic, applies padding, initializes feature entitlments, and configures cloud backups.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -144,6 +158,9 @@ public class SettingsFragment extends MedicationWizardFragment {
         SharedPreferencesManager.getInstance(requireContext()).registerListener(magicBalanceListener);
     }
 
+    /**
+     * Updates the UI to reflect the current magic balance.
+     */
     private void updateMagicDisplay() {
         if (binding == null) return;
         int balance = MagicManager.getInstance(requireContext()).getMagicBalance();
@@ -474,6 +491,11 @@ public class SettingsFragment extends MedicationWizardFragment {
         }
     }
 
+    /**
+     * Shows a rationale bottom sheet prompting the user to unlock a specific premium feature.
+     *
+     * @param type The type of feature required.
+     */
     private void showRational(AppConfig.FeaturePassType type) {
         FeatureRationalBottomSheet.newInstance(type).show(getChildFragmentManager(), "FeatureRational");
         getChildFragmentManager().setFragmentResultListener("feature_unlocked", getViewLifecycleOwner(), (key, bundle) -> {

@@ -19,14 +19,14 @@ import com.robinzon.medicationwizard.utils.Logger;
 public class ConsentManager {
 
     /**
-     * Gathers consent information and shows the consent form if required.
+     * Gathers consent information and presents the consent form if required by the user's region.
      * <p>
-     * Performance: Checks for existing consent information first and only requests
-     * a form if strictly necessary for the current region/status.
+     * Performance: Checks for existing consent information first and only requests a form if strictly necessary
+     * for the current region/status to avoid unnecessary network latency.
      * </p>
      *
-     * @param activity The activity context.
-     * @param listener The listener to notify upon completion.
+     * @param activity The activity context used for UI operations.
+     * @param listener The callback listener to notify upon completion of the consent flow.
      */
     public static void gatherConsent(Activity activity, OnConsentFinishedListener listener) {
         ConsentRequestParameters.Builder paramsBuilder = new ConsentRequestParameters.Builder()
@@ -67,7 +67,10 @@ public class ConsentManager {
     }
 
     /**
-     * Loads and presents the official Google consent form.
+     * Loads and presents the official Google UMP consent form to the user.
+     *
+     * @param activity The activity context used to display the form.
+     * @param listener The callback listener to notify when the form flow is finished.
      */
     private static void loadAndShowForm(Activity activity, OnConsentFinishedListener listener) {
         Logger.log("ConsentManager", "Loading and showing form...");

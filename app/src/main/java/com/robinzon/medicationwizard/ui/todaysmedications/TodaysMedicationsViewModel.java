@@ -45,6 +45,8 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
 
     /**
      * Initializes the ViewModel and sets up the reactive query chain.
+     *
+     * @param application The Android application context.
      */
     public TodaysMedicationsViewModel(@NonNull Application application) {
         super(application);
@@ -103,6 +105,8 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
     }
 
     /**
+     * Retrieves the observable list of medication instances for today.
+     *
      * @return Observable list of medication instances for today, respecting the current sort order.
      */
     public LiveData<List<DoseInstanceEntity>> getTodaysMedications() {
@@ -110,6 +114,8 @@ public class TodaysMedicationsViewModel extends AndroidViewModel {
     }
 
     /**
+     * Retrieves the current sort order used for displaying medications.
+     *
      * @return The current sort order.
      */
     public SortOrder getSortOrder() {

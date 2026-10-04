@@ -16,7 +16,16 @@ import java.util.Calendar;
 public class StreakManager {
 
     /**
-     * Calculates the current streak by checking historical data in the database.
+     * Calculates the current health streak by chronologically examining historical doses in the database.
+     * <p>
+     * Iterates backwards from today up to a maximum of one year to ensure performant execution.
+     * It checks whether all scheduled doses for a day were marked as completed. A day completely devoid
+     * of scheduled medications does not break the streak. The process evaluates the streak status
+     * asynchronously.
+     * </p>
+     *
+     * @param context  The application context to access the database. Must not be null.
+     * @param callback The callback invoked with the final streak count. Must not be null.
      */
     public static void calculateCurrentStreak(Context context, StreakCallback callback) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -72,11 +81,24 @@ public class StreakManager {
         });
     }
 
+    /**
+     * Determines whether two Calendar instances represent the exact same calendar day.
+     *
+     * @param cal1 The first calendar to compare.
+     * @param cal2 The second calendar to compare.
+     * @return True if both calendars fall on the same day of the same year, false otherwise.
+     */
     private static boolean isSameDay(Calendar cal1, Calendar cal2) {
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
     }
 
+    /**
+     * Computes the timestamp for the very beginning of a specified calendar day.
+     *
+     * @param cal The source calendar day.
+     * @return The epoch time in milliseconds corresponding to 00:00:00.000 of the given day.
+     */
     private static long getStartOfDay(Calendar cal) {
         Calendar temp = (Calendar) cal.clone();
         temp.set(Calendar.HOUR_OF_DAY, 0);
@@ -86,6 +108,12 @@ public class StreakManager {
         return temp.getTimeInMillis();
     }
 
+    /**
+     * Computes the timestamp for the very end of a specified calendar day.
+     *
+     * @param cal The source calendar day.
+     * @return The epoch time in milliseconds corresponding to 23:59:59.999 of the given day.
+     */
     private static long getEndOfDay(Calendar cal) {
         Calendar temp = (Calendar) cal.clone();
         temp.set(Calendar.HOUR_OF_DAY, 23);
@@ -95,7 +123,15 @@ public class StreakManager {
         return temp.getTimeInMillis();
     }
 
+    /**
+     * Interface definition for a callback invoked upon completion of streak calculations.
+     */
     public interface StreakCallback {
+        /**
+         * Called when the current streak count has been fully calculated.
+         *
+         * @param streakCount The number of consecutive days of full adherence.
+         */
         void onStreakCalculated(int streakCount);
     }
 }

@@ -17,18 +17,38 @@ import com.robinzon.medicationwizard.utils.NetworkUtils;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Manages the loading and display of App Open ads.
+ * App Open ads are displayed when the user brings the app to the foreground, providing an immediate monetization opportunity.
+ */
 public class AdMobAppOpen extends AdMobAd {
     private AppOpenAd mAppOpenAd;
 
+    /**
+     * Constructs a new App Open ad instance.
+     *
+     * @param adUnitId The unique identifier for this ad unit. Must not be null.
+     * @param adsManager The central manager coordinating this ad's lifecycle. Must not be null.
+     * @param placement The UI context where this ad is intended to appear. Must not be null.
+     */
     public AdMobAppOpen(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
     }
 
+    /**
+     * Retrieves the specific type of this ad unit.
+     *
+     * @return Always returns AdType.AppOpen.
+     */
     @Override
     public AdType getAdType() {
         return AdType.AppOpen;
     }
 
+    /**
+     * Requests an ad payload from the AdMob servers if the network is available and business rules permit.
+     * Handles async loading callbacks to update the AdsManager on success or failure.
+     */
     @Override
     public void load() {
         log("%s Requesting load.\n%s", getLogTag(), thisToString());
@@ -72,6 +92,10 @@ public class AdMobAppOpen extends AdMobAd {
         }
     }
 
+    /**
+     * Renders the App Open ad to the user in a full-screen view if it is ready and permitted by display rules.
+     * Assigns callbacks to handle user interactions and cleanup when the ad is closed.
+     */
     @Override
     public void show() {
         if (shouldShow() && canShow()) {
@@ -136,16 +160,31 @@ public class AdMobAppOpen extends AdMobAd {
         }
     }
 
+    /**
+     * Indicates whether the currently cached ad has passed its expiration window.
+     *
+     * @return False as App Open Ads manage their own implicit expiration logic in most configurations, or if expiration logic isn't yet enforced.
+     */
     @Override
     public boolean isExpired() {
         return false;
     }
 
+    /**
+     * Helper string to log detailed state for debugging.
+     *
+     * @return A formatted string detailing the current state of this ad wrapper.
+     */
     @NonNull
     private String thisToString() {
         return AdMobAppOpen.this.toString();
     }
 
+    /**
+     * Determines if the ad is permitted to be shown right now, incorporating premium restrictions and cooldowns.
+     *
+     * @return True if the ad should be shown; false if it must be blocked.
+     */
     @Override
     public boolean shouldShow() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(getActivity())
@@ -155,31 +194,53 @@ public class AdMobAppOpen extends AdMobAd {
         return getAdsManager().hasCoolDownForFullScreenNonUserInitiatedAd();
     }
 
+    /**
+     * Hides the ad, if applicable. (Not typically used for App Open ads).
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     * Called when the parent activity is paused. (No action needed for App Open ads).
+     */
     @Override
     public void onPause() {
 
     }
 
+    /**
+     * Called when the parent activity is resumed. (No action needed for App Open ads).
+     */
     @Override
     public void onResume() {
 
     }
 
+    /**
+     * Builds and returns a fresh AdRequest payload.
+     *
+     * @return A constructed AdRequest for network fetching.
+     */
     @Override
     public AdRequest getAdRequest() {
         return new AdRequest.Builder().build();
     }
 
+    /**
+     * Retrieves the underlying SDK-specific ad object.
+     *
+     * @return The raw AppOpenAd instance.
+     */
     @Override
     public Object getCoreAdObject() {
         return mAppOpenAd;
     }
 
+    /**
+     * Cleans up resources when the ad instance is destroyed.
+     */
     @Override
     public void onDestroy() {
 

@@ -153,6 +153,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
             }
     );
 
+    /**
+     * Creates a new instance of the bottom sheet, optionally configured to edit an existing medication.
+     *
+     * @param medication The medication to edit, or null to create a new medication.
+     * @return A new AddMedicationBottomSheet instance.
+     */
     public static AddMedicationBottomSheet newInstance(@Nullable Medication medication) {
         AddMedicationBottomSheet fragment = new AddMedicationBottomSheet();
         if (medication != null) {
@@ -304,12 +310,22 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         });
     }
 
+    /**
+     * Evaluates and updates the UI for the inventory tracking feature based on the user's premium entitlements.
+     * Shows or hides the feature lock icon accordingly.
+     */
     private void updateInventoryEntitlement() {
         boolean unlocked = AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.INVENTORY);
         if (imgInventoryLock != null) imgInventoryLock.setVisibility(unlocked ? View.GONE : View.VISIBLE);
         updateInventorySummary();
     }
 
+    /**
+     * Checks if the inventory feature is unlocked before executing the provided action.
+     * If locked, presents the feature rationale bottom sheet to the user.
+     *
+     * @param action The runnable to execute if the feature is unlocked.
+     */
     private void checkInventoryUnlockAndAct(Runnable action) {
         if (AppConfig.isFeatureUnlocked(requireContext(), AppConfig.FeaturePassType.INVENTORY)) {
             action.run();
@@ -493,6 +509,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
+    /**
+     * Processes a selected image URI (from camera or gallery) and attaches it to the medication object.
+     * Triggers UI updates to show the new preview.
+     *
+     * @param uri The URI of the selected image.
+     */
     private void processAndSetImage(Uri uri) {
         String savedPath = saveImageLocally(uri);
         if (savedPath != null) {
@@ -560,6 +582,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
         constraintSet.applyTo(photoContainer);
     }
 
+    /**
+     * Rotates the current medication photo by the specified degrees and saves the rotated version to disk.
+     * Re-renders the image view upon completion.
+     *
+     * @param degrees The number of degrees to rotate (e.g., 90 for clockwise).
+     */
     private void rotateImage(int degrees) {
         if (medication.getImagePath() == null || imgPreview == null) return;
 
@@ -595,6 +623,12 @@ public class AddMedicationBottomSheet extends MedicationWizardBottomSheet {
                 .start();
     }
 
+    /**
+     * Safely copies an image from a content URI to local app storage, resizing it if it exceeds 1280x1280 pixels.
+     *
+     * @param sourceUri The URI of the source image to copy and resize.
+     * @return The absolute local file path of the saved image, or null if the operation failed.
+     */
     private String saveImageLocally(Uri sourceUri) {
         try {
             InputStream inputStream = requireContext().getContentResolver().openInputStream(sourceUri);

@@ -38,7 +38,7 @@ public class Statisticator {
     /**
      * Records the start of a new app session and increments the persistent counter.
      *
-     * @param context Application context.
+     * @param context Application context. Must not be null.
      */
     public static void onSessionStarted(final Context context) {
         sExecutor.execute(() -> {
@@ -47,7 +47,9 @@ public class Statisticator {
     }
 
     /**
-     * @param context Application context.
+     * Retrieves the total number of sessions started since the app was installed.
+     *
+     * @param context Application context. Must not be null.
      * @return Total number of app sessions started.
      */
     public static int getSessionCount(final Context context) {
@@ -55,8 +57,13 @@ public class Statisticator {
     }
 
     /**
-     * @param context Application context.
-     * @return Total accumulated usage time in minutes, including the current active session.
+     * Calculates the total accumulated usage time in minutes.
+     * <p>
+     * Factors in both persistently stored time and the active elapsed time from the current session.
+     * </p>
+     *
+     * @param context Application context. Must not be null.
+     * @return Total accumulated usage time in minutes.
      */
     public static float getTotalUsageMinutes(final Context context) {
         float persisted = SharedPreferencesManager.getInstance(context).getFloat(SPK_SESSION_TIME_MINUTES, 0F);
@@ -70,9 +77,9 @@ public class Statisticator {
     }
 
     /**
-     * Increments the total count of medication doses logged (taken/skipped) by the user.
+     * Increments the total count of medication doses logged (either taken or skipped) by the user.
      *
-     * @param context Application context.
+     * @param context Application context. Must not be null.
      */
     public static void incrementDosesLogged(Context context) {
         sExecutor.execute(() -> {
@@ -82,24 +89,34 @@ public class Statisticator {
     }
 
     /**
-     * @param context Application context.
-     * @return Total number of doses logged across all time.
+     * Retrieves the total count of medication doses logged across all time.
+     *
+     * @param context Application context. Must not be null.
+     * @return Total number of doses logged.
      */
     public static int getTotalDosesLogged(Context context) {
         return SharedPreferencesManager.getInstance(context).getInt(SPK_TOTAL_DOSES_LOGGED, 0);
     }
 
     /**
-     * @param context Application context.
-     * @return The number of actions performed since the last interstitial reset.
+     * Retrieves the number of actions recorded since the last interstitial ad reset.
+     *
+     * @param context Application context. Must not be null.
+     * @return The current count of actions targeting interstitial logic.
      */
     public static int getActionsForInterstitialCount(Context context) {
         return SharedPreferencesManager.getInstance(context).getInt(SPK_ACTIONS_FOR_INTERSTITIAL, 0);
     }
 
     /**
-     * Increments the persistent action counter and checks if an interstitial should be triggered.
-     * Logic: Returns true every N actions (defined by Remote Config).
+     * Increments the persistent action counter and evaluates if an interstitial should be triggered.
+     * <p>
+     * Driven by the logic threshold defined by the Remote Config value. When the threshold is reached,
+     * the counter is reset.
+     * </p>
+     *
+     * @param context Application context. Can be null.
+     * @return True if the interstitial threshold is met and an ad should be displayed, false otherwise.
      */
     public static boolean incrementActionsAndCheckAdEligibility(Context context) {
         if (context == null) return false;
@@ -117,8 +134,15 @@ public class Statisticator {
     }
 
     /**
-     * Increments the persistent interaction score and checks if it has met the threshold.
-     * Main items add 1.5, sub-items add 1.0.
+     * Increments the persistent interaction score and evaluates if the threshold is met.
+     * <p>
+     * Different actions can carry different weights (e.g., main items add 1.5, sub-items add 1.0).
+     * The threshold is determined by Remote Config.
+     * </p>
+     *
+     * @param context     Application context. Can be null.
+     * @param scoreToAdd  The score to append to the current interstitial score pool.
+     * @return True if the interaction threshold is reached, triggering a potential event/ad; false otherwise.
      */
     public static boolean addInteractionScoreAndCheck(Context context, float scoreToAdd) {
         if (context == null) return false;
@@ -139,8 +163,10 @@ public class Statisticator {
     }
 
     /**
-     * @param context Application context.
-     * @return Usage time in minutes accumulated since the last Full Screen Ad (FSA), including current session.
+     * Retrieves the usage time accumulated since the last Full Screen Ad (FSA) was displayed.
+     *
+     * @param context Application context. Must not be null.
+     * @return Usage time in minutes accumulated since the last FSA display, including the active session time.
      */
     public static float getUsageMinutesForAds(final Context context) {
         float persisted = SharedPreferencesManager.getInstance(context).getFloat(SPK_USAGE_MINUTES_FOR_ADS, 0F);
@@ -154,9 +180,13 @@ public class Statisticator {
     }
 
     /**
-     * Resets the usage timer for ads. Should be called after an FSA (Interstitial or Rewarded) is shown.
+     * Resets the usage timer dedicated to ads.
+     * <p>
+     * Must be called immediately following the display of an FSA (Interstitial or Rewarded)
+     * to reset the timer anchor.
+     * </p>
      *
-     * @param context Application context.
+     * @param context Application context. Must not be null.
      */
     public static void resetUsageMinutesForAds(final Context context) {
         sExecutor.execute(() -> {
@@ -167,9 +197,12 @@ public class Statisticator {
     }
 
     /**
-     * Called when the app moves to the background to finalize usage time tracking for the current session.
+     * Halts usage time tracking when the app transitions to the background.
+     * <p>
+     * Synchronizes and persists the current session's elapsed time into the aggregate totals.
+     * </p>
      *
-     * @param context Application context.
+     * @param context Application context. Must not be null.
      */
     public static void onMoveToBackground(final Context context) {
         sExecutor.execute(() -> {
@@ -184,9 +217,9 @@ public class Statisticator {
     }
 
     /**
-     * Called when the app moves to the foreground to start tracking active usage time.
+     * Initiates active usage time tracking when the app enters the foreground.
      *
-     * @param context Application context.
+     * @param context Application context. Must not be null.
      */
     public static void onMoveToForeground(final Context context) {
         sExecutor.execute(() -> {

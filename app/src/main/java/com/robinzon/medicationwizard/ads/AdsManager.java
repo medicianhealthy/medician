@@ -19,6 +19,11 @@ import com.robinzon.medicationwizard.utils.TimeManager;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Manages the initialization, loading, and display of all advertisement units.
+ * This class orchestrates the lifecycle of various ad formats, enforcing business rules 
+ * such as premium status checks, session minimums, and display cooldowns.
+ */
 public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkStatusListener {
 
 
@@ -31,18 +36,37 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     private ArrayList<AdMobAd> adsCollection;
     private long fullAdDismissedTimeStamp;
     private long bannerClickTimeStamp;
+    
+    /**
+     * Instantiates the AdsManager with the given Activity context.
+     *
+     * @param activity The Activity context used for loading and displaying ads. Must not be null.
+     */
     public AdsManager(final @NonNull Activity activity) {
         this.activity = activity;
     }
 
+    /**
+     * Registers a listener to be notified when the availability of ads changes.
+     *
+     * @param listener The callback to invoke on availability changes.
+     */
     public void addAdAvailabilityListener(Runnable listener) {
         adAvailabilityListeners.add(listener);
     }
 
+    /**
+     * Unregisters a previously added ad availability listener.
+     *
+     * @param listener The callback to remove.
+     */
     public void removeAdAvailabilityListener(Runnable listener) {
         adAvailabilityListeners.remove(listener);
     }
 
+    /**
+     * Notifies all registered listeners on the UI thread that ad availability has changed.
+     */
     private void notifyAvailabilityChanged() {
         activity.runOnUiThread(() -> {
             for (Runnable listener : adAvailabilityListeners) {
@@ -52,6 +76,8 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
+     * Retrieves the current Activity context attached to this manager.
+     *
      * @return The currently active Activity context.
      */
     public Activity getActivity() {
@@ -59,7 +85,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
-     * Performs one-time setup of ad units and initiates the first load requests.
+     * Performs one-time setup of the Mobile Ads SDK, ad units, and initiates the first load requests.
      */
     public void initializeAds() {
         MobileAds.initialize(activity, initializationStatus ->
@@ -70,7 +96,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
-     * Instantiates the AdMob wrapper classes for each placement.
+     * Instantiates the AdMob wrapper classes for each specific ad placement and adds them to the collection.
      */
     private void createAds() {
         if (null == mainBanner) {
@@ -101,7 +127,9 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
-     * @return The internal list of managed ad wrappers.
+     * Retrieves the internal collection of managed ad wrappers.
+     *
+     * @return The list of currently managed AdMobAd instances.
      */
     public ArrayList<AdMobAd> getAdsCollection() {
         if (null == adsCollection) {
@@ -111,7 +139,8 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
-     * Initiates load requests for all ad units, subject to usage thresholds for banners.
+     * Initiates load requests for all ad units, checking premium status and usage thresholds first.
+     * Premium users (without forced ads) bypass ad loading entirely.
      */
     public void loadAds() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
@@ -141,6 +170,10 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
+     * Returns the appropriate Google-provided test ad unit ID for the given AdType.
+     *
+     * @param adType The type of ad requested. Must not be null.
+     * @return A valid test ad unit ID string.
      * @noinspection SameParameterValue
      */
     private @NonNull String getTestAdForAdType(@NonNull final AdType adType) {
@@ -157,6 +190,9 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         };
     }
 
+    /**
+     * Called when the parent Activity resumes. Triggers a reload of ads and propagates the event.
+     */
     public void onResume() {
         loadAds(); // Check if we should load banners or reload failed ads
         for (AdMobAd ad : getAdsCollection()) {
@@ -166,6 +202,9 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
+    /**
+     * Called when the parent Activity is destroyed. Cleans up network listeners and propagates the event.
+     */
     public void onDestroy() {
         NetworkMonitor.getInstance(activity).removeListener(this);
         for (AdMobAd ad : getAdsCollection()) {
@@ -175,6 +214,9 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
+    /**
+     * Called when the parent Activity pauses. Propagates the pause event to all managed ad units.
+     */
     public void onPause() {
         for (AdMobAd ad : getAdsCollection()) {
             if (null != ad) {
@@ -183,12 +225,20 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
+    /**
+     * Attaches the main banner ad to a specified FrameLayout container in the UI.
+     *
+     * @param container The FrameLayout where the banner should be injected.
+     */
     public void attachBannerToContainer(android.widget.FrameLayout container) {
         if (mainBanner != null) {
             mainBanner.attachToContainer(container);
         }
     }
 
+    /**
+     * Detaches the main banner ad from its current container and resets its visual state.
+     */
     public void restoreBannerToDefault() {
         if (mainBanner != null) {
             mainBanner.resetContainer();
@@ -196,7 +246,8 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
-     * Triggers a full-screen interstitial ad if both usage and time-based cooldowns are satisfied.
+     * Triggers a full-screen interstitial ad display if both usage requirements and time-based cooldowns are satisfied.
+     * Ignored for premium users unless forced ads are active.
      */
     public void showInterstitialAd() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE)
@@ -211,7 +262,7 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
 
     /**
      * Shows an interstitial ad bypassing the minimum session/usage barriers,
-     * but still strictly respecting the time-based cooldown.
+     * but strictly respecting the time-based cooldown logic.
      */
     public void showInterstitialAdWithCooldownOnly() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE)
@@ -222,11 +273,11 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
-    /** @noinspection unused*/
-
     /**
-     * Determines if the user has reached the minimum activity levels required for interstitials.
-     * Checks session count and ad-specific usage minutes.
+     * Determines if the user has reached the minimum activity levels required to see interstitial ads.
+     * Checks the session count and total app usage minutes against remote configuration thresholds.
+     *
+     * @return True if the usage thresholds are met, false otherwise.
      */
     private boolean shouldShowInterstitialBasedOnUsage() {
         final int sessionCount = com.robinzon.medicationwizard.utils.Statisticator.getSessionCount(activity);
@@ -241,9 +292,10 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
-     * Displays a rewarded video ad to the user.
+     * Displays a rewarded video ad to the user if one is loaded and ready.
+     * Fallbacks to firing NOT_READY if unavailable.
      *
-     * @param listener Callback to receive the result of the reward event.
+     * @param listener Callback to receive the completion status of the rewarded ad event.
      */
     public void showRewarded(OnRewardedFinishedListener listener) {
         if (null != mainRewarded && mainRewarded.isLoaded()) {
@@ -255,22 +307,26 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
     }
 
     /**
-     * @return True if a rewarded video ad is currently loaded and ready to play.
+     * Checks if a rewarded video ad is successfully loaded and ready for immediate display.
+     *
+     * @return True if ready, false otherwise.
      */
     public boolean isRewardedLoaded() {
         return mainRewarded != null && mainRewarded.isLoaded();
     }
-    /** @noinspection unused*/
 
     /**
-     * @return True if a rewarded video ad is currently being fetched from the server.
+     * Checks if a rewarded video ad is currently in the process of being fetched from the server.
+     *
+     * @return True if fetching, false otherwise.
      */
     public boolean isRewardedLoading() {
         return mainRewarded != null && mainRewarded.isLoading();
     }
 
     /**
-     * Attempts to display an App Open ad, checking for usage thresholds and cooldowns.
+     * Attempts to display an App Open ad, subject to usage thresholds and display cooldowns.
+     * Ignored for premium users.
      */
     public void showAppOpenAd() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(activity) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE)
@@ -283,6 +339,11 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
+    /**
+     * Determines whether an App Open ad should be displayed based on global configuration and user activity levels.
+     *
+     * @return True if the App Open ad usage criteria are met, false otherwise.
+     */
     private boolean shouldShowAppOpenBasedOnUsage() {
         com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager rcm = com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance();
 
@@ -298,6 +359,13 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         return sessionCount >= minSessions || totalUsageMinutes >= (float) minUsageMins;
     }
 
+    /**
+     * Centralized callback processor for all ad lifecycle actions. Updates internal availability metrics
+     * and cooldown timestamps based on the ad's behavior.
+     *
+     * @param adMobAd The ad object that triggered the action. Must not be null.
+     * @param adAction The specific action that occurred.
+     */
     @Override
     public void onAdAction(@NonNull AdMobAd adMobAd, AdAction adAction) {
         final AdType adType = adMobAd.getAdType();
@@ -329,24 +397,47 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
+    /**
+     * Records the exact time a full-screen non-user initiated ad was dismissed, for cooldown calculation.
+     * Also resets the internal usage timer to delay the next automated ad popup.
+     */
     private void setFullScreenNonUserInitiatedAdDismissTimeStamp() {
         this.fullAdDismissedTimeStamp = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
         // FSA cooldown reset requirement
         com.robinzon.medicationwizard.utils.Statisticator.resetUsageMinutesForAds(activity);
     }
 
+    /**
+     * Records the exact time a banner ad was clicked, applying a cooldown to full-screen ads to avoid spamming the user.
+     */
     private void setBannerClickTimeStamp() {
         this.bannerClickTimeStamp = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
     }
 
+    /**
+     * Retrieves the timestamp of the last dismissed full-screen non-user initiated ad.
+     *
+     * @return Time in milliseconds.
+     */
     public long getFullScreenNonUserInitiatedAdDismissTimeStamp() {
         return fullAdDismissedTimeStamp;
     }
 
+    /**
+     * Retrieves the timestamp of the last clicked banner ad.
+     *
+     * @return Time in milliseconds.
+     */
     public long getBannerClickTimeStamp() {
         return bannerClickTimeStamp;
     }
 
+    /**
+     * Evaluates if sufficient time has elapsed since the last aggressive ad interaction
+     * to safely show another full-screen, non-user-initiated ad.
+     *
+     * @return True if the cooldown period has expired, false if the ad should be suppressed.
+     */
     public boolean hasCoolDownForFullScreenNonUserInitiatedAd() {
         final long coolDownMillis = TimeManager.getInstance().toMillisFromSeconds(getCoolDownSecondsForFullScreenNonUserInitiatedAd());
         final long now = TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
@@ -356,11 +447,21 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
                 (now - lastBannerClick) > coolDownMillis;
     }
 
+    /**
+     * Retrieves the remote-configured duration required between full-screen ad presentations.
+     *
+     * @return Cooldown time in seconds.
+     */
     private long getCoolDownSecondsForFullScreenNonUserInitiatedAd() {
         // Use the value defined in Remote Config (Server or Local Cache)
         return com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getAdInterstitialCoolDownSeconds();
     }
 
+    /**
+     * Handles changes in network connectivity. Cancels loaders when offline and aggressively requests reloads when back online.
+     *
+     * @param isAvailable Boolean indicating if an active internet connection is present.
+     */
     @Override
     public void onNetworkChanged(boolean isAvailable) {
         if (!isAvailable) {
@@ -376,13 +477,27 @@ public class AdsManager implements OnAdActionListener, NetworkMonitor.NetworkSta
         }
     }
 
+    /**
+     * Represents the outcomes of a rewarded video ad display.
+     */
     public enum RewardedStatus {
+        /** Indicates the user fully watched the ad and earned the reward. */
         SUCCESS,
+        /** Indicates the user closed the ad prematurely and receives no reward. */
         DISMISSED_EARLY,
+        /** Indicates the ad was not loaded or could not be played. */
         NOT_READY
     }
 
+    /**
+     * Callback interface to listen for the termination and reward status of a Rewarded Ad.
+     */
     public interface OnRewardedFinishedListener {
+        /**
+         * Called when the rewarded ad flow is complete, regardless of the outcome.
+         *
+         * @param status The completion status enum indicating SUCCESS, DISMISSED_EARLY, or NOT_READY.
+         */
         void onRewarded(RewardedStatus status);
     }
 }

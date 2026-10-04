@@ -38,6 +38,15 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         this.mActivityRef = new WeakReference<>(activity);
     }
 
+    /**
+     * Creates and registers the main notification channel for medication reminders.
+     * <p>
+     * Deletes any legacy channels and configures the new channel to be silent by default,
+     * allowing the app's custom MediaPlayer alert to play without overlapping system sounds.
+     * </p>
+     *
+     * @param context The application context.
+     */
     public static void createNotificationChannel(Context context) {
         // Delete old channel if it exists to clean up
         android.app.NotificationManager manager = context.getSystemService(android.app.NotificationManager.class);
@@ -65,7 +74,10 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     /**
-     * Retrieves the singleton NotificationManager instance for the current activity.
+     * Retrieves the singleton instance of the NotificationManager, updating its activity reference.
+     *
+     * @param activity The current activity context.
+     * @return The singleton NotificationManager instance.
      */
     public static synchronized NotificationManager getInstance(@NonNull final Activity activity) {
         if (null == sInstance) {
@@ -77,15 +89,20 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     /**
-     * Dismisses a specific notification by its ID.
+     * Dismisses a specific notification actively displayed in the system tray.
      *
-     * @param context        Application context.
+     * @param context        The application context.
      * @param notificationId The unique ID of the notification to dismiss.
      */
     public static void dismissNotification(Context context, int notificationId) {
         NotificationManagerCompat.from(context).cancel(notificationId);
     }
 
+    /**
+     * Evaluates whether the app should prompt the user for notification permissions.
+     *
+     * @return True if permissions are disabled, SDK is Tiramisu or higher, and the rationale hasn't been permanently suppressed.
+     */
     private boolean shouldAskForNotificationPermission() {
         Activity activity = mActivityRef.get();
         if (activity == null) return false;
@@ -97,15 +114,31 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         return false;
     }
 
+    /**
+     * Provides the threshold interval for showing the permission rationale dialog again.
+     *
+     * @return The number of refusals required before showing the rationale dialog again.
+     */
     private int getDeltaToShowRationale() {
         return 5;
     }
 
+    /**
+     * Checks if notifications are currently disabled at the system level for this app.
+     *
+     * @return True if notifications are disabled, false otherwise.
+     */
     private boolean notificationsAreDisabled() {
         final NotificationManagerCompat managerCompat = getNotificationManagerCompat();
         return !managerCompat.areNotificationsEnabled();
     }
 
+    /**
+     * Returns the appropriate compat instance of the Notification Manager.
+     *
+     * @return A NotificationManagerCompat instance.
+     * @throws IllegalStateException if there is no valid Activity context available.
+     */
     @NonNull
     private NotificationManagerCompat getNotificationManagerCompat() {
         Activity activity = mActivityRef.get();
@@ -119,12 +152,21 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     /**
-     * @return True if the application has the POST_NOTIFICATIONS permission granted.
+     * Checks if the application currently has the POST_NOTIFICATIONS permission granted.
+     *
+     * @return True if notifications are enabled and permission is granted, false otherwise.
      */
     public boolean hasPermission() {
         return !notificationsAreDisabled();
     }
 
+    /**
+     * Initiates the notification permission request flow if permissions are not already granted.
+     * <p>
+     * Depending on the user's previous choices and the Android version, this may show a rationale dialog,
+     * directly request the system permission, or prompt the user to open settings.
+     * </p>
+     */
     public void requestPermissionIfNeeded() {
         if (shouldAskForNotificationPermission()) {
             if (shouldShowRationalInnerDialog()) {
@@ -147,8 +189,10 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     /**
-     * Shows a rationale dialog first, then requests permission.
-     * Ideal for the first time a user takes an action that requires notifications.
+     * Shows a rationale dialog first before requesting the notification permission.
+     * <p>
+     * This is ideal for the first time a user takes an action that implicitly requires notifications.
+     * </p>
      */
     public void requestWithRationale() {
         Activity activity = mActivityRef.get();
@@ -173,7 +217,9 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
 
     /**
      * Displays a dialog inviting the user to enable notifications.
-     * Guides them to system settings if they have previously denied the permission.
+     * <p>
+     * If the permission has been permanently denied, this guides the user to the system settings.
+     * </p>
      */
     public void showInvitationDialog() {
         // If we can show the system dialog, do that. Otherwise, we must guide them to settings.
@@ -181,6 +227,11 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         showPermissionDialog(mustGoToSettings);
     }
 
+    /**
+     * Displays a custom dialog explaining the need for notification permissions.
+     *
+     * @param forceSettings If true, clicking 'Sure' opens the system app settings. If false, it requests the system permission.
+     */
     private void showPermissionDialog(boolean forceSettings) {
         Activity activity = mActivityRef.get();
         if (activity == null) return;
@@ -277,6 +328,11 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         SharedPreferencesManager.getInstance(activity).setBoolean(PREF_KEY_DO_NOT_SHOW_RATIONALE, true);
     }
 
+    /**
+     * Persists the user's choice regarding the notification permission.
+     *
+     * @param granted True if the permission was granted, false if it was denied.
+     */
     public void setHasGrantedPermission(final boolean granted) {
         Activity activity = mActivityRef.get();
         if (activity == null) return;
@@ -292,7 +348,9 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
     }
 
     /**
-     * Opens the system application details settings screen.
+     * Opens the system settings screen specifically for this application's details.
+     *
+     * @param context The application context used to launch the settings intent.
      */
     public void openNotificationAppSettings(final Context context) {
         if (context == null) return;
@@ -304,6 +362,13 @@ public class NotificationManager implements DialogInterface.OnClickListener, Dia
         context.startActivity(intent);
     }
 
+    /**
+     * Posts a low-stock inventory alert notification to the system tray.
+     *
+     * @param context The application context.
+     * @param medName The name of the medication running low on stock.
+     * @param message The detailed message to display in the notification body.
+     */
     public static void postInventoryAlert(Context context, String medName, String message) {
         NotificationManagerCompat nm = NotificationManagerCompat.from(context);
         

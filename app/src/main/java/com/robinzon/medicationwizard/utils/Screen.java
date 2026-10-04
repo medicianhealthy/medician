@@ -21,10 +21,14 @@ public final class Screen {
     private static float mDensity;
 
     /**
-     * Returns the physical width of the usable screen area in pixels.
+     * Retrieves the physical width of the usable screen area in pixels.
+     * <p>
+     * For devices running Android R and above, it uses the current window metrics bounds.
+     * For older devices, it falls back to the default display metrics.
+     * </p>
      *
-     * @param activity The current activity.
-     * @return Screen width in pixels.
+     * @param activity The current activity context. Must not be null.
+     * @return The physical screen width in pixels.
      */
     public static int getUsableScreenWidthPX(@NonNull final Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -38,10 +42,14 @@ public final class Screen {
     }
 
     /**
-     * Returns the physical height of the usable screen area in pixels.
+     * Retrieves the physical height of the usable screen area in pixels.
+     * <p>
+     * For devices running Android R and above, it uses the current window metrics bounds.
+     * For older devices, it falls back to the default display metrics.
+     * </p>
      *
-     * @param activity The current activity.
-     * @return Screen height in pixels.
+     * @param activity The current activity context. Must not be null.
+     * @return The physical screen height in pixels.
      */
     public static int getUsableScreenHeightPX(@NonNull final Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -56,10 +64,13 @@ public final class Screen {
 
     /**
      * Retrieves the logical density of the display (density-independent pixel factor).
-     * Caches the value after the first successful retrieval.
+     * <p>
+     * Caches the value after the first successful retrieval to improve performance
+     * on subsequent calls.
+     * </p>
      *
-     * @param resources Application or Activity resources.
-     * @return The display density (e.g., 2.0 for xhdpi).
+     * @param resources The application or activity resources. Must not be null.
+     * @return The display density scaling factor (e.g., 2.0 for xhdpi).
      */
     public static float getDensity(final Resources resources) {
         if (mDensity == 0F) {

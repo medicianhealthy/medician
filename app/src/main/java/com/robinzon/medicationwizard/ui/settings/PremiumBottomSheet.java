@@ -37,12 +37,21 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
     private TabLayoutMediator tabLayoutMediator;
     private Runnable autoScrollRunnable;
 
+    /**
+     * Initializes the bottom sheet dialog and applies the custom style.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.CustomBottomSheetDialog);
     }
 
+    /**
+     * Configures the dialog window to expand fully upon opening.
+     * Sets the bottom sheet container background to transparent for custom styling.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -60,12 +69,26 @@ public class PremiumBottomSheet extends MedicationWizardBottomSheet {
         }
     }
 
+    /**
+     * Creates and inflates the view for the Premium bottom sheet.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.bottom_sheet_premium, container, false);
     }
 
+    /**
+     * Sets up the benefit carousel and handles click events for upgrade options.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

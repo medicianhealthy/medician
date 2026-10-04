@@ -43,13 +43,23 @@ public enum EMeasurementUnit {
     private final String mName;
     private final int mLabelResId;
 
+    /**
+     * Constructs a new measurement unit with its internal name and localized label.
+     *
+     * @param name        The internal, short symbol for the unit (e.g., "mg").
+     * @param labelResId  The string resource ID for the unit's localized label.
+     */
     EMeasurementUnit(final String name, @StringRes final int labelResId) {
         mName = name;
         mLabelResId = labelResId;
     }
 
     /**
-     * Finds a unit by its internal name and returns its localized label.
+     * Finds a measurement unit by its internal name and returns its localized label.
+     *
+     * @param context Must not be null. The application context used to resolve the string resource.
+     * @param name    The internal name of the measurement unit to find.
+     * @return Returns the localized label for the unit if found, or the provided name if no match is found, or an empty string if the name is null.
      */
     public static String getLabelByName(Context context, String name) {
         if (name == null) return "";
@@ -62,14 +72,19 @@ public enum EMeasurementUnit {
     }
 
     /**
-     * @return The short symbol for the unit (e.g., "mg").
+     * Retrieves the short symbol for the unit.
+     *
+     * @return Returns the short symbol for the unit (e.g., "mg").
      */
     public String getName() {
         return mName;
     }
 
     /**
-     * @return The localized label for the unit.
+     * Retrieves the localized label for the unit.
+     *
+     * @param context Must not be null. The application context used to resolve the string resource.
+     * @return Returns the localized label for the unit.
      */
     public String getLabel(Context context) {
         return context.getString(mLabelResId);

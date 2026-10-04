@@ -34,6 +34,12 @@ public class NotificationActionReceiver extends BroadcastReceiver {
     public static final String EXTRA_INSTANCE_IDS = "extra_instance_ids";
     public static final String EXTRA_NOTIFICATION_ID = "extra_notification_id";
 
+    /**
+     * Processes incoming broadcasts for notification actions like take, skip, or snooze.
+     *
+     * @param context The application context.
+     * @param intent  The intent containing the action to perform and instance IDs.
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -83,6 +89,14 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         });
     }
 
+    /**
+     * Executes the appropriate medication action on a specific dose instance.
+     * 
+     * @param context  The application context.
+     * @param db       The local application database instance.
+     * @param instance The dose instance to be updated.
+     * @param action   The action string identifying the user's choice.
+     */
     private void processAction(Context context, AppDatabase db, DoseInstanceEntity instance, String action) {
         long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
         switch (action) {
@@ -113,6 +127,13 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Updates the last taken timestamp of the parent medication definition.
+     *
+     * @param context   The application context.
+     * @param medId     The unique identifier of the parent medication.
+     * @param timestamp The time the medication was taken in milliseconds.
+     */
     private void updateMedicationLastTakenTime(Context context, String medId, long timestamp) {
         List<com.robinzon.medicationwizard.entities.Medication> allMeds = 
                 com.robinzon.medicationwizard.entities.Medication.getSavedMedications(context);
@@ -125,6 +146,13 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Manages the snooze logic for a medication dose, updating its schedule or skipping if limits are reached.
+     *
+     * @param context  The application context.
+     * @param db       The local application database instance.
+     * @param instance The dose instance being snoozed.
+     */
     private void handleSnooze(Context context, AppDatabase db, DoseInstanceEntity instance) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         boolean isCritical = instance.isCritical();

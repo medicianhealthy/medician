@@ -38,7 +38,7 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
-     * Copy constructor that creates a new SimpleDayTime from an existing instance.
+     * Creates a new SimpleDayTime instance by copying from an existing instance.
      *
      * @param value The instance to copy from.
      */
@@ -48,11 +48,14 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
-     * Robust factory method to create a SimpleDayTime from various JSON inputs.
-     * Supports both modern {@link JSONObject} and legacy {@link String} formats (e.g., "12:00").
+     * Parses an object into a SimpleDayTime instance.
+     * <p>
+     * Robust factory method that supports parsing both modern {@link JSONObject} formats
+     * and legacy {@link String} formats (e.g., "12:00").
+     * </p>
      *
-     * @param obj The input object (expected to be a JSONObject or String).
-     * @return A new SimpleDayTime instance, or {@code null} if parsing fails.
+     * @param obj The input object to parse, expected to be a JSONObject or String.
+     * @return A new SimpleDayTime instance, or {@code null} if parsing fails or input type is unsupported.
      */
     @Nullable
     public static SimpleDayTime fromJson(Object obj) {
@@ -70,8 +73,8 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
                 String[] parts = timeStr.split(":");
                 if (parts.length == 2) {
                     return new SimpleDayTime(
-                            Byte.parseByte(parts[0].trim()),
-                            Byte.parseByte(parts[1].trim())
+                        Byte.parseByte(parts[0].trim()),
+                        Byte.parseByte(parts[1].trim())
                     );
                 }
             } catch (Exception e) {
@@ -82,6 +85,8 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
+     * Retrieves the hour component of this time.
+     *
      * @return The hour of the day (0-23).
      */
     public byte getHour() {
@@ -89,6 +94,8 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
+     * Retrieves the minute component of this time.
+     *
      * @return The minute of the hour (0-59).
      */
     public byte getMinute() {
@@ -96,12 +103,14 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
-     * Compares this time with another SimpleDayTime for chronological ordering.
-     * Checks hours first, then minutes.
+     * Compares this time chronologically with another SimpleDayTime instance.
+     * <p>
+     * Checks hours first, then evaluates minutes if the hours are identical.
+     * </p>
      *
-     * @param other The other time to compare to.
+     * @param other The other time to compare against. Must not be null.
      * @return A negative integer, zero, or a positive integer as this time
-     * is earlier than, equal to, or later than the specified time.
+     *         is earlier than, equal to, or later than the specified time.
      */
     @Override
     public int compareTo(@NonNull SimpleDayTime other) {
@@ -112,11 +121,13 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
-     * Indicates whether some other object is "equal to" this one.
-     * Equality is based on matching hour and minute values.
+     * Determines whether another object is "equal to" this time instance.
+     * <p>
+     * Equality is strictly based on matching both the hour and minute values.
+     * </p>
      *
      * @param o The reference object with which to compare.
-     * @return {@code true} if this object is the same as the o argument; {@code false} otherwise.
+     * @return {@code true} if this object represents the same time as the argument; {@code false} otherwise.
      */
     @Override
     public boolean equals(Object o) {
@@ -127,9 +138,9 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
-     * Returns a hash code value for the object.
+     * Generates a hash code value for this time object.
      *
-     * @return A hash code value for this object.
+     * @return A hash code based on the hour and minute values.
      */
     @Override
     public int hashCode() {
@@ -137,10 +148,13 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
-     * Returns a string representation of the time in HH:mm format.
-     * Uses the device's default locale for number formatting.
+     * Formats this time as a standard 24-hour string (e.g., "08:30").
+     * <p>
+     * Specifically utilizes {@link java.util.Locale#US} for formatting to guarantee ASCII digits,
+     * which prevents parsing failures caused by localized digits (like Arabic-Indic numerals).
+     * </p>
      *
-     * @return A formatted string (e.g., "08:30").
+     * @return A formatted time string in HH:mm format.
      */
     @Override
     public String toString() {
@@ -150,9 +164,9 @@ final public class SimpleDayTime implements Comparable<SimpleDayTime> {
     }
 
     /**
-     * Serializes this time into a JSONObject for persistent storage.
+     * Serializes this time instance into a standard JSON object.
      *
-     * @return A JSONObject containing "hour" and "minute" keys.
+     * @return A {@link JSONObject} mapping "hour" and "minute" to their respective values.
      */
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

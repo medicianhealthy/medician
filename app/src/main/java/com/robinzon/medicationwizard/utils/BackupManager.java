@@ -27,13 +27,33 @@ import java.util.List;
  */
 public class BackupManager {
 
+    /**
+     * Key used to store and retrieve the backup version in the JSON object.
+     */
     private static final String KEY_VERSION = "version";
+    /**
+     * Key used to store and retrieve the medications array in the JSON object.
+     */
     private static final String KEY_MEDICATIONS = "medications";
+    /**
+     * Key used to store and retrieve the dose history array in the JSON object.
+     */
     private static final String KEY_HISTORY = "history";
+    /**
+     * The current version of the backup format to handle future migrations.
+     */
     private static final int CURRENT_BACKUP_VERSION = 1;
 
     /**
-     * Exports all data to the provided URI.
+     * Exports all medication and dose history data to a specified URI in JSON format.
+     * <p>
+     * This method executes asynchronously on a database write executor to prevent blocking the UI thread.
+     * It gathers data from SharedPreferences (for medications) and Room database (for history).
+     * </p>
+     *
+     * @param context  The application or activity context. Must not be null.
+     * @param uri      The URI where the backup JSON file should be written. Must not be null.
+     * @param callback The callback to notify upon success or failure of the backup process. Must not be null.
      */
     public static void createBackup(Context context, Uri uri, BackupCallback callback) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -70,8 +90,15 @@ public class BackupManager {
     }
 
     /**
-     * Restores data from the provided URI.
-     * WARNING: This wipes current data!
+     * Restores medication and dose history data from a specified JSON file URI.
+     * <p>
+     * WARNING: This operation wipes all currently stored medications and history to ensure a clean slate before importing.
+     * The method executes asynchronously. Upon successful restoration, it reschedules all alarms for future doses.
+     * </p>
+     *
+     * @param context  The application or activity context. Must not be null.
+     * @param uri      The URI of the backup JSON file to read from. Must not be null.
+     * @param callback The callback to notify upon success or failure of the restore process. Must not be null.
      */
     public static void restoreBackup(Context context, Uri uri, BackupCallback callback) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
@@ -132,7 +159,16 @@ public class BackupManager {
         });
     }
 
+    /**
+     * Interface definition for a callback to be invoked when a backup or restore operation completes.
+     */
     public interface BackupCallback {
+        /**
+         * Called when the backup or restore operation finishes.
+         *
+         * @param success True if the operation was successful, false otherwise.
+         * @param message A descriptive message about the result (e.g., success message or error details).
+         */
         void onComplete(boolean success, String message);
     }
 }

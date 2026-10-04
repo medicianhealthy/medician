@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Adapter for rendering the list of today's medication doses in a RecyclerView.
+ * Handles both individual dose items and groups of doses scheduled at the same time.
+ */
 public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_SINGLE = 0;
@@ -34,6 +38,11 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<DoseItem> items;
     private OnMedicationActionListener actionListener;
 
+    /**
+     * Constructs the adapter with an initial list of dose items.
+     *
+     * @param dataSet The list of dose items to display.
+     */
     public MedicationsAdapter(List<DoseItem> dataSet) {
         this.items = dataSet;
     }
@@ -81,6 +90,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return items.size();
     }
 
+    /**
+     * Interface for communicating medication interaction events back to the fragment/activity.
+     */
     public interface OnMedicationActionListener {
         void onTake(DoseInstanceEntity instance, int position);
 
@@ -106,6 +118,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     // --- ViewHolders ---
 
+    /**
+     * ViewHolder for rendering a single, un-grouped medication dose.
+     */
     class SingleViewHolder extends RecyclerView.ViewHolder {
         private final TextView medNameText, strengthText, quantityText, timeText, directionsText, formText;
         private final TextView scheduledSummaryText, actualActionSummaryText;
@@ -244,6 +259,9 @@ public class MedicationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * ViewHolder for rendering a group of medication doses scheduled together.
+     */
     class GroupViewHolder extends RecyclerView.ViewHolder {
         private final TextView timeText, statusSummaryText;
         private final LinearLayout medNamesContainer;

@@ -18,7 +18,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Global monitor for internet connectivity changes.
+ * <p>
  * Uses reactive callbacks to notify the app when internet is lost or restored.
+ * It leverages the ConnectivityManager to listen for network state changes and
+ * broadcasts updates to all registered listeners.
+ * </p>
  */
 public class NetworkMonitor {
 
@@ -48,12 +52,23 @@ public class NetworkMonitor {
         }
     };
 
+    /**
+     * Constructs the NetworkMonitor.
+     *
+     * @param context The application context used to get system services.
+     */
     private NetworkMonitor(Context context) {
         mContext = context.getApplicationContext();
         mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         mIsConnected = NetworkUtils.isNetworkAvailable(mContext);
     }
 
+    /**
+     * Retrieves the singleton instance of the NetworkMonitor.
+     *
+     * @param context The application or activity context.
+     * @return The active NetworkMonitor instance.
+     */
     public static synchronized NetworkMonitor getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new NetworkMonitor(context);
@@ -63,6 +78,7 @@ public class NetworkMonitor {
 
     /**
      * Starts listening for network changes.
+     * Registers a network callback with the ConnectivityManager.
      */
     public void start() {
         NetworkRequest request = new NetworkRequest.Builder()
@@ -73,6 +89,7 @@ public class NetworkMonitor {
 
     /**
      * Stops listening for network changes.
+     * Unregisters the network callback from the ConnectivityManager.
      */
     public void stop() {
         try {
@@ -81,20 +98,40 @@ public class NetworkMonitor {
         }
     }
 
+    /**
+     * Registers a listener to receive network status updates.
+     *
+     * @param listener The listener to add.
+     */
     public void addListener(NetworkStatusListener listener) {
         mListeners.add(listener);
         // Immediate notification of current state
         listener.onNetworkChanged(mIsConnected);
     }
 
+    /**
+     * Unregisters a listener from receiving network status updates.
+     *
+     * @param listener The listener to remove.
+     */
     public void removeListener(NetworkStatusListener listener) {
         mListeners.remove(listener);
     }
 
+    /**
+     * Checks the current cached network connection state.
+     *
+     * @return True if the device is connected to the internet, false otherwise.
+     */
     public boolean isConnected() {
         return mIsConnected;
     }
 
+    /**
+     * Updates the internal network status and notifies all listeners on the main thread.
+     *
+     * @param isConnected The new connection status.
+     */
     private void updateStatus(boolean isConnected) {
         if (mIsConnected != isConnected) {
             mIsConnected = isConnected;
@@ -110,7 +147,15 @@ public class NetworkMonitor {
         }
     }
 
+    /**
+     * Interface definition for a callback to be invoked when the network status changes.
+     */
     public interface NetworkStatusListener {
+        /**
+         * Called when the network availability changes.
+         *
+         * @param isAvailable True if internet is available, false otherwise.
+         */
         void onNetworkChanged(boolean isAvailable);
     }
 }

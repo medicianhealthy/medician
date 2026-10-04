@@ -22,22 +22,27 @@ import java.util.concurrent.Executors;
 public abstract class AppDatabase extends RoomDatabase {
 
     /**
-     * @return The DAO for interacting with dose instances.
+     * The number of threads used in the fixed thread pool for background database operations.
      */
     private static final int NUMBER_OF_THREADS = 4;
+
     /**
      * A thread pool for performing asynchronous database operations.
      * All insert, update, and delete calls should be wrapped in this executor.
      */
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+
+    /**
+     * The singleton instance of the application database.
+     */
     private static volatile AppDatabase INSTANCE;
 
     /**
      * Retrieves the singleton database instance, creating it if necessary.
      *
-     * @param context Application context.
-     * @return The shared AppDatabase instance.
+     * @param context Application context used for building the database. Must not be null.
+     * @return Returns the shared AppDatabase instance.
      */
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -55,14 +60,9 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     /**
-     * Retrieves the singleton database instance.
+     * Provides the Data Access Object for dose instances.
      *
-     * @param context The application context.
-     * @return The active AppDatabase instance.
-     */
-
-    /**
-     * @return The Data Access Object for dose instances.
+     * @return Returns the {@link DoseInstanceDao} used for database operations on dose instances.
      */
     public abstract DoseInstanceDao doseInstanceDao();
 }

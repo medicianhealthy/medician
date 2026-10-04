@@ -61,7 +61,13 @@ public class AppConfig {
     public static boolean FORCED_ADS_VISIBLE = false;
 
     /**
-     * @return True if the user has purchased the full version of the app.
+     * Evaluates whether the user has permanently purchased the premium version of the app.
+     * <p>
+     * This checks both the runtime flag and the cached status from the billing system.
+     * </p>
+     *
+     * @param context The application or activity context.
+     * @return True if the user has purchased the full version of the app, false otherwise.
      */
     public static boolean isPremiumPurchased(Context context) {
         if (IS_PREMIUM) return true;
@@ -70,7 +76,15 @@ public class AppConfig {
     }
 
     /**
-     * Checks if a specific feature is currently unlocked (either via purchase or active pass).
+     * Checks if a specific feature is currently unlocked for the user.
+     * <p>
+     * A feature can be unlocked either via a permanent premium purchase, a permanent magic unlock,
+     * or a temporary pass. Time-based passes are evaluated against the current time.
+     * </p>
+     *
+     * @param context The application or activity context.
+     * @param feature The specific feature type to evaluate.
+     * @return True if the feature is unlocked and active, false otherwise.
      */
     public static boolean isFeatureUnlocked(Context context, FeaturePassType feature) {
         if (isPremiumPurchased(context)) return true;
@@ -102,23 +116,33 @@ public class AppConfig {
     }
 
     /**
-     * Legacy method for ad-eligibility. Purchase or active Magic Pass (deprecated)
-     * should hide standard ads.
+     * Determines the ad-eligibility status of the user.
+     * <p>
+     * Legacy method: Purchase or active Magic Pass (deprecated) should hide standard ads.
+     * </p>
+     *
+     * @param context The application or activity context.
+     * @return True if ads should be hidden, false if ads can be displayed.
      */
     public static boolean isPremium(Context context) {
         return isPremiumPurchased(context) || isFeatureUnlocked(context, FeaturePassType.AD_FREE);
     }
 
+    /**
+     * Retrieves the number of days to retain medication history.
+     *
+     * @return The history retention duration in days, fetched from RemoteConfig.
+     */
     public static int getHistoryRetentionDays() {
         return com.robinzon.medicationwizard.remoteconfig.RemoteConfigManager.getInstance().getHistoryRetentionDays();
     }
 
     /**
-     * Generates a human-readable label for a feature's active pass status.
+     * Generates a human-readable label indicating the active pass status of a feature.
      *
-     * @param context Application context for string resources.
+     * @param context The application context used to retrieve string resources.
      * @param feature The feature type to check.
-     * @return A string like " Active until 14:00" or "Active for next reminder", or empty if not active.
+     * @return A formatted string (e.g., "Active until 14:00" or "Active for next reminder"), or an empty string if not active or if premium is purchased.
      */
     public static String getFeatureExpiryLabel(Context context, FeaturePassType feature) {
         if (isPremiumPurchased(context)) return "";
@@ -151,6 +175,13 @@ public class AppConfig {
         };
     }
 
+    /**
+     * Formats an expiration timestamp into a human-readable time string.
+     *
+     * @param context The application context used for string formatting.
+     * @param expiry  The expiration time in milliseconds.
+     * @return A string representing the active time format, or an empty string if the expiry has passed.
+     */
     private static String formatExpiry(Context context, long expiry) {
         if (expiry <= com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal()) return "";
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());

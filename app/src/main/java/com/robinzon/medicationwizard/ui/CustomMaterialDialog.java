@@ -34,12 +34,21 @@ public class CustomMaterialDialog {
     private final Context context;
     private Dialog dialog;
 
+    /**
+     * Constructs a new branded dialog instance.
+     *
+     * @param context The context used to build the dialog. Must not be null.
+     */
     public CustomMaterialDialog(@NonNull Context context) {
         this.context = context;
         this.builder = new MaterialAlertDialogBuilder(context);
         applyMagicalStyling();
     }
 
+    /**
+     * Applies the custom rounded corners and colored stroke to the dialog's background.
+     * Modifies the dialog background to fit the magical theme.
+     */
     private void applyMagicalStyling() {
         float density = context.getResources().getDisplayMetrics().density;
         float cornerRadius = 28 * density;
@@ -65,11 +74,22 @@ public class CustomMaterialDialog {
         builder.setBackground(shapeDrawable);
     }
 
+    /**
+     * Sets the title of the dialog.
+     *
+     * @param title The text to display as the dialog title.
+     */
     public void setTitle(String title) {
         // Simple start-aligned title using standard Material text styling
         builder.setTitle(title);
     }
 
+    /**
+     * Sets the main message body of the dialog with custom typography and line-breaking rules.
+     * Uses balanced break strategy on supported versions to avoid single words on the last line.
+     *
+     * @param message The text to display in the body of the dialog.
+     */
     public void setMessage(String message) {
         // High-end readable text layout: Start-aligned and balanced to avoid orphans.
         TextView messageView = new TextView(context);
@@ -102,34 +122,79 @@ public class CustomMaterialDialog {
         builder.setView(messageView);
     }
 
+    /**
+     * Sets the positive action button for the dialog.
+     *
+     * @param text     The text to display on the button.
+     * @param listener The callback to invoke when the button is clicked.
+     */
     public void setPositiveButton(String text, DialogInterface.OnClickListener listener) {
         builder.setPositiveButton(text, listener);
     }
 
+    /**
+     * Sets the negative action button for the dialog.
+     *
+     * @param text     The text to display on the button.
+     * @param listener The callback to invoke when the button is clicked.
+     */
     public void setNegativeButton(String text, DialogInterface.OnClickListener listener) {
         builder.setNegativeButton(text, listener);
     }
 
+    /**
+     * Sets the neutral action button for the dialog.
+     *
+     * @param text     The text to display on the button.
+     * @param listener The callback to invoke when the button is clicked.
+     */
     public void setNeutralButton(String text, DialogInterface.OnClickListener listener) {
         builder.setNeutralButton(text, listener);
     }
 
+    /**
+     * Sets a listener to be invoked when the dialog is dismissed.
+     *
+     * @param listener The callback to invoke on dismissal.
+     */
     public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
         builder.setOnDismissListener(listener);
     }
 
+    /**
+     * Sets a list of items to be displayed in the dialog as a simple list.
+     *
+     * @param items    The items to display.
+     * @param listener The callback to invoke when an item is selected.
+     */
     public void setItems(CharSequence[] items, final DialogInterface.OnClickListener listener) {
         builder.setItems(items, listener);
     }
 
+    /**
+     * Sets a list of items to be displayed in the dialog as a single-choice list.
+     *
+     * @param items       The items to display.
+     * @param checkedItem The index of the initially selected item.
+     * @param listener    The callback to invoke when an item is selected.
+     */
     public void setSingleChoiceItems(CharSequence[] items, int checkedItem, final DialogInterface.OnClickListener listener) {
         builder.setSingleChoiceItems(items, checkedItem, listener);
     }
 
+    /**
+     * Sets a custom view to display in the dialog's content area.
+     *
+     * @param view The custom view to display.
+     */
     public void setView(View view) {
         builder.setView(view);
     }
 
+    /**
+     * Creates and displays the dialog, applying custom styling to the dialog buttons.
+     * Modifies button typefaces and colors to match the app's material design system.
+     */
     public void show() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
@@ -170,6 +235,9 @@ public class CustomMaterialDialog {
         }
     }
 
+    /**
+     * Dismisses the currently showing dialog.
+     */
     public void dismiss() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();

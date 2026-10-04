@@ -27,14 +27,33 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A bottom sheet that presents options for the user to earn "Magics" (in-app currency).
+ * Handles the logic and interactions for rewarded ads, social sharing, and app rating.
+ */
 public class MagicEarnBottomSheet extends MedicationWizardBottomSheet {
 
+    /**
+     * Inflates the layout for the earn magics bottom sheet.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The root view of the inflated layout.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.bottom_sheet_magic_earn, container, false);
     }
 
+    /**
+     * Initializes the view components, evaluates usage limits for rewards, and attaches click listeners.
+     * Enforces daily limits on social sharing and one-time limits on app rating.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -174,6 +193,11 @@ public class MagicEarnBottomSheet extends MedicationWizardBottomSheet {
         });
     }
 
+    /**
+     * Refreshes the display of the current magic balance.
+     *
+     * @param view The root view of the bottom sheet layout.
+     */
     private void updateBalance(View view) {
         TextView balanceView = view.findViewById(R.id.txt_magic_balance);
         int balance = MagicManager.getInstance(requireContext()).getMagicBalance();

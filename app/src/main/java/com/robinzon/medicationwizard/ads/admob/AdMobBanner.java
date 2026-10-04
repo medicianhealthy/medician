@@ -22,12 +22,23 @@ import com.robinzon.medicationwizard.ads.rootclasses.AdMobAd;
 import com.robinzon.medicationwizard.utils.NetworkUtils;
 import com.robinzon.medicationwizard.utils.Screen;
 
+/**
+ * Encapsulates the implementation logic for loading and displaying an adaptive AdMob Banner.
+ * Automatically handles screen width calculations to request the correct adaptive AdSize.
+ */
 public class AdMobBanner extends AdMobAd {
 
     private final AdView mAdView;
     private AdListener mAdListener;
     private FrameLayout mAdContainerView;
 
+    /**
+     * Constructs a new Banner ad wrapper, configuring the underlying AdView instance.
+     *
+     * @param adUnitId The unique identifier for this banner unit. Must not be null.
+     * @param adsManager The central manager coordinating this ad's lifecycle. Must not be null.
+     * @param placement The UI context where this ad is intended to appear. Must not be null.
+     */
     public AdMobBanner(final @NonNull String adUnitId,
                        final @NonNull AdsManager adsManager,
                        final @NonNull AdPlacement placement) {
@@ -47,14 +58,33 @@ public class AdMobBanner extends AdMobAd {
         getAdsManager().onAdAction(this, AdAction.Created);
     }
 
+    /**
+     * Calculates the height in density-independent pixels of the optimal adaptive banner for the current screen.
+     *
+     * @param activity The context used for screen measurements.
+     * @return The banner height in DP.
+     */
     public static int getBannerHeightDP(final Activity activity) {
         return getAdSize(activity).getHeight();
     }
 
+    /**
+     * Calculates the width in density-independent pixels of the optimal adaptive banner for the current screen.
+     *
+     * @param activity The context used for screen measurements.
+     * @return The banner width in DP.
+     */
     public static int getBannerWidthDP(final Activity activity) {
         return getAdSize(activity).getWidth();
     }
 
+    /**
+     * Generates the AdSize required to load an Anchored Adaptive Banner based on available screen space.
+     * Caps the width on very wide tablet devices to avoid excessive letterboxing by AdMob.
+     *
+     * @param activity The context used for screen measurements.
+     * @return The calculated AdSize payload.
+     */
     private static AdSize getAdSize(final Activity activity) {
 
         int adWidthPixels = Screen.getUsableScreenWidthPX(activity);
@@ -67,6 +97,9 @@ public class AdMobBanner extends AdMobAd {
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidthDp);
     }
 
+    /**
+     * Attaches the banner ad to its default target container if available.
+     */
     public void attachToContainer() {
         if (mAdContainerView == null) {
             mAdContainerView = getActivity().findViewById(R.id.ad_container);
@@ -74,6 +107,11 @@ public class AdMobBanner extends AdMobAd {
         attachToContainer(mAdContainerView);
     }
 
+    /**
+     * Injects the banner AdView into the specified container, adjusting background colors to mask letterboxing artifacts.
+     *
+     * @param container The FrameLayout where the banner should reside. May be null.
+     */
     public void attachToContainer(@Nullable FrameLayout container) {
         if (null != container) {
             if (mAdView.getParent() == container) return;
@@ -111,8 +149,10 @@ public class AdMobBanner extends AdMobAd {
     }
 
     /**
-     * Ensures the AdSize is set exactly once for this AdView instance.
-     * Uses the container's width if available, otherwise falls back to usable screen width.
+     * Ensures the AdSize is configured exactly once for this AdView instance to prevent crashes.
+     * Utilizes the container's width if passed, otherwise falls back to the full usable screen width.
+     *
+     * @param container The target container layout. May be null.
      */
     private void ensureAdSizeSet(@Nullable FrameLayout container) {
         if (mAdView.getAdSize() != null) return;
@@ -137,11 +177,17 @@ public class AdMobBanner extends AdMobAd {
         log("%s AdSize set to %s", getLogTag(), targetSize.toString());
     }
 
+    /**
+     * Re-attaches the banner to its default UI position.
+     */
     public void resetContainer() {
         mAdContainerView = null;
         attachToContainer();
     }
 
+    /**
+     * Registers a listener to observe dynamic layout changes, ensuring the layout scales accurately.
+     */
     private void addBannerHeightListener() {
         getAdView().getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -151,16 +197,29 @@ public class AdMobBanner extends AdMobAd {
                 });
     }
 
+    /**
+     * Returns a string representation of the banner ad's state for debugging purposes.
+     *
+     * @return Formatted debugging details.
+     */
     @NonNull
     private String thisToString() {
         return AdMobBanner.this.toString();
     }
 
+    /**
+     * Checks if business logic allows this banner ad to be displayed.
+     *
+     * @return True if the user is not premium or if forced ads are enabled.
+     */
     @Override
     public boolean shouldShow() {
         return !com.robinzon.medicationwizard.AppConfig.isPremium(getContext()) || com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE;
     }
 
+    /**
+     * Instantiates the AdListener that propagates ad loading and interactive states up to the AdsManager.
+     */
     private void createAdListener() {
         mAdListener = new AdListener() {
             @Override
@@ -215,19 +274,37 @@ public class AdMobBanner extends AdMobAd {
         };
     }
 
+    /**
+     * Retrieves the instantiated ad event listener for this banner.
+     *
+     * @return The constructed AdListener object.
+     */
     private @NonNull AdListener getAdListener() {
         return mAdListener;
     }
 
+    /**
+     * Exposes the underlying AdView managed by this class.
+     *
+     * @return The active AdView instance.
+     */
     public @NonNull AdView getAdView() {
         return mAdView;
     }
 
+    /**
+     * Indicates the type format this class manages.
+     *
+     * @return Always AdType.AdaptiveBanner.
+     */
     @Override
     public AdType getAdType() {
         return AdType.AdaptiveBanner;
     }
 
+    /**
+     * Safely initiates an ad payload request on the UI thread, bypassing if conditions are unmet.
+     */
     @Override
     public void load() {
         log("%s Requesting load.\n%s", getLogTag(), thisToString());
@@ -250,41 +327,71 @@ public class AdMobBanner extends AdMobAd {
         }
     }
 
+    /**
+     * Required implementation. Not used explicitly for banners as they are auto-rendered when attached.
+     */
     @Override
     public void show() {
 
     }
 
+    /**
+     * Determines if the loaded banner content is past its useful life.
+     *
+     * @return Always false for Banners, as AdMob internal mechanisms handle their refresh.
+     */
     @Override
     public boolean isExpired() {
         return false;
     }
 
+    /**
+     * Placeholder method to hide the ad view.
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     * Halts internal banner activities when the host UI moves to the background.
+     */
     @Override
     public void onPause() {
         getAdView().pause();
     }
 
+    /**
+     * Resumes internal banner activities when the host UI returns to the foreground.
+     */
     @Override
     public void onResume() {
         getAdView().resume();
     }
 
+    /**
+     * Assembles a new generic AdRequest object for network calls.
+     *
+     * @return A constructed AdRequest.
+     */
     @Override
     public @NonNull AdRequest getAdRequest() {
         return new AdRequest.Builder().build();
     }
 
+    /**
+     * Grants access to the raw View object displaying the ad.
+     *
+     * @return The underlying AdView.
+     */
     @Override
     public Object getCoreAdObject() {
         return getAdView();
     }
 
+    /**
+     * Erases the ad from its layout parent and reclaims resources when the ad is no longer needed.
+     */
     @Override
     public void onDestroy() {
         if (mAdView != null) {

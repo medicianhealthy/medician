@@ -19,18 +19,20 @@ public class MedicationInstance extends Medication {
     private int snoozeCount;
 
     /**
-     * Default constructor for serialization.
+     * Constructs a default MedicationInstance for serialization.
      */
     public MedicationInstance() {
         super();
     }
 
     /**
-     * "Upgrade" constructor that creates a specific instance from a medication definition.
+     * Constructs a specific medication instance from a base medication definition.
+     * <p>
      * Copies all base properties (name, strength, form, etc.) to ensure the instance
      * is self-contained.
+     * </p>
      *
-     * @param medication The base medication definition.
+     * @param medication The base medication definition to copy properties from.
      */
     public MedicationInstance(Medication medication) {
         super();
@@ -54,10 +56,10 @@ public class MedicationInstance extends Medication {
     }
 
     /**
-     * Constructs an instance with explicit status and time.
+     * Constructs a medication instance with explicit status and scheduled time.
      *
-     * @param status        Current status of the dose.
-     * @param scheduledTime Planned execution time (epoch millis).
+     * @param status        The current lifecycle status of the dose.
+     * @param scheduledTime The planned execution time in epoch milliseconds.
      */
     public MedicationInstance(Status status, long scheduledTime) {
         super();
@@ -66,13 +68,17 @@ public class MedicationInstance extends Medication {
     }
 
     /**
-     * @return The planned execution time in epoch milliseconds.
+     * Retrieves the planned execution time of the dose.
+     *
+     * @return Returns the planned execution time in epoch milliseconds.
      */
     public long getScheduledTime() {
         return scheduledTime;
     }
 
     /**
+     * Updates the planned execution time of the dose.
+     *
      * @param scheduledTime The planned execution time in epoch milliseconds.
      */
     public void setScheduledTime(long scheduledTime) {
@@ -80,32 +86,46 @@ public class MedicationInstance extends Medication {
     }
 
     /**
-     * @return The current lifecycle status of this dose.
+     * Retrieves the current lifecycle status of this dose.
+     *
+     * @return Returns the current status of the dose.
      */
     public Status getStatus() {
         return status;
     }
 
     /**
-     * @param status The current lifecycle status of this dose.
+     * Updates the lifecycle status of this dose.
+     *
+     * @param status The new status of the dose.
      */
     public void setStatus(Status status) {
         this.status = status;
     }
 
+    /**
+     * Retrieves the number of times this dose has been snoozed.
+     *
+     * @return Returns the snooze count.
+     */
     public int getSnoozeCount() {
         return snoozeCount;
     }
 
+    /**
+     * Updates the snooze count for this dose.
+     *
+     * @param snoozeCount The new snooze count.
+     */
     public void setSnoozeCount(int snoozeCount) {
         this.snoozeCount = snoozeCount;
     }
 
     /**
-     * Serializes this instance to a JSONObject, including both base medication
-     * details and instance-specific status/timing.
+     * Serializes this medication instance to a JSONObject, including both base medication
+     * details and instance-specific status and timing.
      *
-     * @return The resulting JSONObject.
+     * @return Returns the resulting JSONObject containing the instance's data.
      */
     @Override
     public JSONObject toJson() {
@@ -121,10 +141,10 @@ public class MedicationInstance extends Medication {
     }
 
     /**
-     * Returns a human-readable representation of the instance, including a
+     * Generates a human-readable string representation of the instance, including a
      * localized date and time string for easier debugging and logging.
      *
-     * @return Formatted string (e.g., "MedicationInstance{name='Aspirin', status=SCHEDULED, scheduledTime=Mon, May 17, 08:30}").
+     * @return Returns a formatted string (e.g., "MedicationInstance{name='Aspirin', status=SCHEDULED, scheduledTime=Mon, May 17, 08:30}").
      */
     @Override
     @NonNull

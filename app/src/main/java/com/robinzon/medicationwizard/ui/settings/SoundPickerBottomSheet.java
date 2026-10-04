@@ -44,6 +44,8 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
 
     /**
      * Standard lifecycle method to define the dialog's visual style.
+     *
+     * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
      */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +74,9 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
     }
 
     /**
-     * Sets the selection listener.
+     * Sets the selection listener to handle when a sound is confirmed.
+     *
+     * @param listener The callback to be invoked when a sound is selected.
      */
     public void setOnSoundSelectedListener(OnSoundSelectedListener listener) {
         this.listener = listener;
@@ -80,6 +84,8 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
 
     /**
      * Pre-selects a sound in the list by its URI.
+     *
+     * @param uri The system URI of the sound to pre-select.
      */
     public void setCurrentSoundUri(String uri) {
         this.selectedSoundUri = uri;
@@ -93,7 +99,10 @@ public class SoundPickerBottomSheet extends MedicationWizardBottomSheet {
 
     /**
      * Initializes the sound list and confirm button.
-     * Maps the initial URI to a name for better UI display.
+     * Maps the initial URI to a name for better UI display and scrolls to the selected item.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
      */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

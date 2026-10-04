@@ -20,31 +20,61 @@ import com.robinzon.medicationwizard.utils.NetworkUtils;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Encapsulates the operations for loading, caching, and displaying Rewarded Video ads.
+ * Rewarded ads are strictly user-initiated, allowing users to earn in-app benefits (like extending a premium pass)
+ * in exchange for watching a video.
+ */
 public class AdMobRewarded extends AdMobAd {
 
     RewardedAd mRewardedAd;
     private AdsManager.OnRewardedFinishedListener mRewardedFinishedListener;
     private boolean mUserEarnedReward = false;
 
+    /**
+     * Initializes a new wrapper for an AdMob Rewarded unit.
+     *
+     * @param adUnitId The unique identifier for this rewarded unit. Must not be null.
+     * @param adsManager The central manager coordinating this ad's lifecycle. Must not be null.
+     * @param placement The UI context where this ad is intended to appear. Must not be null.
+     */
     public AdMobRewarded(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
         log("%s Creating object.\n%s", getLogTag(), thisToString());
     }
 
+    /**
+     * Assigns a callback to listen for the completion or dismissal of the rewarded ad.
+     *
+     * @param listener The listener to be notified when the reward flow ends.
+     */
     public void setRewardedFinishedListener(AdsManager.OnRewardedFinishedListener listener) {
         this.mRewardedFinishedListener = listener;
     }
 
+    /**
+     * Helper to retrieve a string representing the current state of this ad wrapper.
+     *
+     * @return Formatted state data.
+     */
     @NonNull
     private String thisToString() {
         return AdMobRewarded.this.toString();
     }
 
+    /**
+     * Identifies the specific type of ad handled by this class.
+     *
+     * @return Always returns AdType.Rewarded.
+     */
     @Override
     public AdType getAdType() {
         return AdType.Rewarded;
     }
 
+    /**
+     * Attempts to fetch a rewarded ad payload from the network if it isn't already loaded and network conditions allow.
+     */
     @Override
     public void load() {
         log("%s Requesting load.\n%s", getLogTag(), thisToString());
@@ -84,6 +114,11 @@ public class AdMobRewarded extends AdMobAd {
         }
     }
 
+    /**
+     * Displays the rewarded ad to the user if it's successfully loaded.
+     * Sets up internal listeners to track if the user actually watched enough of the video to earn the reward,
+     * and forwards that result to the caller via the OnRewardedFinishedListener.
+     */
     @Override
     public void show() {
         if (shouldShow() && canShow()) {
@@ -172,43 +207,75 @@ public class AdMobRewarded extends AdMobAd {
         }
     }
 
+    /**
+     * Determines whether the current ad instance has expired.
+     *
+     * @return Always returns false.
+     */
     @Override
     public boolean isExpired() {
         return false;
     }
 
+    /**
+     * Checks if this ad type is allowed to be shown.
+     * Rewarded ads are typically allowed even for premium users, allowing them to opt-in for rewards.
+     *
+     * @return Always returns true.
+     */
     @Override
     public boolean shouldShow() {
         // user initiated reward should show even if premium to allow extension 
         return true;
     }
 
+    /**
+     * Placeholder method to hide the ad view.
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     * Called when the parent activity is paused.
+     */
     @Override
     public void onPause() {
 
     }
 
+    /**
+     * Called when the parent activity is resumed.
+     */
     @Override
     public void onResume() {
 
     }
 
+    /**
+     * Prepares an AdRequest used to query the ad network.
+     *
+     * @return The AdRequest object.
+     */
     @Override
     public AdRequest getAdRequest() {
         return new AdRequest.Builder().build();
     }
 
+    /**
+     * Fetches the core RewardedAd object maintained by this wrapper.
+     *
+     * @return The wrapped RewardedAd instance.
+     */
     @Override
     public Object getCoreAdObject() {
         return mRewardedAd;
     }
 
-
+    /**
+     * Frees resources when this ad object is permanently dismantled.
+     */
     @Override
     public void onDestroy() {
 

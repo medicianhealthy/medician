@@ -18,25 +18,48 @@ import com.robinzon.medicationwizard.utils.NetworkUtils;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Handles the logic for requesting, loading, and presenting full-screen Interstitial Video ads.
+ */
 public class AdMobInterstitial extends AdMobAd {
     private InterstitialAdLoadCallback mAdLoadCallBack;
     private InterstitialAd mInterstitialAd;
 
+    /**
+     * Initializes a new wrapper for an AdMob interstitial unit.
+     *
+     * @param adUnitId The unique identifier for this interstitial unit. Must not be null.
+     * @param adsManager The central manager coordinating this ad's lifecycle. Must not be null.
+     * @param placement The UI context where this ad is intended to appear. Must not be null.
+     */
     public AdMobInterstitial(@NonNull String adUnitId, @NonNull AdsManager adsManager, @NonNull AdPlacement placement) {
         super(adUnitId, adsManager, placement);
         log("%s Creating object.\n%s", getLogTag(), thisToString());
     }
 
+    /**
+     * Converts the current state of this ad wrapper to a string for debugging.
+     *
+     * @return State representation.
+     */
     @NonNull
     private String thisToString() {
         return AdMobInterstitial.this.toString();
     }
 
+    /**
+     * Identifies the type of ad this class handles.
+     *
+     * @return Always returns AdType.InterstitialVideo.
+     */
     @Override
     public AdType getAdType() {
         return AdType.InterstitialVideo;
     }
 
+    /**
+     * Triggers a network request to load an interstitial ad if it's currently allowed by app logic and network state.
+     */
     @Override
     public void load() {
         log("%s Requesting load.\n%s", getLogTag(), thisToString());
@@ -53,6 +76,11 @@ public class AdMobInterstitial extends AdMobAd {
         }
     }
 
+    /**
+     * Retrieves or instantiates the callback handler for interstitial ad loading events.
+     *
+     * @return The configured InterstitialAdLoadCallback instance.
+     */
     private InterstitialAdLoadCallback getAdLoadCallBack() {
         if (null == mAdLoadCallBack) {
             mAdLoadCallBack = new InterstitialAdLoadCallback() {
@@ -81,6 +109,10 @@ public class AdMobInterstitial extends AdMobAd {
 
     }
 
+    /**
+     * Checks if the ad is ready and attempts to display it as a full-screen overlay over the parent Activity.
+     * Wires up content callbacks to manage user interaction and dismiss events.
+     */
     @Override
     public void show() {
         if (canShow() && shouldShow()) {
@@ -138,11 +170,21 @@ public class AdMobInterstitial extends AdMobAd {
         }
     }
 
+    /**
+     * Identifies whether the ad has expired while waiting to be shown.
+     *
+     * @return Always returns false currently.
+     */
     @Override
     public boolean isExpired() {
         return false;
     }
 
+    /**
+     * Evaluates if this interstitial is allowed to interrupt the user right now based on premium status and cooldown settings.
+     *
+     * @return True if allowed to show, otherwise false.
+     */
     @Override
     public boolean shouldShow() {
         if (com.robinzon.medicationwizard.AppConfig.isPremium(getActivity()) && !com.robinzon.medicationwizard.AppConfig.FORCED_ADS_VISIBLE) {
@@ -151,32 +193,53 @@ public class AdMobInterstitial extends AdMobAd {
         return getAdsManager().hasCoolDownForFullScreenNonUserInitiatedAd();
     }
 
+    /**
+     * Placeholder method to hide the ad view.
+     */
     @Override
     public void hide() {
 
     }
 
+    /**
+     * Called when the parent activity pauses. (No specific logic needed for interstitials).
+     */
     @Override
     public void onPause() {
 
     }
 
+    /**
+     * Called when the parent activity resumes. (No specific logic needed for interstitials).
+     */
     @Override
     public void onResume() {
 
     }
 
+    /**
+     * Creates a new AdRequest bundle for fetching the interstitial content.
+     *
+     * @return An AdRequest instance.
+     */
     @Override
     public AdRequest getAdRequest() {
         return new AdRequest.Builder().build();
     }
 
+    /**
+     * Provides the underlying Google InterstitialAd instance.
+     *
+     * @return The core InterstitialAd.
+     */
     @Override
     public Object getCoreAdObject() {
         return mInterstitialAd;
     }
 
-
+    /**
+     * Handles teardown and cleanup logic when the parent is destroyed.
+     */
     @Override
     public void onDestroy() {
 

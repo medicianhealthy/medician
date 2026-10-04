@@ -46,7 +46,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The primary dashboard fragment of the application.
+ * Fragment displaying the user's scheduled medications for the current day.
+ * Supports chronological and alphabetical sorting, grouping of simultaneous doses,
+ * and direct actions (take, skip, reschedule) from the UI.
  */
 public class TodaysMedicationsFragment extends MedicationWizardFragment {
 
@@ -58,6 +60,14 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
     private Runnable mInactivityRunnable;
     private ValueAnimator mLightningAnimator;
 
+    /**
+     * Inflates the fragment's UI and initializes the ViewModel.
+     *
+     * @param inflater           The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container          If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI, or null.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(TodaysMedicationsViewModel.class);
@@ -65,6 +75,13 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         return mBinding.getRoot();
     }
 
+    /**
+     * Finalizes UI setup, binds ViewModel observables, and configures event listeners
+     * after the view hierarchy is instantiated.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -373,6 +390,12 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         revertAction(instance);
     }
 
+    /**
+     * Reverts a previously taken or skipped action on a dose instance.
+     * Restores the dose to a PENDING state and reverses inventory/streak logic if applicable.
+     *
+     * @param instance The dose instance to revert.
+     */
     private void revertAction(DoseInstanceEntity instance) {
         final Context appContext = requireContext().getApplicationContext();
         if (instance.isPrn()) {
@@ -575,6 +598,11 @@ public class TodaysMedicationsFragment extends MedicationWizardFragment {
         }
     }
 
+    /**
+     * Presents a dialog to pick a new time for a single dose instance.
+     *
+     * @param instance The dose instance to reschedule.
+     */
     private void showReschedulePicker(DoseInstanceEntity instance) {
         MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_24H)

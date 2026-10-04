@@ -33,12 +33,20 @@ public class MedicationWizardApplication extends Application
     /**
      * @return The global application context.
      */
+    /**
+     * Retrieves the global application context.
+     *
+     * @return The global application context instance.
+     */
     public static android.content.Context getContext() {
         return sInstance.getApplicationContext();
     }
 
     /**
      * Initializes the notification channel and default app settings on startup.
+     */
+    /**
+     * Initializes the application, setting up critical managers, notification channels, and global settings on startup.
      */
     @Override
     public void onCreate() {
@@ -58,7 +66,9 @@ public class MedicationWizardApplication extends Application
 
     /**
      * Re-applies the saved language preference to the current application context.
+     * <p>
      * If no preference is saved, the app follows the system language.
+     * </p>
      */
     private void applyLanguage() {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(this);
@@ -70,7 +80,7 @@ public class MedicationWizardApplication extends Application
     }
 
     /**
-     * Enqueues a periodic WorkManager task to clean up old medication history.
+     * Enqueues a periodic WorkManager task to regularly clean up old medication history.
      */
     private void scheduleHistoryCleanup() {
         PeriodicWorkRequest cleanupRequest = new PeriodicWorkRequest.Builder(
@@ -85,7 +95,7 @@ public class MedicationWizardApplication extends Application
     }
 
     /**
-     * Re-applies the saved theme preference (Light, Dark, or System) globally.
+     * Re-applies the saved theme preference (Light, Dark, or System) globally across the application.
      */
     private void applyTheme() {
         SettingsViewModel.enforceEntitlements(this);
@@ -142,8 +152,12 @@ public class MedicationWizardApplication extends Application
     }
 
     /**
-     * Called when the application process moves to the foreground.
+     * Executes logic when the application process moves to the foreground.
+     * <p>
      * Triggers usage tracking and displays App Open ads if eligible.
+     * </p>
+     *
+     * @param owner The lifecycle owner representing the application process.
      */
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
@@ -163,8 +177,12 @@ public class MedicationWizardApplication extends Application
     }
 
     /**
-     * Called when the application process moves to the background.
+     * Executes logic when the application process moves to the background.
+     * <p>
      * Finalizes and persists usage statistics.
+     * </p>
+     *
+     * @param owner The lifecycle owner representing the application process.
      */
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {

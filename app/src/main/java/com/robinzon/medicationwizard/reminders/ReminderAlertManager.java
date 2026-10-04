@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Singleton manager to coordinate reminder sounds.
+ * Manages reminder sounds and vibrations for the application.
  * Ensures only one sound plays at a time and allows stopping the sound from different entry points.
  */
 public class ReminderAlertManager {
@@ -35,6 +35,11 @@ public class ReminderAlertManager {
 
     private ReminderAlertManager() {}
 
+    /**
+     * Retrieves the singleton instance of the ReminderAlertManager.
+     *
+     * @return The singleton instance.
+     */
     public static synchronized ReminderAlertManager getInstance() {
         if (sInstance == null) {
             sInstance = new ReminderAlertManager();
@@ -44,11 +49,23 @@ public class ReminderAlertManager {
 
     /**
      * Starts playing the reminder sound based on user settings.
+     *
+     * @param context The application context.
      */
     public synchronized void startAlarm(Context context) {
         startAlarm(context, false);
     }
 
+    /**
+     * Starts playing the reminder sound and triggers vibrations.
+     * <p>
+     * This handles configuring the MediaPlayer, checking bypass preferences, setting volume levels,
+     * and ensuring a timeout is scheduled to prevent alarms from playing indefinitely.
+     * </p>
+     *
+     * @param context    The application context.
+     * @param isCritical Indicates if the alarm is for a critical medication, altering sound and vibration behavior.
+     */
     public synchronized void startAlarm(Context context, boolean isCritical) {
         stopAlarm(); // Ensure previous alarm is stopped
 
@@ -95,6 +112,13 @@ public class ReminderAlertManager {
         }
     }
 
+    /**
+     * Triggers the vibration pattern associated with the alarm state.
+     *
+     * @param context    The application context.
+     * @param isAlarm    Specifies if the vibration uses the ALARM audio attributes.
+     * @param isCritical Specifies if the urgent heartbeat pattern should be prioritized.
+     */
     private void startVibration(Context context, boolean isAlarm, boolean isCritical) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         // Ensure we respect both the functional toggle and the premium pass
@@ -140,7 +164,7 @@ public class ReminderAlertManager {
     }
 
     /**
-     * Stops and releases the active reminder sound.
+     * Stops and releases the active reminder sound and vibration.
      */
     public synchronized void stopAlarm() {
         notifyListeners(false);
@@ -165,6 +189,9 @@ public class ReminderAlertManager {
         notifyListeners(false);
     }
 
+    /**
+     * Safely releases the internal media player resources.
+     */
     private void releasePlayer() {
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
@@ -173,22 +200,39 @@ public class ReminderAlertManager {
     }
 
     /**
-     * @return True if a reminder sound is currently playing.
+     * Checks whether a reminder sound is currently playing.
+     *
+     * @return True if a reminder sound is currently playing, false otherwise.
      */
     public synchronized boolean isPlaying() {
         return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
+    /**
+     * Subscribes a listener to alarm state changes.
+     *
+     * @param listener The callback interface for alarm state updates.
+     */
     public synchronized void addListener(OnAlarmStateChangedListener listener) {
         if (listener != null && !mListeners.contains(listener)) {
             mListeners.add(listener);
         }
     }
 
+    /**
+     * Unsubscribes a listener from alarm state changes.
+     *
+     * @param listener The callback interface to remove.
+     */
     public synchronized void removeListener(OnAlarmStateChangedListener listener) {
         mListeners.remove(listener);
     }
 
+    /**
+     * Dispatches the current alarm playing state to all registered listeners on the main thread.
+     *
+     * @param isPlaying The current playback state.
+     */
     private void notifyListeners(boolean isPlaying) {
         new Handler(Looper.getMainLooper()).post(() -> {
             synchronized (this) {
@@ -199,7 +243,15 @@ public class ReminderAlertManager {
         });
     }
 
+    /**
+     * Interface definition for a callback to be invoked when the alarm playback state changes.
+     */
     public interface OnAlarmStateChangedListener {
+        /**
+         * Called when the alarm starts or stops playing.
+         *
+         * @param isPlaying True if playing, false if stopped.
+         */
         void onAlarmStateChanged(boolean isPlaying);
     }
 }

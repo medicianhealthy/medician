@@ -18,6 +18,12 @@ public class FeaturePassManager {
     /**
      * Grants a temporary pass for a specific feature upon successful RV completion.
      */
+    /**
+     * Grants a temporary pass for a specific feature, usually upon successful completion of a rewarded video.
+     *
+     * @param context The application or activity context.
+     * @param feature The feature to unlock temporarily.
+     */
     public static void grantPass(Context context, AppConfig.FeaturePassType feature) {
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
         long now = com.robinzon.medicationwizard.utils.TimeManager.getInstance().getCurrentTimeInMillisFakeOrReal();
@@ -52,6 +58,15 @@ public class FeaturePassManager {
      * Consumes all "Next Reminder" temporary passes.
      * Should be called when a reminder alarm fires.
      */
+    /**
+     * Consumes all "Next Reminder" temporary passes.
+     * <p>
+     * This method resets the active status for passes like bypass volume, vibration, and sticky notifications,
+     * ensuring they only apply to a single reminder instance.
+     * </p>
+     *
+     * @param context The application or activity context.
+     */
     public static void consumeNextReminderPasses(Context context) {
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);
         prefs.setBoolean(AppConfig.KEY_PASS_BYPASS_VOLUME_ACTIVE, false);
@@ -68,12 +83,23 @@ public class FeaturePassManager {
     /**
      * Consumes a specific "Marked Taken" pass.
      */
+    /**
+     * Consumes the temporary "Marked Taken" dose window pass.
+     *
+     * @param context The application or activity context.
+     */
     public static void consumeDoseWindowPass(Context context) {
         SharedPreferencesManager.getInstance(context).setBoolean(AppConfig.KEY_PASS_DOSE_WINDOW_ACTIVE, false);
     }
 
     /**
      * Grants a permanent pass for a specific feature upon Magic spending.
+     */
+    /**
+     * Grants a permanent pass for a specific feature, typically triggered by spending Magics.
+     *
+     * @param context The application or activity context.
+     * @param feature The feature to unlock permanently.
      */
     public static void grantPermanentPass(Context context, AppConfig.FeaturePassType feature) {
         SharedPreferencesManager prefs = SharedPreferencesManager.getInstance(context);

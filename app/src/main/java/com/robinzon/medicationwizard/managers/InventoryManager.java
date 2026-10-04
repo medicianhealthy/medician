@@ -11,8 +11,22 @@ import com.robinzon.medicationwizard.notifications.NotificationManager;
 
 import java.util.ArrayList;
 
+/**
+ * Manages medication inventory logic, including deductions and low-stock alerts.
+ */
 public class InventoryManager {
 
+    /**
+     * Decrements the inventory count for a specific medication.
+     * <p>
+     * This operation is only performed if the inventory feature is unlocked. It updates the saved
+     * medication data and evaluates whether a low-stock threshold has been reached.
+     * </p>
+     *
+     * @param context      The application or activity context.
+     * @param medicationId The unique identifier of the medication.
+     * @param amount       The amount to subtract from the current inventory.
+     */
     public static void decrementInventory(Context context, String medicationId, float amount) {
         if (!AppConfig.isFeatureUnlocked(context, AppConfig.FeaturePassType.INVENTORY)) return;
 
@@ -34,6 +48,15 @@ public class InventoryManager {
         }
     }
 
+    /**
+     * Evaluates a medication's inventory against its configured threshold and triggers alerts if necessary.
+     * <p>
+     * It calculates remaining days based on daily frequency, or directly compares amounts, depending on the alert type.
+     * </p>
+     *
+     * @param context The application or activity context.
+     * @param m       The medication object containing current inventory and threshold settings.
+     */
     private static void checkThreshold(Context context, Medication m) {
         if (m.getInventoryThreshold() <= 0) return;
 

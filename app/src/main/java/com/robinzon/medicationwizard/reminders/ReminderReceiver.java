@@ -26,6 +26,14 @@ import com.robinzon.medicationwizard.utils.SharedPreferencesManager;
 
 import java.util.Calendar;
 
+/**
+ * Handles incoming alarm broadcasts and triggers medication notifications.
+ * <p>
+ * This receiver executes precisely at the time a dose is scheduled. It verifies 
+ * settings like quiet hours, groups multiple doses occurring at the same time into a single
+ * unified notification, and triggers the configured alarms, vibrations, and visual indicators.
+ * </p>
+ */
 public class ReminderReceiver extends BroadcastReceiver {
 
     public static final String ACTION_REMIND = "com.robinzon.medicationwizard.ACTION_REMIND";
@@ -34,6 +42,19 @@ public class ReminderReceiver extends BroadcastReceiver {
     public static final String EXTRA_AMOUNT = "extra_amount";
     public static final String EXTRA_FORM = "extra_form";
 
+    /**
+     * Processes the scheduled alarm event.
+     * <p>
+     * Logic implemented:
+     * 1. Confirms the correct intent action.
+     * 2. Checks if quiet hours are enabled and active.
+     * 3. Fetches all due doses synchronously using an async block.
+     * 4. Fires a unified notification if multiple are due, and initiates alerts.
+     * </p>
+     *
+     * @param context The application context.
+     * @param intent  The broadcast intent containing instance details.
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         if (!ACTION_REMIND.equals(intent.getAction())) return;
@@ -102,6 +123,12 @@ public class ReminderReceiver extends BroadcastReceiver {
         }).start();
     }
 
+    /**
+     * Determines whether the current time falls within the configured quiet hours.
+     *
+     * @param sp The shared preferences manager providing start and end times.
+     * @return True if the current time is within quiet hours, false otherwise.
+     */
     private boolean isInQuietHours(SharedPreferencesManager sp) {
         String startStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_START, "23:00");
         String endStr = sp.getString(SettingsViewModel.KEY_QUIET_HOURS_END, "07:00");
@@ -125,6 +152,14 @@ public class ReminderReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Displays the notification representing one or more due medication doses.
+     *
+     * @param context       The application context.
+     * @param doses         The list of dose instances due at this time.
+     * @param scheduledTime The scheduled time in milliseconds for these doses.
+     * @param isCritical    Specifies if any of the doses are marked as critical.
+     */
     private void showNotification(Context context, java.util.List<com.robinzon.medicationwizard.database.DoseInstanceEntity> doses, long scheduledTime, boolean isCritical) {
         if (doses == null || doses.isEmpty()) return;
 
@@ -212,6 +247,13 @@ public class ReminderReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Formats the medication name, amount, and form into a readable localized message.
+     *
+     * @param context The application context for string resolution.
+     * @param dose    The dose instance details.
+     * @return The formatted message string to be displayed.
+     */
     private String formatDoseMessage(Context context, com.robinzon.medicationwizard.database.DoseInstanceEntity dose) {
         float amount = dose.getAmount();
         String amountStr = amount == (long) amount ? String.valueOf((long) amount) : String.valueOf(amount);
@@ -229,6 +271,12 @@ public class ReminderReceiver extends BroadcastReceiver {
         return context.getString(R.string.notification_reminder_message, amountStr, formStr, dose.getMedicationName());
     }
 
+    /**
+     * Triggers the device's camera flash to act as a visual alert.
+     *
+     * @param context    The application context to access the camera service.
+     * @param isCritical True if the notification is for a critical medication (overriding flash pattern).
+     */
     private void triggerFlashSync(Context context, boolean isCritical) {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(context);
         String patternName = isCritical ? "Strobe" : sp.getString(SettingsViewModel.KEY_FLASH_PATTERN, "None");

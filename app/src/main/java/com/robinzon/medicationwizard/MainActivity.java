@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private boolean isSpeedDialExpanded = false;
     private SharedPreferences.OnSharedPreferenceChangeListener magicBalanceListener;
 
+    /**
+     * Initializes the main activity, sets up navigation, processes feature unlocks, and handles initial consent checks.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down, this Bundle contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,7 +198,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     /**
-     * Periodically checks for ad availability and eligibility.
+     * Periodically checks for ad availability and user eligibility.
+     * <p>
+     * Triggers a repeated delayed task that requests ads based on real-time usage data.
+     * </p>
      */
     private void startAdCheckTimer() {
         if (adCheckRunnable != null) return;
@@ -209,6 +217,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         adCheckHandler.postDelayed(adCheckRunnable, 10000L); // Check every 10 seconds
     }
 
+    /**
+     * Stops the periodic ad availability checking timer and cleans up callbacks.
+     */
     private void stopAdCheckTimer() {
         if (adCheckRunnable != null) {
             adCheckHandler.removeCallbacks(adCheckRunnable);
@@ -217,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     /**
-     * Refreshes the navigation drawer header with the current user's profile info.
+     * Refreshes the navigation drawer header with the current user's profile info and magic balance.
      */
     public void refreshNavHeader() {
         final NavigationView navigationView = findViewById(R.id.nav_view);
@@ -228,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     /**
      * Checks if the app has permission to schedule exact alarms (required for Android 12+).
+     * <p>
+     * If permission is missing, prompts the user with a dialog explaining the requirement and redirects to settings.
+     * </p>
      */
     private void checkExactAlarmPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -297,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     /**
-     * Increments the global interaction score and triggers an interstitial if the threshold is met.
+     * Increments the global interaction score and triggers an interstitial ad if the threshold is met.
      *
      * @param score The amount of points to add (e.g., 1.5 for main items, 1.0 for sub-items).
      */
@@ -310,8 +324,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     /**
-     * Adds the interaction score without immediately triggering an ad.
-     * @return True if the threshold was met.
+     * Adds to the interaction score without immediately triggering an ad display.
+     *
+     * @param score The amount of points to add.
+     * @return True if the internal ad threshold has been reached, false otherwise.
      */
     public boolean addInteractionScoreOnly(float score) {
         return com.robinzon.medicationwizard.utils.Statisticator.addInteractionScoreAndCheck(this, score);
@@ -428,6 +444,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         stopAdCheckTimer();
     }
 
+    /**
+     * Toggles the visibility of the primary Floating Action Button (FAB).
+     *
+     * @param visible True to show the FAB, false to hide it.
+     */
     public void setFabVisible(boolean visible) {
         mIsFabVisible = visible;
         final View fab = findViewById(R.id.fab);
@@ -437,6 +458,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         invalidateOptionsMenu();
     }
 
+    /**
+     * Executes ad logic when the application transitions to the foreground state.
+     * <p>
+     * Handles displaying an App Open Ad if one is loaded and ready.
+     * </p>
+     */
     public void onMoveToForeground() {
         adCheckHandler.postDelayed(() -> {
             if (!isFinishing() && !isDestroyed() && getAdsManager() != null) {
@@ -498,6 +525,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         AppConfig.FORCED_ADS_VISIBLE = sharedPreferencesManager.getBoolean(AppConfig.KEY_CHEAT_SHOW_ADS, AppConfig.FORCED_ADS_VISIBLE);
     }
 
+    /**
+     * Toggles the speed dial FAB menu (expanding or collapsing the sub-actions).
+     *
+     * @param binding The ViewBinding instance for the main activity.
+     */
     private void toggleSpeedDial(ActivityMainBinding binding) {
         isSpeedDialExpanded = !isSpeedDialExpanded;
         if (isSpeedDialExpanded) {
@@ -589,6 +621,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
+    /**
+     * Initiates a WhatsApp share intent to share the app with friends, rewarding Magics upon return.
+     * <p>
+     * Checks a daily limit to prevent spam abuse. If WhatsApp is not installed, it falls back to a general system share.
+     * </p>
+     */
     public void shareToWhatsApp() {
         SharedPreferencesManager sp = SharedPreferencesManager.getInstance(this);
         long lastShare = sp.getLong("magic_last_share", 0);

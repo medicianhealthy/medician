@@ -63,6 +63,8 @@ public class SettingsViewModel extends AndroidViewModel {
 
     /**
      * Constructs the ViewModel and loads current preferences from disk.
+     *
+     * @param application The Android application context.
      */
     public SettingsViewModel(@NonNull Application application) {
         super(application);
@@ -72,6 +74,8 @@ public class SettingsViewModel extends AndroidViewModel {
     /**
      * Global utility to check if any temporary passes have expired and revert their
      * associated settings immediately.
+     *
+     * @param context The Android context.
      */
     public static void enforceEntitlements(android.content.Context context) {
         if (com.robinzon.medicationwizard.AppConfig.isPremiumPurchased(context)) return;
@@ -172,6 +176,8 @@ public class SettingsViewModel extends AndroidViewModel {
 
     /**
      * Toggles whether reminder alerts should bypass the device's ringer mode.
+     *
+     * @param bypass True to bypass the system volume, false otherwise.
      */
     public void setBypassVolume(boolean bypass) {
         mBypassVolume.setValue(bypass);
@@ -187,6 +193,8 @@ public class SettingsViewModel extends AndroidViewModel {
 
     /**
      * Updates the custom alert volume percentage (0-100).
+     *
+     * @param volume The target volume percentage to apply.
      */
     public void setNotifVolume(int volume) {
         mNotifVolume.setValue(volume);
@@ -343,6 +351,9 @@ public class SettingsViewModel extends AndroidViewModel {
 
     /**
      * Updates the selected reminder sound name and system URI.
+     *
+     * @param name The human-readable name of the sound.
+     * @param uri  The system URI string of the sound file.
      */
     public void setSound(String name, String uri) {
         mSoundName.setValue(name);
@@ -353,6 +364,11 @@ public class SettingsViewModel extends AndroidViewModel {
 
     /**
      * Updates the time range during which alerts are suppressed.
+     *
+     * @param startH The starting hour (0-23).
+     * @param startM The starting minute (0-59).
+     * @param endH   The ending hour (0-23).
+     * @param endM   The ending minute (0-59).
      */
     public void setQuietHours(int startH, int startM, int endH, int endM) {
         String start = String.format(java.util.Locale.getDefault(), "%02d:%02d", startH, startM);
